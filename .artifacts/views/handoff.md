@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:33d935e4a00928f9011ef038d6b29308a480e1ee7b67798a57ca203d2340e0c4
+> Store state: sha256:8144cf6cc71eb8948d3b06731d34a8e6b8e1690089078a107f79df46a3e78b89
 
 ## dashboard
 
@@ -30,12 +30,11 @@
 - **workflow-loop**: The se-workflow loop maps efforts to product areas, closes finished efforts, runs phases in parallel, and settles the approach with the user before planning; effort; deliver _(id: [rec-65213e61-dda6-4955-95bc-8c9c4b289af1](.artifacts/records/project__active-goal/rec-65213e61-dda6-4955-95bc-8c9c4b289af1.md))_
 
 ### Position
-- **workflow-loop**: check-runner done; no further phase planned; effort _(id: [rec-6406f457-1826-4cef-8831-f8fd0d586ab9](.artifacts/records/project__current-position/rec-6406f457-1826-4cef-8831-f8fd0d586ab9.md))_
+- **workflow-loop**: red-first done; no further phase planned; effort _(id: [rec-ea0c589e-dc91-4013-8a59-6086ea38f1f1](.artifacts/records/project__current-position/rec-ea0c589e-dc91-4013-8a59-6086ea38f1f1.md))_
 
 ### Backlog
 - **gh-10-phase-reviewer**: workflow-loop; open _(id: [rec-1dcea0d3-ab9e-4525-94e9-d12c427a75fe](.artifacts/records/project__backlog-item/rec-1dcea0d3-ab9e-4525-94e9-d12c427a75fe.md))_
 - **gh-11-verification-loop**: workflow-loop; open _(id: [rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7](.artifacts/records/project__backlog-item/rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7.md))_
-- **gh-6-red-first**: workflow-loop; open _(id: [rec-f243b6a7-2d97-49a7-a376-0be83bcb310b](.artifacts/records/project__backlog-item/rec-f243b6a7-2d97-49a7-a376-0be83bcb310b.md))_
 - **gh-7-retry-loop**: workflow-loop; open _(id: [rec-32c68524-3bd4-4827-88a7-4ac10915c3bd](.artifacts/records/project__backlog-item/rec-32c68524-3bd4-4827-88a7-4ac10915c3bd.md))_
 - **gh-8-dashboard-approvals**: workflow-loop; open _(id: [rec-8372b4c1-b939-4819-aae2-557d05506dc2](.artifacts/records/project__backlog-item/rec-8372b4c1-b939-4819-aae2-557d05506dc2.md))_
 - **gh-9-tiered-verification**: workflow-loop; open _(id: [rec-a349def9-ad0c-4d7b-b35a-26c579d9aef3](.artifacts/records/project__backlog-item/rec-a349def9-ad0c-4d7b-b35a-26c579d9aef3.md))_

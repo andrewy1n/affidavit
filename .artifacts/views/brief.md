@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:015ab8c24ca2855eae364b48020d1c8dbe8cd8c941a7be5a4285ff78f8a7fa34
+> Store state: sha256:b08c6f211071a26da9db78dec33bbbd124b3865d85f2966da11d8f073d50115a
 
 ## activity-failures
 
@@ -123,6 +123,31 @@
 
 ### Acceptance
 - **check-run-contract**: Bundled contract declares enums for check-run.result and check-run/acceptance method, lists the optional runner fields, and contract self-consistency plus the flipped evidence-loop/assess-routing tests pass; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py tests/test_evidence_loop.py tests/test_assess_routing.py -q -k 'enum or result or method or contract' _(id: [rec-88363d0c-d058-4a0d-8c04-4a697bbe457d](.artifacts/records/project__acceptance/rec-88363d0c-d058-4a0d-8c04-4a697bbe457d.md))_
+
+## close-red-first
+
+### Acceptance
+- **close-red-first**: close_batch refuses pass-only tdd done without finding (exit 2, criterion named) and accepts fail→pass when red precedes green by git ancestry or dirty red with diff_sha256; wrong order/non-ancestor refused; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first _(id: [rec-e7b02db3-cbf8-492f-8363-9844982d7753](.artifacts/records/project__acceptance/rec-e7b02db3-cbf8-492f-8363-9844982d7753.md))_
+
+## close-red-first-escape
+
+### Acceptance
+- **close-red-first-escape**: Finding escape permits tdd done without red and forces needs human; check and manual criteria close without red_check_run_id; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k 'red_first_escape or red_first_other_methods' _(id: [rec-c8b5c4cd-99a6-4906-a91c-7b4385187029](.artifacts/records/project__acceptance/rec-c8b5c4cd-99a6-4906-a91c-7b4385187029.md))_
+
+## close-red-first-methods
+
+### Acceptance
+- **close-red-first-methods**: check and manual done closes succeed without red_check_run_id; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_other_methods _(id: [rec-20f81a2f-2df9-4e5d-9eec-63da3defeec3](.artifacts/records/project__acceptance/rec-20f81a2f-2df9-4e5d-9eec-63da3defeec3.md))_
+
+## close-red-first-order
+
+### Acceptance
+- **close-red-first-order**: Green SHA must be equal to or git-descendant of red SHA; dirty red accepted only with non-empty diff_sha256; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_order _(id: [rec-6e4d8f33-f843-4db1-a990-e3c5ea1abbd7](.artifacts/records/project__acceptance/rec-6e4d8f33-f843-4db1-a990-e3c5ea1abbd7.md))_
+
+## close-red-first-request
+
+### Acceptance
+- **close-red-first-request**: close_batch validates request-carried red_check_run_id and copied red fields; it does not query the store for prior check-runs; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_request _(id: [rec-be6e5c30-7b5f-44e1-b497-7dcbccbea6ad](.artifacts/records/project__acceptance/rec-be6e5c30-7b5f-44e1-b497-7dcbccbea6ad.md))_
 
 ## close-step-skill
 
@@ -958,6 +983,11 @@ print("phase checks only")
 ### Acceptance
 - **skills-backlog-promote**: engage documents promote as supersede to promoted then discuss/new phase or incidental, and dismiss as supersede to dismissed, with no GitHub scrape; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_assess_routing.py -q _(id: [rec-9dcc1726-0246-424d-a8f7-edd8b8c98ea6](.artifacts/records/project__acceptance/rec-9dcc1726-0246-424d-a8f7-edd8b8c98ea6.md))_
 
+## skills-red-first
+
+### Acceptance
+- **skills-red-first**: verify-work documents enforced red-first close fields and refusal; skill/contract consistency stays green; wording no longer says the engine does not enforce red-first; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_assess_routing.py -q _(id: [rec-4106666c-c561-474e-a8fd-4291869e42db](.artifacts/records/project__acceptance/rec-4106666c-c561-474e-a8fd-4291869e42db.md))_
+
 ## spec-model
 
 ### Acceptance
@@ -1501,6 +1531,31 @@ print("phase checks only")
 ### Acceptance
 - **verify-readable-layout-phase-signoff**: The user views the dashboard in the popup and the side pane and signs off that it is readable and clean; manual; dashboard _(id: [rec-83820e9f-6ff5-407c-aa8f-deb4e441d5a5](.artifacts/records/project__acceptance/rec-83820e9f-6ff5-407c-aa8f-deb4e441d5a5.md))_
 
+## verify-red-first
+
+### Acceptance
+- **verify-red-first**: Through close_batch.py CLI/entry, pass-only tdd done without finding exits 2 and names the criterion; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_pass_only _(id: [rec-c954223e-18ce-4392-ba4a-051f35046275](.artifacts/records/project__acceptance/rec-c954223e-18ce-4392-ba4a-051f35046275.md))_
+
+## verify-red-first-escape
+
+### Acceptance
+- **verify-red-first-escape**: Finding escape permits close without red and forces needs human; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_escape _(id: [rec-964973af-b0ff-4bdc-b880-c49820487c8a](.artifacts/records/project__acceptance/rec-964973af-b0ff-4bdc-b880-c49820487c8a.md))_
+
+## verify-red-first-methods
+
+### Acceptance
+- **verify-red-first-methods**: check and manual closes remain valid without red_check_run_id; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_other_methods _(id: [rec-9167287b-ab92-4409-89bd-e19a6db7f820](.artifacts/records/project__acceptance/rec-9167287b-ab92-4409-89bd-e19a6db7f820.md))_
+
+## verify-red-first-order
+
+### Acceptance
+- **verify-red-first-order**: Fail→pass with valid ancestry or dirty red+diff_sha256 accepted; wrong order/non-ancestor refused; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_order _(id: [rec-cb28d166-0f0f-49ed-8751-925ad1e8d708](.artifacts/records/project__acceptance/rec-cb28d166-0f0f-49ed-8751-925ad1e8d708.md))_
+
+## verify-red-first-skills
+
+### Acceptance
+- **verify-red-first-skills**: verify-work matches enforced red-first; skill/contract consistency green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_assess_routing.py -q _(id: [rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e](.artifacts/records/project__acceptance/rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e.md))_
+
 ## verify-run-facts
 
 ### Acceptance
@@ -1691,4 +1746,4 @@ print("phase checks only")
 ## workflow-loop
 
 ### Position
-- **workflow-loop**: check-runner done; no further phase planned; effort _(id: [rec-6406f457-1826-4cef-8831-f8fd0d586ab9](.artifacts/records/project__current-position/rec-6406f457-1826-4cef-8831-f8fd0d586ab9.md))_
+- **workflow-loop**: red-first done; no further phase planned; effort _(id: [rec-ea0c589e-dc91-4013-8a59-6086ea38f1f1](.artifacts/records/project__current-position/rec-ea0c589e-dc91-4013-8a59-6086ea38f1f1.md))_
