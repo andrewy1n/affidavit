@@ -35,6 +35,7 @@ materialized as `work-item` + `acceptance`.
 
 A Claude Code plugin install alone does not give you the tmux keys. Use TPM or a clone for step 3.
 Without tmux, run `dashboard/bin/dashboard` from inside your repo.
+Run acceptance checks with `bin/se-workflow check` (same plugin root as `dashboard/bin`).
 
 ## Kinds
 
@@ -248,6 +249,23 @@ the structured path integrates.
 
 Shared rules: [skills/kinds-and-focus.md](skills/kinds-and-focus.md).
 Shared first-run steps: [skills/ensure-store.md](skills/ensure-store.md).
+
+## CLI
+
+`bin/se-workflow` is the plugin CLI entry (installed next to
+`dashboard/bin` by `scripts/sync-plugin.sh`). It dispatches subcommands
+and shells to `adaptive-artifacts` for store reads/writes.
+
+```bash
+# From a clone or a sync-plugin install root, inside the project with the store:
+bin/se-workflow check --acceptance <acceptance-id>
+bin/se-workflow check --acceptance <id> --cwd /path/to/phase-worktree
+bin/se-workflow check --acceptance <id> --allow-dirty   # pass on dirty tree
+```
+
+`check` runs the acceptance's `verify_command` (methods `tdd` / `check`
+only), writes a `project:check-run` with revision and runner metadata,
+and refuses `method=manual` (use human `signed_by` sign-off instead).
 
 ## Dashboard in tmux
 
