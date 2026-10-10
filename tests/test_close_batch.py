@@ -27,6 +27,37 @@ SCRIPT = REPO_ROOT / "scripts" / "close_batch.py"
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 import close_batch  # noqa: E402
 
+RUNNER = "se-workflow"
+
+
+def _tdd_pass_only_entry(**extra):
+    entry = {
+        "criterion_id": "rec-ac1",
+        "method": "tdd",
+        "check_run_id": "rec-runner-cr",
+        "result": "pass",
+    }
+    entry.update(extra)
+    return entry
+
+
+def _tdd_with_dirty_red(**extra):
+    """Valid fail→pass via dirty red + diff_sha256 (no git ancestry needed)."""
+    entry = {
+        "criterion_id": "rec-ac1",
+        "method": "tdd",
+        "check_run_id": "rec-runner-green",
+        "result": "pass",
+        "revision": "deadbeef",
+        "red_check_run_id": "rec-runner-red",
+        "red_result": "fail",
+        "red_revision": "dirty",
+        "red_runner": RUNNER,
+        "red_diff_sha256": "a" * 64,
+    }
+    entry.update(extra)
+    return entry
+
 
 def _request(**overrides):
     base = {
@@ -36,18 +67,52 @@ def _request(**overrides):
         "transition": "done",
         "execution_report_id": "rec-er",
         "acceptance_ids": ["rec-ac1"],
-        "criteria": [
-            {
-                "criterion_id": "rec-ac1",
-                "method": "tdd",
-                "check_run_id": "rec-runner-cr",
-                "result": "pass",
-            }
-        ],
+        "criteria": [_tdd_with_dirty_red()],
         "finding": None,
     }
     base.update(overrides)
     return base
+
+
+def _git(cwd: Path, *args: str) -> str:
+    result = subprocess.run(
+        ["git", "-C", str(cwd), *args],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return result.stdout.strip()
+
+
+def _ancestry_repo(tmp_path: Path) -> tuple[Path, str, str]:
+    """Temp git repo with parent (red) → child (green) commits."""
+    repo = tmp_path / "ancestry-repo"
+    repo.mkdir()
+    _git(repo, "init")
+    _git(repo, "config", "user.email", "test@example.com")
+    _git(repo, "config", "user.name", "Test")
+    (repo / "f.txt").write_text("red\n")
+    _git(repo, "add", "f.txt")
+    _git(repo, "commit", "-m", "red")
+    red_sha = _git(repo, "rev-parse", "HEAD")
+    (repo / "f.txt").write_text("green\n")
+    _git(repo, "add", "f.txt")
+    _git(repo, "commit", "-m", "green")
+    green_sha = _git(repo, "rev-parse", "HEAD")
+    return repo, red_sha, green_sha
+
+
+def _run_script(
+    request: dict, tmp_path: Path, *, cwd: Path | None = None
+) -> tuple[subprocess.CompletedProcess, Path]:
+    input_path = tmp_path / "close-request.json"
+    input_path.write_text(json.dumps(request))
+    out_path = tmp_path / "close-batch.ndjson"
+    cmd = [sys.executable, str(SCRIPT), "--input", str(input_path), "--out", str(out_path)]
+    if cwd is not None:
+        cmd.extend(["--cwd", str(cwd)])
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    return result, out_path
 
 
 def _manual_request(**overrides):
@@ -71,18 +136,6 @@ def _manual_request(**overrides):
     }
     base.update(overrides)
     return base
-
-
-def _run_script(request: dict, tmp_path: Path) -> tuple[subprocess.CompletedProcess, Path]:
-    input_path = tmp_path / "close-request.json"
-    input_path.write_text(json.dumps(request))
-    out_path = tmp_path / "close-batch.ndjson"
-    result = subprocess.run(
-        [sys.executable, str(SCRIPT), "--input", str(input_path), "--out", str(out_path)],
-        capture_output=True,
-        text=True,
-    )
-    return result, out_path
 
 
 # -- build_batch: pure policy tests -----------------------------------
@@ -129,14 +182,7 @@ def test_refuses_done_with_failing_criterion_and_no_finding():
 def test_refuses_done_with_a_criterion_never_checked_at_all():
     request = _request(
         acceptance_ids=["rec-ac1", "rec-ac2"],
-        criteria=[
-            {
-                "criterion_id": "rec-ac1",
-                "method": "tdd",
-                "check_run_id": "rec-runner-cr",
-                "result": "pass",
-            }
-        ],
+        criteria=[_tdd_with_dirty_red()],
     )
     with pytest.raises(close_batch.CloseRefused):
         close_batch.build_batch(request)
@@ -190,14 +236,7 @@ def test_no_execution_report_omits_the_second_informed_by_on_manual():
 
 def test_criteria_entry_outside_acceptance_ids_is_malformed():
     request = _request(
-        criteria=[
-            {
-                "criterion_id": "rec-not-active",
-                "method": "tdd",
-                "check_run_id": "rec-runner-cr",
-                "result": "pass",
-            }
-        ]
+        criteria=[_tdd_with_dirty_red(criterion_id="rec-not-active")]
     )
     with pytest.raises(close_batch.CloseRequestError):
         close_batch.build_batch(request)
@@ -210,12 +249,18 @@ def test_missing_top_level_field_is_malformed_not_refused():
         close_batch.build_batch(request)
 
 
-def test_invented_tdd_with_revision_is_malformed():
+def test_invented_tdd_with_signed_by_is_malformed():
+    request = _request(criteria=[_tdd_with_dirty_red(signed_by="agent")])
+    with pytest.raises(close_batch.CloseRequestError, match="signed_by"):
+        close_batch.build_batch(request)
+
+
+def test_invented_check_with_revision_is_malformed():
     request = _request(
         criteria=[
             {
                 "criterion_id": "rec-ac1",
-                "method": "tdd",
+                "method": "check",
                 "check_run_id": "rec-runner-cr",
                 "result": "pass",
                 "revision": "abc123",
@@ -349,7 +394,10 @@ def test_end_to_end_all_pass_closes_the_work_item_to_done(cli, resolved_contract
     subject = "demo-close-task"
     effort = "demo-effort"
     work_item, acceptance, execution_report = _build_work_item_family(cli, defs, subject, effort)
-    runner_cr = _seed_runner_check_run(cli, defs, subject, acceptance, execution_report)
+    red_cr = _seed_runner_check_run(
+        cli, defs, subject, acceptance, execution_report, result="fail"
+    )
+    green_cr = _seed_runner_check_run(cli, defs, subject, acceptance, execution_report)
 
     request = {
         "subject": subject,
@@ -362,8 +410,14 @@ def test_end_to_end_all_pass_closes_the_work_item_to_done(cli, resolved_contract
             {
                 "criterion_id": acceptance["id"],
                 "method": "tdd",
-                "check_run_id": runner_cr["id"],
+                "check_run_id": green_cr["id"],
                 "result": "pass",
+                "revision": "deadbeef",
+                "red_check_run_id": red_cr["id"],
+                "red_result": "fail",
+                "red_revision": "dirty",
+                "red_runner": RUNNER,
+                "red_diff_sha256": "b" * 64,
             }
         ],
         "finding": None,
@@ -384,11 +438,11 @@ def test_end_to_end_all_pass_closes_the_work_item_to_done(cli, resolved_contract
     check_runs = json.loads(
         cli("list", "--type", "project:check-run", "--subject", subject, "--full").stdout
     )["records"]
-    assert len(check_runs) == 1
-    check_run = check_runs[0]
-    assert check_run["id"] == runner_cr["id"]
-    assert check_run["payload"]["result"] == "pass"
-    assert check_run["payload"].get("runner") == "se-workflow"
+    assert len(check_runs) == 2
+    by_id = {cr["id"]: cr for cr in check_runs}
+    assert by_id[green_cr["id"]]["payload"]["result"] == "pass"
+    assert by_id[green_cr["id"]]["payload"].get("runner") == "se-workflow"
+    assert by_id[red_cr["id"]]["payload"]["result"] == "fail"
 
 
 def test_end_to_end_refusal_leaves_the_work_item_in_progress(cli, resolved_contract, tmp_path):
@@ -478,3 +532,181 @@ def test_end_to_end_failing_criterion_with_finding_closes_and_surfaces_needs_hum
     )["records"]
     assert len(findings) == 1
     assert findings[0]["payload"]["needs"] == "human"
+
+
+# -- red-first gate (tdd done) ----------------------------------------
+
+
+def test_red_first_pass_only_refuses_and_names_criterion():
+    request = _request(criteria=[_tdd_pass_only_entry()])
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1") as excinfo:
+        close_batch.build_batch(request)
+    assert "red" in str(excinfo.value).lower()
+
+
+def test_red_first_pass_only_cli_exits_2(tmp_path):
+    request = _request(criteria=[_tdd_pass_only_entry()])
+    result, out_path = _run_script(request, tmp_path)
+    assert result.returncode == 2
+    assert "rec-ac1" in result.stderr
+    assert not out_path.exists()
+
+
+def test_red_first_request_accepts_fail_then_pass_with_dirty_red():
+    ops = close_batch.build_batch(_request(criteria=[_tdd_with_dirty_red()]))
+    assert ops[-1]["transition"] == "done"
+
+
+def test_red_first_request_refuses_non_runner_red():
+    request = _request(criteria=[_tdd_with_dirty_red(red_runner="hand-authored")])
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1") as excinfo:
+        close_batch.build_batch(request)
+    assert "runner" in str(excinfo.value).lower()
+
+
+def test_red_first_request_refuses_red_result_not_fail():
+    request = _request(criteria=[_tdd_with_dirty_red(red_result="pass")])
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1") as excinfo:
+        close_batch.build_batch(request)
+    assert "fail" in str(excinfo.value).lower()
+
+
+def test_red_first_request_does_not_query_store(monkeypatch):
+    """Gate uses request-carried fields only — no adaptive-artifacts / store I/O."""
+
+    def _boom(*_a, **_k):
+        raise AssertionError("close_batch must not query the store")
+
+    monkeypatch.setattr(subprocess, "run", _boom)
+    # Dirty red skips git ancestry, so subprocess must not be needed.
+    ops = close_batch.build_batch(_request(criteria=[_tdd_with_dirty_red()]))
+    assert ops[-1]["transition"] == "done"
+
+
+def test_red_first_order_accepts_when_green_descends_from_red(tmp_path):
+    repo, red_sha, green_sha = _ancestry_repo(tmp_path)
+    entry = {
+        "criterion_id": "rec-ac1",
+        "method": "tdd",
+        "check_run_id": "rec-runner-green",
+        "result": "pass",
+        "revision": green_sha,
+        "red_check_run_id": "rec-runner-red",
+        "red_result": "fail",
+        "red_revision": red_sha,
+        "red_runner": RUNNER,
+    }
+    ops = close_batch.build_batch(_request(criteria=[entry]), cwd=repo)
+    assert ops[-1]["transition"] == "done"
+
+
+def test_red_first_order_accepts_equal_sha(tmp_path):
+    repo, red_sha, _green_sha = _ancestry_repo(tmp_path)
+    entry = {
+        "criterion_id": "rec-ac1",
+        "method": "tdd",
+        "check_run_id": "rec-runner-green",
+        "result": "pass",
+        "revision": red_sha,
+        "red_check_run_id": "rec-runner-red",
+        "red_result": "fail",
+        "red_revision": red_sha,
+        "red_runner": RUNNER,
+    }
+    ops = close_batch.build_batch(_request(criteria=[entry]), cwd=repo)
+    assert ops[-1]["transition"] == "done"
+
+
+def test_red_first_order_refuses_when_green_is_ancestor_of_red(tmp_path):
+    """Wrong order: green SHA is parent of red (green does not descend from red)."""
+    repo, red_sha, green_sha = _ancestry_repo(tmp_path)
+    entry = {
+        "criterion_id": "rec-ac1",
+        "method": "tdd",
+        "check_run_id": "rec-runner-green",
+        "result": "pass",
+        "revision": red_sha,  # older
+        "red_check_run_id": "rec-runner-red",
+        "red_result": "fail",
+        "red_revision": green_sha,  # newer — not an ancestor of red_sha
+        "red_runner": RUNNER,
+    }
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1"):
+        close_batch.build_batch(_request(criteria=[entry]), cwd=repo)
+
+
+def test_red_first_order_refuses_non_ancestor_on_divergent_history(tmp_path):
+    repo, red_sha, green_sha = _ancestry_repo(tmp_path)
+    _git(repo, "checkout", "-b", "other", red_sha)
+    (repo / "f.txt").write_text("other\n")
+    _git(repo, "add", "f.txt")
+    _git(repo, "commit", "-m", "side")
+    side_sha = _git(repo, "rev-parse", "HEAD")
+    entry = {
+        "criterion_id": "rec-ac1",
+        "method": "tdd",
+        "check_run_id": "rec-runner-green",
+        "result": "pass",
+        "revision": green_sha,
+        "red_check_run_id": "rec-runner-red",
+        "red_result": "fail",
+        "red_revision": side_sha,
+        "red_runner": RUNNER,
+    }
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1"):
+        close_batch.build_batch(_request(criteria=[entry]), cwd=repo)
+
+
+def test_red_first_order_dirty_red_requires_nonempty_diff_sha256():
+    request = _request(
+        criteria=[_tdd_with_dirty_red(red_diff_sha256="")]
+    )
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1") as excinfo:
+        close_batch.build_batch(request)
+    assert "diff_sha256" in str(excinfo.value)
+
+
+def test_red_first_order_dirty_red_without_digest_refused():
+    entry = _tdd_with_dirty_red()
+    del entry["red_diff_sha256"]
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1"):
+        close_batch.build_batch(_request(criteria=[entry]))
+
+
+def test_red_first_escape_permits_tdd_done_without_red_and_forces_human():
+    request = _request(
+        criteria=[_tdd_pass_only_entry()],
+        finding={
+            "claim": "closing without red-first evidence for rec-ac1",
+            "basis": "refactor-only change; prior red unavailable",
+            "invalidated_when": "a runner fail then pass is recorded",
+            "needs": "none",
+            "body": "## Evidence\n\nno red\n\n## Consequence\n\ngap\n\n## Follow-up\n\nre-verify",
+        },
+    )
+    ops = close_batch.build_batch(request)
+    finding_op = next(op for op in ops if op["type"] == "project:finding")
+    assert finding_op["payload"]["needs"] == "human"
+    assert ops[-1]["transition"] == "done"
+
+
+def test_red_first_other_methods_check_closes_without_red_check_run_id():
+    request = _request(
+        criteria=[
+            {
+                "criterion_id": "rec-ac1",
+                "method": "check",
+                "check_run_id": "rec-runner-cr",
+                "result": "pass",
+            }
+        ]
+    )
+    ops = close_batch.build_batch(request)
+    assert ops[-1]["transition"] == "done"
+    assert "red_check_run_id" not in request["criteria"][0]
+
+
+def test_red_first_other_methods_manual_closes_without_red_check_run_id():
+    ops = close_batch.build_batch(_manual_request())
+    assert ops[-1]["transition"] == "done"
+    assert [op["op"] for op in ops] == ["create", "update"]

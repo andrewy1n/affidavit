@@ -10,6 +10,13 @@ For `method` `tdd` or `check`, the binary check-run must already exist
 script does not invent pass/fail or emit a `project:check-run` create
 for those methods.
 
+For `method` `tdd` on a `done` transition, the request must also carry
+red-first evidence (`red_check_run_id` and copied fail fields) whose
+revision precedes the green by git ancestry (or a dirty red with
+`diff_sha256`), unless the request includes a finding escape. Ancestry
+uses the process cwd, or `--cwd` when provided. This script does not
+query the store for prior check-runs.
+
 For `method` `manual`, the request carries `result` / `revision` /
 `signed_by` and this script emits one `project:check-run` create per
 entry (linked `informed_by` both its acceptance and the
@@ -20,17 +27,21 @@ that order -- ready to feed straight into `adaptive-artifacts apply`.
 
 What it enforces: closing to `done` while a criterion is unmet or was
 never checked requires a `finding` in the same request, or the batch
-is refused outright rather than silently written without one.
+is refused outright rather than silently written without one. Pass-only
+`tdd` closes without red evidence are refused the same way.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
+from pathlib import Path
 from typing import Any
 
 RUNNER_METHODS = frozenset({"tdd", "check"})
+RUNNER_MARKER = "se-workflow"
 
 
 class CloseRequestError(Exception):
@@ -45,7 +56,87 @@ def _entry_passed(entry: dict[str, Any]) -> bool:
     return entry.get("result") == "pass"
 
 
-def build_batch(request: dict[str, Any]) -> list[dict[str, Any]]:
+def _is_git_ancestor(ancestor: str, descendant: str, cwd: Path) -> bool:
+    """True when ancestor == descendant or ancestor is a git ancestor of descendant."""
+    if ancestor == descendant:
+        return True
+    result = subprocess.run(
+        ["git", "-C", str(cwd), "merge-base", "--is-ancestor", ancestor, descendant],
+        capture_output=True,
+        text=True,
+    )
+    return result.returncode == 0
+
+
+def _enforce_red_first(
+    entry: dict[str, Any],
+    *,
+    cwd: Path,
+) -> None:
+    """Refuse tdd done closes that lack valid request-carried red evidence."""
+    criterion_id = entry.get("criterion_id")
+    red_id = entry.get("red_check_run_id")
+    if not red_id:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: tdd done close requires "
+            "red_check_run_id (runner-produced fail preceding the green), "
+            "or a finding escape naming the missing red"
+        )
+
+    red_result = entry.get("red_result")
+    if red_result != "fail":
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: red evidence result must be "
+            f"'fail', got {red_result!r}"
+        )
+
+    red_runner = entry.get("red_runner")
+    if red_runner != RUNNER_MARKER:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: red check-run is not runner-produced "
+            f"(runner must be {RUNNER_MARKER!r}, got {red_runner!r})"
+        )
+
+    red_revision = entry.get("red_revision")
+    if not red_revision:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: red evidence missing revision"
+        )
+
+    if red_revision == "dirty":
+        digest = entry.get("red_diff_sha256") or ""
+        if not digest:
+            raise CloseRefused(
+                f"criterion {criterion_id!r}: dirty red requires non-empty "
+                "diff_sha256"
+            )
+        return
+
+    green_revision = entry.get("revision")
+    if not green_revision:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: green revision required for "
+            "git-ancestry red-first check"
+        )
+    if green_revision == "dirty":
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: cannot verify red-first ordering "
+            "when green revision is dirty and red is a SHA"
+        )
+
+    if not _is_git_ancestor(red_revision, green_revision, cwd):
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: green revision is not equal to or "
+            f"a git descendant of red revision "
+            f"(red={red_revision}, green={green_revision})"
+        )
+
+
+def build_batch(
+    request: dict[str, Any],
+    *,
+    cwd: str | Path | None = None,
+) -> list[dict[str, Any]]:
     try:
         subject = request["subject"]
         effort = request["effort"]
@@ -58,6 +149,7 @@ def build_batch(request: dict[str, Any]) -> list[dict[str, Any]]:
 
     execution_report_id = request.get("execution_report_id")
     finding = request.get("finding")
+    work_cwd = Path(cwd) if cwd is not None else Path.cwd()
 
     for entry in criteria:
         criterion_id = entry.get("criterion_id")
@@ -80,10 +172,15 @@ def build_batch(request: dict[str, Any]) -> list[dict[str, Any]]:
                     f"criteria entry {criterion_id!r} method={method!r} must "
                     "copy result from the runner check-run"
                 )
-            # Invented create shape: revision/signed_by without going through
-            # the runner — refuse so agents cannot smuggle a hand-authored
-            # binary check-run through close.
-            if "revision" in entry or "signed_by" in entry:
+            # Invented create shape: signed_by without going through the
+            # runner — refuse. For tdd, revision may be copied for the
+            # red-first ancestry gate; for check it remains forbidden.
+            if "signed_by" in entry:
+                raise CloseRequestError(
+                    f"criteria entry {criterion_id!r} method={method!r} must "
+                    "not carry signed_by; reference check_run_id only"
+                )
+            if method == "check" and "revision" in entry:
                 raise CloseRequestError(
                     f"criteria entry {criterion_id!r} method={method!r} must "
                     "not carry revision/signed_by; reference check_run_id only"
@@ -103,6 +200,14 @@ def build_batch(request: dict[str, Any]) -> list[dict[str, Any]]:
             raise CloseRequestError(
                 f"criteria entry {criterion_id!r} has unknown method {method!r}"
             )
+
+    if transition == "done" and not finding:
+        for entry in criteria:
+            if entry.get("method") != "tdd":
+                continue
+            if not _entry_passed(entry):
+                continue
+            _enforce_red_first(entry, cwd=work_cwd)
 
     passed_ids = {
         entry["criterion_id"] for entry in criteria if _entry_passed(entry)
@@ -204,6 +309,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--out", default="-", help="NDJSON output path, or '-' for stdout (default)"
     )
+    parser.add_argument(
+        "--cwd",
+        default=None,
+        help="git cwd for red-first ancestry checks (default: process cwd)",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -213,7 +323,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     try:
-        ops = build_batch(request)
+        ops = build_batch(request, cwd=args.cwd)
     except CloseRefused as exc:
         print(f"close refused: {exc}", file=sys.stderr)
         return 2
