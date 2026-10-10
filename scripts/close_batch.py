@@ -2,18 +2,25 @@
 """Build the NDJSON `apply` batch that closes a work-item.
 
 Reads a close-request JSON describing the work-item's active acceptances,
-the judged result for each one, and the transition to apply; emits one
-`project:check-run` create per judged criterion (linked `informed_by` both
-its acceptance and the execution-report it came from, when there is one),
-an optional `project:finding`, and the work-item transition, in that
-order -- ready to feed straight into `adaptive-artifacts apply`.
+each criterion's evidence, and the transition to apply.
 
-The judgement itself (which result each criterion gets, and whether a
-deferred close is legitimate) is made by whatever builds the close-request
--- this script does not second-guess it. What it does enforce: closing to
-`done` while a criterion is unmet or was never checked requires a
-`finding` in the same request, or the batch is refused outright rather
-than silently written without one.
+For `method` `tdd` or `check`, the binary check-run must already exist
+(from `se-workflow check`). The request references that runner-produced
+`check_run_id` and copies its `result` for the refusal gate — this
+script does not invent pass/fail or emit a `project:check-run` create
+for those methods.
+
+For `method` `manual`, the request carries `result` / `revision` /
+`signed_by` and this script emits one `project:check-run` create per
+entry (linked `informed_by` both its acceptance and the
+execution-report when there is one).
+
+An optional `project:finding` and the work-item transition follow, in
+that order -- ready to feed straight into `adaptive-artifacts apply`.
+
+What it enforces: closing to `done` while a criterion is unmet or was
+never checked requires a `finding` in the same request, or the batch
+is refused outright rather than silently written without one.
 """
 
 from __future__ import annotations
@@ -23,6 +30,8 @@ import json
 import sys
 from typing import Any
 
+RUNNER_METHODS = frozenset({"tdd", "check"})
+
 
 class CloseRequestError(Exception):
     """Malformed close-request -- exit 1, distinct from a policy refusal."""
@@ -30,6 +39,10 @@ class CloseRequestError(Exception):
 
 class CloseRefused(Exception):
     """Policy refusal -- exit 2, distinct from a malformed request."""
+
+
+def _entry_passed(entry: dict[str, Any]) -> bool:
+    return entry.get("result") == "pass"
 
 
 def build_batch(request: dict[str, Any]) -> list[dict[str, Any]]:
@@ -52,9 +65,47 @@ def build_batch(request: dict[str, Any]) -> list[dict[str, Any]]:
             raise CloseRequestError(
                 f"criteria entry {criterion_id!r} is not in acceptance_ids {acceptance_ids}"
             )
+        method = entry.get("method")
+        if method is None:
+            raise CloseRequestError("criteria entry missing field: 'method'")
+        if method in RUNNER_METHODS:
+            if not entry.get("check_run_id"):
+                raise CloseRequestError(
+                    f"criteria entry {criterion_id!r} method={method!r} must "
+                    "reference a runner-produced check_run_id (from "
+                    "se-workflow check); do not invent pass/fail"
+                )
+            if "result" not in entry:
+                raise CloseRequestError(
+                    f"criteria entry {criterion_id!r} method={method!r} must "
+                    "copy result from the runner check-run"
+                )
+            # Invented create shape: revision/signed_by without going through
+            # the runner — refuse so agents cannot smuggle a hand-authored
+            # binary check-run through close.
+            if "revision" in entry or "signed_by" in entry:
+                raise CloseRequestError(
+                    f"criteria entry {criterion_id!r} method={method!r} must "
+                    "not carry revision/signed_by; reference check_run_id only"
+                )
+        elif method == "manual":
+            for field in ("result", "revision"):
+                if field not in entry:
+                    raise CloseRequestError(
+                        f"criteria entry missing field: '{field}'"
+                    )
+            if entry.get("check_run_id"):
+                raise CloseRequestError(
+                    f"criteria entry {criterion_id!r} method=manual must not "
+                    "carry check_run_id; create the manual check-run via the batch"
+                )
+        else:
+            raise CloseRequestError(
+                f"criteria entry {criterion_id!r} has unknown method {method!r}"
+            )
 
     passed_ids = {
-        entry["criterion_id"] for entry in criteria if entry.get("result") == "pass"
+        entry["criterion_id"] for entry in criteria if _entry_passed(entry)
     }
     unmet = [aid for aid in acceptance_ids if aid not in passed_ids]
 
@@ -68,17 +119,18 @@ def build_batch(request: dict[str, Any]) -> list[dict[str, Any]]:
 
     ops: list[dict[str, Any]] = []
     for entry in criteria:
-        try:
-            payload = {
-                "criterion_id": entry["criterion_id"],
-                "revision": entry["revision"],
-                "result": entry["result"],
-                "effort": effort,
-                "method": entry["method"],
-                "signed_by": entry.get("signed_by", ""),
-            }
-        except KeyError as exc:
-            raise CloseRequestError(f"criteria entry missing field: {exc}") from exc
+        method = entry["method"]
+        if method in RUNNER_METHODS:
+            # Runner already wrote the check-run; do not invent another.
+            continue
+        payload = {
+            "criterion_id": entry["criterion_id"],
+            "revision": entry["revision"],
+            "result": entry["result"],
+            "effort": effort,
+            "method": method,
+            "signed_by": entry.get("signed_by", ""),
+        }
         rels = [f"informed_by:{entry['criterion_id']}"]
         if execution_report_id:
             rels.append(f"informed_by:{execution_report_id}")

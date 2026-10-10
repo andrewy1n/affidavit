@@ -120,62 +120,79 @@ adaptive-artifacts update --type project:finding --id <finding-id> \
 
 ## Verify
 
-Verify asks what happened. Write check-runs here. Do not write
-`level` or `next` on them.
+Verify asks what happened. For `tdd`/`check`, the runner writes the
+check-run — do not `create` those by hand. For `manual`, create the
+check-run yourself. Assessments (what evidence means) stay in this
+skill. Do not write `level` or `next` on a check-run.
 
 3. Run the binary criterion when `method` is `tdd` / `check` / a
    `manual` pass/fail, or when `evaluate` has a binary gate:
 
-   - `tdd` — tests live in git. A first failing run is expected;
-     capture it as `result=fail`, then implement, then capture
-     `result=pass`. Do not record a `failed-attempt` for that first
-     red.
-   - `check` — run the stated `acceptance.verify_command`.
+   - `tdd` / `check` — invoke the plugin CLI. It runs
+     `acceptance.verify_command`, maps the process outcome to
+     `result`, and creates the `project:check-run` (with runner
+     fields, `revision`, and `informed_by` the acceptance). A first
+     failing TDD run is expected; do not record a `failed-attempt`
+     for that first red. Pass `--execution-report` when step 1 has
+     one for this dispatch. Pass `--cwd` when the code lives in a
+     phase worktree. Use `--allow-dirty` only for an explicit dirty
+     pass (fails may be dirty without it).
+
+```bash
+se-workflow check --acceptance <acceptance-record-id> \
+  --cwd <repo-or-worktree> \
+  --execution-report <execution-report-record-id>
+```
+
+     Resolve `se-workflow` from the plugin root (`bin/se-workflow`)
+     the same way [ensure-store.md](../ensure-store.md) resolves
+     `<plugin>`. Do **not** `adaptive-artifacts create --type
+     project:check-run` for `method` `tdd` or `check`. Read the
+     runner's JSON (or `list` the new check-run) and keep its `id`
+     and `result` for Assess and for `close`.
+
    - `manual` — user-visible check; do not mark pass without evidence
-     the user would accept, and plan to set `signed_by` (step 4) once
-     they do.
+     the user would accept, and plan to set `signed_by` once they do.
+     Create the check-run yourself (step 4).
 
    Skip `check-run` only when `evaluate` is inconclusive or purely
    comparative with no binary gate. A finding is then required; do
    **not** transition the work-item to `done` unless the user accepts
    that finding as done.
-4. When a binary result exists, `create --type project:check-run`
-   with the same `subject`. Add a second `--rel informed_by:` pointing
-   at the execution-report from step 1 when one exists for this
-   dispatch — omit it only when this task was verified without a
-   subagent:
+4. For `manual` only, when a binary result exists, `create --type
+   project:check-run` with the same `subject`. Add a second `--rel
+   informed_by:` pointing at the execution-report from step 1 when
+   one exists for this dispatch — omit it only when this task was
+   verified without a subagent:
 
 ```bash
 adaptive-artifacts create --type project:check-run \
   --subject "<task-slug>" \
-  --payload '{"criterion_id":"<acceptance-record-id>","revision":"<git sha or dirty>","result":"pass","effort":"<effort-slug>","method":"tdd","signed_by":""}' \
+  --payload '{"criterion_id":"<acceptance-record-id>","revision":"<git sha or dirty>","result":"pass","effort":"<effort-slug>","method":"manual","signed_by":""}' \
   --rel informed_by:<acceptance-record-id> \
   --rel informed_by:<execution-report-id>
 ```
 
-   Prefer `git rev-parse HEAD` after a commit. `dirty` is allowed for
-   a failing TDD red. Passing `check`/`tdd` should be a real revision
-   when possible. `signed_by` is the maintainer's name/handle once
-   they've reviewed a `manual` check-run's evidence; leave it `""`
-   only while still awaiting that review — a `method=manual` check-run
-   with `signed_by=""` surfaces under `handoff`'s Unsigned Manual
-   Check role and stays there until someone signs it. When the user
-   signs it, clear the unsigned gate at the event (kinds-and-focus,
-   Needs-you clears) — prefer `correct` on the existing check-run over
-   rewriting `signed_by` only in a new create:
+   Prefer `git rev-parse HEAD` after a commit. `signed_by` is the
+   maintainer's name/handle once they've reviewed a `manual`
+   check-run's evidence; leave it `""` only while still awaiting that
+   review — a `method=manual` check-run with `signed_by=""` surfaces
+   under `handoff`'s Unsigned Manual Check role and stays there until
+   someone signs it. When the user signs it, clear the unsigned gate
+   at the event (kinds-and-focus, Needs-you clears) — prefer `correct`
+   on the existing check-run over rewriting `signed_by` only in a new
+   create:
 
 ```bash
 adaptive-artifacts correct --type project:check-run --id <check-run-id> \
   --payload '{"signed_by":"<signer>"}'
 ```
 
-   `tdd`/`check` results don't need a signer; leave `signed_by` `""`
-   for those.
+   `tdd`/`check` results (from `se-workflow check`) don't need a
+   signer; their `signed_by` stays `""`.
 
-   That example is simple work: `result` is `pass` or `fail`, and the
-   payload has no `requirement` and no `evidence_kind`. `result` is
-   not a contract enum. Do not add one. On either path, `result` is
-   `pass`, `fail`, `blocked`, or `insufficient`.
+   On every path, `result` is `pass`, `fail`, `blocked`, or
+   `insufficient` (contract `payload_enum`).
 
    - `pass` — the criterion was met. Evidence for that requirement
      only. A pass on one requirement does not verify another, and a
@@ -187,16 +204,17 @@ adaptive-artifacts correct --type project:check-run --id <check-run-id> \
    - `blocked` — the check could not run.
    - `insufficient` — the criterion was not exercised.
 
-   When the acceptance has `requirement`, the check-run payload
-   includes that `requirement` and an `evidence_kind` from the contract
-   enum (`unit`, `integration`, `acceptance`, `static`, `types`,
-   `security`, `property`, `fuzz`, `review`, `runtime`, `other`). Still
-   no `level` and no `next`:
+   When the acceptance has `requirement`, the runner (or a `manual`
+   create) puts that `requirement` and an `evidence_kind` from the
+   contract enum (`unit`, `integration`, `acceptance`, `static`,
+   `types`, `security`, `property`, `fuzz`, `review`, `runtime`,
+   `other`) on the check-run. Still no `level` and no `next`. A
+   structured `manual` create looks like:
 
 ```bash
 adaptive-artifacts create --type project:check-run \
   --subject "<task-slug>" \
-  --payload '{"criterion_id":"<acceptance-record-id>","revision":"<git sha or dirty>","result":"fail","effort":"<effort-slug>","method":"check","signed_by":"","requirement":"<requirement-id>","evidence_kind":"unit"}' \
+  --payload '{"criterion_id":"<acceptance-record-id>","revision":"<git sha or dirty>","result":"fail","effort":"<effort-slug>","method":"manual","signed_by":"","requirement":"<requirement-id>","evidence_kind":"review"}' \
   --rel informed_by:<acceptance-record-id> \
   --rel informed_by:<execution-report-id>
 ```
@@ -516,19 +534,26 @@ adaptive-artifacts update --type project:work-item --id <id> \
 `close` is the simple-work batch for steps 3-5 (a phase with no
 specification, and incidental work). It skips assessment and release.
 A result other than `pass` is already unmet there; do not route
-`blocked` or `insufficient` through `close`. Structured work writes
-each check-run with `requirement` and `evidence_kind`, then Assess.
-`close` does not copy those fields. Use the simple-work batch once
-every active acceptance for this work-item has been judged (step 3)
-and any diagnose/eval records from step 2 are already written. It
-still leaves `in_progress` on a `fail` (step 6) or drives `withdrawn`
-(step 7) — `close` only
-covers the `done` path, including the deliberate "done anyway" path
-step 5 requires a `finding` for. It **enforces** that requirement
-instead of merely stating it: it refuses to build the batch at all —
-prints which criteria are unmet and writes nothing — when `transition`
-is `done`, a criterion is unmet or was never checked, and no `finding`
-was given. Do not hand-write the batch to route around a refusal.
+`blocked` or `insufficient` through `close`. Structured work gets
+check-runs from `se-workflow check` (or a `manual` create) with
+`requirement` and `evidence_kind`, then Assess. `close` does not copy
+those fields. Use the simple-work batch once every active acceptance
+for this work-item has a runner-produced check-run (`tdd`/`check`) or
+a judged `manual` result (step 3) and any diagnose/eval records from
+step 2 are already written. It still leaves `in_progress` on a `fail`
+(step 6) or drives `withdrawn` (step 7) — `close` only covers the
+`done` path, including the deliberate "done anyway" path step 5
+requires a `finding` for. It **enforces** that requirement instead of
+merely stating it: it refuses to build the batch at all — prints which
+criteria are unmet and writes nothing — when `transition` is `done`, a
+criterion is unmet or was never checked, and no `finding` was given.
+Do not hand-write the batch to route around a refusal.
+
+For `tdd`/`check`, `close_batch.py` does **not** invent pass/fail or
+create check-runs. It only references runner-produced `check_run_id`s
+(from `se-workflow check`) and copies each run's `result` for the
+refusal gate. `manual` criteria still carry `result` / `revision` /
+`signed_by` so the batch can create those check-runs.
 
 Script path: `<plugin>/scripts/close_batch.py` (resolve `<plugin>` per
 [ensure-store.md](../ensure-store.md)).
@@ -549,14 +574,15 @@ adaptive-artifacts list --type project:execution-report --subject "<task-slug>" 
 ```
 
    Take the last entry — `recorded_at` sorts oldest first.
-3. Judge each active acceptance exactly as step 3 above directs
-   (`tdd`/`check`/`manual`, `revision` from `git rev-parse HEAD` once
-   committed, `dirty` for a failing TDD red, `signed_by` for a
-   reviewed `manual` check). Write a close-request JSON: `criteria`
-   holds one entry per acceptance actually checked; `acceptance_ids`
-   lists **every** active acceptance from step 1, checked or not, so
-   the refusal check can see one that was skipped. Leave `finding`
-   `null` when every criterion passed:
+3. For each active acceptance, use step 3's check-runs. For
+   `tdd`/`check`, take the runner check-run's `id` and its `result`
+   (do not invent a result). For `manual`, use `revision` from `git
+   rev-parse HEAD` once committed and `signed_by` once reviewed.
+   Write a close-request JSON: `criteria` holds one entry per
+   acceptance actually checked; `acceptance_ids` lists **every**
+   active acceptance from step 1, checked or not, so the refusal
+   check can see one that was skipped. Leave `finding` `null` when
+   every criterion passed:
 
 ```bash
 cat > /tmp/close-request.json <<'EOF'
@@ -568,8 +594,8 @@ cat > /tmp/close-request.json <<'EOF'
   "execution_report_id": "<execution-report-record-id-or-null>",
   "acceptance_ids": ["<acceptance-id-1>", "<acceptance-id-2>"],
   "criteria": [
-    {"criterion_id": "<acceptance-id-1>", "result": "pass", "method": "tdd", "revision": "<git sha or dirty>", "signed_by": ""},
-    {"criterion_id": "<acceptance-id-2>", "result": "pass", "method": "check", "revision": "<git sha or dirty>", "signed_by": ""}
+    {"criterion_id": "<acceptance-id-1>", "method": "tdd", "check_run_id": "<runner-check-run-id>", "result": "pass"},
+    {"criterion_id": "<acceptance-id-2>", "method": "check", "check_run_id": "<runner-check-run-id-2>", "result": "pass"}
   ],
   "finding": null
 }
@@ -590,7 +616,7 @@ cat > /tmp/close-request.json <<'EOF'
   "execution_report_id": "<execution-report-record-id-or-null>",
   "acceptance_ids": ["<acceptance-id-1>"],
   "criteria": [
-    {"criterion_id": "<acceptance-id-1>", "result": "fail", "method": "check", "revision": "<git sha or dirty>", "signed_by": ""}
+    {"criterion_id": "<acceptance-id-1>", "method": "check", "check_run_id": "<runner-check-run-id>", "result": "fail"}
   ],
   "finding": {
     "claim": "<task-slug> closed done with an unmet or unverified criterion",
@@ -614,8 +640,10 @@ python3 "<plugin>/scripts/close_batch.py" --input /tmp/close-request.json --out 
    the `finding`, and do **not** run `apply`. Exit `1` means the
    close-request JSON was malformed — fix it and retry.
 5. Only after a `0` exit, apply the batch — one `project:check-run`
-   per criterion (each `informed_by` both its acceptance and the
-   execution-report), the `finding` if one was given, then the
+   create per `manual` criterion (each `informed_by` both its
+   acceptance and the execution-report); `tdd`/`check` check-runs are
+   already in the store from `se-workflow check` and are not
+   re-created. Then the `finding` if one was given, then the
    work-item transition, all in one process:
 
 ```bash
@@ -627,6 +655,11 @@ adaptive-artifacts apply /tmp/close-batch.ndjson
 ## Do not
 
 - Dual-write CI as records if CI already owns the result
+- `create --type project:check-run` for `method` `tdd` or `check` —
+  only `se-workflow check` (or an already runner-produced id) may
+  supply those binary results
+- Invent pass/fail in a close-request for `tdd`/`check` without a
+  runner `check_run_id` — `close_batch.py` must reference that id
 - Treat a checklist tick as pass without a `check-run` (binary) or
   a `finding` (comparative)
 - Transition a work-item to `done` on an unmet or unverified criterion
@@ -654,3 +687,4 @@ adaptive-artifacts apply /tmp/close-batch.ndjson
 - Edit the tree from a verification task when its check fails. The
   verification executor returns `fail`; leave the work-item
   `in_progress` and use assessment `next` `execute` for that failure
+- Route `manual` criteria through `se-workflow check`

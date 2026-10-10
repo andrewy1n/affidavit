@@ -5,6 +5,9 @@ The pure `build_batch` tests exercise the refusal policy directly; the
 `test_end_to_end_*` tests drive the real `adaptive-artifacts` CLI (via the
 shared `cli`/`resolved_contract` fixtures) to prove the emitted NDJSON is
 actually accepted by `apply` and lands the record shape the skill promises.
+
+For tdd/check, check-runs are runner-produced ahead of close; the batch
+must not invent them.
 """
 
 from __future__ import annotations
@@ -36,8 +39,30 @@ def _request(**overrides):
         "criteria": [
             {
                 "criterion_id": "rec-ac1",
-                "result": "pass",
                 "method": "tdd",
+                "check_run_id": "rec-runner-cr",
+                "result": "pass",
+            }
+        ],
+        "finding": None,
+    }
+    base.update(overrides)
+    return base
+
+
+def _manual_request(**overrides):
+    base = {
+        "subject": "task-1",
+        "effort": "effort-1",
+        "work_item_id": "rec-wi",
+        "transition": "done",
+        "execution_report_id": "rec-er",
+        "acceptance_ids": ["rec-ac1"],
+        "criteria": [
+            {
+                "criterion_id": "rec-ac1",
+                "method": "manual",
+                "result": "pass",
                 "revision": "abc123",
                 "signed_by": "",
             }
@@ -63,14 +88,9 @@ def _run_script(request: dict, tmp_path: Path) -> tuple[subprocess.CompletedProc
 # -- build_batch: pure policy tests -----------------------------------
 
 
-def test_all_pass_batch_is_one_check_run_then_the_transition():
+def test_all_pass_runner_batch_is_only_the_transition():
     ops = close_batch.build_batch(_request())
-    assert [op["op"] for op in ops] == ["create", "update"]
-    check_run = ops[0]
-    assert check_run["type"] == "project:check-run"
-    assert check_run["subject"] == "task-1"
-    assert check_run["payload"]["result"] == "pass"
-    assert check_run["rel"] == ["informed_by:rec-ac1", "informed_by:rec-er"]
+    assert [op["op"] for op in ops] == ["update"]
     assert ops[-1] == {
         "op": "update",
         "type": "project:work-item",
@@ -80,15 +100,25 @@ def test_all_pass_batch_is_one_check_run_then_the_transition():
     }
 
 
+def test_manual_pass_batch_is_one_check_run_then_the_transition():
+    ops = close_batch.build_batch(_manual_request())
+    assert [op["op"] for op in ops] == ["create", "update"]
+    check_run = ops[0]
+    assert check_run["type"] == "project:check-run"
+    assert check_run["subject"] == "task-1"
+    assert check_run["payload"]["result"] == "pass"
+    assert check_run["payload"]["method"] == "manual"
+    assert check_run["rel"] == ["informed_by:rec-ac1", "informed_by:rec-er"]
+
+
 def test_refuses_done_with_failing_criterion_and_no_finding():
     request = _request(
         criteria=[
             {
                 "criterion_id": "rec-ac1",
-                "result": "fail",
                 "method": "check",
-                "revision": "abc123",
-                "signed_by": "",
+                "check_run_id": "rec-runner-cr",
+                "result": "fail",
             }
         ]
     )
@@ -102,10 +132,9 @@ def test_refuses_done_with_a_criterion_never_checked_at_all():
         criteria=[
             {
                 "criterion_id": "rec-ac1",
-                "result": "pass",
                 "method": "tdd",
-                "revision": "abc123",
-                "signed_by": "",
+                "check_run_id": "rec-runner-cr",
+                "result": "pass",
             }
         ],
     )
@@ -119,10 +148,9 @@ def test_withdrawn_does_not_require_a_finding_for_a_failing_criterion():
         criteria=[
             {
                 "criterion_id": "rec-ac1",
-                "result": "fail",
                 "method": "check",
-                "revision": "abc123",
-                "signed_by": "",
+                "check_run_id": "rec-runner-cr",
+                "result": "fail",
             }
         ],
     )
@@ -135,10 +163,9 @@ def test_finding_permits_the_close_and_needs_is_forced_to_human():
         criteria=[
             {
                 "criterion_id": "rec-ac1",
-                "result": "fail",
                 "method": "check",
-                "revision": "abc123",
-                "signed_by": "",
+                "check_run_id": "rec-runner-cr",
+                "result": "fail",
             }
         ],
         finding={
@@ -153,10 +180,11 @@ def test_finding_permits_the_close_and_needs_is_forced_to_human():
     finding_op = next(op for op in ops if op["type"] == "project:finding")
     assert finding_op["payload"]["needs"] == "human"
     assert ops[-1]["op"] == "update" and ops[-1]["transition"] == "done"
+    assert not any(op.get("type") == "project:check-run" for op in ops)
 
 
-def test_no_execution_report_omits_the_second_informed_by():
-    ops = close_batch.build_batch(_request(execution_report_id=None))
+def test_no_execution_report_omits_the_second_informed_by_on_manual():
+    ops = close_batch.build_batch(_manual_request(execution_report_id=None))
     assert ops[0]["rel"] == ["informed_by:rec-ac1"]
 
 
@@ -165,10 +193,9 @@ def test_criteria_entry_outside_acceptance_ids_is_malformed():
         criteria=[
             {
                 "criterion_id": "rec-not-active",
-                "result": "pass",
                 "method": "tdd",
-                "revision": "abc",
-                "signed_by": "",
+                "check_run_id": "rec-runner-cr",
+                "result": "pass",
             }
         ]
     )
@@ -183,6 +210,22 @@ def test_missing_top_level_field_is_malformed_not_refused():
         close_batch.build_batch(request)
 
 
+def test_invented_tdd_with_revision_is_malformed():
+    request = _request(
+        criteria=[
+            {
+                "criterion_id": "rec-ac1",
+                "method": "tdd",
+                "check_run_id": "rec-runner-cr",
+                "result": "pass",
+                "revision": "abc123",
+            }
+        ]
+    )
+    with pytest.raises(close_batch.CloseRequestError, match="revision"):
+        close_batch.build_batch(request)
+
+
 # -- CLI wrapper: exit codes and output-file behavior ------------------
 
 
@@ -191,10 +234,9 @@ def test_cli_refusal_exits_2_prints_why_and_writes_no_file(tmp_path):
         criteria=[
             {
                 "criterion_id": "rec-ac1",
-                "result": "fail",
                 "method": "check",
-                "revision": "abc123",
-                "signed_by": "",
+                "check_run_id": "rec-runner-cr",
+                "result": "fail",
             }
         ]
     )
@@ -208,9 +250,9 @@ def test_cli_success_exits_0_and_writes_ndjson(tmp_path):
     result, out_path = _run_script(_request(), tmp_path)
     assert result.returncode == 0, result.stderr
     lines = out_path.read_text().splitlines()
-    assert len(lines) == 2
+    assert len(lines) == 1
     ops = [json.loads(line) for line in lines]
-    assert [op["op"] for op in ops] == ["create", "update"]
+    assert [op["op"] for op in ops] == ["update"]
 
 
 def test_cli_malformed_json_exits_1(tmp_path):
@@ -229,7 +271,7 @@ def test_cli_malformed_json_exits_1(tmp_path):
 # -- end to end against the real CLI -----------------------------------
 
 
-def _build_work_item_family(cli, defs, subject: str, effort: str):
+def _build_work_item_family(cli, defs, subject: str, effort: str, *, method: str = "tdd"):
     phase = h.create_generic_record(cli, defs, "project:phase", extra_payload={"effort": effort})
     work_item = h.create_generic_record(
         cli,
@@ -246,7 +288,7 @@ def _build_work_item_family(cli, defs, subject: str, effort: str):
         defs,
         "project:acceptance",
         subject=subject,
-        extra_payload={"effort": effort, "phase": phase["subject"], "method": "tdd"},
+        extra_payload={"effort": effort, "phase": phase["subject"], "method": method},
     )
     assignment = h.create_generic_record(
         cli,
@@ -271,11 +313,43 @@ def _build_work_item_family(cli, defs, subject: str, effort: str):
     return work_item, acceptance, execution_report
 
 
+def _seed_runner_check_run(cli, defs, subject, acceptance, execution_report, *, result="pass"):
+    payload = {
+        "criterion_id": acceptance["id"],
+        "revision": "deadbeef",
+        "result": result,
+        "effort": acceptance["payload"]["effort"],
+        "method": acceptance["payload"]["method"],
+        "signed_by": "",
+        "runner": "se-workflow",
+    }
+    args = [
+        "create",
+        "--type",
+        "project:check-run",
+        "--subject",
+        subject,
+        "--payload",
+        json.dumps(payload),
+        "--rel",
+        f"informed_by:{acceptance['id']}",
+        "--rel",
+        f"informed_by:{execution_report['id']}",
+    ]
+    body = h.generic_body(defs["project:check-run"])
+    if body:
+        args.extend(["--body", body])
+    created = cli(*args)
+    assert created.returncode == 0, created.stdout + created.stderr
+    return json.loads(created.stdout)["record"]
+
+
 def test_end_to_end_all_pass_closes_the_work_item_to_done(cli, resolved_contract, tmp_path):
     defs = h.record_defs_by_id(resolved_contract)
     subject = "demo-close-task"
     effort = "demo-effort"
     work_item, acceptance, execution_report = _build_work_item_family(cli, defs, subject, effort)
+    runner_cr = _seed_runner_check_run(cli, defs, subject, acceptance, execution_report)
 
     request = {
         "subject": subject,
@@ -287,10 +361,9 @@ def test_end_to_end_all_pass_closes_the_work_item_to_done(cli, resolved_contract
         "criteria": [
             {
                 "criterion_id": acceptance["id"],
-                "result": "pass",
                 "method": "tdd",
-                "revision": "deadbeef",
-                "signed_by": "",
+                "check_run_id": runner_cr["id"],
+                "result": "pass",
             }
         ],
         "finding": None,
@@ -302,7 +375,7 @@ def test_end_to_end_all_pass_closes_the_work_item_to_done(cli, resolved_contract
     assert apply_result.returncode == 0, apply_result.stdout + apply_result.stderr
     applied = json.loads(apply_result.stdout)
     assert applied["ok"] is True
-    assert applied["applied"] == 2
+    assert applied["applied"] == 1
     assert applied["failed"] == 0
 
     final_work_item = json.loads(cli("get", "--type", "project:work-item", "--id", work_item["id"]).stdout)
@@ -313,17 +386,21 @@ def test_end_to_end_all_pass_closes_the_work_item_to_done(cli, resolved_contract
     )["records"]
     assert len(check_runs) == 1
     check_run = check_runs[0]
+    assert check_run["id"] == runner_cr["id"]
     assert check_run["payload"]["result"] == "pass"
-    assert sorted(check_run["relationships"]["informed_by"]) == sorted(
-        [acceptance["id"], execution_report["id"]]
-    )
+    assert check_run["payload"].get("runner") == "se-workflow"
 
 
 def test_end_to_end_refusal_leaves_the_work_item_in_progress(cli, resolved_contract, tmp_path):
     defs = h.record_defs_by_id(resolved_contract)
     subject = "demo-refuse-task"
     effort = "demo-effort"
-    work_item, acceptance, execution_report = _build_work_item_family(cli, defs, subject, effort)
+    work_item, acceptance, execution_report = _build_work_item_family(
+        cli, defs, subject, effort, method="check"
+    )
+    runner_cr = _seed_runner_check_run(
+        cli, defs, subject, acceptance, execution_report, result="fail"
+    )
 
     request = {
         "subject": subject,
@@ -335,10 +412,9 @@ def test_end_to_end_refusal_leaves_the_work_item_in_progress(cli, resolved_contr
         "criteria": [
             {
                 "criterion_id": acceptance["id"],
-                "result": "fail",
                 "method": "check",
-                "revision": "deadbeef",
-                "signed_by": "",
+                "check_run_id": runner_cr["id"],
+                "result": "fail",
             }
         ],
         "finding": None,
@@ -347,15 +423,8 @@ def test_end_to_end_refusal_leaves_the_work_item_in_progress(cli, resolved_contr
     assert result.returncode == 2
     assert not out_path.exists()
 
-    # Nothing to apply -- following the skill's instructions, `apply` is
-    # never invoked, so the work-item must still be sitting in_progress.
     final_work_item = json.loads(cli("get", "--type", "project:work-item", "--id", work_item["id"]).stdout)
     assert final_work_item["lifecycle_state"] == "in_progress"
-
-    check_runs = json.loads(
-        cli("list", "--type", "project:check-run", "--subject", subject, "--full").stdout
-    )["records"]
-    assert check_runs == []
 
 
 def test_end_to_end_failing_criterion_with_finding_closes_and_surfaces_needs_human(
@@ -364,7 +433,12 @@ def test_end_to_end_failing_criterion_with_finding_closes_and_surfaces_needs_hum
     defs = h.record_defs_by_id(resolved_contract)
     subject = "demo-deferred-task"
     effort = "demo-effort"
-    work_item, acceptance, execution_report = _build_work_item_family(cli, defs, subject, effort)
+    work_item, acceptance, execution_report = _build_work_item_family(
+        cli, defs, subject, effort, method="check"
+    )
+    runner_cr = _seed_runner_check_run(
+        cli, defs, subject, acceptance, execution_report, result="fail"
+    )
 
     request = {
         "subject": subject,
@@ -376,10 +450,9 @@ def test_end_to_end_failing_criterion_with_finding_closes_and_surfaces_needs_hum
         "criteria": [
             {
                 "criterion_id": acceptance["id"],
-                "result": "fail",
                 "method": "check",
-                "revision": "deadbeef",
-                "signed_by": "",
+                "check_run_id": runner_cr["id"],
+                "result": "fail",
             }
         ],
         "finding": {
@@ -395,7 +468,7 @@ def test_end_to_end_failing_criterion_with_finding_closes_and_surfaces_needs_hum
     apply_result = cli("apply", str(out_path))
     assert apply_result.returncode == 0, apply_result.stdout + apply_result.stderr
     applied = json.loads(apply_result.stdout)
-    assert applied["applied"] == 3
+    assert applied["applied"] == 2
 
     final_work_item = json.loads(cli("get", "--type", "project:work-item", "--id", work_item["id"]).stdout)
     assert final_work_item["lifecycle_state"] == "done"
