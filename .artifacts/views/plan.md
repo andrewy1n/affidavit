@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:98df1f2206ed19d3c4613a9ec79ce212fc7c911d71974408f18c1bdd2b10d930
+> Store state: sha256:e054393c1ffb6b966d1d844733d87530415a214931a59af914d90cebd3a78998
 
 ## dashboard-view
 
@@ -267,16 +267,6 @@ print("phase checks only")
 - **verify-needs-you-phase**: The tmux popup test for Needs you and finished efforts passes, README documents n and the Needs-you detail, and the full suite passes; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m 'not tmux' && uv run --with textual --with pytest python -m pytest tests -q -m tmux _(id: [rec-d5958a14-e6a7-4c20-b110-5ae0c0ee54a3](.artifacts/records/project__acceptance/rec-d5958a14-e6a7-4c20-b110-5ae0c0ee54a3.md))_
 
 ## check-runner
-
-### Phase
-- **check-runner**: Check runner: machine-produced check-runs; 13; workflow-loop _(id: [rec-85f75fda-1a30-4145-9cf0-2d4e1ed0ecd1](.artifacts/records/project__phase/rec-85f75fda-1a30-4145-9cf0-2d4e1ed0ecd1.md))_
-
-### Work
-- **check-run-contract**: Contract enums and runner fields for check-runs; check-runner; deliver; workflow-loop _(id: [rec-8532278d-9e44-4c33-8f06-12f4c5c1abdd](.artifacts/records/project__work-item/rec-8532278d-9e44-4c33-8f06-12f4c5c1abdd.md))_
-- **se-workflow-check**: se-workflow CLI check subcommand; check-runner; deliver; workflow-loop _(id: [rec-cee9a85f-4a46-475f-9343-b77df3affcd4](.artifacts/records/project__work-item/rec-cee9a85f-4a46-475f-9343-b77df3affcd4.md))_
-- **task-commit**: execute-phase requires per-task commit; check-runner; deliver; workflow-loop _(id: [rec-8a171076-7b60-47f4-bbec-a2727b51b1a5](.artifacts/records/project__work-item/rec-8a171076-7b60-47f4-bbec-a2727b51b1a5.md))_
-- **verify-authority**: verify-work and close_batch use CLI check-runs; check-runner; deliver; workflow-loop _(id: [rec-04b9c734-de57-4e79-9c09-fce97c8a40dc](.artifacts/records/project__work-item/rec-04b9c734-de57-4e79-9c09-fce97c8a40dc.md))_
-- **verify-check-runner**: Verify check-runner phase; check-runner; deliver; workflow-loop _(id: [rec-92af95c9-a870-4647-87a7-b2e9f87c483b](.artifacts/records/project__work-item/rec-92af95c9-a870-4647-87a7-b2e9f87c483b.md))_
 
 ### Acceptance
 - **check-run-contract**: Bundled contract declares enums for check-run.result and check-run/acceptance method, lists the optional runner fields, and contract self-consistency plus the flipped evidence-loop/assess-routing tests pass; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py tests/test_evidence_loop.py tests/test_assess_routing.py -q -k 'enum or result or method or contract' _(id: [rec-88363d0c-d058-4a0d-8c04-4a697bbe457d](.artifacts/records/project__acceptance/rec-88363d0c-d058-4a0d-8c04-4a697bbe457d.md))_

@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:46bda8e4de2bdf24c8f18e1f5c956cfd4897683fc816106ede8c5e9848169dc4
+> Store state: sha256:33d935e4a00928f9011ef038d6b29308a480e1ee7b67798a57ca203d2340e0c4
 
 ## dashboard
 
@@ -30,11 +30,7 @@
 - **workflow-loop**: The se-workflow loop maps efforts to product areas, closes finished efforts, runs phases in parallel, and settles the approach with the user before planning; effort; deliver _(id: [rec-65213e61-dda6-4955-95bc-8c9c4b289af1](.artifacts/records/project__active-goal/rec-65213e61-dda6-4955-95bc-8c9c4b289af1.md))_
 
 ### Position
-- **check-runner**: check-runner planned; awaiting plan review; phase _(id: [rec-4b7fe3dd-2c2b-43e4-a11c-9149e0c7b804](.artifacts/records/project__current-position/rec-4b7fe3dd-2c2b-43e4-a11c-9149e0c7b804.md))_
-- **workflow-loop**: check-runner approach settled; next plan-phase; effort _(id: [rec-7baad024-9a3b-49f5-8902-7a2787a4ca11](.artifacts/records/project__current-position/rec-7baad024-9a3b-49f5-8902-7a2787a4ca11.md))_
-
-### Blocking Question
-- **workflow-loop**: True; plan-review:check-runner _(id: [rec-675b03c3-7c38-4909-bd47-65cc14928029](.artifacts/records/project__continuity-question/rec-675b03c3-7c38-4909-bd47-65cc14928029.md))_
+- **workflow-loop**: check-runner done; no further phase planned; effort _(id: [rec-6406f457-1826-4cef-8831-f8fd0d586ab9](.artifacts/records/project__current-position/rec-6406f457-1826-4cef-8831-f8fd0d586ab9.md))_
 
 ### Backlog
 - **gh-10-phase-reviewer**: workflow-loop; open _(id: [rec-1dcea0d3-ab9e-4525-94e9-d12c427a75fe](.artifacts/records/project__backlog-item/rec-1dcea0d3-ab9e-4525-94e9-d12c427a75fe.md))_
