@@ -230,6 +230,20 @@ adaptive-artifacts create --type project:assignment \
    been given. Follow `## Approach`. Fill the evidence block below
    in this session.
 
+   When `## Landing` is present, after each task's code lands and
+   before verify for that task, the executor commits on the phase
+   branch from the worktree. That commit excludes `.artifacts`. A
+   commit per task so a passing check-run can carry a real SHA.
+   Put the resulting SHA in the evidence `revision`. Skip the
+   per-task commit when there is nothing to commit, when `## Landing`
+   is absent, or when the task is the verification task (it does not
+   edit the tree).
+
+```bash
+git -C <repo-parent>/<repo-name>--<phase-slug> add -A -- . ':!.artifacts'
+git -C <repo-parent>/<repo-name>--<phase-slug> commit -m "<task-slug>"
+```
+
    Evidence block (what a subagent returns, or what this session
    records after an inline task):
 
@@ -268,7 +282,9 @@ adaptive-artifacts create --type project:assignment-amendment \
 ```
 
 7. When a subagent returns, or when this session finishes an
-   `inline` task, record the evidence block before judging it. That
+   `inline` task, the per-task commit on the phase branch (step 5,
+   when Landing is present) must already have landed before
+   `verify-work`. Record the evidence block before judging it. That
    block is the record, not raw material for this session to
    hand-pick fragments from:
 
@@ -473,6 +489,8 @@ adaptive-artifacts supersede --type project:current-position --id <position-id> 
 - Let code writes leave the worktree when `## Landing` is present
 - Write `.artifacts` anywhere but the primary checkout, or include
   `.artifacts` in the phase branch commit
+- Skip the commit per task on the phase branch when `## Landing` is
+  present and the task changed code — verify needs a real SHA
 - Push unless Landing names push as a human stop
 - Let the verification executor edit the tree. The verification
   executor returns `fail` and does not edit the tree.
