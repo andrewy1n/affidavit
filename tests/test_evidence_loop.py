@@ -156,10 +156,57 @@ def _scaffold(cli, defs, phase: str, task: str, *, requirements: str | None = "R
     return work_item, acceptance
 
 
+def test_check_run_result_and_method_are_contract_enums(cli, resolved_contract):
+    defs = h.record_defs_by_id(resolved_contract)
+    check_def = defs["project:check-run"]
+    assert check_def["payload_enum"]["result"] == [
+        "pass", "fail", "blocked", "insufficient",
+    ]
+    assert check_def["payload_enum"]["method"] == ["tdd", "check", "manual"]
+    assert defs["project:acceptance"]["payload_enum"]["method"] == [
+        "tdd", "check", "manual",
+    ]
+    for field in (
+        "exit_code", "duration_s", "output_sha256", "runner", "diff_sha256",
+    ):
+        assert field in check_def["payload"]
+        assert field in check_def["optional_payload"]
+
+    phase = "enum-phase"
+    _phase(cli, defs, phase)
+    acceptance = _acceptance(cli, defs, "enum-task", phase)
+    bad_result = cli(
+        "create", "--type", "project:check-run", "--subject", "bad-result",
+        "--payload", json.dumps({
+            "criterion_id": acceptance["id"],
+            "revision": "dirty",
+            "result": "tdd",
+            "effort": EFFORT,
+            "method": "check",
+            "signed_by": "",
+        }),
+        "--rel", f"informed_by:{acceptance['id']}",
+    )
+    assert bad_result.returncode != 0
+    bad_method = cli(
+        "create", "--type", "project:check-run", "--subject", "bad-method",
+        "--payload", json.dumps({
+            "criterion_id": acceptance["id"],
+            "revision": "dirty",
+            "result": "pass",
+            "effort": EFFORT,
+            "method": "pytest",
+            "signed_by": "",
+        }),
+        "--rel", f"informed_by:{acceptance['id']}",
+    )
+    assert bad_method.returncode != 0
+
+
 def test_happy_path_reaches_release_ready(cli, resolved_contract):
     defs = h.record_defs_by_id(resolved_contract)
     check_def = defs["project:check-run"]
-    assert "result" not in check_def.get("payload_enum", {})
+    assert "result" in check_def.get("payload_enum", {})
     assert "unit" in check_def["payload_enum"]["evidence_kind"]
     release_states = defs["project:release"]["payload_enum"]["state"]
     assert "ready" in release_states and "deployed" in release_states

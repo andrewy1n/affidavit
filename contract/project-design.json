@@ -149,6 +149,13 @@
       ],
       "payload_references": {
         "phase": "project:phase"
+      },
+      "payload_enum": {
+        "method": [
+          "tdd",
+          "check",
+          "manual"
+        ]
       }
     },
     {
@@ -182,13 +189,34 @@
         "method",
         "signed_by",
         "requirement",
-        "evidence_kind"
+        "evidence_kind",
+        "exit_code",
+        "duration_s",
+        "output_sha256",
+        "runner",
+        "diff_sha256"
       ],
       "optional_payload": [
         "requirement",
-        "evidence_kind"
+        "evidence_kind",
+        "exit_code",
+        "duration_s",
+        "output_sha256",
+        "runner",
+        "diff_sha256"
       ],
       "payload_enum": {
+        "result": [
+          "pass",
+          "fail",
+          "blocked",
+          "insufficient"
+        ],
+        "method": [
+          "tdd",
+          "check",
+          "manual"
+        ],
         "evidence_kind": [
           "unit",
           "integration",

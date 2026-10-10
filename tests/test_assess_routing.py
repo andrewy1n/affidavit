@@ -59,7 +59,6 @@ def test_verify_and_assess_are_separate_steps():
     assert "Verify asks what happened." in flat
     assert "Assess asks what that evidence means" in flat
     assert "A check-run has no `level` and no `next`." in flat
-    assert "`result` is not a contract enum." in flat
     for result in ("pass", "fail", "blocked", "insufficient"):
         assert f"`{result}`" in flat
     assert "`insufficient` — the criterion was not exercised." in flat
@@ -237,11 +236,21 @@ def test_documented_invocations_are_contract_legal(contract_indexes, skill_name)
 def test_assessment_and_check_run_enums_match_the_contract(contract_indexes):
     defs, _ = contract_indexes
     assessment_enum = defs["project:assessment"]["payload_enum"]
-    evidence_kinds = set(defs["project:check-run"]["payload_enum"]["evidence_kind"])
+    check_enum = defs["project:check-run"]["payload_enum"]
+    assert check_enum["result"] == ["pass", "fail", "blocked", "insufficient"]
+    assert check_enum["method"] == ["tdd", "check", "manual"]
+    assert defs["project:acceptance"]["payload_enum"]["method"] == [
+        "tdd", "check", "manual",
+    ]
+    evidence_kinds = set(check_enum["evidence_kind"])
+    results = set(check_enum["result"])
+    methods = set(check_enum["method"])
     for inv in _writes("verify-work", "project:check-run", {"create"}):
         kind = inv["payload"].get("evidence_kind")
         if kind is not None:
             assert kind in evidence_kinds
+        assert inv["payload"]["result"] in results
+        assert inv["payload"]["method"] in methods
     for inv in _writes("verify-work", "project:assessment"):
         payload = inv["payload"]
         assert payload["status"] in assessment_enum["status"]
