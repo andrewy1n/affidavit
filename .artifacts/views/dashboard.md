@@ -1,7 +1,7 @@
 # Project Dashboard
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:7e67e75371284b25fd8f9e65249c26cd3ec20c4d168c1b38777f1bd590d47aeb
+> Store state: sha256:a7ee27cf139b25d372aaaee15d052d444e223a8aa6e9003021dfed06984bee7b
 
 ## dashboard
 
@@ -10,11 +10,6 @@
 
 ### Done Recent
 - **drop-row-waits-on**: title: Drop waits-on note from task row; phase: waits-on-compact _(id: [rec-39018206-0ce9-45fa-83c3-4827ab517305](.artifacts/records/project__work-item/rec-39018206-0ce9-45fa-83c3-4827ab517305.md))_
-- **gates-landing**: title: Read-only phase Landing git state; phase: human-gates _(id: [rec-7670ae47-9b16-4a83-bba8-adc230411a8d](.artifacts/records/project__work-item/rec-7670ae47-9b16-4a83-bba8-adc230411a8d.md))_
-- **gates-model**: title: Wire landing merge, last_record_at, and quiet into the model; phase: human-gates _(id: [rec-ac8585d0-b933-4316-9117-d0a07db48860](.artifacts/records/project__work-item/rec-ac8585d0-b933-4316-9117-d0a07db48860.md))_
-- **gates-status**: title: tmux status-right needs-you count segment; phase: human-gates _(id: [rec-1749a417-d901-4efd-89eb-bd7bab403426](.artifacts/records/project__work-item/rec-1749a417-d901-4efd-89eb-bd7bab403426.md))_
-- **gates-ui**: title: Next-step line, copy prompt, and new-item alerts; phase: human-gates _(id: [rec-6230a7c9-c054-4825-8f76-92e8f21bdcd5](.artifacts/records/project__work-item/rec-6230a7c9-c054-4825-8f76-92e8f21bdcd5.md))_
-- **gates-vocab**: title: Gate vocabulary: labels, prompts, next step, quiet; phase: human-gates _(id: [rec-72a1fc93-f49b-4f59-bc6a-e45cd50e7d03](.artifacts/records/project__work-item/rec-72a1fc93-f49b-4f59-bc6a-e45cd50e7d03.md))_
 - **journal-agent**: title: Agent work section on task detail; phase: journal-view _(id: [rec-27ad566b-6186-43df-b8f3-863be5f3fa69](.artifacts/records/project__work-item/rec-27ad566b-6186-43df-b8f3-863be5f3fa69.md))_
 - **journal-model**: title: Journal load, scope, open-first order, kind panel data; phase: journal-view _(id: [rec-939f8e3b-dfc5-4bca-9e73-46a534b15bcc](.artifacts/records/project__work-item/rec-939f8e3b-dfc5-4bca-9e73-46a534b15bcc.md))_
 - **journal-panel**: title: Kind-based Journal panel above task table; phase: journal-view _(id: [rec-0d3ae892-5026-4771-8967-ef3624ec5035](.artifacts/records/project__work-item/rec-0d3ae892-5026-4771-8967-ef3624ec5035.md))_
@@ -44,6 +39,21 @@
 
 ### Goal
 - **workflow-loop**: goal: The se-workflow loop maps efforts to product areas, closes finished efforts, runs phases in parallel, and settles the approach with the user before planning; scope: effort; kind: deliver _(id: [rec-65213e61-dda6-4955-95bc-8c9c4b289af1](.artifacts/records/project__active-goal/rec-65213e61-dda6-4955-95bc-8c9c4b289af1.md))_
+
+### Phase
+- **check-runner**: title: Check runner: machine-produced check-runs; ordinal: 13 _(id: [rec-85f75fda-1a30-4145-9cf0-2d4e1ed0ecd1](.artifacts/records/project__phase/rec-85f75fda-1a30-4145-9cf0-2d4e1ed0ecd1.md))_
+
+### Blocking Question
+- **workflow-loop**: blocking: True; scope: plan-review:check-runner _(id: [rec-675b03c3-7c38-4909-bd47-65cc14928029](.artifacts/records/project__continuity-question/rec-675b03c3-7c38-4909-bd47-65cc14928029.md))_
+
+### Ready
+- **check-run-contract**: title: Contract enums and runner fields for check-runs; phase: check-runner _(id: [rec-8532278d-9e44-4c33-8f06-12f4c5c1abdd](.artifacts/records/project__work-item/rec-8532278d-9e44-4c33-8f06-12f4c5c1abdd.md))_
+- **task-commit**: title: execute-phase requires per-task commit; phase: check-runner _(id: [rec-8a171076-7b60-47f4-bbec-a2727b51b1a5](.artifacts/records/project__work-item/rec-8a171076-7b60-47f4-bbec-a2727b51b1a5.md))_
+
+### Waiting
+- **se-workflow-check**: title: se-workflow CLI check subcommand; phase: check-runner _(id: [rec-cee9a85f-4a46-475f-9343-b77df3affcd4](.artifacts/records/project__work-item/rec-cee9a85f-4a46-475f-9343-b77df3affcd4.md))_
+- **verify-authority**: title: verify-work and close_batch use CLI check-runs; phase: check-runner _(id: [rec-04b9c734-de57-4e79-9c09-fce97c8a40dc](.artifacts/records/project__work-item/rec-04b9c734-de57-4e79-9c09-fce97c8a40dc.md))_
+- **verify-check-runner**: title: Verify check-runner phase; phase: check-runner _(id: [rec-92af95c9-a870-4647-87a7-b2e9f87c483b](.artifacts/records/project__work-item/rec-92af95c9-a870-4647-87a7-b2e9f87c483b.md))_
 
 ### Done Recent
 - **backlog-lifecycle**: title: CLI create list promote dismiss for backlog-item; phase: backlog-capture _(id: [rec-1972a42d-4f9a-4628-971c-e98e8542931f](.artifacts/records/project__work-item/rec-1972a42d-4f9a-4628-971c-e98e8542931f.md))_

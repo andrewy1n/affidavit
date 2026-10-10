@@ -7,7 +7,7 @@
     "resolved_contract_format": "0.3.0",
     "traits_version": "0.4.0",
     "backends_version": "0.4.0",
-    "design_digest": "sha256:a2bc0b826f2b5eb935bf3b22a43ea49029dbe8c1293a669022d847def36c7c7d",
+    "design_digest": "sha256:6ed36ea363570063d024dba09ac8c9255bb69ff506052d03036a7febb6a89217",
     "source_lock": {
       "catalog_version": "0.7.0",
       "catalog": "sha256:d7f0f1d05f8c67f638c0ff1b4ad738161f43c1ec970729709f8f2afc1d8c1eb1",
@@ -424,6 +424,13 @@
       "optional_payload": [
         "requirement"
       ],
+      "payload_enum": {
+        "method": [
+          "tdd",
+          "check",
+          "manual"
+        ]
+      },
       "pattern": "definition",
       "purpose": "What done means for this change",
       "canonical_for": "what done means for this change"
@@ -513,7 +520,12 @@
         "method",
         "signed_by",
         "requirement",
-        "evidence_kind"
+        "evidence_kind",
+        "exit_code",
+        "duration_s",
+        "output_sha256",
+        "runner",
+        "diff_sha256"
       ],
       "lifecycle": {
         "initial": "recorded",
@@ -539,9 +551,25 @@
       ],
       "optional_payload": [
         "requirement",
-        "evidence_kind"
+        "evidence_kind",
+        "exit_code",
+        "duration_s",
+        "output_sha256",
+        "runner",
+        "diff_sha256"
       ],
       "payload_enum": {
+        "result": [
+          "pass",
+          "fail",
+          "blocked",
+          "insufficient"
+        ],
+        "method": [
+          "tdd",
+          "check",
+          "manual"
+        ],
         "evidence_kind": [
           "unit",
           "integration",
