@@ -21,13 +21,18 @@ a criterion was tested and any diagnose/eval conclusion.
 `in_progress -> done` or `withdrawn` — not a payload flag; there is no
 `live` field.
 
-Red-first (fail before you fix) is an **instruction-level** convention
-followed by this skill and by subagents — the engine does not enforce
-it. Nothing in the contract checks that a `check-run result=fail`
-record exists before a `result=pass` one for the same criterion. Do
-not claim otherwise to a user; if that ordering matters, it holds
-because this skill's steps are followed in order, not because a
-validator would catch skipping it.
+Red-first (fail before you fix) for `method` `tdd` on a `done` close
+is **enforced** by `close_batch.py`. A pass-only `tdd` close-request
+without request-carried red evidence is refused (exit 2), the same
+way unmet criteria without a finding are refused. The gate is
+request-carried: the close-request must name a runner-produced fail
+via `red_check_run_id` and copy that fail's fields; the script does
+not query the store for prior check-runs. Ordering is git ancestry —
+the green revision must equal or be a descendant of the red revision
+— or the red may be `dirty` with a non-empty `red_diff_sha256`.
+Closing a `tdd` pass without red requires the same finding escape as
+closing on an unmet criterion. `check` and `manual` do not require
+red evidence.
 
 Verify and assess are two steps. Verify asks what happened. Assess
 asks what that evidence means and what happens next. A check-run has
@@ -547,13 +552,17 @@ requires a `finding` for. It **enforces** that requirement instead of
 merely stating it: it refuses to build the batch at all — prints which
 criteria are unmet and writes nothing — when `transition` is `done`, a
 criterion is unmet or was never checked, and no `finding` was given.
-Do not hand-write the batch to route around a refusal.
+It also refuses a pass-only `tdd` `done` close that lacks valid
+request-carried red evidence (and has no `finding`). Do not
+hand-write the batch to route around a refusal.
 
 For `tdd`/`check`, `close_batch.py` does **not** invent pass/fail or
 create check-runs. It only references runner-produced `check_run_id`s
 (from `se-workflow check`) and copies each run's `result` for the
-refusal gate. `manual` criteria still carry `result` / `revision` /
-`signed_by` so the batch can create those check-runs.
+refusal gate. For `tdd` on `done`, also carry red-first fields from a
+prior runner fail (below). `manual` criteria still carry `result` /
+`revision` / `signed_by` so the batch can create those check-runs.
+`check` and `manual` do not require `red_check_run_id`.
 
 Script path: `<plugin>/scripts/close_batch.py` (resolve `<plugin>` per
 [ensure-store.md](../ensure-store.md)).
@@ -576,13 +585,31 @@ adaptive-artifacts list --type project:execution-report --subject "<task-slug>" 
    Take the last entry — `recorded_at` sorts oldest first.
 3. For each active acceptance, use step 3's check-runs. For
    `tdd`/`check`, take the runner check-run's `id` and its `result`
-   (do not invent a result). For `manual`, use `revision` from `git
-   rev-parse HEAD` once committed and `signed_by` once reviewed.
-   Write a close-request JSON: `criteria` holds one entry per
-   acceptance actually checked; `acceptance_ids` lists **every**
-   active acceptance from step 1, checked or not, so the refusal
-   check can see one that was skipped. Leave `finding` `null` when
-   every criterion passed:
+   (do not invent a result). For `tdd` closing to `done` with
+   `result` `pass`, also list check-runs for the task and pick a
+   prior runner-produced fail for that criterion as the red:
+
+```bash
+adaptive-artifacts list --type project:check-run --subject "<task-slug>" --full --order-by recorded_at
+```
+
+   Copy from the red check-run into the criteria entry:
+   `red_check_run_id` (the red run's `id`), `red_result` (must be
+   `fail`), `red_revision`, `red_runner` (must be `se-workflow`), and
+   when `red_revision` is `dirty`, non-empty `red_diff_sha256` from
+   that run's `diff_sha256`. Copy the green run's `revision` onto the
+   criteria entry too — ancestry requires it when red is a SHA (green
+   must equal or be a git descendant of red). Dirty red skips SHA
+   ancestry and only needs `red_diff_sha256`. Do not invent red
+   fields; if there is no valid red, either keep the work-item
+   `in_progress` or use the finding escape below. For `manual`, use
+   `revision` from `git rev-parse HEAD` once committed and
+   `signed_by` once reviewed. Write a close-request JSON: `criteria`
+   holds one entry per acceptance actually checked; `acceptance_ids`
+   lists **every** active acceptance from step 1, checked or not, so
+   the refusal check can see one that was skipped. Leave `finding`
+   `null` when every criterion passed and each `tdd` pass carries
+   valid red evidence:
 
 ```bash
 cat > /tmp/close-request.json <<'EOF'
@@ -594,7 +621,17 @@ cat > /tmp/close-request.json <<'EOF'
   "execution_report_id": "<execution-report-record-id-or-null>",
   "acceptance_ids": ["<acceptance-id-1>", "<acceptance-id-2>"],
   "criteria": [
-    {"criterion_id": "<acceptance-id-1>", "method": "tdd", "check_run_id": "<runner-check-run-id>", "result": "pass"},
+    {
+      "criterion_id": "<acceptance-id-1>",
+      "method": "tdd",
+      "check_run_id": "<green-runner-check-run-id>",
+      "result": "pass",
+      "revision": "<green-sha>",
+      "red_check_run_id": "<red-runner-check-run-id>",
+      "red_result": "fail",
+      "red_revision": "<red-sha>",
+      "red_runner": "se-workflow"
+    },
     {"criterion_id": "<acceptance-id-2>", "method": "check", "check_run_id": "<runner-check-run-id-2>", "result": "pass"}
   ],
   "finding": null
@@ -602,9 +639,42 @@ cat > /tmp/close-request.json <<'EOF'
 EOF
 ```
 
-   When closing anyway on an unmet/unverified criterion, `finding`
-   carries exactly step 5's fields (`needs` is forced to `"human"`
-   regardless of what is written here):
+   When the red was recorded dirty, use `red_revision` `"dirty"` and
+   carry `red_diff_sha256` (green `revision` is still copied from the
+   green check-run, but dirty red does not run SHA ancestry):
+
+```bash
+cat > /tmp/close-request.json <<'EOF'
+{
+  "subject": "<task-slug>",
+  "effort": "<effort-slug>",
+  "work_item_id": "<work-item-record-id>",
+  "transition": "done",
+  "execution_report_id": "<execution-report-record-id-or-null>",
+  "acceptance_ids": ["<acceptance-id-1>"],
+  "criteria": [
+    {
+      "criterion_id": "<acceptance-id-1>",
+      "method": "tdd",
+      "check_run_id": "<green-runner-check-run-id>",
+      "result": "pass",
+      "revision": "<green-sha-or-dirty>",
+      "red_check_run_id": "<red-runner-check-run-id>",
+      "red_result": "fail",
+      "red_revision": "dirty",
+      "red_runner": "se-workflow",
+      "red_diff_sha256": "<digest-from-red-check-run-diff_sha256>"
+    }
+  ],
+  "finding": null
+}
+EOF
+```
+
+   When closing anyway on an unmet/unverified criterion, or on a
+   `tdd` pass without red evidence, `finding` carries exactly step
+   5's fields (`needs` is forced to `"human"` regardless of what is
+   written here):
 
 ```bash
 cat > /tmp/close-request.json <<'EOF'
@@ -628,17 +698,24 @@ cat > /tmp/close-request.json <<'EOF'
 EOF
 ```
 
-4. Build the batch:
+4. Build the batch. Pass `--cwd` when the code lives in a phase
+   worktree so git-ancestry red-first checks run against that repo
+   (default: process cwd):
 
 ```bash
-python3 "<plugin>/scripts/close_batch.py" --input /tmp/close-request.json --out /tmp/close-batch.ndjson
+python3 "<plugin>/scripts/close_batch.py" \
+  --input /tmp/close-request.json \
+  --out /tmp/close-batch.ndjson \
+  --cwd <repo-or-worktree>
 ```
 
    Exit `0` means the batch was written — run `apply` next. Exit `2`
-   means refused (unmet/unverified criterion, no `finding`) — stderr
-   names the criteria; go back to step 3, either resolve them or add
-   the `finding`, and do **not** run `apply`. Exit `1` means the
-   close-request JSON was malformed — fix it and retry.
+   means refused (unmet/unverified criterion with no `finding`, or
+   pass-only `tdd` without valid red evidence / ancestry) — stderr
+   names the criteria; go back to step 3, either resolve them, add
+   red fields, or add the `finding`, and do **not** run `apply`.
+   Exit `1` means the close-request JSON was malformed — fix it and
+   retry.
 5. Only after a `0` exit, apply the batch — one `project:check-run`
    create per `manual` criterion (each `informed_by` both its
    acceptance and the execution-report); `tdd`/`check` check-runs are
@@ -668,9 +745,10 @@ adaptive-artifacts apply /tmp/close-batch.ndjson
 - Put a metric table in `check-run.result`
 - Leave a `manual` check-run's `signed_by` empty once someone actually
   reviewed it — sign it, or it lingers under Unsigned Manual Check
-- Transition a work-item to `done` on the strength of "red-first was
-  probably followed" — nothing checks that; verify the actual command
-  output for this task
+- Invent `red_*` fields or close a pass-only `tdd` criterion without
+  a runner-produced fail preceding the green (or a finding escape) —
+  `close_batch.py` refuses that close; verify the actual command
+  output and copy ids/fields from real check-runs
 - Close another focus's work-item
 - Skip `close_batch.py` and hand-assemble the `apply` NDJSON for a
   multi-criterion close — that is exactly the ad-hoc path that let a

@@ -229,6 +229,25 @@ def test_engage_documents_backlog_item_list_create_supersede():
     ]
 
 
+def test_verify_work_documents_enforced_red_first_close():
+    """R6: verify-work must describe close_batch red-first, not deny it."""
+    text = _text("verify-work")
+    flat = _normalized(text)
+    assert "the engine does not enforce" not in flat
+    assert "does not enforce" not in flat
+    assert "instruction-level" not in flat
+    assert "Nothing in the contract checks" not in text
+    assert "red_check_run_id" in text
+    assert "red_result" in text
+    assert "red_revision" in text
+    assert "red_runner" in text
+    assert "red_diff_sha256" in text
+    assert "enforced" in flat and "red-first" in flat
+    assert "pass-only" in flat
+    assert "--cwd" in text
+    assert '"revision": "<green-sha>"' in text
+
+
 @pytest.mark.parametrize("skill_name", ["verify-work", "engage"])
 def test_documented_invocations_are_contract_legal(contract_indexes, skill_name):
     defs, bundles_by_id = contract_indexes
