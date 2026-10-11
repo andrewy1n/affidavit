@@ -900,7 +900,7 @@ class DashboardApp(App[None]):
     ENABLE_COMMAND_PALETTE = False
     BINDINGS = [
         ("q", "quit", "quit"),
-        Binding("tab", "next_effort", "switch", priority=True),
+        Binding("tab", "next_effort", "sw", priority=True),
         Binding("shift+tab", "previous_effort", "previous", show=False, priority=True),
         Binding("r", "refresh", "refresh", show=False),
         Binding("c", "copy_slug", "copy"),
@@ -909,9 +909,9 @@ class DashboardApp(App[None]):
         Binding("s", "open_phase('spec')", "spec", show=False),
         Binding("e", "open_phase('evidence')", "evidence", show=False),
         Binding("n", "focus_needs", "needs"),
-        Binding("b", "focus_backlog", "backlog"),
+        Binding("b", "focus_backlog", "bl"),
         Binding("slash", "filter", "filter"),
-        Binding("1", "status_tab('active')", "status", key_display="1-6"),
+        Binding("1", "status_tab('active')", "tabs", key_display="1-6"),
         Binding("2", "status_tab('running')", "running", show=False),
         Binding("3", "status_tab('ready')", "ready", show=False),
         Binding("4", "status_tab('waiting')", "waiting", show=False),
@@ -1073,11 +1073,17 @@ class DashboardApp(App[None]):
         return next((view for view in self.snapshot.efforts if view.effort == effort), None)
 
     def _needs_copy_focus(self) -> bool:
+        # Teardown/focus races can fire with an empty screen stack.
+        try:
+            focused = self.focused
+            screen = self.screen
+        except Exception:
+            return False
         return (
-            isinstance(self.focused, NeedsList)
-            or isinstance(self.focused, BacklogList)
-            or isinstance(self.screen, NeedsYouDetailScreen)
-            or isinstance(self.screen, BacklogDetailScreen)
+            isinstance(focused, NeedsList)
+            or isinstance(focused, BacklogList)
+            or isinstance(screen, NeedsYouDetailScreen)
+            or isinstance(screen, BacklogDetailScreen)
         )
 
     def _refresh_copy_binding(self) -> None:

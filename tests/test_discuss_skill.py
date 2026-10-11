@@ -43,9 +43,12 @@ def test_plan_phase_opens_a_blocking_plan_review_question():
         inv for inv in extract_invocations(_text("plan-phase"))
         if inv["subcommand"] == "create" and inv["type"] == "project:continuity-question"
     ]
-    assert len(reviews) == 1
-    payload = reviews[0]["payload"]
-    assert payload["blocking"] is True and payload["scope"].startswith("plan-review:")
+    # Initial plan review plus optional re-open after next:plan deltas.
+    assert reviews
+    for inv in reviews:
+        payload = inv["payload"]
+        assert payload["blocking"] is True
+        assert payload["scope"].startswith("plan-review:")
 
 
 def test_execute_phase_scopes_plan_review_questions_to_their_phase():

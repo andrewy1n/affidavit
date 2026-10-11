@@ -527,7 +527,9 @@ def test_footer_has_no_palette_and_every_binding_fits_at_60_columns(seeded):
     async def scenario(app, pilot):
         await pilot.pause()
         keys = list(app.query("FooterKey"))
-        assert sorted(str(key.description) for key in keys) == ["copy", "filter", "needs", "phase", "quit", "status", "switch"]
+        assert sorted(str(key.description) for key in keys) == [
+            "bl", "copy", "filter", "needs", "phase", "quit", "sw", "tabs",
+        ]
         assert all(key.region.right <= 60 for key in keys)
 
     _run(seeded, 60, scenario)

@@ -4,3 +4,6 @@ __pycache__/
 
 # Operational store state, never record data.
 .write.lock
+
+# Tier-2 background suite logs (phase worktree).
+.tier2/
