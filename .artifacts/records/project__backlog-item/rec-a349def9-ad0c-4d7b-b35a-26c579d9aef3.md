@@ -4,16 +4,16 @@
   "epistemic_status": "asserted",
   "id": "rec-a349def9-ad0c-4d7b-b35a-26c579d9aef3",
   "identity": "unknown",
-  "lifecycle_state": "active",
+  "lifecycle_state": "superseded",
   "payload": {
     "effort": "workflow-loop",
     "source": "github",
     "status": "open"
   },
   "record_type": "project:backlog-item",
-  "recorded_at": "2026-10-10T09:56:16+00:00",
+  "recorded_at": "2026-10-11T06:13:46+00:00",
   "relationships": {},
-  "revision": "sha256:5d7bbc51c53d985797eec3f9f908759f6bf9c18f57e395c8a7c93060dcc34baa",
+  "revision": "sha256:cd4c194e4ee862972092006fc1a20786c0709779bfdc78e8e5e85027a69368b7",
   "stewardship": {
     "steward": "agent"
   },

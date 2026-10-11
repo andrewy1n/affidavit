@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:b08c6f211071a26da9db78dec33bbbd124b3865d85f2966da11d8f073d50115a
+> Store state: sha256:4ea75acb345f0f07e6b9afc0bf0a4070c24e93c42099bd224bd3461588e42574
 
 ## activity-failures
 
@@ -744,6 +744,11 @@ print("phase checks only")
 ### Acceptance
 - **package-move**: The dashboard files are in dashboard/, none remain in scripts/, and the non-tmux dashboard tests pass at the new paths.; tdd; dashboard; test ! -e scripts/dashboard_app.py && test ! -e scripts/dashboard_model.py && test ! -e scripts/artifact_store.py && uv run --with pytest --with textual pytest tests/test_dashboard_app.py tests/test_dashboard_model.py tests/test_dashboard_launcher.py tests/test_dashboard_status.py tests/test_dashboard_view.py tests/test_dashboard_integration.py _(id: [rec-976f8b89-c8c7-4ced-855d-c8c5b3c6c2fb](.artifacts/records/project__acceptance/rec-976f8b89-c8c7-4ced-855d-c8c5b3c6c2fb.md))_
 
+## packaging
+
+### Position
+- **packaging**: backlog parked; no phase started; effort _(id: [rec-a717c4b4-ce8e-4fc2-b60e-6bddfebc9d4d](.artifacts/records/project__current-position/rec-a717c4b4-ce8e-4fc2-b60e-6bddfebc9d4d.md))_
+
 ## pane-width-stable
 
 ### Acceptance
@@ -878,6 +883,21 @@ print("phase checks only")
 
 ### Acceptance
 - **requirement-screen**: Pilot tests at 60 and 120 columns show the text, status, decisions, traced tasks, acceptances with latest check and evidence kind, and history oldest first; enter on a task opens its detail and esc returns; the screen redraws after a store change; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_requirement.py -q _(id: [rec-fe7cbd3d-6b76-4bf1-b258-e4fa9361b6d8](.artifacts/records/project__acceptance/rec-fe7cbd3d-6b76-4bf1-b258-e4fa9361b6d8.md))_
+
+## retry-dashboard
+
+### Acceptance
+- **retry-dashboard**: Retried task rows show attempt n/budget; model/app tests with attempt_* -k filter pass; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_app.py -q -k "attempt_row or attempt_budget or attempt_snapshot or attempt_title" _(id: [rec-7bd7b9f7-ab98-40b6-9831-a074659941f7](.artifacts/records/project__acceptance/rec-7bd7b9f7-ab98-40b6-9831-a074659941f7.md))_
+
+## retry-engine
+
+### Acceptance
+- **retry-engine**: test_retry_loop covers redispatch, amendment, attempts, fix_task/depends_on/no_reopen, budget exhaustion, and next_plan; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_retry_loop.py -q _(id: [rec-09626673-9f46-4904-8541-2d2d5ecaf514](.artifacts/records/project__acceptance/rec-09626673-9f46-4904-8541-2d2d5ecaf514.md))_
+
+## retry-engine-contract
+
+### Acceptance
+- **retry-engine-contract**: Optional attempts is on work-item; skill invocations stay contract-legal; consistency tests green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-a40b0635-99ac-481f-a4fb-855a830b6fa1](.artifacts/records/project__acceptance/rec-a40b0635-99ac-481f-a4fb-855a830b6fa1.md))_
 
 ## rj-join
 
@@ -1556,6 +1576,21 @@ print("phase checks only")
 ### Acceptance
 - **verify-red-first-skills**: verify-work matches enforced red-first; skill/contract consistency green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_assess_routing.py -q _(id: [rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e](.artifacts/records/project__acceptance/rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e.md))_
 
+## verify-retry-loop
+
+### Acceptance
+- **verify-retry-loop**: Through pytest entry point, retry-loop tests prove redispatch, amendment, attempts, fix_task, budget, and next_plan; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_retry_loop.py -q _(id: [rec-882f6075-f91a-479c-b426-a0eee0ffba59](.artifacts/records/project__acceptance/rec-882f6075-f91a-479c-b426-a0eee0ffba59.md))_
+
+## verify-retry-loop-contract
+
+### Acceptance
+- **verify-retry-loop-contract**: Skill and contract consistency stay green with optional attempts declared; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-0b667469-29df-4007-a46b-05a8b860091a](.artifacts/records/project__acceptance/rec-0b667469-29df-4007-a46b-05a8b860091a.md))_
+
+## verify-retry-loop-dashboard
+
+### Acceptance
+- **verify-retry-loop-dashboard**: Dashboard shows attempt n/budget on retried rows; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_app.py -q -k "attempt_row or attempt_budget or attempt_snapshot or attempt_title" _(id: [rec-7d873780-5fa8-4f70-af41-851701195ec5](.artifacts/records/project__acceptance/rec-7d873780-5fa8-4f70-af41-851701195ec5.md))_
+
 ## verify-run-facts
 
 ### Acceptance
@@ -1746,4 +1781,4 @@ print("phase checks only")
 ## workflow-loop
 
 ### Position
-- **workflow-loop**: red-first done; no further phase planned; effort _(id: [rec-ea0c589e-dc91-4013-8a59-6086ea38f1f1](.artifacts/records/project__current-position/rec-ea0c589e-dc91-4013-8a59-6086ea38f1f1.md))_
+- **workflow-loop**: retry-loop done; next up: phase-reviewer; effort _(id: [rec-d18f60b5-1709-4e8a-ae38-9cb0b3596619](.artifacts/records/project__current-position/rec-d18f60b5-1709-4e8a-ae38-9cb0b3596619.md))_

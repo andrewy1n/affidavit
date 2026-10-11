@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:fe5e720fdf31c543bd8c14a5203bf4b33fab20c9ad71b5456ae4e93988b83ab1
+> Store state: sha256:25d211dfb6a4faec50e4246a06239c501562e3558f4e05be0214e8bb4655f013
 
 ## dashboard-view
 
@@ -322,6 +322,16 @@ print("phase checks only")
 - **stepper-wrap**: Pilot test at 60 columns: every stepper line starts with a phase glyph and no line ends with a bare glyph, and no line is wider than the pane; the test fails before the change; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k stepper _(id: [rec-c2df3f61-8b0b-44d8-89b3-f3033ebcf9d0](.artifacts/records/project__acceptance/rec-c2df3f61-8b0b-44d8-89b3-f3033ebcf9d0.md))_
 - **verify-layout-phase**: The tmux popup layout test passes, README shows the tab row with number keys, and the full suite passes; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m 'not tmux' && uv run --with textual --with pytest python -m pytest tests -q -m tmux -rf _(id: [rec-5d64f143-cdea-49dc-8cb4-7ca9fb9f2517](.artifacts/records/project__acceptance/rec-5d64f143-cdea-49dc-8cb4-7ca9fb9f2517.md))_
 
+## retry-loop
+
+### Acceptance
+- **retry-dashboard**: Retried task rows show attempt n/budget; model/app tests with attempt_* -k filter pass; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_app.py -q -k "attempt_row or attempt_budget or attempt_snapshot or attempt_title" _(id: [rec-7bd7b9f7-ab98-40b6-9831-a074659941f7](.artifacts/records/project__acceptance/rec-7bd7b9f7-ab98-40b6-9831-a074659941f7.md))_
+- **retry-engine**: test_retry_loop covers redispatch, amendment, attempts, fix_task/depends_on/no_reopen, budget exhaustion, and next_plan; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_retry_loop.py -q _(id: [rec-09626673-9f46-4904-8541-2d2d5ecaf514](.artifacts/records/project__acceptance/rec-09626673-9f46-4904-8541-2d2d5ecaf514.md))_
+- **retry-engine-contract**: Optional attempts is on work-item; skill invocations stay contract-legal; consistency tests green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-a40b0635-99ac-481f-a4fb-855a830b6fa1](.artifacts/records/project__acceptance/rec-a40b0635-99ac-481f-a4fb-855a830b6fa1.md))_
+- **verify-retry-loop**: Through pytest entry point, retry-loop tests prove redispatch, amendment, attempts, fix_task, budget, and next_plan; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_retry_loop.py -q _(id: [rec-882f6075-f91a-479c-b426-a0eee0ffba59](.artifacts/records/project__acceptance/rec-882f6075-f91a-479c-b426-a0eee0ffba59.md))_
+- **verify-retry-loop-contract**: Skill and contract consistency stay green with optional attempts declared; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-0b667469-29df-4007-a46b-05a8b860091a](.artifacts/records/project__acceptance/rec-0b667469-29df-4007-a46b-05a8b860091a.md))_
+- **verify-retry-loop-dashboard**: Dashboard shows attempt n/budget on retried rows; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_app.py -q -k "attempt_row or attempt_budget or attempt_snapshot or attempt_title" _(id: [rec-7d873780-5fa8-4f70-af41-851701195ec5](.artifacts/records/project__acceptance/rec-7d873780-5fa8-4f70-af41-851701195ec5.md))_
+
 ## dashboard-package
 
 ### Acceptance
@@ -336,6 +346,16 @@ print("phase checks only")
 - **verify-dashboard-package-outside-scripts**: The dashboard code lives in dashboard/ and no dashboard file remains in scripts/.; check; dashboard; test -f dashboard/app.py && test -f dashboard/model.py && ! ls scripts | grep -i dashboard _(id: [rec-78759ece-bf5a-4584-9ce1-17650f1217c6](.artifacts/records/project__acceptance/rec-78759ece-bf5a-4584-9ce1-17650f1217c6.md))_
 - **verify-dashboard-package-task-modules**: The task code is in dashboard/tasks.py and dashboard/task_detail.py, not app.py.; check; dashboard; test -f dashboard/tasks.py && test -f dashboard/task_detail.py && ! grep -nE '^class (TaskFilter|TaskTable|TaskDetailScreen)' dashboard/app.py _(id: [rec-1d30f9a6-5236-45c6-8ba7-265bc6a9ca53](.artifacts/records/project__acceptance/rec-1d30f9a6-5236-45c6-8ba7-265bc6a9ca53.md))_
 
+## phase-reviewer
+
+### Phase
+- **phase-reviewer**: Phase-end independent reviewer; 16; workflow-loop _(id: [rec-7fa68692-3ae0-4731-be8d-9539e5cc3450](.artifacts/records/project__phase/rec-7fa68692-3ae0-4731-be8d-9539e5cc3450.md))_
+
+## tiered-verification
+
+### Phase
+- **tiered-verification**: Tiered verification at phase head; 17; workflow-loop _(id: [rec-179b8c91-686b-4657-ac2b-64ec25aab995](.artifacts/records/project__phase/rec-179b8c91-686b-4657-ac2b-64ec25aab995.md))_
+
 ## tmux-plugin-entry
 
 ### Acceptance
@@ -349,6 +369,11 @@ print("phase checks only")
 - **verify-tmux-plugin-entry-full-suite**: The full suite passes, including the tmux tests.; check; dashboard; uv run --with pytest --with textual pytest && uv run --with pytest --with textual pytest -m tmux _(id: [rec-c78b573b-fc0f-4ab7-8f1a-52f73766dc61](.artifacts/records/project__acceptance/rec-c78b573b-fc0f-4ab7-8f1a-52f73766dc61.md))_
 - **verify-tmux-plugin-entry-key-options**: The key options rebind the keys and the defaults are A and S.; check; dashboard; uv run --with pytest --with textual pytest -m tmux tests/test_tmux_entry.py -k 'default or custom_keys' _(id: [rec-22a2f699-9b2e-4971-8f8f-72f726491c0f](.artifacts/records/project__acceptance/rec-22a2f699-9b2e-4971-8f8f-72f726491c0f.md))_
 - **verify-tmux-plugin-entry-readme**: The README has a numbered Quick start that covers TPM and run-shell.; check; dashboard; grep -q '^## Quick start' README.md && grep -q "@plugin 'andrewy1n/se-workflow'" README.md && grep -q 'run-shell' README.md _(id: [rec-81b6561f-39c6-4892-91e4-e2a043e7dd9b](.artifacts/records/project__acceptance/rec-81b6561f-39c6-4892-91e4-e2a043e7dd9b.md))_
+
+## dashboard-approvals
+
+### Phase
+- **dashboard-approvals**: Dashboard approvals with evidence; 18; workflow-loop _(id: [rec-b91d2d82-6de1-4191-8e37-42205191dd9f](.artifacts/records/project__phase/rec-b91d2d82-6de1-4191-8e37-42205191dd9f.md))_
 
 ## quiet-header
 
