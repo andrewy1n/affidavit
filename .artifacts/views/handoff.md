@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:058faa1ab82972a3b1e32d050e5fdde6f3f0eadb1fad59942fcb951dee431f64
+> Store state: sha256:1060403370d85cb5806be8239cda4cee7ecded974a0b461a1fa0a9daac5099d1
 
 ## dashboard
 
@@ -47,14 +47,8 @@
 
 ### Position
 - **phase-reviewer**: phase-reviewer done; next up: tiered-verification; phase _(id: [rec-db17b780-4178-4359-b4ee-119fb52aba18](.artifacts/records/project__current-position/rec-db17b780-4178-4359-b4ee-119fb52aba18.md))_
-- **tiered-verification**: tier-2 failed; 3 fix tasks planned; budget escalate Needs you; phase _(id: [rec-ca05196c-0620-4421-b882-c2e43822edad](.artifacts/records/project__current-position/rec-ca05196c-0620-4421-b882-c2e43822edad.md))_
-- **workflow-loop**: phase-reviewer done; next up: tiered-verification; effort _(id: [rec-721cf0b5-262e-4368-ab82-503a4320efbf](.artifacts/records/project__current-position/rec-721cf0b5-262e-4368-ab82-503a4320efbf.md))_
-
-### Blocking Question
-- **workflow-loop**: True; retry:tiered-verification-tier2 _(id: [rec-47b1bf12-d15b-4663-87f0-2dd1675d08f1](.artifacts/records/project__continuity-question/rec-47b1bf12-d15b-4663-87f0-2dd1675d08f1.md))_
-
-### Needs Human
-- **tiered-verification-tier2-budget**: Tier-2 fix-task budget exhausted with remaining failing modules; human _(id: [rec-b8101acf-ff6c-4dbc-8042-6499702bd5e5](.artifacts/records/project__finding/rec-b8101acf-ff6c-4dbc-8042-6499702bd5e5.md))_
+- **workflow-loop**: tiered-verification done; next up: dashboard-approvals; effort _(id: [rec-1e29c4c8-2372-4747-a17d-1829df765c93](.artifacts/records/project__current-position/rec-1e29c4c8-2372-4747-a17d-1829df765c93.md))_
 
 ### Backlog
 - **gh-11-verification-loop**: workflow-loop; open _(id: [rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7](.artifacts/records/project__backlog-item/rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7.md))_
+

@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:8cac9912757917906b2d32c6e7eefc528a2c8cfefc0af3594ffdf4b13e87dd3b
+> Store state: sha256:853631f075b2d8b77ddf516a1b400c10a4e164176af891639b60d98269b8d19f
 
 ## dashboard-view
 
@@ -372,18 +372,14 @@ print("phase checks only")
 
 ## tiered-verification
 
-### Phase
-- **tiered-verification**: Tiered verification at phase head; 17; workflow-loop _(id: [rec-179b8c91-686b-4657-ac2b-64ec25aab995](.artifacts/records/project__phase/rec-179b8c91-686b-4657-ac2b-64ec25aab995.md))_
-
-### Work
-- **fix-test_dashboard_app**: Fix tier-2 failures in test_dashboard_app; tiered-verification; deliver; workflow-loop _(id: [rec-8c44cf95-1a96-4c1f-92f2-fe979fafd1a2](.artifacts/records/project__work-item/rec-8c44cf95-1a96-4c1f-92f2-fe979fafd1a2.md))_
-- **fix-test_dashboard_journal**: Fix tier-2 failure in test_dashboard_journal; tiered-verification; deliver; workflow-loop _(id: [rec-45e726ef-e8c7-4fb6-bde5-d1b5157d2302](.artifacts/records/project__work-item/rec-45e726ef-e8c7-4fb6-bde5-d1b5157d2302.md))_
-- **fix-test_discuss_skill**: Fix tier-2 failure in test_discuss_skill; tiered-verification; deliver; workflow-loop _(id: [rec-93b65e63-ebd3-4419-972f-e66bc47908fc](.artifacts/records/project__work-item/rec-93b65e63-ebd3-4419-972f-e66bc47908fc.md))_
-
 ### Acceptance
 - **fix-test_dashboard_app**: Module failures cleared: test_running_row_status_shows_its_running_time[120]; test_footer_has_no_palette_and_every_binding_fits_at_60_columns; test_detail_related_panel_lists_related_records[size1-_open_by_click]; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'running_row_status_shows_its_running_time or footer_has_no_palette or detail_related_panel_lists_related_records' _(id: [rec-d2f35534-584a-4e18-b439-3641ec83969d](.artifacts/records/project__acceptance/rec-d2f35534-584a-4e18-b439-3641ec83969d.md))_
 - **fix-test_dashboard_journal**: Module failures cleared: test_journal_panel_shows_for_repair_kind; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_journal.py -q -k journal_panel_shows_for_repair_kind _(id: [rec-3df8eb5b-21db-4624-8831-12b8bdc2a294](.artifacts/records/project__acceptance/rec-3df8eb5b-21db-4624-8831-12b8bdc2a294.md))_
 - **fix-test_discuss_skill**: Module failures cleared: test_plan_phase_opens_a_blocking_plan_review_question; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_discuss_skill.py -q -k plan_phase_opens_a_blocking_plan_review_question _(id: [rec-7a209b57-ff35-4f91-b06b-41f8057aecef](.artifacts/records/project__acceptance/rec-7a209b57-ff35-4f91-b06b-41f8057aecef.md))_
+- **fix-test_evidence_loop**: Cleared: test_check_run_result_and_method_are_contract_enums; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_evidence_loop.py -q -k check_run_result_and_method_are_contract_enums _(id: [rec-be712a69-03e1-4ea1-a1e1-b0534ae0b828](.artifacts/records/project__acceptance/rec-be712a69-03e1-4ea1-a1e1-b0534ae0b828.md))_
+- **fix-test_plan_landing**: Cleared: test_plan_review_stays_closed_until_landing_is_present; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_plan_landing.py -q -k plan_review_stays_closed_until_landing _(id: [rec-47fbfa19-5038-4851-830d-42a55a72a49e](.artifacts/records/project__acceptance/rec-47fbfa19-5038-4851-830d-42a55a72a49e.md))_
+- **fix-test_plan_wave_rules**: Cleared: test_plan_review_stays_closed_until_recipe_executor_and_run_facts_are_present; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_plan_wave_rules.py -q -k plan_review_stays_closed_until_recipe _(id: [rec-f0ad8c81-df6e-457c-8553-9dd57d03f91e](.artifacts/records/project__acceptance/rec-f0ad8c81-df6e-457c-8553-9dd57d03f91e.md))_
+- **fix-test_verify_authority**: Cleared: test_skill_close_request_references_check_run_id_for_runner_methods; test_close_batch_does_not_emit_check_run_create_for_runner_methods; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_authority.py -q -k 'skill_close_request_references_check_run_id or close_batch_does_not_emit_check_run_create' _(id: [rec-e09c9aac-f876-43da-9856-41ed79b75404](.artifacts/records/project__acceptance/rec-e09c9aac-f876-43da-9856-41ed79b75404.md))_
 - **tier2-dashboard**: At 60 and 120 columns, a phase header shows tier-2 running / passed@SHA / failed@SHA from seeded store state; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k tier2 _(id: [rec-b5eb3ea3-6ec1-4431-ab56-fcb60d7b1574](.artifacts/records/project__acceptance/rec-b5eb3ea3-6ec1-4431-ab56-fcb60d7b1574.md))_
 - **tier2-engine**: Parent starts a background tmux full-suite run in the phase worktree after reviewer pass without blocking the agent session, and records one tier-2 check-run at the phase head SHA with exit code, duration, output digest, and failing node IDs when failed; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "runner or background or check_run or tmux" _(id: [rec-66d14411-07cd-479e-bb45-abfd3ee105f3](.artifacts/records/project__acceptance/rec-66d14411-07cd-479e-bb45-abfd3ee105f3.md))_
 - **tier2-engine-fix**: A tier-2 failure creates fix work-item(s) under the retry-loop budget clustered by failing test file/module, with no inline fix-and-rerun inside the verification step; after fixes tier-2 is expected to rerun at the new head; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "fix or cluster or budget" _(id: [rec-e54af7a4-185c-4adc-93b9-6ca9417d5f0f](.artifacts/records/project__acceptance/rec-e54af7a4-185c-4adc-93b9-6ca9417d5f0f.md))_
@@ -589,3 +585,4 @@ print("phase checks only")
 - **model-fixture-reuse-total**: The full suite wall time is under 50s (baseline 101s) and user+sys CPU time does not exceed the baseline of 58s; check; test-suite-speed; time python3 -m pytest -q _(id: [rec-db700c2c-4b03-4fb5-9aec-9517316abf2b](.artifacts/records/project__acceptance/rec-db700c2c-4b03-4fb5-9aec-9517316abf2b.md))_
 - **test-suite-speed**: All 262 tests pass, full suite wall time is at most 158s (half of the 317s clean-HEAD baseline), CPU time stays under 250s, and no timeout or deadline value is larger than before the change; check; test-suite-speed; time uv run --with textual --with pytest python -m pytest tests -q _(id: [rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99](.artifacts/records/project__acceptance/rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99.md))_
 - **tmux-test-waits**: The six failing tmux and e2e tests pass, and each tmux popup test takes under 4s; check; test-suite-speed; python3 -m pytest tests/test_tmux_integration.py tests/test_e2e_dashboard.py -q --durations=6 _(id: [rec-572fa450-b4a2-45bb-b52e-b5198f0e9b91](.artifacts/records/project__acceptance/rec-572fa450-b4a2-45bb-b52e-b5198f0e9b91.md))_
+
