@@ -85,7 +85,10 @@ kind/focus are unset).
   `estimate_minutes`. `size` is `XS` a trivial or local change, `S` a
   small change, `M` a moderate change, `L` a substantial or multi-file
   change, or `XL` a large or high-risk change. `estimate_minutes` is a
-  non-negative integer for that task's executor. Absent means unset.
+  non-negative integer for that task's executor. It is agent wall-clock
+  minutes for that worker, not human pacing — do not pad for reading,
+  meetings, or context-switch. Typical ranges (guidance only): `XS`
+  2–5, `S` 5–10, `M` 8–15, `L` 15–25, `XL` 25–40. Absent means unset.
   Zero is a real estimate. A missing executor means the minutes are
   for a subagent. `size` and `estimate_minutes` are not derived from
   each other. The phase record stores neither field. Inline minutes
@@ -255,7 +258,7 @@ adaptive-artifacts capture --bundle project:specified-work --records "$(cat <<'E
       "effort": "<effort-slug>",
       "executor": "subagent",
       "size": "M",
-      "estimate_minutes": 25,
+      "estimate_minutes": 10,
       "requirements": "R1,R2",
       "decisions": "<decision-a>,<decision-b>"
     },
@@ -316,7 +319,7 @@ EOF
 ```bash
 adaptive-artifacts create --type project:work-item \
   --subject "<task-slug>" \
-  --payload '{"title":"<short title>","phase":"<current-phase-slug>","kind":"deliver","assignee":"","effort":"<effort-slug>","executor":"subagent","size":"M","estimate_minutes":25,"requirements":"R1,R2","decisions":"<decision-a>,<decision-b>"}' \
+  --payload '{"title":"<short title>","phase":"<current-phase-slug>","kind":"deliver","assignee":"","effort":"<effort-slug>","executor":"subagent","size":"M","estimate_minutes":10,"requirements":"R1,R2","decisions":"<decision-a>,<decision-b>"}' \
   --body "## Description
 
 <what this task builds/fixes, and why it waits>
@@ -343,7 +346,7 @@ adaptive-artifacts create --type project:acceptance \
 ```bash
 adaptive-artifacts create --type project:work-item \
   --subject "verify-<phase-slug>" \
-  --payload '{"title":"Verify <phase title>","phase":"<current-phase-slug>","kind":"deliver","assignee":"","effort":"<effort-slug>","executor":"subagent","size":"M","estimate_minutes":25,"requirements":"R1,R2","decisions":"<decision-a>,<decision-b>"}' \
+  --payload '{"title":"Verify <phase title>","phase":"<current-phase-slug>","kind":"deliver","assignee":"","effort":"<effort-slug>","executor":"subagent","size":"M","estimate_minutes":10,"requirements":"R1,R2","decisions":"<decision-a>,<decision-b>"}' \
   --body "## Description
 
 Prove the phase exit criteria hold together: run the integration

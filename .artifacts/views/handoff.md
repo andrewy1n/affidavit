@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:07f81d2e303de94592df39d39e39526703638ee4270ee3063ec997b1157998fe
+> Store state: sha256:8fcac5e660674d27af39497d2e95e02dd84b6e89851bfc83f9f703573c2b9edc
 
 ## dashboard
 
@@ -47,7 +47,11 @@
 
 ### Position
 - **phase-reviewer**: phase-reviewer done; next up: tiered-verification; phase _(id: [rec-db17b780-4178-4359-b4ee-119fb52aba18](.artifacts/records/project__current-position/rec-db17b780-4178-4359-b4ee-119fb52aba18.md))_
+- **tiered-verification**: tiered-verification planned; awaiting plan review; phase _(id: [rec-33e312f6-b35f-406e-8790-deeea3f3a123](.artifacts/records/project__current-position/rec-33e312f6-b35f-406e-8790-deeea3f3a123.md))_
 - **workflow-loop**: phase-reviewer done; next up: tiered-verification; effort _(id: [rec-721cf0b5-262e-4368-ab82-503a4320efbf](.artifacts/records/project__current-position/rec-721cf0b5-262e-4368-ab82-503a4320efbf.md))_
+
+### Blocking Question
+- **workflow-loop**: True; plan-review:tiered-verification _(id: [rec-1043547e-3583-432c-84bb-6b09ef50faaf](.artifacts/records/project__continuity-question/rec-1043547e-3583-432c-84bb-6b09ef50faaf.md))_
 
 ### Backlog
 - **agent-estimate-calibration**: workflow-loop; open _(id: [rec-92355db7-36c0-429c-bd5c-3a359d0dcd38](.artifacts/records/project__backlog-item/rec-92355db7-36c0-429c-bd5c-3a359d0dcd38.md))_

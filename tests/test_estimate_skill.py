@@ -50,9 +50,19 @@ def test_write_size_and_estimate_minutes_on_every_work_item():
         "`estimate_minutes` is a non-negative integer for that task's executor."
         in text
     )
+    assert "It is agent wall-clock minutes for that worker, not human pacing" in text
+    assert "Typical ranges (guidance only):" in text
+    assert "`XS` 2–5" in text
+    assert "`S` 5–10" in text
+    assert "`M` 8–15" in text
+    assert "`L` 15–25" in text
+    assert "`XL` 25–40" in text
     assert "Absent means unset." in text
     assert "Zero is a real estimate." in text
     assert "A missing executor means the minutes are for a subagent." in text
+    for payload in payloads:
+        # Examples must not re-anchor on the old human-paced 25m default.
+        assert payload["estimate_minutes"] < 25
 
 
 def test_rollup_adds_inline_minutes_and_takes_the_subagent_wave_maximum():

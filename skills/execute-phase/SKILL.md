@@ -664,7 +664,7 @@ or `retry:<fix-slug>` as appropriate) instead of creating another fix.
 ```bash
 adaptive-artifacts create --type project:work-item \
   --subject "fix-<failing-area>" \
-  --payload '{"title":"Fix <failing area>","phase":"<current-phase-slug>","kind":"deliver","assignee":"","effort":"<focus>","executor":"<same mode as phase wave>","size":"S","estimate_minutes":20,"requirements":"<ids>","decisions":"<ids>"}' \
+  --payload '{"title":"Fix <failing area>","phase":"<current-phase-slug>","kind":"deliver","assignee":"","effort":"<focus>","executor":"<same mode as phase wave>","size":"S","estimate_minutes":8,"requirements":"<ids>","decisions":"<ids>"}' \
   --body "## Description
 
 Fix the failure that blocked closing verification.
