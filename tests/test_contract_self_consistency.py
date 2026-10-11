@@ -159,3 +159,50 @@ def test_payload_reference_violation_is_caught_by_validate(cli, resolved_contrac
     assert payload.get("status") != "valid", (
         f"validate accepted a payload reference to a nonexistent subject: {payload}"
     )
+
+
+# Optional note fields the dashboard uses when clearing human gates.
+_APPROVAL_OPTIONAL_NOTES = (
+    ("project:continuity-question", "answer"),
+    ("project:check-run", "signed_note"),
+    ("project:finding", "resolution_note"),
+)
+
+
+@pytest.mark.parametrize(
+    "record_id,field",
+    _APPROVAL_OPTIONAL_NOTES,
+    ids=[f"{rid}:{field}" for rid, field in _APPROVAL_OPTIONAL_NOTES],
+)
+def test_approval_optional_payload_note_fields_resolve(resolved_contract, record_id, field):
+    """Gate types expose optional note fields after resolve so approval UX
+    can record notes without inventing out-of-contract keys."""
+    defs = h.record_defs_by_id(resolved_contract)
+    record_def = defs[record_id]
+    assert field in record_def["payload"], (
+        f"{record_id}: {field!r} missing from payload"
+    )
+    assert field in (record_def.get("optional_payload") or []), (
+        f"{record_id}: {field!r} missing from optional_payload"
+    )
+
+
+@pytest.mark.parametrize(
+    "record_id,field",
+    _APPROVAL_OPTIONAL_NOTES,
+    ids=[f"{rid}:{field}" for rid, field in _APPROVAL_OPTIONAL_NOTES],
+)
+def test_approval_optional_payload_note_fields_accepted(
+    cli, resolved_contract, record_id, field
+):
+    """Creating a gate record with the optional note field is legal and persists."""
+    defs = h.record_defs_by_id(resolved_contract)
+    note = f"approval-{field}-note"
+    record = h.create_generic_record(
+        cli, defs, record_id, extra_payload={field: note}
+    )
+    assert record["payload"].get(field) == note
+    readback = cli("get", "--type", record_id, "--id", record["id"])
+    assert readback.returncode == 0, readback.stdout + readback.stderr
+    stored = json.loads(readback.stdout)
+    assert stored["payload"].get(field) == note
