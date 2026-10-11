@@ -309,49 +309,105 @@ adaptive-artifacts create --type project:execution-report \
    `true` automatically the moment its dependency's lifecycle reaches
    its terminal success state; the next wave's `list` in step 3 will
    see it.
-8. Next wave. After the last implementation wave and before
-   dispatching the verification task, record semantic integration.
+8. Next wave. Phase-end order for structured work with Landing:
+
+   last implementation wave → closing verification → reviewer →
+   integration-report from the reviewer `integration` section →
+   phase gate (include a passing `method: review` check-run at the
+   phase head) → Landing merge.
 
    The verification task is the work-item that `depends_on` every
    other phase work-item. An implementation wave is a dispatch wave
-   of the other work-items. After that last implementation wave's
-   execution-reports are recorded, and before the verification task
-   is dispatched:
+   of the other work-items. After the last implementation wave's
+   execution-reports are recorded, return to step 3 and dispatch the
+   closing verification task (do **not** write an integration-report
+   before verification — that content comes from the reviewer below).
 
-   Skip the report when incidental, or when no implementation wave
-   has more than one task. When the report is skipped, return to
-   step 3 and dispatch the verification task.
+   After the closing verification task succeeds (`done`), and before
+   merge (and before tier-2 when that phase exists), run the phase-end
+   reviewer once. Skip the reviewer, review check-run, and
+   integration-report when incidental.
 
-   Otherwise create one `project:integration-report` for the phase.
-   Check interfaces, shared assumptions, cross-task invariants, and
-   integration behavior. `result` is `pass`, `fail`, or `blocked`.
-   Write `pass` only after those checks hold. A clean git merge does
-   not by itself write `pass`.
+   Parent only — the reviewer writes no store records:
+
+   1. Build the restricted brief with `se_workflow.reviewer.build_reviewer_brief`
+      (work-item descriptions/Approach, acceptances, requirements/
+      invariants, and `git diff <base>..<phase-head>` only — no
+      execution-report, check-run, assessment, or assignment text).
+   2. Dispatch `agents/se-reviewer.md` (Cursor: tightest read-only /
+      explore restriction available + the agent prompt forbid). Refuse
+      any reviewer-authored store write or tree mutation.
+   3. Parse the structured verdict. Create one `project:check-run` with
+      `method: review`, `evidence_kind: review`, `revision` = phase
+      head, `result` from the verdict (`PASS` → `pass`, `NEEDS_WORK` →
+      `fail`). Create one `project:finding` per NEEDS_WORK item
+      (`needs: none` when a fix task is created, `needs: human` for
+      `severity: judgment` or when no fix is created).
+
+```bash
+adaptive-artifacts create --type project:check-run \
+  --subject "<phase-slug>-review" \
+  --payload '{"criterion_id":"<phase-review-acceptance-id>","revision":"<phase-head-sha>","result":"<pass|fail>","effort":"<focus>","method":"review","signed_by":"","evidence_kind":"review"}' \
+  --body "<reviewer output, verbatim>"
+
+adaptive-artifacts create --type project:finding \
+  --subject "review-<task-or-phase>-<kind>" \
+  --payload '{"claim":"<kind> on <task>: <expected>","basis":"<observed>","invalidated_when":"fix lands and reviewer re-run passes, or human clears","effort":"<focus>","needs":"<none|human>"}' \
+  --body "## Evidence
+
+<expected vs observed from the finding>
+
+## Consequence
+
+Phase merge is blocked until the finding is fixed or cleared.
+
+## Follow-up
+
+Create a fix work-item under the retry budget, or answer Needs you."
+```
+
+   4. Fixable NEEDS_WORK kinds (`spec-gap`, `behavior-bug`,
+      `missing-test`, `invariant-violation`, except `severity:
+      judgment`) become fix work-items via the **Retry loop** Fix tasks
+      path and `retry_max_fix_tasks` budget. Never reopen `done`.
+      After those fixes land and are verified, re-run the reviewer
+      **once** on the new phase diff (same brief rules). Do not re-run
+      a second time. When the fix-task budget is exhausted, escalate
+      with the budget-exhaustion Needs-you path (`continuity-question`
+      / finding `needs: human`) and stop — do not reopen `done`.
+   5. Write one `project:integration-report` for the phase whose body
+      sections come from the reviewer's `integration` map (parent still
+      creates the record). Skip the report when incidental, or when no
+      implementation wave has more than one task. `result` is `pass`,
+      `fail`, or `blocked`. Write `pass` only when the reviewer
+      verdict is `PASS` and those sections hold. A clean git merge does
+      not by itself write `pass`.
 
 ```bash
 adaptive-artifacts create --type project:integration-report \
   --subject "<phase-slug>" \
-  --payload '{"phase":"<phase-slug>","effort":"<focus>","result":"<pass|fail|blocked>","revision":"<git sha or dirty>"}' \
+  --payload '{"phase":"<phase-slug>","effort":"<focus>","result":"<pass|fail|blocked>","revision":"<phase-head-sha>"}' \
   --body "## Interfaces
 
-<interfaces checked across the tasks>
+<from reviewer integration.interfaces>
 
 ## Assumptions
 
-<shared assumptions that still hold>
+<from reviewer integration.assumptions>
 
 ## Invariants
 
-<cross-task invariants>
+<from reviewer integration.invariants>
 
 ## Conflicts
 
-<conflicts, or none>"
+<from reviewer integration.conflicts>"
 ```
 
-   On `fail` or `blocked`, do not dispatch the verification task.
-   Leave it `planned` and stop. On `pass`, return to step 3 and
-   dispatch the verification task.
+   On integration-report `fail` or `blocked`, or when the review
+   check-run is not a passing `method: review` at the phase head, do
+   not merge. Leave the phase `in_progress` and stop (or route fixes /
+   escalate as above).
 
    When no `planned`/`in_progress` same-focus work-items
    remain in this phase (or the incidental task is closed), check the
@@ -367,6 +423,10 @@ adaptive-artifacts list --type project:acceptance \
 
 adaptive-artifacts list --type project:check-run \
   --where payload.criterion_id=<acceptance-id> --order-by recorded_at
+
+adaptive-artifacts list --type project:check-run \
+  --where payload.method=review --where payload.effort=<focus> \
+  --order-by recorded_at
 ```
 
    The gate holds only when all of these are true:
@@ -375,6 +435,9 @@ adaptive-artifacts list --type project:check-run \
    - Every active phase acceptance has a check-run, and the latest
      check-run per `criterion_id` has a passing `result`.
    - Every `method=manual` latest check-run has `signed_by` set.
+   - A passing `method: review` / `evidence_kind: review` check-run
+     exists whose `revision` is the phase-head SHA (required before
+     merge; skip this bullet for incidental).
 
    When the user signs an unsigned manual check, clear it at the event
    (kinds-and-focus, Needs-you clears):
@@ -386,10 +449,11 @@ adaptive-artifacts correct --type project:check-run --id <check-run-id> \
 
    If the gate does not hold, leave the phase `in_progress`. Tell the
    user which criterion has no check-run, a failing latest check-run,
-   or no signature, or that the verification task is missing. Then
+   or no signature, that the verification task is missing, or that the
+   phase lacks a passing review check-run at the phase head. Then
    stop. Do not close the phase to move on. `deliver` and `repair`
-   phases always need the verification task. Skip the gate for
-   incidental work.
+   phases always need the verification task and a passing review at
+   head. Skip the gate for incidental work.
 
    When the gate holds and `## Landing` is present, commit the phase
    branch from the worktree. That commit excludes `.artifacts`. From
@@ -644,8 +708,14 @@ Never transition a `done` work-item back to `in_progress` or
 - Close a phase whose gate in step 8 does not hold
 - Write `pass` on `project:integration-report` because a git merge was
   clean. A clean git merge does not by itself write `pass`
-- Dispatch the verification task when the integration-report `result`
-  is `fail` or `blocked`
+- Write the integration-report before closing verification / the
+  reviewer, or invent its body instead of copying the reviewer's
+  `integration` section
+- Merge (or close the phase) without a passing `method: review`
+  check-run at the phase-head SHA
+- Let the reviewer call `adaptive-artifacts` or write `.artifacts`
+- Re-run the reviewer more than once after fix tasks for the same
+  phase-end pass
 - Create a branch or worktree when the phase body has no Landing section
 - Let code writes leave the worktree when `## Landing` is present
 - Write `.artifacts` anywhere but the primary checkout, or include

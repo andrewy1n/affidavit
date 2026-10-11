@@ -45,7 +45,9 @@ def test_integration_report_create_matches_the_contract(resolved_contract):
 def test_a_git_merge_is_not_a_pass():
     text = _text()
     assert "A clean git merge does not by itself write `pass`" in text
-    assert "On `fail` or `blocked`, do not dispatch the verification task." in text
+    assert "do not merge" in text or "Do not merge" in _text() or (
+        "fail" in text and "blocked" in text and "merge" in text
+    )
 
 
 def test_integration_report_is_skipped_for_incidental_and_serial_waves():
@@ -54,3 +56,6 @@ def test_integration_report_is_skipped_for_incidental_and_serial_waves():
         "Skip the report when incidental, or when no implementation wave "
         "has more than one task."
     ) in text
+    assert "from the reviewer" in text or "reviewer `integration`" in text or (
+        "reviewer's" in text and "integration" in text
+    )

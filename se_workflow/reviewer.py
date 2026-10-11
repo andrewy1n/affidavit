@@ -1,8 +1,15 @@
-"""Build a phase-end reviewer brief with restricted inputs (no builder self-grades)."""
+"""Build a phase-end reviewer brief with restricted inputs (no builder self-grades).
+
+Also parse reviewer output and build parent-side check-run / finding / gate /
+integration-report payloads. The reviewer process never writes store records;
+these helpers are for the parent session only.
+"""
 
 from __future__ import annotations
 
+import re
 import subprocess
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -25,6 +32,16 @@ ALLOWED_KINDS = frozenset(
         "requirement",
         "specification",
         "design",
+    }
+)
+
+# NEEDS_WORK finding kinds that may become retry-loop fix tasks.
+FIXABLE_FINDING_KINDS = frozenset(
+    {
+        "spec-gap",
+        "behavior-bug",
+        "missing-test",
+        "invariant-violation",
     }
 )
 
@@ -149,3 +166,226 @@ def build_reviewer_brief(
     sections.append("")
 
     return "\n".join(sections)
+
+
+def _strip_fence(text: str) -> str:
+    stripped = text.strip()
+    if stripped.startswith("```"):
+        lines = stripped.splitlines()
+        if lines and lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        stripped = "\n".join(lines).strip()
+    return stripped
+
+
+def parse_reviewer_output(text: str) -> dict[str, Any]:
+    """Parse the structured PASS/NEEDS_WORK block from the reviewer."""
+    raw = _strip_fence(text)
+    verdict_m = re.search(r"(?im)^\s*verdict:\s*(\S+)", raw)
+    verdict = (verdict_m.group(1) if verdict_m else "").strip().upper()
+    if verdict in {"NEEDS_WORK", "NEEDS-WORK"}:
+        verdict = "NEEDS_WORK"
+
+    findings: list[dict[str, str]] = []
+    findings_m = re.search(
+        r"(?is)^\s*findings:\s*(.*?)^\s*integration:\s*",
+        raw,
+        re.MULTILINE,
+    )
+    findings_block = findings_m.group(1) if findings_m else ""
+    if findings_block.strip() and findings_block.strip() not in {"[]", "-", "[]\n"}:
+        chunks = re.split(r"(?m)^\s*-\s+task:\s*", findings_block)
+        for chunk in chunks:
+            chunk = chunk.strip()
+            if not chunk:
+                continue
+            task_line, _, rest = chunk.partition("\n")
+            task = task_line.strip()
+            kind_m = re.search(r"(?im)^\s*kind:\s*(\S+)", rest)
+            expected_m = re.search(r"(?im)^\s*expected:\s*(.+)$", rest)
+            observed_m = re.search(r"(?im)^\s*observed:\s*(.+)$", rest)
+            severity_m = re.search(r"(?im)^\s*severity:\s*(\S+)", rest)
+            findings.append(
+                {
+                    "task": task,
+                    "kind": (kind_m.group(1) if kind_m else "").strip(),
+                    "expected": (expected_m.group(1) if expected_m else "").strip(),
+                    "observed": (observed_m.group(1) if observed_m else "").strip(),
+                    "severity": (severity_m.group(1) if severity_m else "").strip(),
+                }
+            )
+
+    integration: dict[str, str] = {
+        "interfaces": "",
+        "assumptions": "",
+        "invariants": "",
+        "conflicts": "",
+    }
+    integ_m = re.search(r"(?im)^\s*integration:\s*\n(.*)\Z", raw, re.DOTALL)
+    if integ_m:
+        block = integ_m.group(1)
+        for key in ("interfaces", "assumptions", "invariants", "conflicts"):
+            km = re.search(rf"(?im)^\s*{key}:\s*(.*)$", block)
+            if km:
+                integration[key] = km.group(1).strip()
+
+    return {"verdict": verdict, "findings": findings, "integration": integration}
+
+
+def verdict_to_result(verdict: str) -> str:
+    normalized = (verdict or "").strip().upper().replace("-", "_")
+    if normalized == "PASS":
+        return "pass"
+    return "fail"
+
+
+def build_review_check_run_payload(
+    *,
+    criterion_id: str,
+    phase_head: str,
+    effort: str,
+    verdict: str,
+) -> dict[str, str]:
+    """Parent-only payload for the phase-end review check-run."""
+    return {
+        "criterion_id": criterion_id,
+        "revision": phase_head,
+        "result": verdict_to_result(verdict),
+        "effort": effort,
+        "method": "review",
+        "signed_by": "",
+        "evidence_kind": "review",
+    }
+
+
+def is_fixable_finding_kind(kind: str) -> bool:
+    return (kind or "").strip() in FIXABLE_FINDING_KINDS
+
+
+def build_finding_payload(
+    finding: Mapping[str, Any],
+    *,
+    effort: str,
+    fix_task_created: bool,
+) -> dict[str, str]:
+    """Parent-only finding payload for one NEEDS_WORK item."""
+    severity = str(finding.get("severity") or "").strip().lower()
+    if severity == "judgment":
+        needs = "human"
+    elif fix_task_created:
+        needs = "none"
+    else:
+        needs = "human"
+    kind = str(finding.get("kind") or "finding")
+    task = str(finding.get("task") or "phase")
+    claim = f"{kind} on {task}: {finding.get('expected') or ''}".strip()
+    basis = str(finding.get("observed") or "")
+    return {
+        "claim": claim,
+        "basis": basis,
+        "invalidated_when": "fix lands and reviewer re-run passes, or human clears",
+        "effort": effort,
+        "needs": needs,
+    }
+
+
+@dataclass
+class ReviewRouting:
+    create_fix_flags: list[bool] = field(default_factory=list)
+    fix_subjects: list[str] = field(default_factory=list)
+    escalate: bool = False
+    reopen_done: bool = False
+
+
+def route_review_findings(
+    findings: Sequence[Mapping[str, Any]],
+    *,
+    fix_budget_remaining: int,
+    reviewer_rerun_used: bool = False,
+) -> ReviewRouting:
+    """Decide which NEEDS_WORK items become fix tasks under the retry budget.
+
+    Never reopens ``done`` work-items (``reopen_done`` is always False).
+    Judgment severity does not create a fix task. Budget exhaustion escalates.
+    """
+    del reviewer_rerun_used  # reserved for callers; routing is budget-driven
+    flags: list[bool] = []
+    subjects: list[str] = []
+    remaining = max(0, int(fix_budget_remaining))
+    wanted_fixable = 0
+    for finding in findings:
+        kind = str(finding.get("kind") or "")
+        severity = str(finding.get("severity") or "").strip().lower()
+        task = str(finding.get("task") or "phase")
+        fixable = is_fixable_finding_kind(kind) and severity != "judgment"
+        if fixable:
+            wanted_fixable += 1
+        if fixable and remaining > 0:
+            flags.append(True)
+            subjects.append(f"fix-{task}-{kind}")
+            remaining -= 1
+        else:
+            flags.append(False)
+            subjects.append("")
+    escalate = wanted_fixable > 0 and remaining == 0 and not any(flags)
+    # Also escalate when some fixable items were skipped due to budget mid-batch.
+    if wanted_fixable > sum(flags):
+        escalate = True
+    return ReviewRouting(
+        create_fix_flags=flags,
+        fix_subjects=subjects,
+        escalate=escalate,
+        reopen_done=False,
+    )
+
+
+def should_rerun_reviewer(*, fix_tasks_created: int, reviewer_rerun_used: bool) -> bool:
+    """Re-run the reviewer once after fix tasks land; never a second re-run."""
+    return bool(fix_tasks_created) and not reviewer_rerun_used
+
+
+def _revision_matches(check_revision: str, phase_head: str) -> bool:
+    a = (check_revision or "").strip().lower()
+    b = (phase_head or "").strip().lower()
+    if not a or not b:
+        return False
+    if a == b:
+        return True
+    # Allow abbreviated SHAs either direction.
+    shorter, longer = (a, b) if len(a) <= len(b) else (b, a)
+    return longer.startswith(shorter) and len(shorter) >= 7
+
+
+def phase_review_gate_holds(
+    *,
+    check_runs: Sequence[Mapping[str, Any]],
+    phase_head: str,
+) -> bool:
+    """True when a passing method:review check-run exists at the phase head."""
+    for run in check_runs:
+        method = str(run.get("method") or "")
+        result = str(run.get("result") or "")
+        revision = str(run.get("revision") or "")
+        if method != "review":
+            continue
+        if result != "pass":
+            continue
+        if _revision_matches(revision, phase_head):
+            return True
+    return False
+
+
+def integration_report_body(integration: Mapping[str, Any]) -> str:
+    """Fill integration-report required sections from reviewer integration."""
+    return (
+        "## Interfaces\n\n"
+        f"{integration.get('interfaces') or ''}\n\n"
+        "## Assumptions\n\n"
+        f"{integration.get('assumptions') or ''}\n\n"
+        "## Invariants\n\n"
+        f"{integration.get('invariants') or ''}\n\n"
+        "## Conflicts\n\n"
+        f"{integration.get('conflicts') or ''}"
+    )

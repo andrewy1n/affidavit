@@ -260,7 +260,7 @@ def test_assessment_and_check_run_enums_match_the_contract(contract_indexes):
     assessment_enum = defs["project:assessment"]["payload_enum"]
     check_enum = defs["project:check-run"]["payload_enum"]
     assert check_enum["result"] == ["pass", "fail", "blocked", "insufficient"]
-    assert check_enum["method"] == ["tdd", "check", "manual"]
+    assert check_enum["method"] == ["tdd", "check", "manual", "review"]
     assert defs["project:acceptance"]["payload_enum"]["method"] == [
         "tdd", "check", "manual",
     ]
