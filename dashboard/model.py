@@ -57,6 +57,9 @@ class PhaseRow:
     unset_estimates: int = 0
 
 
+DEFAULT_RETRY_MAX_REDISPATCHES = 2
+
+
 @dataclass(frozen=True)
 class TaskRow:
     id: str
@@ -72,6 +75,8 @@ class TaskRow:
     estimate_minutes: int | None = None
     executor: str = "subagent"
     last_record_at: datetime | None = None
+    attempts: int = 0
+    retry_budget: int = DEFAULT_RETRY_MAX_REDISPATCHES
 
 
 @dataclass(frozen=True)
@@ -440,6 +445,20 @@ def sitting_phrase(body: str) -> str:
     return ""
 
 
+def retry_max_redispatches(body: str) -> int:
+    """Per-task re-dispatch budget from phase run facts, or the default of 2."""
+    for line in (body or "").splitlines():
+        if "retry_max_redispatches" not in line:
+            continue
+        _, _, rest = line.partition("retry_max_redispatches")
+        rest = rest.lstrip(" \t:")
+        token = rest.split()[0] if rest.split() else ""
+        token = token.rstrip(".,;")
+        if token.isdigit():
+            return int(token)
+    return DEFAULT_RETRY_MAX_REDISPATCHES
+
+
 def phase_elapsed(tasks: list[TaskRow]) -> tuple[int | None, int]:
     """Wave-rule minutes for already-counted tasks, plus how many lack an estimate.
 
@@ -487,6 +506,15 @@ def _estimate_minutes(payload: dict[str, Any]) -> int | None:
 def _executor(payload: dict[str, Any]) -> str:
     executor = payload.get("executor")
     return executor if executor else "subagent"
+
+
+def _attempts(payload: dict[str, Any]) -> int:
+    if "attempts" not in payload:
+        return 0
+    value = payload["attempts"]
+    if value is None or value == "":
+        return 0
+    return int(value)
 
 
 def _task_status(record: dict[str, Any]) -> str | None:
@@ -537,12 +565,17 @@ def _task_rows(
     amendments: list[dict[str, Any]] | None = None,
     reports: list[dict[str, Any]] | None = None,
     checks: list[dict[str, Any]] | None = None,
+    phases: list[dict[str, Any]] | None = None,
 ) -> list[TaskRow]:
     by_id = {record["id"]: record for record in records}
     assignments = assignments or []
     amendments = amendments or []
     reports = reports or []
     checks = checks or []
+    budgets = {
+        phase["subject"]: retry_max_redispatches(phase.get("body") or "")
+        for phase in (phases or [])
+    }
     subjects = [record["subject"] for record in records]
     rows = []
     for record in records:
@@ -557,14 +590,17 @@ def _task_rows(
             _last_record_at(record, assignments, amendments, reports, checks, others)
             if running_since is not None else None
         )
+        phase = payload.get("phase", "")
         rows.append(TaskRow(
             id=record["id"], subject=record["subject"], title=payload.get("title", ""),
-            phase=payload.get("phase", ""), assignee=payload.get("assignee", ""),
+            phase=phase, assignee=payload.get("assignee", ""),
             wave=_derived(record).get("wave"), status=status,
             waits_on=tuple(dep["subject"] for dep in depends_on if dep["lifecycle_state"] != "done"),
             running_since=running_since,
             size=_size(payload), estimate_minutes=_estimate_minutes(payload), executor=_executor(payload),
             last_record_at=last_record_at,
+            attempts=_attempts(payload),
+            retry_budget=budgets.get(phase, DEFAULT_RETRY_MAX_REDISPATCHES),
         ))
     rows.sort(key=lambda row: (TASK_ORDER.index(row.status), row.wave if row.wave is not None else 0, row.subject))
     return rows
@@ -1038,6 +1074,7 @@ def load_snapshot(target: Target, now: datetime | None = None) -> Snapshot:
                 listed["project:assignment-amendment"],
                 listed["project:execution-report"],
                 effort_checks,
+                phases.get(effort, []),
             ),
             needs_you=_needs_you(
                 questions.get(effort, []), findings.get(effort, []), effort_checks, acceptances_by_id,
@@ -1515,7 +1552,7 @@ def load_phase_detail(target: Target, effort: str, phase_subject: str) -> PhaseD
         subject=phase_subject, effort=effort, title=payload.get("title", ""), state=record["lifecycle_state"],
         awaiting_signoff=bool(row and row.awaiting_signoff), body=item.get("body") or "",
         decisions=decisions, constraints=constraints,
-        tasks=[t for t in _task_rows(tasks) if t.phase == phase_subject],
+        tasks=[t for t in _task_rows(tasks, phases=[record]) if t.phase == phase_subject],
         evidence=evidence,
         spec_body=(spec.get("body") or "") if spec else "",
         design_body=(design.get("body") or "") if design else "",

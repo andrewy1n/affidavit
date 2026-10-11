@@ -3694,3 +3694,37 @@ def test_backlog_detail_promote_and_refuse_non_backlog(store, cli, defs, monkeyp
         assert any(entry.id == fake.id for entry in app.effort_view("alpha").backlog)
 
     _detail_run(store, (120, 40), scenario)
+
+
+def test_attempt_title_suffix_default_budget(store, cli, defs):
+    _estimate_goal(cli, defs)
+    _open_phase(cli, defs, "att", 1, "Attempt phase", _phase_body(defs))
+    retried = _estimate_task(cli, defs, "retried", "att", title="Retried", attempts=1)
+    fresh = _estimate_task(cli, defs, "fresh", "att", title="Fresh")
+    zero = _estimate_task(cli, defs, "zeroed", "att", title="Zeroed", attempts=0)
+
+    async def scenario(app, pilot):
+        assert "attempt 1/2" in _task_plain(app, retried["id"])
+        fresh_plain = _task_plain(app, fresh["id"])
+        assert "attempt" not in fresh_plain
+        assert "attempt" not in _task_plain(app, zero["id"])
+        cell = app.query_one("#tasks").get_row(retried["id"])[1]
+        start = str(cell).index("attempt 1/2")
+        muted = app_module.palette_from(app.get_css_variables())["muted"]
+        assert any(span.start <= start and str(span.style) == muted for span in cell.spans)
+
+    _run(store, 60, scenario)
+
+
+def test_attempt_title_suffix_run_fact_budget(store, cli, defs):
+    _estimate_goal(cli, defs)
+    body = _phase_body(defs, "retry_max_redispatches: 5")
+    _open_phase(cli, defs, "att-ov", 1, "Override phase", body)
+    retried = _estimate_task(cli, defs, "retried-ov", "att-ov", title="Retried", attempts=2)
+
+    async def scenario(app, pilot):
+        plain = _task_plain(app, retried["id"])
+        assert "attempt 2/5" in plain
+        assert "attempt 2/2" not in plain
+
+    _run(store, 60, scenario)

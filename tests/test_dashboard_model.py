@@ -2075,3 +2075,61 @@ def test_backlog_never_lands_in_needs_you(store, cli, defs):
     assert [entry.subject for entry in view.backlog] == ["parked-only"]
     assert view.backlog[0].id == item["id"]
     assert view.needs_you == []
+
+
+def test_attempt_row_fields_default_budget():
+    retried = _estimate_record("retried", attempts=1)
+    fresh = _estimate_record("fresh")
+    zero = _estimate_record("zero", attempts=0)
+    rows = {row.subject: row for row in model._task_rows([retried, fresh, zero])}
+    assert rows["retried"].attempts == 1
+    assert rows["retried"].retry_budget == 2
+    assert rows["fresh"].attempts == 0
+    assert rows["fresh"].retry_budget == 2
+    assert rows["zero"].attempts == 0
+
+
+def test_attempt_budget_from_phase_run_facts():
+    assert model.retry_max_redispatches("") == 2
+    assert model.retry_max_redispatches("retry_max_redispatches: 5") == 5
+    assert model.retry_max_redispatches("## Run facts\n\n- retry_max_redispatches: 4\n") == 4
+    task = _estimate_record("retried", attempts=2, phase="p-retry")
+    phase = {
+        "id": "phase-retry",
+        "subject": "p-retry",
+        "lifecycle_state": "in_progress",
+        "payload": {"title": "Retry", "ordinal": 1},
+        "body": "retry_max_redispatches: 5\n",
+    }
+    row = model._task_rows([task], phases=[phase])[0]
+    assert row.attempts == 2
+    assert row.retry_budget == 5
+
+
+def test_attempt_snapshot_reads_payload_and_run_facts(store, cli, defs):
+    _goal(cli, defs, "alpha")
+    body = (
+        "## Problem\n\nplaceholder.\n\n"
+        "## Approach\n\nretry_max_redispatches: 3\n\n"
+        "## Exit criteria\n\nplaceholder.\n"
+    )
+    phase = _record(
+        cli, defs, "project:phase", "p-attempt",
+        {"title": "Attempt", "ordinal": 1, "effort": "alpha"}, body,
+    )
+    h.transition(cli, "project:phase", phase, "in_progress")
+    retried = _record(cli, defs, "project:work-item", "attempt-task", {
+        "title": "Retried task", "phase": "p-attempt", "kind": "deliver",
+        "assignee": "", "effort": "alpha", "attempts": 1,
+    })
+    _record(cli, defs, "project:work-item", "fresh-task", {
+        "title": "Fresh task", "phase": "p-attempt", "kind": "deliver",
+        "assignee": "", "effort": "alpha",
+    })
+    view = _effort(model.load_snapshot(_target(store)), "alpha")
+    tasks = {task.subject: task for task in view.tasks}
+    assert tasks["attempt-task"].attempts == 1
+    assert tasks["attempt-task"].retry_budget == 3
+    assert tasks["attempt-task"].id == retried["id"]
+    assert tasks["fresh-task"].attempts == 0
+    assert tasks["fresh-task"].retry_budget == 3

@@ -156,6 +156,8 @@ def task_suffix(task: model.TaskRow) -> str:
     if task.estimate_minutes is not None:
         parts.append(f"{task.estimate_minutes}m")
     parts.append(task.executor or "subagent")
+    if task.attempts > 0:
+        parts.append(f"attempt {task.attempts}/{task.retry_budget}")
     return " · " + " · ".join(parts)
 
 
