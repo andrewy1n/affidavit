@@ -113,6 +113,41 @@ kind/focus are unset).
 
 ## Steps
 
+0. When handed an assessment with `next: plan` for this phase (or
+   engage routes here because Assess chose `plan`), consume that
+   signal before a fresh full plan: list active assessments with
+   `next` `plan` for the phase, identify the uncovered requirement,
+   add the missing task(s) for that requirement (same create shapes
+   as steps 5–7, including `depends_on` and a new edge on the
+   verification task via `update --rel` when needed), regenerate
+   views, and re-open plan review for the delta. Do not invent a
+   parallel skill.
+
+```bash
+adaptive-artifacts list --type project:assessment --state active \
+  --where payload.phase=<current-phase-slug> --where payload.next=plan
+```
+
+   After the missing work-item(s) and acceptance(s) exist, open (or
+   re-create if the prior plan-review was already answered) the plan
+   review gate:
+
+```bash
+adaptive-artifacts create --type project:continuity-question \
+  --subject "<effort-slug>" \
+  --payload '{"owner":"user","blocking":true,"scope":"plan-review:<current-phase-slug>"}'
+```
+
+   When the user approves the delta, clear it at the event:
+
+```bash
+adaptive-artifacts update --type project:continuity-question --id <question-id> \
+  --transition answered --expected-revision <revision>
+```
+
+   Then stop until approval; do not dispatch. If there is no `next:
+   plan` assessment, continue with step 1.
+
 1. Read views if not already in context:
    `adaptive-artifacts hook-start`
    Resolve **focus** and **kind**. Use the `## <focus>` plan section.

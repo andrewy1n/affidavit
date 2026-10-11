@@ -100,14 +100,16 @@
         "requirements",
         "decisions",
         "size",
-        "estimate_minutes"
+        "estimate_minutes",
+        "attempts"
       ],
       "optional_payload": [
         "executor",
         "requirements",
         "decisions",
         "size",
-        "estimate_minutes"
+        "estimate_minutes",
+        "attempts"
       ],
       "required_sections": [
         "Description"

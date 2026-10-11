@@ -519,7 +519,10 @@ adaptive-artifacts create --type project:finding \
    verification check fails and the cause is the task's code, leave
    the work-item `in_progress` and use assessment `next` `execute`
    for that failure. Do not tell the parent to run a suite the
-   acceptance does not name.
+   acceptance does not name. The parent (`execute-phase`) will
+   re-dispatch that task or create a fix work-item under the retry
+   budget; this skill does not re-dispatch and does not change
+   evidence-escalation routing.
 7. On **abandoned** approach: `create --type project:failed-attempt`
    with `attempted_action`, `retry_when`, `effort`. If the whole task
    is dropped (not just this attempt), transition the work-item to

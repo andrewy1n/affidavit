@@ -58,6 +58,11 @@ adaptive-artifacts update --type project:continuity-question --id <question-id> 
 ```
 
    Do not dispatch another effort's tasks.
+
+   Before selecting planned ready work, select retryable `in_progress`
+   work-items in this phase and re-dispatch them (same executor mode).
+   See **Retry loop** below. Only after that pass, continue with the
+   planned ready list.
 2. Select dispatchable work-items directly — `project:plan`'s rendered
    view does not carry `derived.ready`/`wave`, so query the store:
 
@@ -460,6 +465,162 @@ adaptive-artifacts supersede --type project:current-position --id <position-id> 
    reopening.
 9. Regenerate views (including `project:brief`); `adaptive-artifacts validate`.
 
+## Retry loop
+
+Parent-only. Do this at the start of each dispatch cycle, before the
+planned ready `list` in step 2. Evidence escalation still chooses
+`level` / `next`; the budget only decides when to stop.
+
+### Re-dispatch selection
+
+```bash
+adaptive-artifacts list --type project:work-item --state in_progress \
+  --where payload.effort=<focus> --where payload.phase=<current-phase-slug>
+```
+
+For each result, load the latest `project:assessment` for that task
+(structured) or the latest `project:check-run` (simple). Treat as
+retry when the assessment has `next` `execute`, or the check-run has
+`result` `fail`. Skip a task whose executor is still running for the
+current assignment. Skip a task with an open blocking
+`continuity-question` whose `scope` is `retry:<task-slug>`.
+
+Re-dispatch with the same `payload.executor` mode as the prior wave
+(`inline` or `subagent`; missing means `subagent`). Do not change the
+wave mode for a retry.
+
+### Budget (hard backstop)
+
+Defaults (override in the phase body's run facts):
+
+- `retry_max_redispatches`: 2 re-dispatches per task
+- `retry_time_multiplier`: 2 (stop when cumulative executor running
+  time ≥ 2× `estimate_minutes` when that field is set; whichever of
+  count or time comes first)
+- `retry_max_fix_tasks`: 3 fix work-items created for the phase
+
+When run facts omit a key, use the default. When cumulative time
+cannot be computed from assignment / execution-report timestamps,
+fall back to the re-dispatch count only. `attempts` is the
+re-dispatch count (optional integer; treat absent as 0). The evidence
+ladder is unchanged for routing.
+
+When a per-task or per-phase fix-task budget is exhausted, do not
+re-dispatch that task. Open Needs you and stop selecting it:
+
+```bash
+adaptive-artifacts create --type project:continuity-question \
+  --subject "<focus>" \
+  --payload '{"owner":"user","blocking":true,"scope":"retry:<task-slug>"}'
+
+adaptive-artifacts create --type project:finding \
+  --subject "retry-<task-slug>" \
+  --payload '{"claim":"retry budget exhausted for <task-slug> after <attempts> re-dispatches","basis":"<attempts, check-runs, assessments>","invalidated_when":"human raises the budget or withdraws the task","effort":"<focus>","needs":"human"}' \
+  --body "## Evidence
+
+<attempts, failing check-runs, latest assessment>
+
+## Consequence
+
+Dispatch of this task stops until the human answers.
+
+## Follow-up
+
+Raise the run-fact budget, withdraw the task, or choose another approach."
+```
+
+When the user answers the question or clears the finding, clear each
+at the event (kinds-and-focus, Needs-you clears):
+
+```bash
+adaptive-artifacts update --type project:continuity-question --id <question-id> \
+  --transition answered --expected-revision <revision>
+
+adaptive-artifacts update --type project:finding --id <finding-id> \
+  --expected-revision <revision> \
+  --payload '{"needs":"none"}'
+```
+
+### Amendment, attempts, re-dispatch
+
+For each retryable task still inside budget: record an
+`assignment-amendment` whose `## Correction` quotes the failing
+check-run evidence (runner output tail) and the assessment's
+`## Reason` when present; increment `attempts`; then create a fresh
+`project:assignment` and dispatch as in steps 4–5 (same executor
+mode). The work-item stays `in_progress` — do not reopen `done`.
+
+```bash
+adaptive-artifacts create --type project:assignment-amendment \
+  --subject "<task-slug>" \
+  --payload '{"assignment":"<task-slug>","effort":"<focus>"}' \
+  --body "## Correction
+
+Re-dispatch after failure.
+
+## Failing check-run
+
+<runner output tail from the failing check-run>
+
+## Reason
+
+<assessment ## Reason when present, else omit>"
+
+adaptive-artifacts update --type project:work-item --id <id> \
+  --expected-revision <revision> \
+  --payload '{"attempts":1}'
+
+adaptive-artifacts create --type project:assignment \
+  --subject "<task-slug>" \
+  --payload '{"work_item":"<task-slug>","executor":"<assignee>","effort":"<focus>"}' \
+  --body "## Orientation
+
+Re-dispatch attempt <attempts>. Same territory and executor mode as the prior wave.
+
+<quoted requirement / design / decision text as in step 4>"
+```
+
+Set `attempts` to the prior value plus one (absent means 0, so the
+first re-dispatch writes `1`). Then dispatch with that same executor
+mode and continue through execution-report + `verify-work`.
+
+### Fix tasks (closing verification)
+
+When the closing verification task (the work-item that `depends_on`
+every other phase work-item) fails and the cause is another task's
+code, create a new fix work-item in the same phase — never reopen
+`done`. The fix has no `depends_on`. Its Approach comes from the
+failure; its acceptance is the failing check. Then add a `depends_on`
+edge from the verification task to the fix so `derived.ready`
+re-gates verification. Count the new fix against
+`retry_max_fix_tasks`. If that phase budget is exhausted, use the
+budget-exhaustion Needs-you path above (`scope: retry:<verification-slug>`
+or `retry:<fix-slug>` as appropriate) instead of creating another fix.
+
+```bash
+adaptive-artifacts create --type project:work-item \
+  --subject "fix-<failing-area>" \
+  --payload '{"title":"Fix <failing area>","phase":"<current-phase-slug>","kind":"deliver","assignee":"","effort":"<focus>","executor":"<same mode as phase wave>","size":"S","estimate_minutes":20,"requirements":"<ids>","decisions":"<ids>"}' \
+  --body "## Description
+
+Fix the failure that blocked closing verification.
+
+## Approach
+
+<from the failing check-run / node ids>"
+
+adaptive-artifacts create --type project:acceptance \
+  --subject "fix-<failing-area>" \
+  --payload '{"criterion":"<the failing check>","method":"tdd","phase":"<current-phase-slug>","effort":"<focus>","verify_command":"<command>","requirement":"<id>"}'
+
+adaptive-artifacts update --type project:work-item --id <verification-work-item-id> \
+  --expected-revision <revision> \
+  --rel depends_on:<fix-work-item-id>
+```
+
+Never transition a `done` work-item back to `in_progress` or
+`planned`. Fix tasks stay in the current phase.
+
 ## Do not
 
 - Write a plan document as authority
@@ -494,3 +655,9 @@ adaptive-artifacts supersede --type project:current-position --id <position-id> 
 - Push unless Landing names push as a human stop
 - Let the verification executor edit the tree. The verification
   executor returns `fail` and does not edit the tree.
+- Reopen a `done` work-item. Never reopen `done`; create a fix
+  work-item and `depends_on` instead
+- Re-dispatch a task after its retry budget is exhausted without
+  opening `scope: retry:<task-slug>` Needs you
+- Skip the retryable `in_progress` pass and only select `planned`
+  ready work
