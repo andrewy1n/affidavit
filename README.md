@@ -460,6 +460,15 @@ uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -
   && uv run --with textual --with pytest python -m pytest tests -q -m tmux
 ```
 
+That full chain is the **phase-level tier-2** suite. Per-task
+`verify_command` values stay narrowly scoped (specific files and `-k`
+filters). Do not put this whole-suite command on a work-item
+acceptance. After closing verification and the phase-end reviewer
+pass, `execute-phase` starts this suite in a detached tmux window in
+the phase worktree, records one tier-2 check-run
+(`subject` `<phase>-tier2`, `evidence_kind: integration`) at the phase
+head SHA, and requires that pass before merge.
+
 By default it looks for the runtime at `~/adaptive-artifacts`. Point it
 elsewhere with `ADAPTIVE_ARTIFACTS_ROOT`:
 

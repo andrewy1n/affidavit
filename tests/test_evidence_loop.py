@@ -162,7 +162,7 @@ def test_check_run_result_and_method_are_contract_enums(cli, resolved_contract):
     assert check_def["payload_enum"]["result"] == [
         "pass", "fail", "blocked", "insufficient",
     ]
-    assert check_def["payload_enum"]["method"] == ["tdd", "check", "manual"]
+    assert check_def["payload_enum"]["method"] == ["tdd", "check", "manual", "review"]
     assert defs["project:acceptance"]["payload_enum"]["method"] == [
         "tdd", "check", "manual",
     ]

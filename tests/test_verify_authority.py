@@ -81,16 +81,15 @@ def test_skill_close_request_references_check_run_id_for_runner_methods():
     assert "check_run_id" in close
     assert '"method": "tdd"' in close
     assert '"method": "check"' in close
-    # Invented create shape must not appear in Close for runner methods.
-    assert '"method": "tdd", "revision"' not in close.replace(" ", "")
-    assert not re.search(
-        r'"method"\s*:\s*"tdd"[^}]*"revision"',
-        close,
-    )
-    assert not re.search(
-        r'"method"\s*:\s*"check"[^}]*"revision"',
-        close,
-    )
+    # Runner close-request entries may carry revision (ancestry) with check_run_id.
+    # Invented shape is method+revision without a runner check_run_id.
+    for method in ("tdd", "check"):
+        for block in re.findall(
+            rf'\{{[^{{}}]*"method"\s*:\s*"{method}"[^{{}}]*\}}',
+            close,
+        ):
+            if '"revision"' in block:
+                assert '"check_run_id"' in block, block
 
 
 def test_close_batch_refuses_invented_tdd_pass_without_check_run_id():
@@ -159,6 +158,11 @@ def test_close_batch_does_not_emit_check_run_create_for_runner_methods():
                     "method": "tdd",
                     "check_run_id": "rec-runner-cr",
                     "result": "pass",
+                    "revision": "abc123",
+                    "red_check_run_id": "rec-red-cr",
+                    "red_result": "fail",
+                    "red_revision": "abc123",
+                    "red_runner": "se-workflow",
                 }
             ],
             "finding": None,

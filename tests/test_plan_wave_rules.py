@@ -89,7 +89,8 @@ def test_plan_review_stays_closed_until_recipe_executor_and_run_facts_are_presen
     )
     assert question["payload"]["blocking"] is True
     assert question["payload"]["scope"].startswith("plan-review:")
-    question_at = flat.index("adaptive-artifacts create --type project:continuity-question")
+    # Final plan-review create (step 10), not the earlier next:plan re-open example.
+    question_at = flat.rindex("adaptive-artifacts create --type project:continuity-question")
     gate_at = flat.rindex(gate)
     assert gate_at < question_at
     window = flat[gate_at:question_at]

@@ -430,14 +430,29 @@ def test_prefix_a_popup_walks_six_tabs_counts_needs_you_reads_unsigned_checks_re
     press(b"\x1b", "title of fx-running", "assignee", absent=("Description",))
 
     # tmux 3.2 closes a popup when the client tty changes size, so reopen at the new size.
+    # Resize/reopen races: popup may still be wide or empty until redraw; poll with refresh.
     os.write(tmux.client_fd, b"q")
     time.sleep(0.4)
     fcntl.ioctl(tmux.client_fd, termios.TIOCSWINSZ, struct.pack("HHHH", tmux.rows, 80, 0, 0))
-    time.sleep(0.2)
-    tmux.press("A")
-    narrow = tmux.screen_text(["title of fx-running", "title of fx-ready"])
-    assert "assignee" not in narrow, narrow[-2000:]
-    assert "No live efforts" not in narrow, narrow[-2000:]
+    time.sleep(0.5)
+    end = time.monotonic() + h.DEADLINE * 2
+    narrow = ""
+    while time.monotonic() < end:
+        tmux.press("A")
+        narrow = _refreshed(tmux, "title of fx-running", "title of fx-ready")
+        if (
+            "title of fx-running" in narrow
+            and "title of fx-ready" in narrow
+            and "assignee" not in narrow
+            and "No live efforts" not in narrow
+        ):
+            break
+        os.write(tmux.client_fd, b"q")
+        time.sleep(0.4)
+        fcntl.ioctl(tmux.client_fd, termios.TIOCSWINSZ, struct.pack("HHHH", tmux.rows, 80, 0, 0))
+        time.sleep(0.5)
+    else:
+        raise AssertionError(narrow[-2000:])
     assert len(tmux("list-panes", "-t", "main", "-F", "#{pane_id}").split()) == 1
 
 

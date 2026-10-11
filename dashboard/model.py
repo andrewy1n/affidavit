@@ -55,6 +55,7 @@ class PhaseRow:
     body: str = ""
     elapsed_minutes: int | None = None
     unset_estimates: int = 0
+    tier2: str = ""
 
 
 DEFAULT_RETRY_MAX_REDISPATCHES = 2
@@ -445,6 +446,45 @@ def sitting_phrase(body: str) -> str:
     return ""
 
 
+# Tier-2 check-run convention (shared with tier2-engine):
+# subject `<phase>-tier2`, evidence_kind `integration`, revision = phase head SHA.
+# In-flight: result `blocked` and body contains the marker below (no final pass/fail yet).
+TIER2_SUBJECT_SUFFIX = "-tier2"
+TIER2_EVIDENCE_KIND = "integration"
+TIER2_RUNNING_MARKER = "tier2-running"
+
+
+def _short_revision(revision: str) -> str:
+    rev = (revision or "").strip()
+    if not rev:
+        return "?"
+    return rev[:7]
+
+
+def tier2_status_label(phase: str, checks: list[dict[str, Any]]) -> str:
+    """Compact tier-2 chrome for a phase header: t2 run / t2 ok@SHA / t2 fail@SHA."""
+    matched = [
+        record for record in checks
+        if record.get("lifecycle_state") not in INACTIVE_STATES
+        and record.get("subject") == f"{phase}{TIER2_SUBJECT_SUFFIX}"
+        and (_payload(record).get("evidence_kind") or "") == TIER2_EVIDENCE_KIND
+    ]
+    record = _newest(matched)
+    if record is None:
+        return ""
+    payload = _payload(record)
+    result = payload.get("result") or ""
+    body = record.get("body") or ""
+    if result == "blocked" and TIER2_RUNNING_MARKER in body:
+        return "t2 run"
+    short = _short_revision(payload.get("revision") or "")
+    if result == "pass":
+        return f"t2 ok@{short}"
+    if result == "fail":
+        return f"t2 fail@{short}"
+    return ""
+
+
 def retry_max_redispatches(body: str) -> int:
     """Per-task re-dispatch budget from phase run facts, or the default of 2."""
     for line in (body or "").splitlines():
@@ -649,6 +689,7 @@ def _phase_rows(
             evidence=evidence_by_phase.get(record["subject"]),
             sitting=sitting_phrase(body), body=body,
             elapsed_minutes=elapsed_minutes, unset_estimates=unset_estimates,
+            tier2=tier2_status_label(record["subject"], checks or []),
         ))
     rows.sort(key=lambda row: (row.ordinal, row.subject))
     return rows
