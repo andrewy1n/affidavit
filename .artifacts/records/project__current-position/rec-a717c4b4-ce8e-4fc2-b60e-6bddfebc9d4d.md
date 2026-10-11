@@ -4,7 +4,7 @@
   "epistemic_status": "asserted",
   "id": "rec-a717c4b4-ce8e-4fc2-b60e-6bddfebc9d4d",
   "identity": "unknown",
-  "lifecycle_state": "active",
+  "lifecycle_state": "superseded",
   "payload": {
     "effort": "packaging",
     "position": "backlog parked; no phase started",
@@ -12,9 +12,9 @@
     "status": "open"
   },
   "record_type": "project:current-position",
-  "recorded_at": "2026-10-11T06:28:28+00:00",
+  "recorded_at": "2026-10-11T06:43:48+00:00",
   "relationships": {},
-  "revision": "sha256:17d8db18fd888bb15dc73d48533b651d78e1aee495933b5d0b420a4b1d1f7d42",
+  "revision": "sha256:a29d804e51a28c3d343d46c16383c0fa2a5f3eb0214892abeddbbfec44a98ef8",
   "stewardship": {
     "steward": "agent"
   },

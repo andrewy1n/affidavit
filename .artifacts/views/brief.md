@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:4ea75acb345f0f07e6b9afc0bf0a4070c24e93c42099bd224bd3461588e42574
+> Store state: sha256:ddd3df9ea9a86fe20d7b125572493a54efcd6664aa41bf7b9e034b48ed7d95a7
 
 ## activity-failures
 
@@ -123,6 +123,19 @@
 
 ### Acceptance
 - **check-run-contract**: Bundled contract declares enums for check-run.result and check-run/acceptance method, lists the optional runner fields, and contract self-consistency plus the flipped evidence-loop/assess-routing tests pass; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py tests/test_evidence_loop.py tests/test_assess_routing.py -q -k 'enum or result or method or contract' _(id: [rec-88363d0c-d058-4a0d-8c04-4a697bbe457d](.artifacts/records/project__acceptance/rec-88363d0c-d058-4a0d-8c04-4a697bbe457d.md))_
+
+## claude-shared-marketplace
+
+### Work
+- **claude-shared-marketplace**: Shared marketplace manifests + README; plugin-dep-marketplace; deliver; packaging _(id: [rec-dc9849df-5539-4ed7-86b3-23ecf520b96b](.artifacts/records/project__work-item/rec-dc9849df-5539-4ed7-86b3-23ecf520b96b.md))_
+
+### Acceptance
+- **claude-shared-marketplace**: plugin.json declares adaptive-artifacts in dependencies and marketplace.json lists both plugins with AA via github source; claude plugin validate . exits 0; check; packaging; claude plugin validate . && python3 -c "import json;p=json.load(open('.claude-plugin/plugin.json'));d=p.get('dependencies',[]);assert 'adaptive-artifacts' in d or any(isinstance(x,dict) and x.get('name')=='adaptive-artifacts' for x in d);m=json.load(open('.claude-plugin/marketplace.json'));assert {x.get('name') for x in m['plugins']}>= {'se-workflow','adaptive-artifacts'}" _(id: [rec-a60c0f0a-abb6-4cfe-b569-657d0edb4722](.artifacts/records/project__acceptance/rec-a60c0f0a-abb6-4cfe-b569-657d0edb4722.md))_
+
+## claude-shared-marketplace-readme
+
+### Acceptance
+- **claude-shared-marketplace-readme**: README Claude install uses a single marketplace add for se-workflow; Cursor subsection does not claim dependency auto-install; check; packaging; grep -q 'claude plugin marketplace add andrewy1n/se-workflow' README.md && grep -qi Cursor README.md && ! grep -qiE 'Cursor.*(auto-?install|plugin dependenc).*adaptive-artifacts' README.md _(id: [rec-49384b6f-6de8-4e22-b43c-f27f3e8f06ad](.artifacts/records/project__acceptance/rec-49384b6f-6de8-4e22-b43c-f27f3e8f06ad.md))_
 
 ## close-red-first
 
@@ -747,7 +760,7 @@ print("phase checks only")
 ## packaging
 
 ### Position
-- **packaging**: backlog parked; no phase started; effort _(id: [rec-a717c4b4-ce8e-4fc2-b60e-6bddfebc9d4d](.artifacts/records/project__current-position/rec-a717c4b4-ce8e-4fc2-b60e-6bddfebc9d4d.md))_
+- **packaging**: plugin-dep-marketplace discussed; next plan-phase; effort _(id: [rec-5f1ae973-beca-48a0-a5e9-a9a684834179](.artifacts/records/project__current-position/rec-5f1ae973-beca-48a0-a5e9-a9a684834179.md))_
 
 ## pane-width-stable
 
@@ -788,6 +801,11 @@ print("phase checks only")
 
 ### Acceptance
 - **phase-position-skills**: Skills document the per-phase position with payloads the contract accepts; skill/contract consistency tests pass; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_phase_position.py -q _(id: [rec-9f326a41-7f0f-4d28-89c6-069154ad5a65](.artifacts/records/project__acceptance/rec-9f326a41-7f0f-4d28-89c6-069154ad5a65.md))_
+
+## phase-reviewer
+
+### Position
+- **phase-reviewer**: executing wave 2: status-tabs-fixture; phase _(id: [rec-cf72e13a-516c-4f7c-a911-1c8d06a91bef](.artifacts/records/project__current-position/rec-cf72e13a-516c-4f7c-a911-1c8d06a91bef.md))_
 
 ## phase-sections
 
@@ -849,6 +867,11 @@ print("phase checks only")
 ### Acceptance
 - **plan-wave-rules**: plan-phase requires a recipe, one shared executor of inline or subagent per wave, and phase size, stops, and collision notes, and it does not open plan review until those are present; tdd; workflow-loop; python3 -m pytest tests/test_plan_wave_rules.py -q _(id: [rec-b1c39c5f-6758-426d-bdcf-0ff6c57bcbc5](.artifacts/records/project__acceptance/rec-b1c39c5f-6758-426d-bdcf-0ff6c57bcbc5.md))_
 
+## plugin-dep-marketplace
+
+### Position
+- **plugin-dep-marketplace**: plan ready; awaiting plan review; phase _(id: [rec-0b073b0a-072b-4875-bf64-b9802c7e846e](.artifacts/records/project__current-position/rec-0b073b0a-072b-4875-bf64-b9802c7e846e.md))_
+
 ## readme-lifecycle
 
 ### Acceptance
@@ -899,6 +922,31 @@ print("phase checks only")
 ### Acceptance
 - **retry-engine-contract**: Optional attempts is on work-item; skill invocations stay contract-legal; consistency tests green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-a40b0635-99ac-481f-a4fb-855a830b6fa1](.artifacts/records/project__acceptance/rec-a40b0635-99ac-481f-a4fb-855a830b6fa1.md))_
 
+## reviewer-brief
+
+### Acceptance
+- **reviewer-brief**: A test asserts the reviewer brief excludes execution-report, check-run, and assessment content; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k brief _(id: [rec-880e5caf-3938-480b-ae11-a180c0b1ed38](.artifacts/records/project__acceptance/rec-880e5caf-3938-480b-ae11-a180c0b1ed38.md))_
+
+## reviewer-execute
+
+### Acceptance
+- **reviewer-execute**: execute-phase invokes the reviewer after closing verification and before merge; parent records method:review / evidence_kind:review check-run at head and findings for NEEDS_WORK; reviewer writes no store records; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k "execute or parent_write or review_check" _(id: [rec-10c147f9-1f69-4746-8444-72e2fe310165](.artifacts/records/project__acceptance/rec-10c147f9-1f69-4746-8444-72e2fe310165.md))_
+
+## reviewer-execute-fix
+
+### Acceptance
+- **reviewer-execute-fix**: Fixable NEEDS_WORK creates fix work-items under the retry budget; reviewer re-runs once after fixes; exhausted budget escalates without reopening done tasks; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k "fix_task or rerun or budget" _(id: [rec-7d0c4862-c22a-4fd3-bcae-3679c065e527](.artifacts/records/project__acceptance/rec-7d0c4862-c22a-4fd3-bcae-3679c065e527.md))_
+
+## reviewer-execute-gate
+
+### Acceptance
+- **reviewer-execute-gate**: Phase gate requires a passing review check-run at the phase head SHA before merge; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k gate _(id: [rec-4fe99528-e397-4b36-b07f-f93d2b1291f9](.artifacts/records/project__acceptance/rec-4fe99528-e397-4b36-b07f-f93d2b1291f9.md))_
+
+## reviewer-execute-integration
+
+### Acceptance
+- **reviewer-execute-integration**: Integration-report body is filled from the reviewer integration section; skill/contract consistency stays green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py tests/test_skill_contract_consistency.py -q -k "integration or test_skill_contract" _(id: [rec-87416dee-0be6-4e6a-bf05-d567fac451bf](.artifacts/records/project__acceptance/rec-87416dee-0be6-4e6a-bf05-d567fac451bf.md))_
+
 ## rj-join
 
 ### Acceptance
@@ -941,6 +989,11 @@ print("phase checks only")
 
 ### Constraint
 - **sa-script-read-only**: The analysis script reads the store and never writes to it.; scripts; session-analysis _(id: [rec-bcd11e56-a54f-4d85-9055-63d13bb03ee8](.artifacts/records/project__constraint/rec-bcd11e56-a54f-4d85-9055-63d13bb03ee8.md))_
+
+## se-reviewer-agent
+
+### Acceptance
+- **se-reviewer-agent**: agents/se-reviewer.md exists without Write/Edit tools and forbids store writes; sync-plugin.sh installs the agents/ directory; check; workflow-loop; test -f agents/se-reviewer.md && grep -qiE "no Write|without Write" agents/se-reviewer.md && grep -q agents/ scripts/sync-plugin.sh && d=$(mktemp -d) && bash scripts/sync-plugin.sh "$d/p" && test -f "$d/p/agents/se-reviewer.md" _(id: [rec-b06d589a-93d4-47e0-b2a4-5e1bf1fd8f21](.artifacts/records/project__acceptance/rec-b06d589a-93d4-47e0-b2a4-5e1bf1fd8f21.md))_
 
 ## se-workflow-check
 
@@ -1069,6 +1122,14 @@ print("phase checks only")
 ### Amendment
 - **status-tabs**: status-tabs; dashboard-ui _(id: [rec-9d00fbec-bc87-40b3-b37b-38e00bea73db](.artifacts/records/project__assignment-amendment/rec-9d00fbec-bc87-40b3-b37b-38e00bea73db.md))_
 - **status-tabs**: status-tabs; dashboard-ui _(id: [rec-e076f208-265b-4f3a-8365-0f04b6b421a8](.artifacts/records/project__assignment-amendment/rec-e076f208-265b-4f3a-8365-0f04b6b421a8.md))_
+
+## status-tabs-fixture
+
+### Work
+- **status-tabs-fixture**: status-tabs NEEDS_WORK / spec-gap fixture; phase-reviewer; deliver; workflow-loop _(id: [rec-18ccd738-2055-480d-9cda-d3bbdd47ef75](.artifacts/records/project__work-item/rec-18ccd738-2055-480d-9cda-d3bbdd47ef75.md))_
+
+### Acceptance
+- **status-tabs-fixture**: status-tabs fixture yields NEEDS_WORK with a spec-gap finding; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k status_tabs _(id: [rec-a6aabc11-4cb5-47dd-84da-5c01fd225ab5](.artifacts/records/project__acceptance/rec-a6aabc11-4cb5-47dd-84da-5c01fd225ab5.md))_
 
 ## stepper-wrap
 
@@ -1491,6 +1552,34 @@ print("phase checks only")
 ### Acceptance
 - **verify-phase-landing-plan**: plan-phase requires a Landing section before plan review, and incidental work skips it; tdd; workflow-loop; python3 -m pytest tests/test_plan_landing.py -q _(id: [rec-58522d3a-4f28-4cd8-bcf8-4f8ab951dd54](.artifacts/records/project__acceptance/rec-58522d3a-4f28-4cd8-bcf8-4f8ab951dd54.md))_
 
+## verify-phase-reviewer
+
+### Work
+- **verify-phase-reviewer**: Verify phase-end independent reviewer; phase-reviewer; deliver; workflow-loop _(id: [rec-366155af-fa6c-46a6-ae03-dc91eb6022f5](.artifacts/records/project__work-item/rec-366155af-fa6c-46a6-ae03-dc91eb6022f5.md))_
+
+### Acceptance
+- **verify-phase-reviewer**: Through pytest entry point, phase-reviewer tests prove brief limits, parent review check-run/findings, fix routing, one re-run, gate, and integration-report from reviewer output; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q _(id: [rec-a5b4ff28-4664-45b7-9b25-489d4f58af19](.artifacts/records/project__acceptance/rec-a5b4ff28-4664-45b7-9b25-489d4f58af19.md))_
+
+## verify-phase-reviewer-agent
+
+### Acceptance
+- **verify-phase-reviewer-agent**: Reviewer agent exists with restricted tools and sync-plugin installs it; execute-phase documents phase-end invocation after verification; check; workflow-loop; test -f agents/se-reviewer.md && grep -qiE "no Write|without Write" agents/se-reviewer.md && grep -q agents/ scripts/sync-plugin.sh && grep -qiE "reviewer|se-reviewer" skills/execute-phase/SKILL.md _(id: [rec-1c47f604-3a3d-43ce-b488-7f0dc461180e](.artifacts/records/project__acceptance/rec-1c47f604-3a3d-43ce-b488-7f0dc461180e.md))_
+
+## verify-phase-reviewer-contract
+
+### Acceptance
+- **verify-phase-reviewer-contract**: Skill and contract consistency stay green with review check-run and phase-end reviewer writes; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-5fe7f197-7081-4e2e-a8dd-bd9014170eaf](.artifacts/records/project__acceptance/rec-5fe7f197-7081-4e2e-a8dd-bd9014170eaf.md))_
+
+## verify-phase-reviewer-fixture
+
+### Acceptance
+- **verify-phase-reviewer-fixture**: status-tabs fixture returns NEEDS_WORK / spec-gap; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k status_tabs _(id: [rec-14227c0e-f22a-4354-92b7-eb89f4eba878](.artifacts/records/project__acceptance/rec-14227c0e-f22a-4354-92b7-eb89f4eba878.md))_
+
+## verify-phase-reviewer-gate
+
+### Acceptance
+- **verify-phase-reviewer-gate**: Phase gate requires passing review at head before merge; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k gate _(id: [rec-47250685-0161-4993-80af-7bd73bdce32b](.artifacts/records/project__acceptance/rec-47250685-0161-4993-80af-7bd73bdce32b.md))_
+
 ## verify-phase-selector
 
 ### Acceptance
@@ -1510,6 +1599,19 @@ print("phase checks only")
 
 ### Acceptance
 - **verify-phase-selector-suite**: Full non-tmux and tmux test suites pass; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m not tmux && uv run --with textual --with pytest python -m pytest tests -q -m tmux _(id: [rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9](.artifacts/records/project__acceptance/rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9.md))_
+
+## verify-plugin-dep-marketplace
+
+### Work
+- **verify-plugin-dep-marketplace**: Verify plugin-dep-marketplace; plugin-dep-marketplace; deliver; packaging _(id: [rec-5504f534-0cdb-4d0c-8b1d-7b0f286b272c](.artifacts/records/project__work-item/rec-5504f534-0cdb-4d0c-8b1d-7b0f286b272c.md))_
+
+### Acceptance
+- **verify-plugin-dep-marketplace**: claude plugin validate . succeeds with both plugins listed and adaptive-artifacts dependency declared (exit criterion 1, real entry point); check; packaging; claude plugin validate . && python3 -c "import json;p=json.load(open('.claude-plugin/plugin.json'));d=p.get('dependencies',[]);assert 'adaptive-artifacts' in d or any(isinstance(x,dict) and x.get('name')=='adaptive-artifacts' for x in d);m=json.load(open('.claude-plugin/marketplace.json'));assert {x.get('name') for x in m['plugins']}>= {'se-workflow','adaptive-artifacts'}" _(id: [rec-463ee27b-5093-4184-bbf6-7b80770d43ac](.artifacts/records/project__acceptance/rec-463ee27b-5093-4184-bbf6-7b80770d43ac.md))_
+
+## verify-plugin-dep-marketplace-readme
+
+### Acceptance
+- **verify-plugin-dep-marketplace-readme**: README Install matches manifests: single Claude marketplace add; Cursor does not claim dependency auto-install (exit criteria 2-3); check; packaging; grep -q 'claude plugin marketplace add andrewy1n/se-workflow' README.md && grep -qi Cursor README.md && ! grep -qiE 'Cursor.*(auto-?install|plugin dependenc).*adaptive-artifacts' README.md _(id: [rec-c30aaca7-94df-4c02-a6f3-fcce0c8d6b00](.artifacts/records/project__acceptance/rec-c30aaca7-94df-4c02-a6f3-fcce0c8d6b00.md))_
 
 ## verify-quiet-header
 
