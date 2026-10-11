@@ -190,6 +190,8 @@ def phase_label(phase: model.PhaseRow, title_width: int) -> str:
         tail += f" · {phase.elapsed_minutes}m"
         if phase.unset_estimates > 0:
             tail += f" · {phase.unset_estimates} unset"
+    if phase.tier2:
+        tail += f" · {phase.tier2}"
     if phase.awaiting_signoff:
         tail += " · awaiting sign-off"
     evidence = phase.evidence

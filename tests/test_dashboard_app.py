@@ -3728,3 +3728,38 @@ def test_attempt_title_suffix_run_fact_budget(store, cli, defs):
         assert "attempt 2/2" not in plain
 
     _run(store, 60, scenario)
+
+
+def _tier2_check_run(cli, defs, phase, result, revision="abc1234deadbeef", body=None):
+    payload = {
+        "criterion_id": "tier2",
+        "revision": revision,
+        "result": result,
+        "effort": "alpha",
+        "method": "check",
+        "signed_by": "",
+        "evidence_kind": "integration",
+    }
+    return _record(cli, defs, "project:check-run", f"{phase}-tier2", payload, body)
+
+
+@pytest.mark.parametrize("width", WIDTHS)
+def test_tier2_header_pass_fail_running(store, cli, defs, width):
+    _estimate_goal(cli, defs)
+    _open_phase(cli, defs, "ok", 1, "Pass phase", _phase_body(defs))
+    _open_phase(cli, defs, "bad", 2, "Fail phase", _phase_body(defs))
+    _open_phase(cli, defs, "run", 3, "Running phase", _phase_body(defs))
+    _estimate_task(cli, defs, "ok-task", "ok")
+    _estimate_task(cli, defs, "bad-task", "bad")
+    _estimate_task(cli, defs, "run-task", "run")
+    _tier2_check_run(cli, defs, "ok", "pass", "abc1234deadbeef")
+    _tier2_check_run(cli, defs, "bad", "fail", "deadbeefcafebabe")
+    _tier2_check_run(cli, defs, "run", "blocked", body="tier2-running")
+
+    async def scenario(app, pilot):
+        assert "t2 ok@abc1234" in _row_text(app, "phase:ok")
+        assert "t2 fail@deadbee" in _row_text(app, "phase:bad")
+        assert "t2 run" in _row_text(app, "phase:run")
+        assert "t2 ok@" not in _row_text(app, "phase:run")
+
+    _run(store, width, scenario, grouped=True)

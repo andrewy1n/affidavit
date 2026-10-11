@@ -2133,3 +2133,57 @@ def test_attempt_snapshot_reads_payload_and_run_facts(store, cli, defs):
     assert tasks["attempt-task"].id == retried["id"]
     assert tasks["fresh-task"].attempts == 0
     assert tasks["fresh-task"].retry_budget == 3
+
+
+def _tier2_check(
+    subject: str, result: str, revision: str = "abc1234deadbeef", *, body: str = "",
+) -> dict:
+    return {
+        "id": f"id-{subject}-{result}",
+        "subject": subject,
+        "lifecycle_state": "recorded",
+        "recorded_at": "2026-01-01T12:00:00+00:00",
+        "payload": {
+            "criterion_id": "tier2",
+            "revision": revision,
+            "result": result,
+            "effort": "alpha",
+            "method": "check",
+            "signed_by": "",
+            "evidence_kind": "integration",
+        },
+        "body": body,
+    }
+
+
+def test_tier2_status_label_pass_fail_running():
+    assert model.tier2_status_label("p-ok", [_tier2_check("p-ok-tier2", "pass", "abcdef0123456789")]) == "t2 ok@abcdef0"
+    assert model.tier2_status_label("p-bad", [_tier2_check("p-bad-tier2", "fail", "deadbeef")]) == "t2 fail@deadbee"
+    assert model.tier2_status_label(
+        "p-run",
+        [_tier2_check("p-run-tier2", "blocked", body="tier2-running in worktree")],
+    ) == "t2 run"
+    assert model.tier2_status_label("p-none", []) == ""
+    assert model.tier2_status_label("p-ok", [_tier2_check("other-tier2", "pass")]) == ""
+    wrong_kind = _tier2_check("p-ok-tier2", "pass")
+    wrong_kind["payload"]["evidence_kind"] = "unit"
+    assert model.tier2_status_label("p-ok", [wrong_kind]) == ""
+
+
+def test_tier2_phase_row_from_snapshot(store, cli, defs):
+    _goal(cli, defs, "alpha")
+    phase = _record(
+        cli, defs, "project:phase", "t2p",
+        {"title": "Tier2 phase", "ordinal": 1, "effort": "alpha"},
+    )
+    h.transition(cli, "project:phase", phase, "in_progress")
+    _record(cli, defs, "project:work-item", "t2p-task", {
+        "title": "Task", "phase": "t2p", "kind": "deliver", "assignee": "", "effort": "alpha",
+    })
+    _record(cli, defs, "project:check-run", "t2p-tier2", {
+        "criterion_id": "tier2", "revision": "abc1234deadbeef", "result": "pass",
+        "effort": "alpha", "method": "check", "signed_by": "", "evidence_kind": "integration",
+    })
+    view = _effort(model.load_snapshot(_target(store)), "alpha")
+    row = next(p for p in view.phases if p.subject == "t2p")
+    assert row.tier2 == "t2 ok@abc1234"
