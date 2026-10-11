@@ -313,8 +313,8 @@ adaptive-artifacts create --type project:execution-report \
 
    last implementation wave → closing verification → reviewer →
    integration-report from the reviewer `integration` section →
-   phase gate (include a passing `method: review` check-run at the
-   phase head) → Landing merge.
+   tier-2 (background full suite) → phase gate (acceptances@head +
+   review@head + tier-2@head) → Landing merge.
 
    The verification task is the work-item that `depends_on` every
    other phase work-item. An implementation wave is a dispatch wave
@@ -324,9 +324,9 @@ adaptive-artifacts create --type project:execution-report \
    before verification — that content comes from the reviewer below).
 
    After the closing verification task succeeds (`done`), and before
-   merge (and before tier-2 when that phase exists), run the phase-end
-   reviewer once. Skip the reviewer, review check-run, and
-   integration-report when incidental.
+   merge, run the phase-end reviewer once, then tier-2. Skip the
+   reviewer, review check-run, integration-report, and tier-2 when
+   incidental.
 
    Parent only — the reviewer writes no store records:
 
@@ -409,6 +409,41 @@ adaptive-artifacts create --type project:integration-report \
    not merge. Leave the phase `in_progress` and stop (or route fixes /
    escalate as above).
 
+   After the reviewer passes (and the integration-report is written),
+   start **tier-2** once before the merge gate. Parent only — do not
+   block the agent session on the suite: start a detached tmux window
+   in the phase worktree running the README full suite (fast non-tmux,
+   then serial tmux), poll/reattach for completion, then record **one**
+   `project:check-run` at the phase-head SHA. Subject is
+   `<phase-slug>-tier2`; `evidence_kind` is `integration`; include
+   runner metadata (`revision`, `exit_code`, `duration_s`,
+   `output_sha256`, and `failing_node_ids` when failed). Use
+   `se_workflow.tier2` (`start_tier2_background`, `poll_tier2` /
+   `collect_tier2`, `record_tier2_check_run`). Dirty-only pass is
+   refused the same way as `se-workflow check` (commit first, or
+   `--allow-dirty` → `revision=dirty` + `diff_sha256`).
+
+   If the tmux job is orphaned, reattach with
+   `tmux attach -t se-tier2-<phase-slug>` (or inspect the log / exit
+   files under the worktree `.tier2/`), then re-start tier-2 in the
+   phase worktree if the session is gone. Do **not** fix-and-rerun
+   inside this verification step.
+
+```bash
+adaptive-artifacts create --type project:check-run \
+  --subject "<phase-slug>-tier2" \
+  --payload '{"criterion_id":"<phase-slug>-tier2","revision":"<phase-head-sha>","result":"<pass|fail|blocked>","effort":"<focus>","method":"check","signed_by":"","evidence_kind":"integration","runner":"se-workflow","exit_code":0,"duration_s":0,"output_sha256":"<digest>","failing_node_ids":"[]"}' \
+  --body "<suite output tail; failing node ids when failed>"
+```
+
+   On tier-2 `fail`, create fix work-item(s) under the **Retry loop**
+   fix-task budget, clustered by failing test file/module (one fix
+   subject per module). Never reopen `done`. There is no inline
+   fix-and-rerun inside the tier-2 step. After those fixes land and
+   are verified, re-run tier-2 at the new phase head. When the
+   fix-task budget is exhausted, escalate with the budget-exhaustion
+   Needs-you path and stop.
+
    When no `planned`/`in_progress` same-focus work-items
    remain in this phase (or the incidental task is closed), check the
    phase gate before closing anything. An empty task list is not proof
@@ -427,6 +462,10 @@ adaptive-artifacts list --type project:check-run \
 adaptive-artifacts list --type project:check-run \
   --where payload.method=review --where payload.effort=<focus> \
   --order-by recorded_at
+
+adaptive-artifacts list --type project:check-run \
+  --where payload.evidence_kind=integration --where payload.effort=<focus> \
+  --order-by recorded_at
 ```
 
    The gate holds only when all of these are true:
@@ -434,10 +473,16 @@ adaptive-artifacts list --type project:check-run \
      every other phase work-item) exists and is `done`.
    - Every active phase acceptance has a check-run, and the latest
      check-run per `criterion_id` has a passing `result`.
+   - Every active phase acceptance has a passing runner check-run
+     whose `revision` is the phase-head SHA.
    - Every `method=manual` latest check-run has `signed_by` set.
    - A passing `method: review` / `evidence_kind: review` check-run
      exists whose `revision` is the phase-head SHA (required before
      merge; skip this bullet for incidental).
+   - A passing tier-2 check-run (`subject` `<phase-slug>-tier2`,
+     `evidence_kind: integration`) exists whose `revision` is that
+     same phase-head SHA. Missing or failing tier-2 blocks merge
+     (skip this bullet for incidental).
 
    When the user signs an unsigned manual check, clear it at the event
    (kinds-and-focus, Needs-you clears):
@@ -449,11 +494,12 @@ adaptive-artifacts correct --type project:check-run --id <check-run-id> \
 
    If the gate does not hold, leave the phase `in_progress`. Tell the
    user which criterion has no check-run, a failing latest check-run,
-   or no signature, that the verification task is missing, or that the
-   phase lacks a passing review check-run at the phase head. Then
+   or no signature, that the verification task is missing, that the
+   phase lacks a passing review check-run at the phase head, or that
+   tier-2 is missing or failing at the phase head. Then
    stop. Do not close the phase to move on. `deliver` and `repair`
-   phases always need the verification task and a passing review at
-   head. Skip the gate for incidental work.
+   phases always need the verification task, a passing review at
+   head, and a passing tier-2 at head. Skip the gate for incidental work.
 
    When the gate holds and `## Landing` is present, commit the phase
    branch from the worktree. That commit excludes `.artifacts`. From
@@ -713,9 +759,15 @@ Never transition a `done` work-item back to `in_progress` or
   `integration` section
 - Merge (or close the phase) without a passing `method: review`
   check-run at the phase-head SHA
+- Merge (or close the phase) without a passing tier-2 check-run
+  (`<phase-slug>-tier2`, `evidence_kind: integration`) at the
+  phase-head SHA
 - Let the reviewer call `adaptive-artifacts` or write `.artifacts`
 - Re-run the reviewer more than once after fix tasks for the same
   phase-end pass
+- Fix-and-rerun inside the tier-2 verification step (create fix
+  work-items under the retry budget instead; rerun tier-2 at the
+  new head after fixes)
 - Create a branch or worktree when the phase body has no Landing section
 - Let code writes leave the worktree when `## Landing` is present
 - Write `.artifacts` anywhere but the primary checkout, or include
@@ -731,3 +783,5 @@ Never transition a `done` work-item back to `in_progress` or
   opening `scope: retry:<task-slug>` Needs you
 - Skip the retryable `in_progress` pass and only select `planned`
   ready work
+- Put a whole-suite command on a per-task `verify_command` — per-task
+  checks stay scoped; the full suite is the phase-level tier-2 run

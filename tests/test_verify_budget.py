@@ -61,3 +61,30 @@ def test_verification_failure_does_not_edit():
         in verify
     )
     assert "a suite the acceptance does not name" in verify
+
+
+def test_per_task_verify_stays_scoped_while_phase_tier2_full_run_is_required():
+    """Per-task verify_command stays scoped; phase-level tier-2 is the full suite."""
+    execute = _flat(_text("execute-phase"))
+    assert "whole-suite" in execute or "whole suite" in execute or "full suite" in execute
+    assert "tier-2" in execute or "tier2" in execute
+    assert "per-task" in execute and "scoped" in execute
+    assert "verify_command" in execute
+
+    readme = _testing_section("README.md")
+    assert "tier-2" in readme or "tier2" in readme
+    assert "phase-level" in readme or "phase level" in readme
+    assert "Per-task" in readme or "per-task" in readme
+    assert "narrowly scoped" in readme or "scoped" in readme
+    # README may document the full suite as tier-2, but AGENTS/CLAUDE close
+    # instructions must not tell a task to run it.
+    for name in ("AGENTS.md", "CLAUDE.md"):
+        section = _testing_section(name)
+        assert "`verify_command`" in section
+        assert "run the full suite" not in section
+
+
+def test_plan_phase_still_rejects_whole_suite_on_verification_task():
+    text = _flat(_text("plan-phase"))
+    assert "whole `tests` tree" in text
+    assert "is not a verification acceptance" in text
