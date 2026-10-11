@@ -7,7 +7,7 @@
     "resolved_contract_format": "0.3.0",
     "traits_version": "0.4.0",
     "backends_version": "0.4.0",
-    "design_digest": "sha256:6ed36ea363570063d024dba09ac8c9255bb69ff506052d03036a7febb6a89217",
+    "design_digest": "sha256:e3c659381c339d252b9a6814fed0ba35435d187334c14d91ec95f43914289033",
     "source_lock": {
       "catalog_version": "0.7.0",
       "catalog": "sha256:d7f0f1d05f8c67f638c0ff1b4ad738161f43c1ec970729709f8f2afc1d8c1eb1",
@@ -294,7 +294,8 @@
         "requirements",
         "decisions",
         "size",
-        "estimate_minutes"
+        "estimate_minutes",
+        "attempts"
       ],
       "lifecycle": {
         "initial": "planned",
@@ -345,7 +346,8 @@
         "requirements",
         "decisions",
         "size",
-        "estimate_minutes"
+        "estimate_minutes",
+        "attempts"
       ],
       "payload_enum": {
         "executor": [
@@ -568,7 +570,8 @@
         "method": [
           "tdd",
           "check",
-          "manual"
+          "manual",
+          "review"
         ],
         "evidence_kind": [
           "unit",

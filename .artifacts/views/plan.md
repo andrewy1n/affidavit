@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:3ab11b32537c6078b1ad9fb057009a43fd2cdbd9d45cc137fd1264facf0cc66e
+> Store state: sha256:927fff27d537ed157cb656d590a5dff186f429dfef9fa46558a02d686aee17e6
 
 ## dashboard-view
 
@@ -15,13 +15,6 @@
 - **verify-dashboard-view-phase-suites**: Full test suites of both repos pass on the phase-1 changes; check; dashboard; cd ~/adaptive-artifacts && python3 -m pytest tools/runtime/tests -q && cd ~/se-workflow && python3 -m pytest tests -q _(id: [rec-1a3c142c-b9c6-4f57-baf0-b38000b5bb9f](.artifacts/records/project__acceptance/rec-1a3c142c-b9c6-4f57-baf0-b38000b5bb9f.md))_
 
 ## plugin-dep-marketplace
-
-### Phase
-- **plugin-dep-marketplace**: Declare AA dependency + shared marketplace; 1; packaging _(id: [rec-2defc0ec-894d-4308-b62e-9444322a94f2](.artifacts/records/project__phase/rec-2defc0ec-894d-4308-b62e-9444322a94f2.md))_
-
-### Work
-- **claude-shared-marketplace**: Shared marketplace manifests + README; plugin-dep-marketplace; deliver; packaging _(id: [rec-dc9849df-5539-4ed7-86b3-23ecf520b96b](.artifacts/records/project__work-item/rec-dc9849df-5539-4ed7-86b3-23ecf520b96b.md))_
-- **verify-plugin-dep-marketplace**: Verify plugin-dep-marketplace; plugin-dep-marketplace; deliver; packaging _(id: [rec-5504f534-0cdb-4d0c-8b1d-7b0f286b272c](.artifacts/records/project__work-item/rec-5504f534-0cdb-4d0c-8b1d-7b0f286b272c.md))_
 
 ### Acceptance
 - **claude-shared-marketplace**: plugin.json declares adaptive-artifacts in dependencies and marketplace.json lists both plugins with AA via github source; claude plugin validate . exits 0; check; packaging; claude plugin validate . && python3 -c "import json;p=json.load(open('.claude-plugin/plugin.json'));d=p.get('dependencies',[]);assert 'adaptive-artifacts' in d or any(isinstance(x,dict) and x.get('name')=='adaptive-artifacts' for x in d);m=json.load(open('.claude-plugin/marketplace.json'));assert {x.get('name') for x in m['plugins']}>= {'se-workflow','adaptive-artifacts'}" _(id: [rec-a60c0f0a-abb6-4cfe-b569-657d0edb4722](.artifacts/records/project__acceptance/rec-a60c0f0a-abb6-4cfe-b569-657d0edb4722.md))_
@@ -362,14 +355,6 @@ print("phase checks only")
 - **verify-dashboard-package-task-modules**: The task code is in dashboard/tasks.py and dashboard/task_detail.py, not app.py.; check; dashboard; test -f dashboard/tasks.py && test -f dashboard/task_detail.py && ! grep -nE '^class (TaskFilter|TaskTable|TaskDetailScreen)' dashboard/app.py _(id: [rec-1d30f9a6-5236-45c6-8ba7-265bc6a9ca53](.artifacts/records/project__acceptance/rec-1d30f9a6-5236-45c6-8ba7-265bc6a9ca53.md))_
 
 ## phase-reviewer
-
-### Phase
-- **phase-reviewer**: Phase-end independent reviewer; 16; workflow-loop _(id: [rec-7fa68692-3ae0-4731-be8d-9539e5cc3450](.artifacts/records/project__phase/rec-7fa68692-3ae0-4731-be8d-9539e5cc3450.md))_
-
-### Work
-- **reviewer-execute**: Wire phase-end reviewer into execute-phase; phase-reviewer; deliver; workflow-loop _(id: [rec-546c72b0-10b9-4021-a373-07fa75aa11c6](.artifacts/records/project__work-item/rec-546c72b0-10b9-4021-a373-07fa75aa11c6.md))_
-- **status-tabs-fixture**: status-tabs NEEDS_WORK / spec-gap fixture; phase-reviewer; deliver; workflow-loop _(id: [rec-18ccd738-2055-480d-9cda-d3bbdd47ef75](.artifacts/records/project__work-item/rec-18ccd738-2055-480d-9cda-d3bbdd47ef75.md))_
-- **verify-phase-reviewer**: Verify phase-end independent reviewer; phase-reviewer; deliver; workflow-loop _(id: [rec-366155af-fa6c-46a6-ae03-dc91eb6022f5](.artifacts/records/project__work-item/rec-366155af-fa6c-46a6-ae03-dc91eb6022f5.md))_
 
 ### Acceptance
 - **reviewer-brief**: A test asserts the reviewer brief excludes execution-report, check-run, and assessment content; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k brief _(id: [rec-880e5caf-3938-480b-ae11-a180c0b1ed38](.artifacts/records/project__acceptance/rec-880e5caf-3938-480b-ae11-a180c0b1ed38.md))_

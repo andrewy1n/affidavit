@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:53533452506869e87727ad1f5519647728b7162409bf1742aa4c49b34aa05c98
+> Store state: sha256:07f81d2e303de94592df39d39e39526703638ee4270ee3063ec997b1157998fe
 
 ## dashboard
 
@@ -46,8 +46,9 @@
 - **workflow-loop**: The se-workflow loop maps efforts to product areas, closes finished efforts, runs phases in parallel, and settles the approach with the user before planning; effort; deliver _(id: [rec-65213e61-dda6-4955-95bc-8c9c4b289af1](.artifacts/records/project__active-goal/rec-65213e61-dda6-4955-95bc-8c9c4b289af1.md))_
 
 ### Position
-- **phase-reviewer**: executing wave 2: status-tabs-fixture; phase _(id: [rec-cf72e13a-516c-4f7c-a911-1c8d06a91bef](.artifacts/records/project__current-position/rec-cf72e13a-516c-4f7c-a911-1c8d06a91bef.md))_
-- **workflow-loop**: retry-loop done; next up: phase-reviewer; effort _(id: [rec-d18f60b5-1709-4e8a-ae38-9cb0b3596619](.artifacts/records/project__current-position/rec-d18f60b5-1709-4e8a-ae38-9cb0b3596619.md))_
+- **phase-reviewer**: phase-reviewer done; next up: tiered-verification; phase _(id: [rec-db17b780-4178-4359-b4ee-119fb52aba18](.artifacts/records/project__current-position/rec-db17b780-4178-4359-b4ee-119fb52aba18.md))_
+- **workflow-loop**: phase-reviewer done; next up: tiered-verification; effort _(id: [rec-721cf0b5-262e-4368-ab82-503a4320efbf](.artifacts/records/project__current-position/rec-721cf0b5-262e-4368-ab82-503a4320efbf.md))_
 
 ### Backlog
+- **agent-estimate-calibration**: workflow-loop; open _(id: [rec-92355db7-36c0-429c-bd5c-3a359d0dcd38](.artifacts/records/project__backlog-item/rec-92355db7-36c0-429c-bd5c-3a359d0dcd38.md))_
 - **gh-11-verification-loop**: workflow-loop; open _(id: [rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7](.artifacts/records/project__backlog-item/rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7.md))_

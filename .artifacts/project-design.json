@@ -100,14 +100,16 @@
         "requirements",
         "decisions",
         "size",
-        "estimate_minutes"
+        "estimate_minutes",
+        "attempts"
       ],
       "optional_payload": [
         "executor",
         "requirements",
         "decisions",
         "size",
-        "estimate_minutes"
+        "estimate_minutes",
+        "attempts"
       ],
       "required_sections": [
         "Description"
@@ -215,7 +217,8 @@
         "method": [
           "tdd",
           "check",
-          "manual"
+          "manual",
+          "review"
         ],
         "evidence_kind": [
           "unit",
