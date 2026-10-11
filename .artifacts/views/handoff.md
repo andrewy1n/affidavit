@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:8fcac5e660674d27af39497d2e95e02dd84b6e89851bfc83f9f703573c2b9edc
+> Store state: sha256:058faa1ab82972a3b1e32d050e5fdde6f3f0eadb1fad59942fcb951dee431f64
 
 ## dashboard
 
@@ -9,7 +9,7 @@
 - **dashboard**: A live terminal dashboard, openable from tmux, shows each effort's phases, tasks and what needs you, lets you move from any item to its related records, and works correctly in every state; effort; deliver _(id: [rec-39db526b-abbb-4753-b9ff-40b8c05662c2](.artifacts/records/project__active-goal/rec-39db526b-abbb-4753-b9ff-40b8c05662c2.md))_
 
 ### Position
-- **dashboard**: waits-on-compact done; no further phase planned; effort _(id: [rec-706fd9f0-d080-41e8-b1ce-1c3474f14f19](.artifacts/records/project__current-position/rec-706fd9f0-d080-41e8-b1ce-1c3474f14f19.md))_
+- **dashboard**: store-binding done; repo pinned local via store-binding.json; effort _(id: [rec-2956e86d-f425-45d9-9415-1ebec4be7272](.artifacts/records/project__current-position/rec-2956e86d-f425-45d9-9415-1ebec4be7272.md))_
 
 ## packaging
 
@@ -47,12 +47,14 @@
 
 ### Position
 - **phase-reviewer**: phase-reviewer done; next up: tiered-verification; phase _(id: [rec-db17b780-4178-4359-b4ee-119fb52aba18](.artifacts/records/project__current-position/rec-db17b780-4178-4359-b4ee-119fb52aba18.md))_
-- **tiered-verification**: tiered-verification planned; awaiting plan review; phase _(id: [rec-33e312f6-b35f-406e-8790-deeea3f3a123](.artifacts/records/project__current-position/rec-33e312f6-b35f-406e-8790-deeea3f3a123.md))_
+- **tiered-verification**: tier-2 failed; 3 fix tasks planned; budget escalate Needs you; phase _(id: [rec-ca05196c-0620-4421-b882-c2e43822edad](.artifacts/records/project__current-position/rec-ca05196c-0620-4421-b882-c2e43822edad.md))_
 - **workflow-loop**: phase-reviewer done; next up: tiered-verification; effort _(id: [rec-721cf0b5-262e-4368-ab82-503a4320efbf](.artifacts/records/project__current-position/rec-721cf0b5-262e-4368-ab82-503a4320efbf.md))_
 
 ### Blocking Question
-- **workflow-loop**: True; plan-review:tiered-verification _(id: [rec-1043547e-3583-432c-84bb-6b09ef50faaf](.artifacts/records/project__continuity-question/rec-1043547e-3583-432c-84bb-6b09ef50faaf.md))_
+- **workflow-loop**: True; retry:tiered-verification-tier2 _(id: [rec-47b1bf12-d15b-4663-87f0-2dd1675d08f1](.artifacts/records/project__continuity-question/rec-47b1bf12-d15b-4663-87f0-2dd1675d08f1.md))_
+
+### Needs Human
+- **tiered-verification-tier2-budget**: Tier-2 fix-task budget exhausted with remaining failing modules; human _(id: [rec-b8101acf-ff6c-4dbc-8042-6499702bd5e5](.artifacts/records/project__finding/rec-b8101acf-ff6c-4dbc-8042-6499702bd5e5.md))_
 
 ### Backlog
-- **agent-estimate-calibration**: workflow-loop; open _(id: [rec-92355db7-36c0-429c-bd5c-3a359d0dcd38](.artifacts/records/project__backlog-item/rec-92355db7-36c0-429c-bd5c-3a359d0dcd38.md))_
 - **gh-11-verification-loop**: workflow-loop; open _(id: [rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7](.artifacts/records/project__backlog-item/rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7.md))_

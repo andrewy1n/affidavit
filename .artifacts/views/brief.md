@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:ddd3df9ea9a86fe20d7b125572493a54efcd6664aa41bf7b9e034b48ed7d95a7
+> Store state: sha256:73d55cdaabaee36b41e5f26995b409a4755581d897aa9c55ae705c4599994fba
 
 ## activity-failures
 
@@ -125,9 +125,6 @@
 - **check-run-contract**: Bundled contract declares enums for check-run.result and check-run/acceptance method, lists the optional runner fields, and contract self-consistency plus the flipped evidence-loop/assess-routing tests pass; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py tests/test_evidence_loop.py tests/test_assess_routing.py -q -k 'enum or result or method or contract' _(id: [rec-88363d0c-d058-4a0d-8c04-4a697bbe457d](.artifacts/records/project__acceptance/rec-88363d0c-d058-4a0d-8c04-4a697bbe457d.md))_
 
 ## claude-shared-marketplace
-
-### Work
-- **claude-shared-marketplace**: Shared marketplace manifests + README; plugin-dep-marketplace; deliver; packaging _(id: [rec-dc9849df-5539-4ed7-86b3-23ecf520b96b](.artifacts/records/project__work-item/rec-dc9849df-5539-4ed7-86b3-23ecf520b96b.md))_
 
 ### Acceptance
 - **claude-shared-marketplace**: plugin.json declares adaptive-artifacts in dependencies and marketplace.json lists both plugins with AA via github source; claude plugin validate . exits 0; check; packaging; claude plugin validate . && python3 -c "import json;p=json.load(open('.claude-plugin/plugin.json'));d=p.get('dependencies',[]);assert 'adaptive-artifacts' in d or any(isinstance(x,dict) and x.get('name')=='adaptive-artifacts' for x in d);m=json.load(open('.claude-plugin/marketplace.json'));assert {x.get('name') for x in m['plugins']}>= {'se-workflow','adaptive-artifacts'}" _(id: [rec-a60c0f0a-abb6-4cfe-b569-657d0edb4722](.artifacts/records/project__acceptance/rec-a60c0f0a-abb6-4cfe-b569-657d0edb4722.md))_
@@ -760,7 +757,7 @@ print("phase checks only")
 ## packaging
 
 ### Position
-- **packaging**: plugin-dep-marketplace discussed; next plan-phase; effort _(id: [rec-5f1ae973-beca-48a0-a5e9-a9a684834179](.artifacts/records/project__current-position/rec-5f1ae973-beca-48a0-a5e9-a9a684834179.md))_
+- **packaging**: plugin-dep-marketplace done; backlog remains (plugin-root-paths, rename, versions, …); effort _(id: [rec-1e135d18-12a8-4a7e-b7ba-146c9fd01e57](.artifacts/records/project__current-position/rec-1e135d18-12a8-4a7e-b7ba-146c9fd01e57.md))_
 
 ## pane-width-stable
 
@@ -805,7 +802,7 @@ print("phase checks only")
 ## phase-reviewer
 
 ### Position
-- **phase-reviewer**: executing wave 2: status-tabs-fixture; phase _(id: [rec-cf72e13a-516c-4f7c-a911-1c8d06a91bef](.artifacts/records/project__current-position/rec-cf72e13a-516c-4f7c-a911-1c8d06a91bef.md))_
+- **phase-reviewer**: phase-reviewer done; next up: tiered-verification; phase _(id: [rec-db17b780-4178-4359-b4ee-119fb52aba18](.artifacts/records/project__current-position/rec-db17b780-4178-4359-b4ee-119fb52aba18.md))_
 
 ## phase-sections
 
@@ -866,11 +863,6 @@ print("phase checks only")
 
 ### Acceptance
 - **plan-wave-rules**: plan-phase requires a recipe, one shared executor of inline or subagent per wave, and phase size, stops, and collision notes, and it does not open plan review until those are present; tdd; workflow-loop; python3 -m pytest tests/test_plan_wave_rules.py -q _(id: [rec-b1c39c5f-6758-426d-bdcf-0ff6c57bcbc5](.artifacts/records/project__acceptance/rec-b1c39c5f-6758-426d-bdcf-0ff6c57bcbc5.md))_
-
-## plugin-dep-marketplace
-
-### Position
-- **plugin-dep-marketplace**: plan ready; awaiting plan review; phase _(id: [rec-0b073b0a-072b-4875-bf64-b9802c7e846e](.artifacts/records/project__current-position/rec-0b073b0a-072b-4875-bf64-b9802c7e846e.md))_
 
 ## readme-lifecycle
 
@@ -1125,9 +1117,6 @@ print("phase checks only")
 
 ## status-tabs-fixture
 
-### Work
-- **status-tabs-fixture**: status-tabs NEEDS_WORK / spec-gap fixture; phase-reviewer; deliver; workflow-loop _(id: [rec-18ccd738-2055-480d-9cda-d3bbdd47ef75](.artifacts/records/project__work-item/rec-18ccd738-2055-480d-9cda-d3bbdd47ef75.md))_
-
 ### Acceptance
 - **status-tabs-fixture**: status-tabs fixture yields NEEDS_WORK with a spec-gap finding; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k status_tabs _(id: [rec-a6aabc11-4cb5-47dd-84da-5c01fd225ab5](.artifacts/records/project__acceptance/rec-a6aabc11-4cb5-47dd-84da-5c01fd225ab5.md))_
 
@@ -1198,6 +1187,41 @@ print("phase checks only")
 
 ### Acceptance
 - **test-suite-speed**: All 262 tests pass, full suite wall time is at most 158s (half of the 317s clean-HEAD baseline), CPU time stays under 250s, and no timeout or deadline value is larger than before the change; check; test-suite-speed; time uv run --with textual --with pytest python -m pytest tests -q _(id: [rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99](.artifacts/records/project__acceptance/rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99.md))_
+
+## tier2-dashboard
+
+### Acceptance
+- **tier2-dashboard**: At 60 and 120 columns, a phase header shows tier-2 running / passed@SHA / failed@SHA from seeded store state; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k tier2 _(id: [rec-b5eb3ea3-6ec1-4431-ab56-fcb60d7b1574](.artifacts/records/project__acceptance/rec-b5eb3ea3-6ec1-4431-ab56-fcb60d7b1574.md))_
+
+## tier2-engine
+
+### Acceptance
+- **tier2-engine**: Parent starts a background tmux full-suite run in the phase worktree after reviewer pass without blocking the agent session, and records one tier-2 check-run at the phase head SHA with exit code, duration, output digest, and failing node IDs when failed; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "runner or background or check_run or tmux" _(id: [rec-66d14411-07cd-479e-bb45-abfd3ee105f3](.artifacts/records/project__acceptance/rec-66d14411-07cd-479e-bb45-abfd3ee105f3.md))_
+
+## tier2-engine-fix
+
+### Acceptance
+- **tier2-engine-fix**: A tier-2 failure creates fix work-item(s) under the retry-loop budget clustered by failing test file/module, with no inline fix-and-rerun inside the verification step; after fixes tier-2 is expected to rerun at the new head; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "fix or cluster or budget" _(id: [rec-e54af7a4-185c-4adc-93b9-6ca9417d5f0f](.artifacts/records/project__acceptance/rec-e54af7a4-185c-4adc-93b9-6ca9417d5f0f.md))_
+
+## tier2-engine-gate
+
+### Acceptance
+- **tier2-engine-gate**: Phase gate requires every active phase acceptance to have a passing runner check-run at the phase head SHA and a passing tier-2 check-run at that same SHA before merge; missing or failing tier-2 blocks merge; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k gate _(id: [rec-5ad44d4e-6fd3-4829-be3e-95e48379990b](.artifacts/records/project__acceptance/rec-5ad44d4e-6fd3-4829-be3e-95e48379990b.md))_
+
+## tier2-engine-meta
+
+### Acceptance
+- **tier2-engine-meta**: The tier-2 check-run carries runner metadata: revision = phase head SHA, exit_code, duration_s, output_sha256, and failing node IDs when failed, with evidence_kind integration; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "meta or fields or evidence_kind or digest" _(id: [rec-f434ce3c-77ee-4e17-80d6-ad308eadb1f2](.artifacts/records/project__acceptance/rec-f434ce3c-77ee-4e17-80d6-ad308eadb1f2.md))_
+
+## tier2-engine-scoped
+
+### Acceptance
+- **tier2-engine-scoped**: Skills/README/test_verify_budget keep per-task verification scoped (no whole-suite per-task verify_command) while documenting the required phase-level tier-2 full run; skill↔contract consistency stays green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_budget.py tests/test_skill_contract_consistency.py -q _(id: [rec-97b46204-7027-47b9-bf84-e4b585da8849](.artifacts/records/project__acceptance/rec-97b46204-7027-47b9-bf84-e4b585da8849.md))_
+
+## tiered-verification
+
+### Position
+- **tiered-verification**: wave 1 in progress: tier2-engine + tier2-dashboard; phase _(id: [rec-e0d290ea-ab54-4adc-9242-6b5ffe181a35](.artifacts/records/project__current-position/rec-e0d290ea-ab54-4adc-9242-6b5ffe181a35.md))_
 
 ## tm-cli
 
@@ -1554,9 +1578,6 @@ print("phase checks only")
 
 ## verify-phase-reviewer
 
-### Work
-- **verify-phase-reviewer**: Verify phase-end independent reviewer; phase-reviewer; deliver; workflow-loop _(id: [rec-366155af-fa6c-46a6-ae03-dc91eb6022f5](.artifacts/records/project__work-item/rec-366155af-fa6c-46a6-ae03-dc91eb6022f5.md))_
-
 ### Acceptance
 - **verify-phase-reviewer**: Through pytest entry point, phase-reviewer tests prove brief limits, parent review check-run/findings, fix routing, one re-run, gate, and integration-report from reviewer output; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q _(id: [rec-a5b4ff28-4664-45b7-9b25-489d4f58af19](.artifacts/records/project__acceptance/rec-a5b4ff28-4664-45b7-9b25-489d4f58af19.md))_
 
@@ -1601,9 +1622,6 @@ print("phase checks only")
 - **verify-phase-selector-suite**: Full non-tmux and tmux test suites pass; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m not tmux && uv run --with textual --with pytest python -m pytest tests -q -m tmux _(id: [rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9](.artifacts/records/project__acceptance/rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9.md))_
 
 ## verify-plugin-dep-marketplace
-
-### Work
-- **verify-plugin-dep-marketplace**: Verify plugin-dep-marketplace; plugin-dep-marketplace; deliver; packaging _(id: [rec-5504f534-0cdb-4d0c-8b1d-7b0f286b272c](.artifacts/records/project__work-item/rec-5504f534-0cdb-4d0c-8b1d-7b0f286b272c.md))_
 
 ### Acceptance
 - **verify-plugin-dep-marketplace**: claude plugin validate . succeeds with both plugins listed and adaptive-artifacts dependency declared (exit criterion 1, real entry point); check; packaging; claude plugin validate . && python3 -c "import json;p=json.load(open('.claude-plugin/plugin.json'));d=p.get('dependencies',[]);assert 'adaptive-artifacts' in d or any(isinstance(x,dict) and x.get('name')=='adaptive-artifacts' for x in d);m=json.load(open('.claude-plugin/marketplace.json'));assert {x.get('name') for x in m['plugins']}>= {'se-workflow','adaptive-artifacts'}" _(id: [rec-463ee27b-5093-4184-bbf6-7b80770d43ac](.artifacts/records/project__acceptance/rec-463ee27b-5093-4184-bbf6-7b80770d43ac.md))_
@@ -1771,6 +1789,29 @@ print("phase checks only")
 ### Acceptance
 - **verify-task-rows-phase**: The tmux popup test for task rows and activity passes, README describes waits-on, running time and failed activity, and the full suite passes; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m 'not tmux' && uv run --with textual --with pytest python -m pytest tests -q -m tmux -rf _(id: [rec-92df6b15-9068-4342-b3fa-899bc28247b3](.artifacts/records/project__acceptance/rec-92df6b15-9068-4342-b3fa-899bc28247b3.md))_
 
+## verify-tiered-verification
+
+### Work
+- **verify-tiered-verification**: Verify tiered verification at phase head; tiered-verification; deliver; workflow-loop _(id: [rec-dc6cb033-154a-4def-ba5a-abf81d109042](.artifacts/records/project__work-item/rec-dc6cb033-154a-4def-ba5a-abf81d109042.md))_
+
+### Acceptance
+- **verify-tiered-verification**: Through the pytest entry point, background tier-2 run records a check-run at phase head without blocking the agent session for the suite duration; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "runner or background or check_run" _(id: [rec-e094b9fe-4161-4ebd-81ad-00b66dce7444](.artifacts/records/project__acceptance/rec-e094b9fe-4161-4ebd-81ad-00b66dce7444.md))_
+
+## verify-tiered-verification-fix
+
+### Acceptance
+- **verify-tiered-verification-fix**: Tier-2 failure creates fix work-item(s) under retry budget with no inline verifier fix loop; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "fix or cluster or budget" _(id: [rec-3441488d-4728-4c7e-855a-ef05fc967f31](.artifacts/records/project__acceptance/rec-3441488d-4728-4c7e-855a-ef05fc967f31.md))_
+
+## verify-tiered-verification-gate
+
+### Acceptance
+- **verify-tiered-verification-gate**: Phase gate requires head-SHA acceptance passes and a passing tier-2 check-run before merge; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k gate _(id: [rec-6c629730-fc3a-4ca1-9d42-88c84c5b8b34](.artifacts/records/project__acceptance/rec-6c629730-fc3a-4ca1-9d42-88c84c5b8b34.md))_
+
+## verify-tiered-verification-surfaces
+
+### Acceptance
+- **verify-tiered-verification-surfaces**: Dashboard shows tier-2 status on the phase header; skills/README/verify-budget stay scoped for per-task checks; skill↔contract consistency green; CI-owned tier-2 remains future/non-goal; check; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k tier2 && uv run --with pytest python -m pytest tests/test_verify_budget.py tests/test_skill_contract_consistency.py -q _(id: [rec-07249524-c6b9-49bf-8823-074594abbd01](.artifacts/records/project__acceptance/rec-07249524-c6b9-49bf-8823-074594abbd01.md))_
+
 ## verify-tmux-integration-phase
 
 ### Acceptance
@@ -1883,4 +1924,4 @@ print("phase checks only")
 ## workflow-loop
 
 ### Position
-- **workflow-loop**: retry-loop done; next up: phase-reviewer; effort _(id: [rec-d18f60b5-1709-4e8a-ae38-9cb0b3596619](.artifacts/records/project__current-position/rec-d18f60b5-1709-4e8a-ae38-9cb0b3596619.md))_
+- **workflow-loop**: phase-reviewer done; next up: tiered-verification; effort _(id: [rec-721cf0b5-262e-4368-ab82-503a4320efbf](.artifacts/records/project__current-position/rec-721cf0b5-262e-4368-ab82-503a4320efbf.md))_
