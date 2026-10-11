@@ -139,7 +139,25 @@ def test_prints_no_store_message(home, repo, tmp_path):
     result = _run(repo, home, uv=_fake_uv(tmp_path / "uv"))
     assert result.returncode == 1
     assert "no artifact store" in result.stdout.lower()
+    assert str(repo / ".artifacts") in result.stdout
     assert str(home / ".artifacts" / repo.name) in result.stdout
+    assert '"argv"' not in result.stdout
+
+
+def test_committed_local_binding_uses_repo_when_home_store_exists(home, repo, tmp_path):
+    _write_store(repo / ".artifacts")
+    _write_store(home / ".artifacts" / repo.name)
+    (repo / ".artifacts" / "store-binding.json").write_text(json.dumps({"store": "local"}))
+    assert _exec_record(_run(repo, home, uv=_fake_uv(tmp_path / "uv")))["argv"][:2] == ["run", "--script"]
+
+
+def test_bound_global_without_meta_prints_binding_error(home, repo, tmp_path):
+    _write_store(repo / ".artifacts")
+    (repo / ".artifacts" / "store-binding.json").write_text(json.dumps({"store": "global"}))
+    result = _run(repo, home, uv=_fake_uv(tmp_path / "uv"))
+    assert result.returncode == 1
+    assert "store binding" in result.stdout.lower()
+    assert "global" in result.stdout
     assert '"argv"' not in result.stdout
 
 

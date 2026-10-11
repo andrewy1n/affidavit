@@ -4,3 +4,6 @@ __pycache__/
 
 # Operational store state, never record data.
 .write.lock
+
+# Machine-local store binding override (committed default is store-binding.json).
+.artifacts/store-binding.local.json

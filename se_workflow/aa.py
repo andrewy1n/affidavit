@@ -10,6 +10,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from dashboard.artifact_store import StoreBindingError, resolve
+
 
 def resolve_aa_command() -> list[str]:
     override = os.environ.get("ADAPTIVE_ARTIFACTS_BIN")
@@ -39,9 +41,15 @@ def resolve_aa_command() -> list[str]:
 
 
 def find_store_root(start: Path) -> Path:
-    """Walk up from start for a directory that has .artifacts/meta.json."""
+    """Walk up from start for a project root that resolves to a store."""
     cur = start.resolve()
     for candidate in [cur, *cur.parents]:
+        try:
+            target = resolve(candidate)
+        except StoreBindingError:
+            continue
+        if target.store is not None:
+            return target.root
         if (candidate / ".artifacts" / "meta.json").is_file():
             return candidate
     return start.resolve()
@@ -52,7 +60,8 @@ def run_aa(
     root: Path,
     check: bool = False,
 ) -> subprocess.CompletedProcess[str]:
-    cmd = [*resolve_aa_command(), "--root", str(root), *args]
+    target = resolve(root)
+    cmd = [*resolve_aa_command(), *target.cli_args(), *args]
     result = subprocess.run(cmd, capture_output=True, text=True)
     if check and result.returncode != 0:
         raise RuntimeError(

@@ -358,10 +358,28 @@ It needs `uv`. The first run downloads `textual`.
 `dashboard/bin/dashboard --interval S` sets the seconds between change checks
 (default 2).
 
-The launcher finds the store from the git toplevel of the directory:
+The launcher (and `se_workflow.aa`) pick **one** store for the git
+toplevel — local (`<toplevel>/.artifacts`) or global
+(`~/.artifacts/<toplevel name>`), never both.
 
-1. `~/.artifacts/<toplevel name>`, if it has `meta.json`.
-2. `<toplevel>/.artifacts`, if it has `meta.json`.
+Resolution order:
+
+1. `$SE_WORKFLOW_STORE` (`local` or `global`).
+2. `<toplevel>/.artifacts/store-binding.local.json` (gitignored override).
+3. `<toplevel>/.artifacts/store-binding.json` (committed default).
+4. Default: local if it has `meta.json`, else global if it has
+   `meta.json`, else none.
+
+Binding files are JSON: `{"store":"local"}` or `{"store":"global"}`.
+A set binding that points at a path without `meta.json` fails; it does
+not fall through to the other store. This repository pins local in
+`.artifacts/store-binding.json`.
+
+If a personal shell function wraps `adaptive-artifacts` and forces
+`--store ~/.artifacts/<name>`, it bypasses this binding for bare CLI
+calls. Prefer `command adaptive-artifacts`, or pass `--store` /
+`--contract` from the resolved target (as `se_workflow.aa.run_aa`
+does).
 
 It runs the app from the toplevel. The app finds the runtime binary in
 this order:

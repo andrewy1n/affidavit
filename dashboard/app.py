@@ -1654,7 +1654,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
-    target = artifact_store.resolve(Path.cwd())
+    try:
+        target = artifact_store.resolve(Path.cwd())
+    except artifact_store.StoreBindingError as exc:
+        print(str(exc))
+        return 1
     if target.store is None or target.contract is None:
         print(f"No artifact store found for {target.root}")
         return 1
