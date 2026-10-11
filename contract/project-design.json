@@ -217,7 +217,8 @@
         "method": [
           "tdd",
           "check",
-          "manual"
+          "manual",
+          "review"
         ],
         "evidence_kind": [
           "unit",
