@@ -16,5 +16,8 @@
     "tdd",
     "artifacts",
     "verification"
+  ],
+  "dependencies": [
+    "adaptive-artifacts"
   ]
 }

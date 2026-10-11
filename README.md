@@ -56,22 +56,13 @@ one effort do not collide. Handoff groups by `effort`. See [skills/kinds-and-foc
 
 ## Install
 
-Requires **adaptive-artifacts** first (`adaptive-artifacts` on PATH).
-That plugin is not in Anthropic's official marketplace.
+Requires **adaptive-artifacts** (`adaptive-artifacts` on PATH). Neither
+plugin is in Anthropic's official marketplace.
 
-### 1. adaptive-artifacts (dependency)
+### Claude Code
 
-```bash
-claude plugin marketplace add andrewy1n/adaptive-artifacts
-claude plugin install adaptive-artifacts@adaptive-artifacts -y
-```
-
-Or for Cursor: clone/sync adaptive-artifacts and put `bin/adaptive-artifacts`
-on PATH (see that repo's README).
-
-### 2. se-workflow
-
-#### Claude Code
+The se-workflow marketplace lists both plugins. Installing se-workflow
+pulls `adaptive-artifacts` as a declared dependency (same marketplace):
 
 ```bash
 claude plugin marketplace add andrewy1n/se-workflow
@@ -82,11 +73,19 @@ Install id is `se-workflow@se-workflow`. If a marketplace with that name
 already points elsewhere: `claude plugin marketplace remove se-workflow`
 then add again.
 
-#### Cursor
+To install only the runtime (without se-workflow), use its own
+marketplace: `claude plugin marketplace add andrewy1n/adaptive-artifacts`
+then `claude plugin install adaptive-artifacts@adaptive-artifacts -y`.
 
-From a clone:
+### Cursor
+
+Cursor does not auto-install Claude-style plugin dependencies. Clone
+or sync **both** repos and put `adaptive-artifacts` on PATH:
 
 ```bash
+git clone https://github.com/andrewy1n/adaptive-artifacts.git
+# put adaptive-artifacts/bin on PATH (see that repo's README)
+
 git clone https://github.com/andrewy1n/se-workflow.git
 ./se-workflow/scripts/sync-plugin.sh
 ```
