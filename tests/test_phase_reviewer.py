@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -15,6 +16,7 @@ from se_workflow.reviewer import (  # noqa: E402
     build_finding_payload,
     build_review_check_run_payload,
     build_reviewer_brief,
+    grade_reviewer_inputs,
     integration_report_body,
     is_fixable_finding_kind,
     parse_reviewer_output,
@@ -23,6 +25,8 @@ from se_workflow.reviewer import (  # noqa: E402
     should_rerun_reviewer,
     verdict_to_result,
 )
+
+STATUS_TABS_FIXTURE = REPO_ROOT / "tests" / "fixtures" / "status_tabs_spec_gap.json"
 
 SKILL = REPO_ROOT / "skills" / "execute-phase" / "SKILL.md"
 
@@ -395,3 +399,33 @@ def test_integration_report_body_from_reviewer_section():
     raw = creates[0]["raw"]
     assert "## Interfaces" in raw
     assert "reviewer" in _skill_flat()
+
+
+def test_status_tabs_fixture_yields_needs_work_spec_gap():
+    """Dogfood: description lists more UI than acceptance/diff → NEEDS_WORK / spec-gap."""
+    fixture = json.loads(STATUS_TABS_FIXTURE.read_text())
+    records = fixture["records"]
+    phase_diff = fixture["phase_diff"]
+
+    brief = build_reviewer_brief(
+        records=records,
+        phase_diff=phase_diff,
+        base=fixture.get("base", "main"),
+        phase_head=fixture.get("phase_head", "HEAD"),
+    )
+    assert "Active" in brief and "Done" in brief and "Archived" in brief
+    assert "UNIQUE_EXEC_SHOULD_NOT_AFFECT_GRADE" not in brief
+
+    graded = grade_reviewer_inputs(records=records, phase_diff=phase_diff)
+    assert graded["verdict"] == "NEEDS_WORK"
+    kinds = {f.get("kind") for f in graded["findings"]}
+    assert "spec-gap" in kinds
+    status_findings = [
+        f for f in graded["findings"] if f.get("kind") == "spec-gap"
+    ]
+    assert status_findings
+    assert any(
+        "Archived" in (f.get("expected") or "")
+        or "Archived" in (f.get("observed") or "")
+        for f in status_findings
+    )

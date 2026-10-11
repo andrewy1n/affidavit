@@ -389,3 +389,122 @@ def integration_report_body(integration: Mapping[str, Any]) -> str:
         "## Conflicts\n\n"
         f"{integration.get('conflicts') or ''}"
     )
+
+
+# UI labels used by the status-tabs dogfood / similar dashboard tab work.
+_UI_LABELS = (
+    "Active",
+    "Done",
+    "Archived",
+    "Waiting",
+    "Blocked",
+    "Ready",
+    "Needs you",
+    "All",
+)
+_UI_LABEL_RE = re.compile(
+    r"\b(" + "|".join(re.escape(label) for label in _UI_LABELS) + r")\b"
+)
+
+
+def _ui_labels_in(text: str) -> list[str]:
+    """Return unique UI labels in first-seen order."""
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for match in _UI_LABEL_RE.finditer(text or ""):
+        label = match.group(1)
+        if label not in seen:
+            seen.add(label)
+            ordered.append(label)
+    return ordered
+
+
+def grade_reviewer_inputs(
+    *,
+    records: Sequence[Mapping[str, Any]],
+    phase_diff: str,
+) -> dict[str, Any]:
+    """Deterministic stub mirroring ``agents/se-reviewer.md`` spec-gap grading.
+
+    When a work-item description promises UI labels that neither that task's
+    acceptance criteria nor the phase diff cover, return NEEDS_WORK with a
+    ``spec-gap`` finding. Builder self-grades in ``records`` are ignored.
+    """
+    allowed = filter_reviewer_records(records)
+    accept_by_subject: dict[str, list[str]] = {}
+    work_items: list[Mapping[str, Any]] = []
+    for record in allowed:
+        kind = _short_kind(str(record.get("record_type") or record.get("kind") or ""))
+        subject = str(record.get("subject") or record.get("title") or "phase")
+        if kind == "work-item":
+            work_items.append(record)
+        elif kind == "acceptance":
+            text = " ".join(
+                str(part)
+                for part in (
+                    record.get("criterion"),
+                    record.get("body"),
+                    record.get("text"),
+                )
+                if part
+            )
+            accept_by_subject.setdefault(subject, []).append(text)
+
+    findings: list[dict[str, str]] = []
+    delivered_global = _ui_labels_in(phase_diff or "")
+    for item in work_items:
+        subject = str(item.get("subject") or item.get("title") or "phase")
+        description = " ".join(
+            str(part)
+            for part in (item.get("body"), item.get("text"), item.get("title"))
+            if part
+        )
+        promised = _ui_labels_in(description)
+        if not promised:
+            continue
+        accept_text = " ".join(accept_by_subject.get(subject, []))
+        covered = set(_ui_labels_in(accept_text)) | set(delivered_global)
+        missing = [label for label in promised if label not in covered]
+        if not missing:
+            continue
+        findings.append(
+            {
+                "task": subject,
+                "kind": "spec-gap",
+                "expected": (
+                    "Description lists "
+                    + ", ".join(promised)
+                    + " tabs/UI"
+                ),
+                "observed": (
+                    "Acceptance and diff only cover "
+                    + (", ".join(label for label in promised if label in covered) or "(none)")
+                    + f"; missing: {', '.join(missing)}"
+                ),
+                "severity": "major",
+            }
+        )
+
+    if findings:
+        return {
+            "verdict": "NEEDS_WORK",
+            "findings": findings,
+            "integration": {
+                "interfaces": "spec-gap detected between description and acceptance/diff",
+                "assumptions": "UI labels extracted from work-item description text",
+                "invariants": "builder self-grades excluded from grading inputs",
+                "conflicts": "; ".join(
+                    f"{f['task']}: {f['observed']}" for f in findings
+                ),
+            },
+        }
+    return {
+        "verdict": "PASS",
+        "findings": [],
+        "integration": {
+            "interfaces": "description UI covered by acceptance/diff",
+            "assumptions": "UI labels extracted from work-item description text",
+            "invariants": "builder self-grades excluded from grading inputs",
+            "conflicts": "",
+        },
+    }
