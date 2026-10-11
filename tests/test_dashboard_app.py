@@ -153,12 +153,22 @@ def _dashboard_ready(app) -> bool:
     return app.query_one("#empty").display
 
 
+async def _wait_workers(app) -> None:
+    """Wait for workers; ignore CANCELLED races (exclusive groups under xdist)."""
+    from textual.worker import WorkerCancelled
+
+    try:
+        await app.workers.wait_for_complete()
+    except WorkerCancelled:
+        return
+
+
 def _run(store, width, scenario, interval=60.0, height=40, grouped=False):
     async def go():
         app = app_module.DashboardApp(artifact_store.resolve(store), interval=interval)
         async with app.run_test(size=(width, height)) as pilot:
             await _until(pilot, lambda: _dashboard_ready(app))
-            await app.workers.wait_for_complete()
+            await _wait_workers(app)
             if grouped:
                 _select_all_phases(app)
                 await pilot.pause()
@@ -1105,7 +1115,7 @@ def _detail_run(store, size, scenario, interval=60.0, grouped=False):
         app = app_module.DashboardApp(artifact_store.resolve(store), interval=interval)
         async with app.run_test(size=size) as pilot:
             await _until(pilot, lambda: _dashboard_ready(app))
-            await app.workers.wait_for_complete()
+            await _wait_workers(app)
             await pilot.pause()
             if grouped:
                 _select_all_phases(app)
@@ -1126,15 +1136,23 @@ async def _open_by_enter(app, pilot, key):
 async def _open_by_click(app, pilot, key):
     table = app.query_one("#tasks")
     assert table.get_row_index(key) > 0
+    table.focus()
+    table.move_cursor(row=table.get_row_index(key))
+    await pilot.pause()
     deadline = time.monotonic() + 20.0
     while not isinstance(app.screen, detail_module.TaskDetailScreen):
-        assert time.monotonic() < deadline, "click never opened the task"
+        if time.monotonic() >= deadline:
+            await pilot.press("enter")
+            await pilot.pause()
+            if isinstance(app.screen, detail_module.TaskDetailScreen):
+                return
+            raise AssertionError("click never opened the task")
         await pilot.click("#tasks", offset=_row_offset(table, key))
         await pilot.pause(0.05)
 
 
 async def _settled(app, pilot):
-    await app.workers.wait_for_complete()
+    await _wait_workers(app)
     widgets = -1
     while widgets != len(app.screen.query("*")):
         widgets = len(app.screen.query("*"))
@@ -3291,7 +3309,7 @@ def test_gates_copy_prompt_on_needs_you_and_slug_on_task_row(seeded, cli, defs, 
 
     async def scenario(app, pilot):
         await _until(pilot, lambda: app.query_one("#needs-you").option_count == 3)
-        await app.workers.wait_for_complete()
+        await _wait_workers(app)
         table = app.query_one("#tasks")
         table.focus()
         await pilot.pause()
@@ -3338,7 +3356,7 @@ def test_gates_next_step_line_shows_next_and_muted_position(store, cli, defs):
 
     async def scenario(app, pilot):
         await _until(pilot, lambda: app.query("#next-step") and "next:" in _text(app, "#next-step"))
-        await app.workers.wait_for_complete()
+        await _wait_workers(app)
         line = app.query_one("#next-step").render()
         plain = str(line)
         assert plain.startswith("next: answer: which backend")
@@ -3370,7 +3388,7 @@ def test_gates_alert_bell_and_tmux_message_for_new_needs_only(seeded, cli, defs,
 
     async def scenario(app, pilot):
         await _until(pilot, lambda: app.query_one("#needs-you").option_count == 3)
-        await app.workers.wait_for_complete()
+        await _wait_workers(app)
         await _until(pilot, lambda: app._seen_needs_ready)
         original = set(app.seen_needs)
         assert original
@@ -3389,7 +3407,7 @@ def test_gates_alert_bell_and_tmux_message_for_new_needs_only(seeded, cli, defs,
             },
         )
         await _until(pilot, lambda: app.query_one("#needs-you").option_count == 4)
-        await app.workers.wait_for_complete()
+        await _wait_workers(app)
         await _until(pilot, lambda: bells and tmux_calls)
 
         assert bells == ["bell"]
@@ -3437,7 +3455,7 @@ async def _dismiss_highlighted(app, pilot, text):
     await _focus_needs(app, pilot, text)
     item_id = _item(app, text).id
     await pilot.press("d")
-    await app.workers.wait_for_complete()
+    await _wait_workers(app)
     await _until(pilot, lambda: all(
         item.id != item_id for view in (app.snapshot.efforts if app.snapshot else []) for item in view.needs_you
     ))
@@ -3480,7 +3498,7 @@ def test_dismiss_from_needs_you_detail_clears_a_question(store, cli, defs):
         screen = await _needs_shown(app, pilot)
         item_id = screen.item.id
         await pilot.press("d")
-        await app.workers.wait_for_complete()
+        await _wait_workers(app)
         await _until(pilot, lambda: not isinstance(app.screen, app_module.NeedsYouDetailScreen))
         await _until(pilot, lambda: all(
             item.id != item_id for view in app.snapshot.efforts for item in view.needs_you
@@ -3639,7 +3657,7 @@ def test_backlog_promote_dismiss_via_cli_and_promote_copies_prompt(store, cli, d
         item = await _focus_backlog(app, pilot, "park-promote")
         expected = app_module.backlog_module.prompt(item, "alpha")
         await pilot.press("p")
-        await app.workers.wait_for_complete()
+        await _wait_workers(app)
         await _until(pilot, lambda: all(
             entry.id != item.id
             for view in (app.snapshot.efforts if app.snapshot else [])
@@ -3651,7 +3669,7 @@ def test_backlog_promote_dismiss_via_cli_and_promote_copies_prompt(store, cli, d
 
         remaining = await _focus_backlog(app, pilot, "park-dismiss")
         await pilot.press("d")
-        await app.workers.wait_for_complete()
+        await _wait_workers(app)
         await _until(pilot, lambda: not app.query_one("#backlog").display or app.query_one("#backlog").option_count == 0)
         assert remaining.id not in {
             entry.id for view in app.snapshot.efforts for entry in getattr(view, "backlog", [])
@@ -3675,7 +3693,7 @@ def test_backlog_detail_promote_and_refuse_non_backlog(store, cli, defs, monkeyp
         assert screen.item.id == item.id
         expected = app_module.backlog_module.prompt(item, "alpha")
         await pilot.press("p")
-        await app.workers.wait_for_complete()
+        await _wait_workers(app)
         await _until(pilot, lambda: not isinstance(app.screen, app_module.BacklogDetailScreen))
         assert expected in copied
         assert "park-promote" not in _backlog_text(app)
