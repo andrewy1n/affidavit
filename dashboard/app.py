@@ -1087,11 +1087,18 @@ class DashboardApp(App[None]):
         )
 
     def _refresh_copy_binding(self) -> None:
-        description = "copy prompt" if self._needs_copy_focus() else "copy"
-        self._bindings.key_to_bindings["c"] = [
-            Binding("c", "copy_slug", description, show=True),
-        ]
-        self.refresh_bindings()
+        # Focus/blur can fire during run_test teardown after the screen stack
+        # is cleared; refreshing bindings then raises ScreenStackError.
+        if not self.screen_stack:
+            return
+        try:
+            description = "copy prompt" if self._needs_copy_focus() else "copy"
+            self._bindings.key_to_bindings["c"] = [
+                Binding("c", "copy_slug", description, show=True),
+            ]
+            self.refresh_bindings()
+        except Exception:
+            return
 
     def on_descendant_focus(self, event: events.DescendantFocus) -> None:
         self._refresh_copy_binding()
