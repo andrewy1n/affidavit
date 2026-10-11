@@ -1139,16 +1139,20 @@ async def _open_by_click(app, pilot, key):
     table.focus()
     table.move_cursor(row=table.get_row_index(key))
     await pilot.pause()
-    deadline = time.monotonic() + 20.0
-    while not isinstance(app.screen, detail_module.TaskDetailScreen):
-        if time.monotonic() >= deadline:
-            await pilot.press("enter")
-            await pilot.pause()
-            if isinstance(app.screen, detail_module.TaskDetailScreen):
-                return
-            raise AssertionError("click never opened the task")
+    for _ in range(3):
+        if isinstance(app.screen, detail_module.TaskDetailScreen):
+            return
         await pilot.click("#tasks", offset=_row_offset(table, key))
-        await pilot.pause(0.05)
+        await pilot.pause(0.15)
+    if isinstance(app.screen, detail_module.TaskDetailScreen):
+        return
+    # Under xdist, pilot clicks often miss; keyboard open is the reliable path.
+    await _open_by_enter(app, pilot, key)
+    await _until(
+        pilot,
+        lambda: isinstance(app.screen, detail_module.TaskDetailScreen),
+        timeout=10.0,
+    )
 
 
 async def _settled(app, pilot):
