@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from se_workflow.check import DEFAULT_TIMEOUT_S, run_check
+from se_workflow.close_batch import main as close_batch_main
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -43,6 +44,26 @@ def _build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_TIMEOUT_S,
         help=f"verify_command timeout in seconds (default: {DEFAULT_TIMEOUT_S:g})",
     )
+
+    close_batch = sub.add_parser(
+        "close-batch",
+        help="Build NDJSON apply batch that closes a work-item",
+    )
+    close_batch.add_argument(
+        "--input",
+        default="-",
+        help="close-request JSON path, or '-' for stdin (default)",
+    )
+    close_batch.add_argument(
+        "--out",
+        default="-",
+        help="NDJSON output path, or '-' for stdout (default)",
+    )
+    close_batch.add_argument(
+        "--cwd",
+        default=None,
+        help="git cwd for red-first ancestry checks (default: process cwd)",
+    )
     return parser
 
 
@@ -63,5 +84,10 @@ def main(argv: list[str] | None = None) -> int:
         if outcome.message:
             print(outcome.message, file=sys.stderr)
         return outcome.exit_code
+    if args.command == "close-batch":
+        argv = ["--input", args.input, "--out", args.out]
+        if args.cwd is not None:
+            argv.extend(["--cwd", args.cwd])
+        return close_batch_main(argv)
     parser.error(f"unknown command {args.command!r}")
     return 2

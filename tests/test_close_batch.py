@@ -1,4 +1,4 @@
-"""Tests for scripts/close_batch.py -- the batch builder behind the
+"""Tests for se-workflow close-batch -- the batch builder behind the
 verify-work `close` procedure.
 
 The pure `build_batch` tests exercise the refusal policy directly; the
@@ -21,11 +21,9 @@ import pytest
 
 import helpers as h
 from conftest import REPO_ROOT
+from se_workflow import close_batch
 
-SCRIPT = REPO_ROOT / "scripts" / "close_batch.py"
-
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
-import close_batch  # noqa: E402
+CLI = REPO_ROOT / "bin" / "se-workflow"
 
 RUNNER = "se-workflow"
 
@@ -108,7 +106,7 @@ def _run_script(
     input_path = tmp_path / "close-request.json"
     input_path.write_text(json.dumps(request))
     out_path = tmp_path / "close-batch.ndjson"
-    cmd = [sys.executable, str(SCRIPT), "--input", str(input_path), "--out", str(out_path)]
+    cmd = [sys.executable, str(CLI), "close-batch", "--input", str(input_path), "--out", str(out_path)]
     if cwd is not None:
         cmd.extend(["--cwd", str(cwd)])
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -305,7 +303,7 @@ def test_cli_malformed_json_exits_1(tmp_path):
     input_path.write_text("{not json")
     out_path = tmp_path / "close-batch.ndjson"
     result = subprocess.run(
-        [sys.executable, str(SCRIPT), "--input", str(input_path), "--out", str(out_path)],
+        [sys.executable, str(CLI), "close-batch", "--input", str(input_path), "--out", str(out_path)],
         capture_output=True,
         text=True,
     )

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Build the NDJSON `apply` batch that closes a work-item.
 
 Reads a close-request JSON describing the work-item's active acceptances,
