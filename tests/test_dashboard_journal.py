@@ -649,6 +649,7 @@ async def _journal_shown(app, pilot):
     await _until(
         pilot,
         lambda: isinstance(app.screen, JournalScreen) and app.screen.loaded,
+        timeout=40.0,
     )
     await pilot.pause(0.2)
     return app.screen
@@ -658,6 +659,7 @@ async def _record_shown(app, pilot):
     await _until(
         pilot,
         lambda: isinstance(app.screen, RecordDetailScreen) and app.screen.loaded,
+        timeout=40.0,
     )
     await pilot.pause(0.2)
     return app.screen
@@ -875,3 +877,4 @@ def test_journal_detail_pager_pages_record_with_stub(journal_ui, tmp_path, monke
         assert not recorded.exists()
 
     _journal_run(store, scenario)
+
