@@ -232,7 +232,40 @@ def test_needs_you_effort_level_question_links_to_no_task(store, cli, defs):
 
 def test_needs_you_item_defaults_keep_the_four_field_constructor_working():
     item = model.NeedsYouItem("needs-human", "rec-1", "s", "t")
-    assert (item.record_type, item.body, item.task_id) == ("", "", "")
+    assert (item.record_type, item.body, item.task_id, item.revision) == ("", "", "", "")
+
+
+def test_approval_needs_you_items_carry_displayed_revision(store, cli, defs):
+    _goal(cli, defs, "alpha")
+    question = h.create_generic_record(
+        cli, defs, "project:continuity-question", subject="alpha",
+        extra_payload={"blocking": True, "scope": "plan-review:alpha"},
+    )
+    finding = h.create_generic_record(
+        cli, defs, "project:finding", subject="f-human",
+        extra_payload={"claim": "human decides", "needs": "human", "effort": "alpha"},
+    )
+    acceptance = _record(
+        cli, defs, "project:acceptance", "u-task",
+        {"criterion": "pages render", "method": "manual", "verify_command": "", "effort": "alpha", "phase": "a-one"},
+    )
+    check = _record(
+        cli, defs, "project:check-run", "u-check",
+        {
+            "criterion_id": acceptance["id"], "method": "manual", "result": "pass",
+            "signed_by": "", "revision": "r", "effort": "alpha",
+        },
+    )
+
+    items = {item.kind: item for item in _effort(model.load_snapshot(_target(store)), "alpha").needs_you}
+    assert items["blocking-question"].revision == question["revision"]
+    assert items["needs-human"].revision == finding["revision"]
+    assert items["unsigned-check"].revision == check["revision"]
+    assert "@current" not in {
+        items["blocking-question"].revision,
+        items["needs-human"].revision,
+        items["unsigned-check"].revision,
+    }
 
 
 def test_recent_activity_lists_last_24h_newest_first_and_resolves_reports_to_their_effort(store, cli, defs):

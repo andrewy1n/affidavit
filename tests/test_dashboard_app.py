@@ -3787,3 +3787,126 @@ def test_tier2_header_pass_fail_running(store, cli, defs, width):
         assert "t2 ok@" not in _row_text(app, "phase:run")
 
     _run(store, width, scenario, grouped=True)
+
+
+# --- approval-dismiss: revision / notes / reject / stale (CLI layer) ---
+
+
+def _approval_question(**overrides):
+    base = dict(
+        kind="blocking-question",
+        id="rec-q1",
+        subject="alpha",
+        text="plan-review:alpha",
+        record_type="project:continuity-question",
+        revision="sha256:displayed-question",
+    )
+    base.update(overrides)
+    return model_module.NeedsYouItem(**base)
+
+
+def _approval_finding(**overrides):
+    base = dict(
+        kind="needs-human",
+        id="rec-f1",
+        subject="risk-claim",
+        text="risk claim",
+        record_type="project:finding",
+        revision="sha256:displayed-finding",
+    )
+    base.update(overrides)
+    return model_module.NeedsYouItem(**base)
+
+
+def _approval_check(**overrides):
+    base = dict(
+        kind="unsigned-check",
+        id="rec-c1",
+        subject="u-task",
+        text="pages render pass",
+        record_type="project:check-run",
+        revision="sha256:displayed-check",
+    )
+    base.update(overrides)
+    return model_module.NeedsYouItem(**base)
+
+
+def test_approval_dismiss_command_uses_displayed_revision_never_at_current():
+    from dashboard import dismiss as dismiss_module
+
+    question = _approval_question()
+    finding = _approval_finding()
+    check = _approval_check()
+
+    approve = dismiss_module.dismiss_command(question, action="approve", note="looks good")
+    accept = dismiss_module.dismiss_command(finding, action="accept", note="accepted risk")
+    sign = dismiss_module.dismiss_command(check, action="sign", note="signed ok", signer="pilot")
+
+    for args in (approve, accept, sign):
+        assert "@current" not in args
+    assert approve[approve.index("--expected-revision") + 1] == question.revision
+    assert accept[accept.index("--expected-revision") + 1] == finding.revision
+    assert "--expected-revision" not in sign  # correct has no revision flag
+    assert json.loads(approve[approve.index("--payload") + 1])["answer"] == "looks good"
+    assert json.loads(accept[accept.index("--payload") + 1]) == {
+        "needs": "none", "resolution_note": "accepted risk",
+    }
+    assert json.loads(sign[sign.index("--payload") + 1]) == {
+        "signed_by": "pilot", "signed_note": "signed ok",
+    }
+
+
+def test_approval_reject_creates_needs_human_finding_and_does_not_answer():
+    from dashboard import dismiss as dismiss_module
+
+    question = _approval_question()
+    args = dismiss_module.dismiss_command(question, action="reject", note="rework approach")
+
+    assert args[0] == "create"
+    assert args[args.index("--type") + 1] == "project:finding"
+    assert "answered" not in args
+    assert "update" not in args
+    payload = json.loads(args[args.index("--payload") + 1])
+    assert payload["needs"] == "human"
+    assert "rejected" in payload["claim"].lower() or "plan rejected" in payload["claim"].lower()
+    assert "discuss" in payload["claim"].lower() or "plan-phase" in payload["claim"].lower()
+    assert "rework approach" in payload["basis"]
+    body = args[args.index("--body") + 1]
+    assert "rework approach" in body
+    assert "@current" not in args
+
+
+def test_approval_dismiss_refuses_missing_or_at_current_revision():
+    from dashboard import dismiss as dismiss_module
+
+    for bad in ("", "@current"):
+        item = _approval_question(revision=bad)
+        with pytest.raises(dismiss_module.DismissError, match="displayed revision|never @current"):
+            dismiss_module.dismiss_command(item, action="approve")
+
+
+def test_approval_stale_revision_raises_clear_error_without_retry(monkeypatch):
+    from dashboard import dismiss as dismiss_module
+    from dashboard.artifact_store import Target
+    from pathlib import Path
+
+    item = _approval_question()
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        return subprocess.CompletedProcess(
+            cmd, 2,
+            '{"error":"stale_write","message":"stale write for rec-q1: expected sha256:displayed-question, got sha256:other"}',
+            "",
+        )
+
+    monkeypatch.setattr(dismiss_module.subprocess, "run", fake_run)
+    target = Target(root=Path("/tmp"), store=Path("/tmp/store"), contract=Path("/tmp/contract.json"))
+
+    with pytest.raises(dismiss_module.DismissError, match="changed since opened|stale revision"):
+        dismiss_module.dismiss_item(target, item, action="approve")
+
+    write_calls = [c for c in calls if any(part in {"update", "correct", "create"} for part in c)]
+    assert len(write_calls) == 1
+    assert all("@current" not in c for c in calls)

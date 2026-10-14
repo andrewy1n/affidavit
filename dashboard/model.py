@@ -94,6 +94,7 @@ class NeedsYouItem:
     status: str = ""
     next: str = ""
     result: str = ""
+    revision: str = ""
 
 
 @dataclass(frozen=True)
@@ -744,6 +745,7 @@ def _needs_you(
         return NeedsYouItem(
             kind, record["id"], subject, text, record_type=record.get("record_type", ""),
             body=record.get("body") or "", task_id=_task_for(subject, tasks),
+            revision=record.get("revision") or "",
         )
 
     items = []
@@ -772,6 +774,7 @@ def _needs_you(
         items.append(NeedsYouItem(
             "loop-route", record["id"], record["subject"], text, record_type=record.get("record_type", ""),
             phase=phase, requirement=requirement, status=status, next=nxt,
+            revision=record.get("revision") or "",
         ))
     reports_by_phase: dict[str, list[dict[str, Any]]] = {}
     for record in _live(integrations or []):
@@ -788,6 +791,7 @@ def _needs_you(
         items.append(NeedsYouItem(
             "integration", latest["id"], latest["subject"], f"{phase} {result}",
             record_type=latest.get("record_type", ""), phase=phase, result=result,
+            revision=latest.get("revision") or "",
         ))
     items.sort(key=lambda entry: NEEDS_ORDER.index(entry.kind))
     return items
