@@ -4,16 +4,16 @@
   "epistemic_status": "asserted",
   "id": "rec-8597722c-fa29-4a49-aa1f-bfcb30e9a6bd",
   "identity": "unknown",
-  "lifecycle_state": "active",
+  "lifecycle_state": "superseded",
   "payload": {
     "effort": "workflow-loop",
     "phase": "tiered-verification",
     "state": "ready"
   },
   "record_type": "project:release",
-  "recorded_at": "2026-10-11T09:44:19+00:00",
+  "recorded_at": "2026-10-14T08:03:46+00:00",
   "relationships": {},
-  "revision": "sha256:0c6ca64504826225237f655b810884428d400f196c391bf8792bcef50bfc9f0d",
+  "revision": "sha256:b8915451a5302596f5de0268ea0a3248b6bf895e501ad9ef8d98eb534e4e9b6b",
   "stewardship": {
     "steward": "agent"
   },
