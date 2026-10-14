@@ -14,12 +14,10 @@ import pytest
 
 from conftest import REPO_ROOT
 from skill_extraction import extract_invocations
-
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
-import close_batch  # noqa: E402
+from se_workflow import close_batch
 
 SKILL = REPO_ROOT / "skills" / "verify-work" / "SKILL.md"
-SCRIPT = REPO_ROOT / "scripts" / "close_batch.py"
+SCRIPT = REPO_ROOT / "se_workflow" / "close_batch.py"
 
 
 def _skill() -> str:
