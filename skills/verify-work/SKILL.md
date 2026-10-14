@@ -22,7 +22,7 @@ a criterion was tested and any diagnose/eval conclusion.
 `live` field.
 
 Red-first (fail before you fix) for `method` `tdd` on a `done` close
-is **enforced** by `close_batch.py`. A pass-only `tdd` close-request
+is **enforced** by `se-workflow close-batch`. A pass-only `tdd` close-request
 without request-carried red evidence is refused (exit 2), the same
 way unmet criteria without a finding are refused. The gate is
 request-carried: the close-request must name a runner-produced fail
@@ -559,7 +559,7 @@ It also refuses a pass-only `tdd` `done` close that lacks valid
 request-carried red evidence (and has no `finding`). Do not
 hand-write the batch to route around a refusal.
 
-For `tdd`/`check`, `close_batch.py` does **not** invent pass/fail or
+For `tdd`/`check`, `se-workflow close-batch` does **not** invent pass/fail or
 create check-runs. It only references runner-produced `check_run_id`s
 (from `se-workflow check`) and copies each run's `result` for the
 refusal gate. For `tdd` on `done`, also carry red-first fields from a
@@ -567,8 +567,8 @@ prior runner fail (below). `manual` criteria still carry `result` /
 `revision` / `signed_by` so the batch can create those check-runs.
 `check` and `manual` do not require `red_check_run_id`.
 
-Script path: `<plugin>/scripts/close_batch.py` (resolve `<plugin>` per
-[ensure-store.md](../ensure-store.md)).
+CLI: `se-workflow close-batch` (or `<plugin>/bin/se-workflow close-batch`
+after resolving `<plugin>` per [ensure-store.md](../ensure-store.md)).
 
 1. Fetch the active acceptances — superseded ones are retired
    definitions and must not be re-checked:
@@ -706,7 +706,7 @@ EOF
    (default: process cwd):
 
 ```bash
-python3 "<plugin>/scripts/close_batch.py" \
+se-workflow close-batch \
   --input /tmp/close-request.json \
   --out /tmp/close-batch.ndjson \
   --cwd <repo-or-worktree>
@@ -739,7 +739,7 @@ adaptive-artifacts apply /tmp/close-batch.ndjson
   only `se-workflow check` (or an already runner-produced id) may
   supply those binary results
 - Invent pass/fail in a close-request for `tdd`/`check` without a
-  runner `check_run_id` — `close_batch.py` must reference that id
+  runner `check_run_id` — `se-workflow close-batch` must reference that id
 - Treat a checklist tick as pass without a `check-run` (binary) or
   a `finding` (comparative)
 - Transition a work-item to `done` on an unmet or unverified criterion
@@ -750,10 +750,10 @@ adaptive-artifacts apply /tmp/close-batch.ndjson
   reviewed it — sign it, or it lingers under Unsigned Manual Check
 - Invent `red_*` fields or close a pass-only `tdd` criterion without
   a runner-produced fail preceding the green (or a finding escape) —
-  `close_batch.py` refuses that close; verify the actual command
+  `se-workflow close-batch` refuses that close; verify the actual command
   output and copy ids/fields from real check-runs
 - Close another focus's work-item
-- Skip `close_batch.py` and hand-assemble the `apply` NDJSON for a
+- Skip `se-workflow close-batch` and hand-assemble the `apply` NDJSON for a
   multi-criterion close — that is exactly the ad-hoc path that let a
   `done` work-item carry a failing check-run with no `finding` before
 - Put `level` or `next` on a check-run

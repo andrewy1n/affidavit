@@ -27,9 +27,13 @@ design is `<plugin>/contract/project-design.json`.
 
 Resolve `<plugin>` in order:
 
-1. Directory two levels above this `SKILL.md`
-2. `$CLAUDE_PLUGIN_ROOT` if that path contains `contract/project-design.json`
-3. `$HOME/.cursor/plugins/local/se-workflow`
+1. `$CLAUDE_PLUGIN_ROOT` if that path contains `contract/project-design.json`
+2. `$CURSOR_PLUGIN_ROOT` if that path contains `contract/project-design.json`
+3. Directory two levels above this `SKILL.md` (skill-relative layout)
+
+Do not hardcode `~/.cursor/plugins/local/se-workflow` as a primary
+path. Local sync installs still work when skills run from that tree
+via step 3.
 
 ## First run in a work repo
 
