@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:1060403370d85cb5806be8239cda4cee7ecded974a0b461a1fa0a9daac5099d1
+> Store state: sha256:5b36935b640bf157edf7eddb2b666bb763c1c8cb7efe32387d9909d9e7ae01a5
 
 ## dashboard
 
@@ -47,8 +47,7 @@
 
 ### Position
 - **phase-reviewer**: phase-reviewer done; next up: tiered-verification; phase _(id: [rec-db17b780-4178-4359-b4ee-119fb52aba18](.artifacts/records/project__current-position/rec-db17b780-4178-4359-b4ee-119fb52aba18.md))_
-- **workflow-loop**: tiered-verification done; next up: dashboard-approvals; effort _(id: [rec-1e29c4c8-2372-4747-a17d-1829df765c93](.artifacts/records/project__current-position/rec-1e29c4c8-2372-4747-a17d-1829df765c93.md))_
+- **workflow-loop**: dashboard-approvals done; no further phase planned; effort _(id: [rec-bb67a79c-7d06-4d76-8b70-7d2625a9ad9d](.artifacts/records/project__current-position/rec-bb67a79c-7d06-4d76-8b70-7d2625a9ad9d.md))_
 
 ### Backlog
 - **gh-11-verification-loop**: workflow-loop; open _(id: [rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7](.artifacts/records/project__backlog-item/rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7.md))_
-

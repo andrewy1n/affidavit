@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:73d55cdaabaee36b41e5f26995b409a4755581d897aa9c55ae705c4599994fba
+> Store state: sha256:efdeb0cafdb7e3ae50fc597231713262e3cec081d0fc6d95d7cb656d64f3f203
 
 ## activity-failures
 
@@ -42,6 +42,41 @@
 
 ### Acceptance
 - **ag-tool-skill-rollup**: A fixture yields exact per-tool calls, errors, error rate, retries and session counts, and per-skill invocation and session counts, in sorted order.; tdd; session-analysis; python3 -m pytest -q tests/test_tool_skill_rollup.py _(id: [rec-f283ff9c-78e6-439b-ae65-90ef88690304](.artifacts/records/project__acceptance/rec-f283ff9c-78e6-439b-ae65-90ef88690304.md))_
+
+## approval-confirm-ux
+
+### Acceptance
+- **approval-confirm-ux**: From the Needs-you list, d opens detail and does not write; a write requires detail plus confirm; cancel makes no CLI call; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'approval and (detail or confirm or cancel)' _(id: [rec-18701e87-22d6-4a86-add9-8b350996cbcf](.artifacts/records/project__acceptance/rec-18701e87-22d6-4a86-add9-8b350996cbcf.md))_
+
+## approval-confirm-ux-actions
+
+### Acceptance
+- **approval-confirm-ux-actions**: Plan-review Approve/Reject, manual Sign, and finding Accept risk behave as specified with note rules; Reject keeps the question open; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'approval and (approve or reject or sign or accept)' _(id: [rec-cfce9c2b-44e5-4324-913a-5bb887a7aa33](.artifacts/records/project__acceptance/rec-cfce9c2b-44e5-4324-913a-5bb887a7aa33.md))_
+
+## approval-confirm-ux-readme
+
+### Acceptance
+- **approval-confirm-ux-readme**: README key table documents detail-first d, confirm actions (Approve/Reject/Sign/Accept risk), and note rules; check; workflow-loop; grep -E 'Approve|Reject|Accept risk|Sign' README.md && grep -E 'Needs you|dismiss|confirm' README.md _(id: [rec-454294d0-2d0a-4652-92d3-ddfd22b795fd](.artifacts/records/project__acceptance/rec-454294d0-2d0a-4652-92d3-ddfd22b795fd.md))_
+
+## approval-constraints
+
+### Acceptance
+- **approval-constraints**: dashboard-human-gate-writes is active with the human-gate write statement; no active constraint still claims the dashboard never writes; the three former read-only subjects are retired pointers to dashboard-human-gate-writes; check; workflow-loop; /home/andrewyin/adaptive-artifacts/bin/adaptive-artifacts --store /home/andrewyin/se-workflow/.artifacts list --type project:constraint --state active | python3 -c "import sys,json; d=json.load(sys.stdin); stmts=[(r['subject'], (r.get('payload') or {}).get('statement') or '') for r in d['records']]; assert any(s=='dashboard-human-gate-writes' for s,_ in stmts); hg=[t for s,t in stmts if s=='dashboard-human-gate-writes']; assert hg and ('human Needs-you' in hg[0] or 'human-gate' in hg[0].lower()); old={'dashboard-read-only','dashboard-read-only-dashboard-bugfix','dashboard-read-only-dashboard-features'}; assert not any('never writes' in t.lower() for s,t in stmts if s in old); assert all('Retired' in t or 'dashboard-human-gate-writes' in t for s,t in stmts if s in old)" _(id: [rec-7927a6c7-eea1-4224-b9a1-9d4800dce4b0](.artifacts/records/project__acceptance/rec-7927a6c7-eea1-4224-b9a1-9d4800dce4b0.md))_
+
+## approval-contract
+
+### Acceptance
+- **approval-contract**: Bundled contract resolves with optional answer, signed_note, and resolution_note on the gate types; skill↔contract consistency and contract self-consistency tests pass; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py -q -k approval_optional_payload_note_fields _(id: [rec-de3c1982-720c-4be7-90ef-54f23b74e65e](.artifacts/records/project__acceptance/rec-de3c1982-720c-4be7-90ef-54f23b74e65e.md))_
+
+## approval-dismiss
+
+### Acceptance
+- **approval-dismiss**: dismiss_command uses displayed revision (never @current); Approve/Sign/Accept-risk payloads include note fields when provided; Reject creates a needs:human finding and does not answer the continuity-question; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k 'approval and (dismiss or revision or reject)' _(id: [rec-6709bf08-2353-479f-ae3d-993edd2c640c](.artifacts/records/project__acceptance/rec-6709bf08-2353-479f-ae3d-993edd2c640c.md))_
+
+## approval-dismiss-stale
+
+### Acceptance
+- **approval-dismiss-stale**: When the CLI rejects a stale expected-revision, dismiss raises a clear error and does not retry with @current; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'approval and stale' _(id: [rec-5acd72b1-7099-4efa-a8b1-ac7f5c99ebd1](.artifacts/records/project__acceptance/rec-5acd72b1-7099-4efa-a8b1-ac7f5c99ebd1.md))_
 
 ## as-cost-null
 
@@ -202,7 +237,7 @@
 ## dashboard
 
 ### Position
-- **dashboard**: waits-on-compact done; no further phase planned; effort _(id: [rec-706fd9f0-d080-41e8-b1ce-1c3474f14f19](.artifacts/records/project__current-position/rec-706fd9f0-d080-41e8-b1ce-1c3474f14f19.md))_
+- **dashboard**: store-binding done; repo pinned local via store-binding.json; effort _(id: [rec-2956e86d-f425-45d9-9415-1ebec4be7272](.artifacts/records/project__current-position/rec-2956e86d-f425-45d9-9415-1ebec4be7272.md))_
 
 ## dashboard-app
 
@@ -260,6 +295,11 @@
 ### Acceptance
 - **dashboard-dismiss-refuse**: Pilot: dismiss is refused for merge-branch (and other non-human kinds); CLI failure keeps the item and shows an error; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'dismiss and (refuse or fail or error)' _(id: [rec-76204de3-ed47-4406-9096-db2caa3f9d68](.artifacts/records/project__acceptance/rec-76204de3-ed47-4406-9096-db2caa3f9d68.md))_
 
+## dashboard-human-gate-writes
+
+### Constraint
+- **dashboard-human-gate-writes**: The dashboard may write to the artifact store only for: (1) human Needs-you gates (continuity-question answer/reject-routing, unsigned manual check sign, finding accept-risk) via the adaptive-artifacts CLI using the displayed record revision and a recorded decision or note as designed; and (2) backlog promote/dismiss of project:backlog-item via the adaptive-artifacts CLI (existing backlog path). No other dashboard store writes.; dashboard/dismiss.py, dashboard Needs-you confirm UX, and dashboard/backlog.py promote/dismiss; workflow-loop _(id: [rec-d7e838f6-8bcb-409b-a42f-b7c275fd572a](.artifacts/records/project__constraint/rec-d7e838f6-8bcb-409b-a42f-b7c275fd572a.md))_
+
 ## dashboard-launcher
 
 ### Acceptance
@@ -273,17 +313,17 @@
 ## dashboard-read-only
 
 ### Constraint
-- **dashboard-read-only**: The dashboard never writes to the artifact store; actions that change records go through the parent Claude session; scripts/dashboard_app.py and scripts/dashboard_model.py; dashboard _(id: [rec-b4685bf6-c27e-4989-9815-9a2559ab8fee](.artifacts/records/project__constraint/rec-b4685bf6-c27e-4989-9815-9a2559ab8fee.md))_
+- **dashboard-read-only**: Retired: see active constraint dashboard-human-gate-writes for the allowed dashboard human-gate write set.; superseded — do not enforce; workflow-loop _(id: [rec-4166b95d-091d-4916-a329-98947bc115ef](.artifacts/records/project__constraint/rec-4166b95d-091d-4916-a329-98947bc115ef.md))_
 
 ## dashboard-read-only-dashboard-bugfix
 
 ### Constraint
-- **dashboard-read-only-dashboard-bugfix**: The dashboard never writes to the store; copy actions hand work to the agent; dashboard-bugfix; dashboard _(id: [rec-47aeb7b3-42ac-450d-876f-63029610f77d](.artifacts/records/project__constraint/rec-47aeb7b3-42ac-450d-876f-63029610f77d.md))_
+- **dashboard-read-only-dashboard-bugfix**: Retired: see active constraint dashboard-human-gate-writes for the allowed dashboard human-gate write set.; superseded — do not enforce; workflow-loop _(id: [rec-c5efee3b-e0f7-46c6-ba6d-fbb490dac319](.artifacts/records/project__constraint/rec-c5efee3b-e0f7-46c6-ba6d-fbb490dac319.md))_
 
 ## dashboard-read-only-dashboard-features
 
 ### Constraint
-- **dashboard-read-only-dashboard-features**: The dashboard never writes to the store; copy actions hand work to the agent; dashboard-features; dashboard _(id: [rec-641107fa-4a3f-4d31-b739-36fe0e4ad9db](.artifacts/records/project__constraint/rec-641107fa-4a3f-4d31-b739-36fe0e4ad9db.md))_
+- **dashboard-read-only-dashboard-features**: Retired: see active constraint dashboard-human-gate-writes for the allowed dashboard human-gate write set.; superseded — do not enforce; workflow-loop _(id: [rec-2279d7f2-696c-40dc-a787-d70ff5871593](.artifacts/records/project__constraint/rec-2279d7f2-696c-40dc-a787-d70ff5871593.md))_
 
 ## dashboard-snapshot
 
@@ -526,6 +566,46 @@
 
 ### Acceptance
 - **finished-effort-view**: Model test: finished is true only when every phase and counted task is done. Pilot tests: a finished effort shows All N tasks done under Active, sorts after a live effort, and has a dimmed label; a live effort with an empty filter still shows No tasks match; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_app.py -q -k finished _(id: [rec-cc216932-78bb-4df8-b80d-8da0eb287a9c](.artifacts/records/project__acceptance/rec-cc216932-78bb-4df8-b80d-8da0eb287a9c.md))_
+
+## fix-human-gate-constraint
+
+### Acceptance
+- **fix-human-gate-constraint**: Active dashboard-human-gate-writes names Needs-you human gates and preserves backlog promote/dismiss as allowed (or clarifies exclusivity without contradicting Non-goals); old never-writes subjects stay retired; check; workflow-loop; /home/andrewyin/adaptive-artifacts/bin/adaptive-artifacts --store /home/andrewyin/se-workflow/.artifacts list --type project:constraint --state active | python3 -c "import sys,json; d=json.load(sys.stdin); stmts=[(r['subject'], (r.get('payload') or {}).get('statement') or '') for r in d['records']]; hg=[t for s,t in stmts if s=='dashboard-human-gate-writes']; assert hg; t=hg[0].lower(); assert 'needs-you' in t or 'human' in t; assert 'backlog' in t and (('promote' in t) or ('dismiss' in t)); old={'dashboard-read-only','dashboard-read-only-dashboard-bugfix','dashboard-read-only-dashboard-features'}; assert not any('never writes' in x.lower() for s,x in stmts if s in old)" _(id: [rec-7cd14081-b40c-4643-9c77-8ead22c68483](.artifacts/records/project__acceptance/rec-7cd14081-b40c-4643-9c77-8ead22c68483.md))_
+
+## fix-test_dashboard_app
+
+### Acceptance
+- **fix-test_dashboard_app**: Module failures cleared: test_running_row_status_shows_its_running_time[120]; test_footer_has_no_palette_and_every_binding_fits_at_60_columns; test_detail_related_panel_lists_related_records[size1-_open_by_click]; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'running_row_status_shows_its_running_time or footer_has_no_palette or detail_related_panel_lists_related_records' _(id: [rec-d2f35534-584a-4e18-b439-3641ec83969d](.artifacts/records/project__acceptance/rec-d2f35534-584a-4e18-b439-3641ec83969d.md))_
+
+## fix-test_dashboard_journal
+
+### Acceptance
+- **fix-test_dashboard_journal**: Module failures cleared: test_journal_panel_shows_for_repair_kind; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_journal.py -q -k journal_panel_shows_for_repair_kind _(id: [rec-3df8eb5b-21db-4624-8831-12b8bdc2a294](.artifacts/records/project__acceptance/rec-3df8eb5b-21db-4624-8831-12b8bdc2a294.md))_
+
+## fix-test_discuss_skill
+
+### Acceptance
+- **fix-test_discuss_skill**: Module failures cleared: test_plan_phase_opens_a_blocking_plan_review_question; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_discuss_skill.py -q -k plan_phase_opens_a_blocking_plan_review_question _(id: [rec-7a209b57-ff35-4f91-b06b-41f8057aecef](.artifacts/records/project__acceptance/rec-7a209b57-ff35-4f91-b06b-41f8057aecef.md))_
+
+## fix-test_evidence_loop
+
+### Acceptance
+- **fix-test_evidence_loop**: Cleared: test_check_run_result_and_method_are_contract_enums; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_evidence_loop.py -q -k check_run_result_and_method_are_contract_enums _(id: [rec-be712a69-03e1-4ea1-a1e1-b0534ae0b828](.artifacts/records/project__acceptance/rec-be712a69-03e1-4ea1-a1e1-b0534ae0b828.md))_
+
+## fix-test_plan_landing
+
+### Acceptance
+- **fix-test_plan_landing**: Cleared: test_plan_review_stays_closed_until_landing_is_present; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_plan_landing.py -q -k plan_review_stays_closed_until_landing _(id: [rec-47fbfa19-5038-4851-830d-42a55a72a49e](.artifacts/records/project__acceptance/rec-47fbfa19-5038-4851-830d-42a55a72a49e.md))_
+
+## fix-test_plan_wave_rules
+
+### Acceptance
+- **fix-test_plan_wave_rules**: Cleared: test_plan_review_stays_closed_until_recipe_executor_and_run_facts_are_present; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_plan_wave_rules.py -q -k plan_review_stays_closed_until_recipe _(id: [rec-f0ad8c81-df6e-457c-8553-9dd57d03f91e](.artifacts/records/project__acceptance/rec-f0ad8c81-df6e-457c-8553-9dd57d03f91e.md))_
+
+## fix-test_verify_authority
+
+### Acceptance
+- **fix-test_verify_authority**: Cleared: test_skill_close_request_references_check_run_id_for_runner_methods; test_close_batch_does_not_emit_check_run_create_for_runner_methods; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_authority.py -q -k 'skill_close_request_references_check_run_id or close_batch_does_not_emit_check_run_create' _(id: [rec-e09c9aac-f876-43da-9856-41ed79b75404](.artifacts/records/project__acceptance/rec-e09c9aac-f876-43da-9856-41ed79b75404.md))_
 
 ## gates-landing
 
@@ -914,6 +994,11 @@ print("phase checks only")
 ### Acceptance
 - **retry-engine-contract**: Optional attempts is on work-item; skill invocations stay contract-legal; consistency tests green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-a40b0635-99ac-481f-a4fb-855a830b6fa1](.artifacts/records/project__acceptance/rec-a40b0635-99ac-481f-a4fb-855a830b6fa1.md))_
 
+## review-approval-constraints-spec-gap
+
+### Finding
+- **review-approval-constraints-spec-gap**: spec-gap on approval-constraints: exclusive human-gate constraint wording conflicts with preserved backlog promote/dismiss writes; dashboard-human-gate-writes says only Needs-you clears; backlog.py still supersedes with @current; constraint statement names backlog promote/dismiss as allowed or exclusivity is clarified without contradicting Non-goals, and reviewer re-run passes; none _(id: [rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f](.artifacts/records/project__finding/rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f.md))_
+
 ## reviewer-brief
 
 ### Acceptance
@@ -1218,10 +1303,10 @@ print("phase checks only")
 ### Acceptance
 - **tier2-engine-scoped**: Skills/README/test_verify_budget keep per-task verification scoped (no whole-suite per-task verify_command) while documenting the required phase-level tier-2 full run; skill↔contract consistency stays green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_budget.py tests/test_skill_contract_consistency.py -q _(id: [rec-97b46204-7027-47b9-bf84-e4b585da8849](.artifacts/records/project__acceptance/rec-97b46204-7027-47b9-bf84-e4b585da8849.md))_
 
-## tiered-verification
+## tiered-verification-tier2-budget
 
-### Position
-- **tiered-verification**: wave 1 in progress: tier2-engine + tier2-dashboard; phase _(id: [rec-e0d290ea-ab54-4adc-9242-6b5ffe181a35](.artifacts/records/project__current-position/rec-e0d290ea-ab54-4adc-9242-6b5ffe181a35.md))_
+### Finding
+- **tiered-verification-tier2-budget**: Tier-2 fix-task budget exhausted with remaining failing modules; tier-2 check-run rec-a24a9ec0-30f8-41e7-a2dc-c8552984c3ae failed with 10 node ids across 7 modules; created 3 fix tasks (dashboard_app, dashboard_journal, discuss_skill); remaining: evidence_loop, plan_landing, plan_wave_rules, verify_authority; remaining modules fixed and tier-2 passes at phase head, or human accepts scoped waiver; none _(id: [rec-b8101acf-ff6c-4dbc-8042-6499702bd5e5](.artifacts/records/project__finding/rec-b8101acf-ff6c-4dbc-8042-6499702bd5e5.md))_
 
 ## tm-cli
 
@@ -1342,6 +1427,26 @@ print("phase checks only")
 
 ### Acceptance
 - **verify-dashboard-actions-phase-signoff**: The user tries filter, hide-done, copy, and commit view in the popup and the side pane and signs off; manual; dashboard _(id: [rec-aa7012e9-f5d9-427c-a0d5-74e173544519](.artifacts/records/project__acceptance/rec-aa7012e9-f5d9-427c-a0d5-74e173544519.md))_
+
+## verify-dashboard-approvals
+
+### Acceptance
+- **verify-dashboard-approvals**: Through the Textual dashboard app entry point: list d opens detail with no write; confirm/cancel and Approve/Reject/Sign/Accept-risk behave as specified with notes; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k approval _(id: [rec-5b8ab6e4-d17d-479a-b038-38d2f8a03d1e](.artifacts/records/project__acceptance/rec-5b8ab6e4-d17d-479a-b038-38d2f8a03d1e.md))_
+
+## verify-dashboard-approvals-constraints
+
+### Acceptance
+- **verify-dashboard-approvals-constraints**: Stale never-writes dashboard constraints superseded; dashboard-human-gate-writes active with human-gate write policy; check; workflow-loop; /home/andrewyin/adaptive-artifacts/bin/adaptive-artifacts --store /home/andrewyin/se-workflow/.artifacts list --type project:constraint --state active | python3 -c "import sys,json; d=json.load(sys.stdin); stmts=[(r['subject'], (r.get('payload') or {}).get('statement') or '') for r in d['records']]; assert any(s=='dashboard-human-gate-writes' for s,_ in stmts); hg=[t for s,t in stmts if s=='dashboard-human-gate-writes']; assert hg and ('human Needs-you' in hg[0] or 'human-gate' in hg[0].lower()); old={'dashboard-read-only','dashboard-read-only-dashboard-bugfix','dashboard-read-only-dashboard-features'}; assert not any('never writes' in t.lower() for s,t in stmts if s in old); assert all('Retired' in t or 'dashboard-human-gate-writes' in t for s,t in stmts if s in old)" _(id: [rec-9c7c3c55-1e86-41fd-bb53-3c6f41567cf4](.artifacts/records/project__acceptance/rec-9c7c3c55-1e86-41fd-bb53-3c6f41567cf4.md))_
+
+## verify-dashboard-approvals-docs
+
+### Acceptance
+- **verify-dashboard-approvals-docs**: README keys updated; skill↔contract consistency green when skills mention the new optional note fields; check; workflow-loop; grep -E 'Approve|Reject|Accept risk' README.md && uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-a764fa17-a012-4fec-8c30-4b0eb791b434](.artifacts/records/project__acceptance/rec-a764fa17-a012-4fec-8c30-4b0eb791b434.md))_
+
+## verify-dashboard-approvals-revision
+
+### Acceptance
+- **verify-dashboard-approvals-revision**: Stale displayed revision shows a visible message and skips the write; no @current retry; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'approval and stale' _(id: [rec-84aa203e-910a-40ea-a99b-1e0c3efdda28](.artifacts/records/project__acceptance/rec-84aa203e-910a-40ea-a99b-1e0c3efdda28.md))_
 
 ## verify-dashboard-package
 
@@ -1791,9 +1896,6 @@ print("phase checks only")
 
 ## verify-tiered-verification
 
-### Work
-- **verify-tiered-verification**: Verify tiered verification at phase head; tiered-verification; deliver; workflow-loop _(id: [rec-dc6cb033-154a-4def-ba5a-abf81d109042](.artifacts/records/project__work-item/rec-dc6cb033-154a-4def-ba5a-abf81d109042.md))_
-
 ### Acceptance
 - **verify-tiered-verification**: Through the pytest entry point, background tier-2 run records a check-run at phase head without blocking the agent session for the suite duration; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "runner or background or check_run" _(id: [rec-e094b9fe-4161-4ebd-81ad-00b66dce7444](.artifacts/records/project__acceptance/rec-e094b9fe-4161-4ebd-81ad-00b66dce7444.md))_
 
@@ -1924,4 +2026,4 @@ print("phase checks only")
 ## workflow-loop
 
 ### Position
-- **workflow-loop**: phase-reviewer done; next up: tiered-verification; effort _(id: [rec-721cf0b5-262e-4368-ab82-503a4320efbf](.artifacts/records/project__current-position/rec-721cf0b5-262e-4368-ab82-503a4320efbf.md))_
+- **workflow-loop**: dashboard-approvals done; no further phase planned; effort _(id: [rec-bb67a79c-7d06-4d76-8b70-7d2625a9ad9d](.artifacts/records/project__current-position/rec-bb67a79c-7d06-4d76-8b70-7d2625a9ad9d.md))_

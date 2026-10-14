@@ -196,7 +196,9 @@
         "duration_s",
         "output_sha256",
         "runner",
-        "diff_sha256"
+        "diff_sha256",
+        "failing_node_ids",
+        "signed_note"
       ],
       "optional_payload": [
         "requirement",
@@ -205,7 +207,9 @@
         "duration_s",
         "output_sha256",
         "runner",
-        "diff_sha256"
+        "diff_sha256",
+        "failing_node_ids",
+        "signed_note"
       ],
       "payload_enum": {
         "result": [
@@ -266,7 +270,11 @@
       "payload": [
         "owner",
         "blocking",
-        "scope"
+        "scope",
+        "answer"
+      ],
+      "optional_payload": [
+        "answer"
       ]
     },
     {
@@ -309,7 +317,11 @@
         "basis",
         "invalidated_when",
         "effort",
-        "needs"
+        "needs",
+        "resolution_note"
+      ],
+      "optional_payload": [
+        "resolution_note"
       ],
       "required_sections": [
         "Evidence",

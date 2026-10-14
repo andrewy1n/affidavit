@@ -1,7 +1,7 @@
 # Project Verification
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:23f8b63ca584ba096cbe53230a4257039fefb1bcecdc28be21dba660c7d95282
+> Store state: sha256:d9f1dbd769d66a0a3dacf8efb936c83d65b3a8b75051a80e93ddc53c1dca0166
 
 ## activity-failures
 
@@ -56,6 +56,65 @@
 
 ### Check
 - **ag-tool-skill-rollup**: rec-f283ff9c-78e6-439b-ae65-90ef88690304; dirty; pass; tdd _(id: [rec-d83cb7ea-fdf5-43ff-963d-6a25570a2de5](.artifacts/records/project__check-run/rec-d83cb7ea-fdf5-43ff-963d-6a25570a2de5.md))_
+
+## approval-confirm-ux
+
+### Acceptance
+- **approval-confirm-ux**: From the Needs-you list, d opens detail and does not write; a write requires detail plus confirm; cancel makes no CLI call; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'approval and (detail or confirm or cancel)' _(id: [rec-18701e87-22d6-4a86-add9-8b350996cbcf](.artifacts/records/project__acceptance/rec-18701e87-22d6-4a86-add9-8b350996cbcf.md))_
+
+### Check
+- **approval-confirm-ux**: rec-18701e87-22d6-4a86-add9-8b350996cbcf; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; tdd _(id: [rec-18a75883-bd92-4900-ba37-7f83f25bdb57](.artifacts/records/project__check-run/rec-18a75883-bd92-4900-ba37-7f83f25bdb57.md))_
+
+## approval-confirm-ux-actions
+
+### Acceptance
+- **approval-confirm-ux-actions**: Plan-review Approve/Reject, manual Sign, and finding Accept risk behave as specified with note rules; Reject keeps the question open; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'approval and (approve or reject or sign or accept)' _(id: [rec-cfce9c2b-44e5-4324-913a-5bb887a7aa33](.artifacts/records/project__acceptance/rec-cfce9c2b-44e5-4324-913a-5bb887a7aa33.md))_
+
+### Check
+- **approval-confirm-ux-actions**: rec-cfce9c2b-44e5-4324-913a-5bb887a7aa33; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; tdd _(id: [rec-c31a38af-f997-4e0f-aee3-c5a16df0102f](.artifacts/records/project__check-run/rec-c31a38af-f997-4e0f-aee3-c5a16df0102f.md))_
+
+## approval-confirm-ux-readme
+
+### Acceptance
+- **approval-confirm-ux-readme**: README key table documents detail-first d, confirm actions (Approve/Reject/Sign/Accept risk), and note rules; check; workflow-loop; grep -E 'Approve|Reject|Accept risk|Sign' README.md && grep -E 'Needs you|dismiss|confirm' README.md _(id: [rec-454294d0-2d0a-4652-92d3-ddfd22b795fd](.artifacts/records/project__acceptance/rec-454294d0-2d0a-4652-92d3-ddfd22b795fd.md))_
+
+### Check
+- **approval-confirm-ux-readme**: rec-454294d0-2d0a-4652-92d3-ddfd22b795fd; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; check _(id: [rec-bfbc3223-705a-45cc-b668-1664a79619e1](.artifacts/records/project__check-run/rec-bfbc3223-705a-45cc-b668-1664a79619e1.md))_
+
+## approval-constraints
+
+### Acceptance
+- **approval-constraints**: dashboard-human-gate-writes is active with the human-gate write statement; no active constraint still claims the dashboard never writes; the three former read-only subjects are retired pointers to dashboard-human-gate-writes; check; workflow-loop; /home/andrewyin/adaptive-artifacts/bin/adaptive-artifacts --store /home/andrewyin/se-workflow/.artifacts list --type project:constraint --state active | python3 -c "import sys,json; d=json.load(sys.stdin); stmts=[(r['subject'], (r.get('payload') or {}).get('statement') or '') for r in d['records']]; assert any(s=='dashboard-human-gate-writes' for s,_ in stmts); hg=[t for s,t in stmts if s=='dashboard-human-gate-writes']; assert hg and ('human Needs-you' in hg[0] or 'human-gate' in hg[0].lower()); old={'dashboard-read-only','dashboard-read-only-dashboard-bugfix','dashboard-read-only-dashboard-features'}; assert not any('never writes' in t.lower() for s,t in stmts if s in old); assert all('Retired' in t or 'dashboard-human-gate-writes' in t for s,t in stmts if s in old)" _(id: [rec-7927a6c7-eea1-4224-b9a1-9d4800dce4b0](.artifacts/records/project__acceptance/rec-7927a6c7-eea1-4224-b9a1-9d4800dce4b0.md))_
+
+### Check
+- **approval-constraints**: rec-7927a6c7-eea1-4224-b9a1-9d4800dce4b0; dirty; pass; check _(id: [rec-da95e0a2-c3d9-4062-99f0-7d1b309b6a40](.artifacts/records/project__check-run/rec-da95e0a2-c3d9-4062-99f0-7d1b309b6a40.md))_
+
+## approval-contract
+
+### Acceptance
+- **approval-contract**: Bundled contract resolves with optional answer, signed_note, and resolution_note on the gate types; skill↔contract consistency and contract self-consistency tests pass; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py -q -k approval_optional_payload_note_fields _(id: [rec-de3c1982-720c-4be7-90ef-54f23b74e65e](.artifacts/records/project__acceptance/rec-de3c1982-720c-4be7-90ef-54f23b74e65e.md))_
+
+### Check
+- **approval-contract**: rec-de3c1982-720c-4be7-90ef-54f23b74e65e; 74bd9a1d9af382217e652fb4eb3f7a23fb61a25d; pass; tdd _(id: [rec-03aaea29-4322-4cbd-a60e-77bed891d77c](.artifacts/records/project__check-run/rec-03aaea29-4322-4cbd-a60e-77bed891d77c.md))_
+- **approval-contract**: rec-de3c1982-720c-4be7-90ef-54f23b74e65e; 99072b992cdbd1c45a11081d940de72e61022d3b; fail; tdd _(id: [rec-6e29f579-2087-4eb7-b762-3fb53abd21a4](.artifacts/records/project__check-run/rec-6e29f579-2087-4eb7-b762-3fb53abd21a4.md))_
+- **approval-contract**: rec-de3c1982-720c-4be7-90ef-54f23b74e65e; 74bd9a1d9af382217e652fb4eb3f7a23fb61a25d; pass; tdd _(id: [rec-706b4c15-8743-4096-a7e7-23bdba2bd25d](.artifacts/records/project__check-run/rec-706b4c15-8743-4096-a7e7-23bdba2bd25d.md))_
+- **approval-contract**: rec-de3c1982-720c-4be7-90ef-54f23b74e65e; 99072b992cdbd1c45a11081d940de72e61022d3b; pass; tdd _(id: [rec-970a0b83-b87f-4de8-a07c-dc081ef1c1e4](.artifacts/records/project__check-run/rec-970a0b83-b87f-4de8-a07c-dc081ef1c1e4.md))_
+
+## approval-dismiss
+
+### Acceptance
+- **approval-dismiss**: dismiss_command uses displayed revision (never @current); Approve/Sign/Accept-risk payloads include note fields when provided; Reject creates a needs:human finding and does not answer the continuity-question; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k 'approval and (dismiss or revision or reject)' _(id: [rec-6709bf08-2353-479f-ae3d-993edd2c640c](.artifacts/records/project__acceptance/rec-6709bf08-2353-479f-ae3d-993edd2c640c.md))_
+
+### Check
+- **approval-dismiss**: rec-6709bf08-2353-479f-ae3d-993edd2c640c; 83a192e629165f9377c23943ea7088c2ce53e3e4; pass; tdd _(id: [rec-d5d8e1a2-38b3-41a6-ad24-a3547b8c4d9e](.artifacts/records/project__check-run/rec-d5d8e1a2-38b3-41a6-ad24-a3547b8c4d9e.md))_
+
+## approval-dismiss-stale
+
+### Acceptance
+- **approval-dismiss-stale**: When the CLI rejects a stale expected-revision, dismiss raises a clear error and does not retry with @current; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'approval and stale' _(id: [rec-5acd72b1-7099-4efa-a8b1-ac7f5c99ebd1](.artifacts/records/project__acceptance/rec-5acd72b1-7099-4efa-a8b1-ac7f5c99ebd1.md))_
+
+### Check
+- **approval-dismiss-stale**: rec-5acd72b1-7099-4efa-a8b1-ac7f5c99ebd1; 83a192e629165f9377c23943ea7088c2ce53e3e4; pass; tdd _(id: [rec-9071df4e-a52b-459d-81c4-e36f196f16da](.artifacts/records/project__check-run/rec-9071df4e-a52b-459d-81c4-e36f196f16da.md))_
 
 ## as-cost-null
 
@@ -180,6 +239,75 @@
 - **budget-instructions-stop**: rec-4c85a8d1-dde4-448b-bfe6-aee86654a15e; dirty; pass; tdd _(id: [rec-5a6a0868-84bc-4a9f-bc50-5d2304feb0dd](.artifacts/records/project__check-run/rec-5a6a0868-84bc-4a9f-bc50-5d2304feb0dd.md))_
 - **budget-instructions-stop**: rec-4c85a8d1-dde4-448b-bfe6-aee86654a15e; dirty; fail; tdd _(id: [rec-ef3f591d-b275-455e-b7eb-4b4e227cdbc1](.artifacts/records/project__check-run/rec-ef3f591d-b275-455e-b7eb-4b4e227cdbc1.md))_
 
+## check-run-contract
+
+### Acceptance
+- **check-run-contract**: Bundled contract declares enums for check-run.result and check-run/acceptance method, lists the optional runner fields, and contract self-consistency plus the flipped evidence-loop/assess-routing tests pass; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py tests/test_evidence_loop.py tests/test_assess_routing.py -q -k 'enum or result or method or contract' _(id: [rec-88363d0c-d058-4a0d-8c04-4a697bbe457d](.artifacts/records/project__acceptance/rec-88363d0c-d058-4a0d-8c04-4a697bbe457d.md))_
+
+### Check
+- **check-run-contract**: rec-88363d0c-d058-4a0d-8c04-4a697bbe457d; 16c24e78d806d5207ee2c37a9418e828521f8389; pass; tdd _(id: [rec-06babb10-72f2-4c7c-8ef8-285ebdef0f15](.artifacts/records/project__check-run/rec-06babb10-72f2-4c7c-8ef8-285ebdef0f15.md))_
+
+## claude-shared-marketplace
+
+### Acceptance
+- **claude-shared-marketplace**: plugin.json declares adaptive-artifacts in dependencies and marketplace.json lists both plugins with AA via github source; claude plugin validate . exits 0; check; packaging; claude plugin validate . && python3 -c "import json;p=json.load(open('.claude-plugin/plugin.json'));d=p.get('dependencies',[]);assert 'adaptive-artifacts' in d or any(isinstance(x,dict) and x.get('name')=='adaptive-artifacts' for x in d);m=json.load(open('.claude-plugin/marketplace.json'));assert {x.get('name') for x in m['plugins']}>= {'se-workflow','adaptive-artifacts'}" _(id: [rec-a60c0f0a-abb6-4cfe-b569-657d0edb4722](.artifacts/records/project__acceptance/rec-a60c0f0a-abb6-4cfe-b569-657d0edb4722.md))_
+
+### Check
+- **claude-shared-marketplace**: rec-a60c0f0a-abb6-4cfe-b569-657d0edb4722; 40db2970236ac7ff04afd9eaf08292f072a912a2; pass; check _(id: [rec-133596a3-9698-4c2b-aeaa-ae7ab76e82f5](.artifacts/records/project__check-run/rec-133596a3-9698-4c2b-aeaa-ae7ab76e82f5.md))_
+
+## claude-shared-marketplace-readme
+
+### Acceptance
+- **claude-shared-marketplace-readme**: README Claude install uses a single marketplace add for se-workflow; Cursor subsection does not claim dependency auto-install; check; packaging; grep -q 'claude plugin marketplace add andrewy1n/se-workflow' README.md && grep -qi Cursor README.md && ! grep -qiE 'Cursor.*(auto-?install|plugin dependenc).*adaptive-artifacts' README.md _(id: [rec-49384b6f-6de8-4e22-b43c-f27f3e8f06ad](.artifacts/records/project__acceptance/rec-49384b6f-6de8-4e22-b43c-f27f3e8f06ad.md))_
+
+### Check
+- **claude-shared-marketplace-readme**: rec-49384b6f-6de8-4e22-b43c-f27f3e8f06ad; 40db2970236ac7ff04afd9eaf08292f072a912a2; pass; check _(id: [rec-afd46d92-057c-4b40-8961-34c19871e95d](.artifacts/records/project__check-run/rec-afd46d92-057c-4b40-8961-34c19871e95d.md))_
+
+## close-red-first
+
+### Acceptance
+- **close-red-first**: close_batch refuses pass-only tdd done without finding (exit 2, criterion named) and accepts fail→pass when red precedes green by git ancestry or dirty red with diff_sha256; wrong order/non-ancestor refused; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first _(id: [rec-e7b02db3-cbf8-492f-8363-9844982d7753](.artifacts/records/project__acceptance/rec-e7b02db3-cbf8-492f-8363-9844982d7753.md))_
+
+### Check
+- **close-red-first**: rec-e7b02db3-cbf8-492f-8363-9844982d7753; b3159b685f2992638a84ad36d56a81f9ed8e8151; fail; tdd _(id: [rec-518b386e-aa2c-42c3-a539-a7d1220f7051](.artifacts/records/project__check-run/rec-518b386e-aa2c-42c3-a539-a7d1220f7051.md))_
+- **close-red-first**: rec-e7b02db3-cbf8-492f-8363-9844982d7753; 54181564b74027f0ec23a402a44df7dc009d42d2; pass; tdd _(id: [rec-7f23ed3b-5645-4eb2-a0e0-5378ea9acb2d](.artifacts/records/project__check-run/rec-7f23ed3b-5645-4eb2-a0e0-5378ea9acb2d.md))_
+
+## close-red-first-escape
+
+### Acceptance
+- **close-red-first-escape**: Finding escape permits tdd done without red and forces needs human; check and manual criteria close without red_check_run_id; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k 'red_first_escape or red_first_other_methods' _(id: [rec-c8b5c4cd-99a6-4906-a91c-7b4385187029](.artifacts/records/project__acceptance/rec-c8b5c4cd-99a6-4906-a91c-7b4385187029.md))_
+
+### Check
+- **close-red-first-escape**: rec-c8b5c4cd-99a6-4906-a91c-7b4385187029; 54181564b74027f0ec23a402a44df7dc009d42d2; pass; tdd _(id: [rec-33825f2d-fc44-4516-905b-51032ccb78e2](.artifacts/records/project__check-run/rec-33825f2d-fc44-4516-905b-51032ccb78e2.md))_
+- **close-red-first-escape**: rec-c8b5c4cd-99a6-4906-a91c-7b4385187029; b3159b685f2992638a84ad36d56a81f9ed8e8151; fail; tdd _(id: [rec-eccd7ba2-0282-4e31-91bf-ef3c74080e73](.artifacts/records/project__check-run/rec-eccd7ba2-0282-4e31-91bf-ef3c74080e73.md))_
+
+## close-red-first-methods
+
+### Acceptance
+- **close-red-first-methods**: check and manual done closes succeed without red_check_run_id; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_other_methods _(id: [rec-20f81a2f-2df9-4e5d-9eec-63da3defeec3](.artifacts/records/project__acceptance/rec-20f81a2f-2df9-4e5d-9eec-63da3defeec3.md))_
+
+### Check
+- **close-red-first-methods**: rec-20f81a2f-2df9-4e5d-9eec-63da3defeec3; 54181564b74027f0ec23a402a44df7dc009d42d2; pass; tdd _(id: [rec-7d303292-39e4-4fd7-b485-dc88c66ad0bb](.artifacts/records/project__check-run/rec-7d303292-39e4-4fd7-b485-dc88c66ad0bb.md))_
+- **close-red-first-methods**: rec-20f81a2f-2df9-4e5d-9eec-63da3defeec3; b3159b685f2992638a84ad36d56a81f9ed8e8151; fail; tdd _(id: [rec-bc6eeb64-10b5-4bca-a8d0-6b0d84553830](.artifacts/records/project__check-run/rec-bc6eeb64-10b5-4bca-a8d0-6b0d84553830.md))_
+
+## close-red-first-order
+
+### Acceptance
+- **close-red-first-order**: Green SHA must be equal to or git-descendant of red SHA; dirty red accepted only with non-empty diff_sha256; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_order _(id: [rec-6e4d8f33-f843-4db1-a990-e3c5ea1abbd7](.artifacts/records/project__acceptance/rec-6e4d8f33-f843-4db1-a990-e3c5ea1abbd7.md))_
+
+### Check
+- **close-red-first-order**: rec-6e4d8f33-f843-4db1-a990-e3c5ea1abbd7; b3159b685f2992638a84ad36d56a81f9ed8e8151; fail; tdd _(id: [rec-22236a02-24dc-4d28-8d2c-c5fed9959b77](.artifacts/records/project__check-run/rec-22236a02-24dc-4d28-8d2c-c5fed9959b77.md))_
+- **close-red-first-order**: rec-6e4d8f33-f843-4db1-a990-e3c5ea1abbd7; 54181564b74027f0ec23a402a44df7dc009d42d2; pass; tdd _(id: [rec-5e39adba-823f-401d-ba69-558b1eba100d](.artifacts/records/project__check-run/rec-5e39adba-823f-401d-ba69-558b1eba100d.md))_
+
+## close-red-first-request
+
+### Acceptance
+- **close-red-first-request**: close_batch validates request-carried red_check_run_id and copied red fields; it does not query the store for prior check-runs; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_request _(id: [rec-be6e5c30-7b5f-44e1-b497-7dcbccbea6ad](.artifacts/records/project__acceptance/rec-be6e5c30-7b5f-44e1-b497-7dcbccbea6ad.md))_
+
+### Check
+- **close-red-first-request**: rec-be6e5c30-7b5f-44e1-b497-7dcbccbea6ad; 54181564b74027f0ec23a402a44df7dc009d42d2; pass; tdd _(id: [rec-1ba03e59-6710-4afc-bafd-05f0555f3d77](.artifacts/records/project__check-run/rec-1ba03e59-6710-4afc-bafd-05f0555f3d77.md))_
+- **close-red-first-request**: rec-be6e5c30-7b5f-44e1-b497-7dcbccbea6ad; b3159b685f2992638a84ad36d56a81f9ed8e8151; fail; tdd _(id: [rec-6c63bc4a-319f-4ba9-9412-c689022b6183](.artifacts/records/project__check-run/rec-6c63bc4a-319f-4ba9-9412-c689022b6183.md))_
+
 ## close-step-skill
 
 ### Acceptance
@@ -254,6 +382,12 @@
 
 ### Check
 - **dashboard-app**: rec-607927c0-6e77-499d-ae1f-ee7a890cfd07; f84a229; pass; tdd _(id: [rec-3b1bf0ad-45ab-4b9b-8c35-152bc2cd0bad](.artifacts/records/project__check-run/rec-3b1bf0ad-45ab-4b9b-8c35-152bc2cd0bad.md))_
+
+## dashboard-approvals-review
+
+### Check
+- **dashboard-approvals-review**: dashboard-approvals-review; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; fail; review _(id: [rec-9b93df93-3d63-4d15-8eb1-f927c1beb724](.artifacts/records/project__check-run/rec-9b93df93-3d63-4d15-8eb1-f927c1beb724.md))_
+- **dashboard-approvals-review**: dashboard-approvals-review; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; review _(id: [rec-a1ab248f-9e27-47ac-bce5-f732320cabba](.artifacts/records/project__check-run/rec-a1ab248f-9e27-47ac-bce5-f732320cabba.md))_
 
 ## dashboard-backlog
 
@@ -712,6 +846,77 @@
 ### Check
 - **finished-effort-view**: rec-cc216932-78bb-4df8-b80d-8da0eb287a9c; 11fdbbe31fe4a60f1985ccc24fa41788fa83d1d5; pass; tdd _(id: [rec-9e17ccb9-1b70-4843-ade6-cabf22d52de2](.artifacts/records/project__check-run/rec-9e17ccb9-1b70-4843-ade6-cabf22d52de2.md))_
 
+## fix-human-gate-constraint
+
+### Acceptance
+- **fix-human-gate-constraint**: Active dashboard-human-gate-writes names Needs-you human gates and preserves backlog promote/dismiss as allowed (or clarifies exclusivity without contradicting Non-goals); old never-writes subjects stay retired; check; workflow-loop; /home/andrewyin/adaptive-artifacts/bin/adaptive-artifacts --store /home/andrewyin/se-workflow/.artifacts list --type project:constraint --state active | python3 -c "import sys,json; d=json.load(sys.stdin); stmts=[(r['subject'], (r.get('payload') or {}).get('statement') or '') for r in d['records']]; hg=[t for s,t in stmts if s=='dashboard-human-gate-writes']; assert hg; t=hg[0].lower(); assert 'needs-you' in t or 'human' in t; assert 'backlog' in t and (('promote' in t) or ('dismiss' in t)); old={'dashboard-read-only','dashboard-read-only-dashboard-bugfix','dashboard-read-only-dashboard-features'}; assert not any('never writes' in x.lower() for s,x in stmts if s in old)" _(id: [rec-7cd14081-b40c-4643-9c77-8ead22c68483](.artifacts/records/project__acceptance/rec-7cd14081-b40c-4643-9c77-8ead22c68483.md))_
+
+### Check
+- **fix-human-gate-constraint**: rec-7cd14081-b40c-4643-9c77-8ead22c68483; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; check _(id: [rec-1ed320a3-c828-48d4-8de2-9969706b2fa7](.artifacts/records/project__check-run/rec-1ed320a3-c828-48d4-8de2-9969706b2fa7.md))_
+
+## fix-test_dashboard_app
+
+### Acceptance
+- **fix-test_dashboard_app**: Module failures cleared: test_running_row_status_shows_its_running_time[120]; test_footer_has_no_palette_and_every_binding_fits_at_60_columns; test_detail_related_panel_lists_related_records[size1-_open_by_click]; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'running_row_status_shows_its_running_time or footer_has_no_palette or detail_related_panel_lists_related_records' _(id: [rec-d2f35534-584a-4e18-b439-3641ec83969d](.artifacts/records/project__acceptance/rec-d2f35534-584a-4e18-b439-3641ec83969d.md))_
+
+### Check
+- **fix-test_dashboard_app**: rec-d2f35534-584a-4e18-b439-3641ec83969d; dirty; pass; tdd _(id: [rec-c01b17e8-2ecb-4d56-a364-324cd98b402e](.artifacts/records/project__check-run/rec-c01b17e8-2ecb-4d56-a364-324cd98b402e.md))_
+- **fix-test_dashboard_app**: rec-d2f35534-584a-4e18-b439-3641ec83969d; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; tdd _(id: [rec-c2bb099d-b561-4751-9063-0c3a95a508ec](.artifacts/records/project__check-run/rec-c2bb099d-b561-4751-9063-0c3a95a508ec.md))_
+
+## fix-test_dashboard_journal
+
+### Acceptance
+- **fix-test_dashboard_journal**: Module failures cleared: test_journal_panel_shows_for_repair_kind; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_journal.py -q -k journal_panel_shows_for_repair_kind _(id: [rec-3df8eb5b-21db-4624-8831-12b8bdc2a294](.artifacts/records/project__acceptance/rec-3df8eb5b-21db-4624-8831-12b8bdc2a294.md))_
+
+### Check
+- **fix-test_dashboard_journal**: rec-3df8eb5b-21db-4624-8831-12b8bdc2a294; dirty; pass; tdd _(id: [rec-0863cd5c-7440-4218-8155-5bf3d3c2ff35](.artifacts/records/project__check-run/rec-0863cd5c-7440-4218-8155-5bf3d3c2ff35.md))_
+- **fix-test_dashboard_journal**: rec-3df8eb5b-21db-4624-8831-12b8bdc2a294; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; tdd _(id: [rec-f968b020-0e52-4016-a7e1-432bc354f41b](.artifacts/records/project__check-run/rec-f968b020-0e52-4016-a7e1-432bc354f41b.md))_
+
+## fix-test_discuss_skill
+
+### Acceptance
+- **fix-test_discuss_skill**: Module failures cleared: test_plan_phase_opens_a_blocking_plan_review_question; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_discuss_skill.py -q -k plan_phase_opens_a_blocking_plan_review_question _(id: [rec-7a209b57-ff35-4f91-b06b-41f8057aecef](.artifacts/records/project__acceptance/rec-7a209b57-ff35-4f91-b06b-41f8057aecef.md))_
+
+### Check
+- **fix-test_discuss_skill**: rec-7a209b57-ff35-4f91-b06b-41f8057aecef; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; tdd _(id: [rec-2db0a42c-4698-4121-bdc9-7daf4749d1d4](.artifacts/records/project__check-run/rec-2db0a42c-4698-4121-bdc9-7daf4749d1d4.md))_
+- **fix-test_discuss_skill**: rec-7a209b57-ff35-4f91-b06b-41f8057aecef; dirty; fail; tdd _(id: [rec-5f1fbf64-77e1-4d1b-b3ce-5d52ea252a75](.artifacts/records/project__check-run/rec-5f1fbf64-77e1-4d1b-b3ce-5d52ea252a75.md))_
+
+## fix-test_evidence_loop
+
+### Acceptance
+- **fix-test_evidence_loop**: Cleared: test_check_run_result_and_method_are_contract_enums; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_evidence_loop.py -q -k check_run_result_and_method_are_contract_enums _(id: [rec-be712a69-03e1-4ea1-a1e1-b0534ae0b828](.artifacts/records/project__acceptance/rec-be712a69-03e1-4ea1-a1e1-b0534ae0b828.md))_
+
+### Check
+- **fix-test_evidence_loop**: rec-be712a69-03e1-4ea1-a1e1-b0534ae0b828; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; tdd _(id: [rec-a10d7f0b-0e2c-4f35-a269-2afd2c76ec1a](.artifacts/records/project__check-run/rec-a10d7f0b-0e2c-4f35-a269-2afd2c76ec1a.md))_
+- **fix-test_evidence_loop**: rec-be712a69-03e1-4ea1-a1e1-b0534ae0b828; dirty; pass; tdd _(id: [rec-f36113f3-83c1-4d55-afb0-ae1ab32433d1](.artifacts/records/project__check-run/rec-f36113f3-83c1-4d55-afb0-ae1ab32433d1.md))_
+
+## fix-test_plan_landing
+
+### Acceptance
+- **fix-test_plan_landing**: Cleared: test_plan_review_stays_closed_until_landing_is_present; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_plan_landing.py -q -k plan_review_stays_closed_until_landing _(id: [rec-47fbfa19-5038-4851-830d-42a55a72a49e](.artifacts/records/project__acceptance/rec-47fbfa19-5038-4851-830d-42a55a72a49e.md))_
+
+### Check
+- **fix-test_plan_landing**: rec-47fbfa19-5038-4851-830d-42a55a72a49e; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; tdd _(id: [rec-3872f5a3-92d9-462a-bbc9-a18e3c83ba7e](.artifacts/records/project__check-run/rec-3872f5a3-92d9-462a-bbc9-a18e3c83ba7e.md))_
+- **fix-test_plan_landing**: rec-47fbfa19-5038-4851-830d-42a55a72a49e; dirty; pass; tdd _(id: [rec-b585900a-70ef-43b3-ac03-688d876df257](.artifacts/records/project__check-run/rec-b585900a-70ef-43b3-ac03-688d876df257.md))_
+
+## fix-test_plan_wave_rules
+
+### Acceptance
+- **fix-test_plan_wave_rules**: Cleared: test_plan_review_stays_closed_until_recipe_executor_and_run_facts_are_present; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_plan_wave_rules.py -q -k plan_review_stays_closed_until_recipe _(id: [rec-f0ad8c81-df6e-457c-8553-9dd57d03f91e](.artifacts/records/project__acceptance/rec-f0ad8c81-df6e-457c-8553-9dd57d03f91e.md))_
+
+### Check
+- **fix-test_plan_wave_rules**: rec-f0ad8c81-df6e-457c-8553-9dd57d03f91e; dirty; pass; tdd _(id: [rec-010f08e6-8773-48a3-95de-c92efae83877](.artifacts/records/project__check-run/rec-010f08e6-8773-48a3-95de-c92efae83877.md))_
+- **fix-test_plan_wave_rules**: rec-f0ad8c81-df6e-457c-8553-9dd57d03f91e; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; tdd _(id: [rec-ab7a14d0-d11a-458f-a40e-c14ffe4dc4c0](.artifacts/records/project__check-run/rec-ab7a14d0-d11a-458f-a40e-c14ffe4dc4c0.md))_
+
+## fix-test_verify_authority
+
+### Acceptance
+- **fix-test_verify_authority**: Cleared: test_skill_close_request_references_check_run_id_for_runner_methods; test_close_batch_does_not_emit_check_run_create_for_runner_methods; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_authority.py -q -k 'skill_close_request_references_check_run_id or close_batch_does_not_emit_check_run_create' _(id: [rec-e09c9aac-f876-43da-9856-41ed79b75404](.artifacts/records/project__acceptance/rec-e09c9aac-f876-43da-9856-41ed79b75404.md))_
+
+### Check
+- **fix-test_verify_authority**: rec-e09c9aac-f876-43da-9856-41ed79b75404; dirty; pass; tdd _(id: [rec-5e5e7943-0cfe-47be-bdc1-7c6c5ca5fe32](.artifacts/records/project__check-run/rec-5e5e7943-0cfe-47be-bdc1-7c6c5ca5fe32.md))_
+- **fix-test_verify_authority**: rec-e09c9aac-f876-43da-9856-41ed79b75404; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; tdd _(id: [rec-9dbbcb14-8061-4f28-87e0-56bbddc01a16](.artifacts/records/project__check-run/rec-9dbbcb14-8061-4f28-87e0-56bbddc01a16.md))_
+
 ## gates-landing
 
 ### Acceptance
@@ -1127,6 +1332,11 @@ print("phase checks only")
 ### Check
 - **phase-position-skills**: rec-9f326a41-7f0f-4d28-89c6-069154ad5a65; 8d0b7fd43309d93b0b7f2b3db0a3f8a1022e405b; pass; tdd _(id: [rec-77842b73-9ccb-479a-b84e-5cfd5dab3508](.artifacts/records/project__check-run/rec-77842b73-9ccb-479a-b84e-5cfd5dab3508.md))_
 
+## phase-reviewer-review
+
+### Check
+- **phase-reviewer-review**: rec-a5b4ff28-4664-45b7-9b25-489d4f58af19; 11a147e75daa100a2fbca2202399205b480b42e9; pass; review _(id: [rec-2b4e526d-ddb7-401f-910a-d4d5516c94f7](.artifacts/records/project__check-run/rec-2b4e526d-ddb7-401f-910a-d4d5516c94f7.md))_
+
 ## phase-sections
 
 ### Acceptance
@@ -1271,6 +1481,84 @@ print("phase checks only")
 ### Check
 - **requirement-screen**: rec-fe7cbd3d-6b76-4bf1-b258-e4fa9361b6d8; dirty; pass; tdd _(id: [rec-35e6d3ed-e3ba-41c5-96b9-e142d13d297a](.artifacts/records/project__check-run/rec-35e6d3ed-e3ba-41c5-96b9-e142d13d297a.md))_
 
+## retry-dashboard
+
+### Acceptance
+- **retry-dashboard**: Retried task rows show attempt n/budget; model/app tests with attempt_* -k filter pass; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_app.py -q -k "attempt_row or attempt_budget or attempt_snapshot or attempt_title" _(id: [rec-7bd7b9f7-ab98-40b6-9831-a074659941f7](.artifacts/records/project__acceptance/rec-7bd7b9f7-ab98-40b6-9831-a074659941f7.md))_
+
+### Check
+- **retry-dashboard**: rec-7bd7b9f7-ab98-40b6-9831-a074659941f7; 0077727e7e8d3b25e53d5aa1722b5c8f9ca58577; pass; tdd _(id: [rec-48ee479b-442e-4ce5-9c7c-d4dcdb02e4af](.artifacts/records/project__check-run/rec-48ee479b-442e-4ce5-9c7c-d4dcdb02e4af.md))_
+- **retry-dashboard**: rec-7bd7b9f7-ab98-40b6-9831-a074659941f7; ee1a41be208bfdae700e1b78f9340296d82dae91; fail; tdd _(id: [rec-67c90e91-3195-4f2f-8740-ee38eb5249da](.artifacts/records/project__check-run/rec-67c90e91-3195-4f2f-8740-ee38eb5249da.md))_
+- **retry-dashboard**: rec-17744c6d-ef91-4cf9-8072-298566ec8d16; 8ed3d5858b974a2fad5c321a09eb71edbd38bfb1; pass; tdd _(id: [rec-7bd4690f-7209-4c85-827e-68fd5125a8e8](.artifacts/records/project__check-run/rec-7bd4690f-7209-4c85-827e-68fd5125a8e8.md))_
+- **retry-dashboard**: rec-17744c6d-ef91-4cf9-8072-298566ec8d16; ee1a41be208bfdae700e1b78f9340296d82dae91; pass; tdd _(id: [rec-867fca21-ef5a-4247-a438-bc49b8d485d5](.artifacts/records/project__check-run/rec-867fca21-ef5a-4247-a438-bc49b8d485d5.md))_
+- **retry-dashboard**: rec-17744c6d-ef91-4cf9-8072-298566ec8d16; 0077727e7e8d3b25e53d5aa1722b5c8f9ca58577; pass; tdd _(id: [rec-a4506ee7-e01f-4925-8c0c-0de65f059c69](.artifacts/records/project__check-run/rec-a4506ee7-e01f-4925-8c0c-0de65f059c69.md))_
+
+## retry-engine
+
+### Acceptance
+- **retry-engine**: test_retry_loop covers redispatch, amendment, attempts, fix_task/depends_on/no_reopen, budget exhaustion, and next_plan; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_retry_loop.py -q _(id: [rec-09626673-9f46-4904-8541-2d2d5ecaf514](.artifacts/records/project__acceptance/rec-09626673-9f46-4904-8541-2d2d5ecaf514.md))_
+
+### Check
+- **retry-engine**: rec-09626673-9f46-4904-8541-2d2d5ecaf514; ee1a41be208bfdae700e1b78f9340296d82dae91; fail; tdd _(id: [rec-a518ce34-e098-4ab4-b526-3c2be4689d66](.artifacts/records/project__check-run/rec-a518ce34-e098-4ab4-b526-3c2be4689d66.md))_
+- **retry-engine**: rec-09626673-9f46-4904-8541-2d2d5ecaf514; 0077727e7e8d3b25e53d5aa1722b5c8f9ca58577; pass; tdd _(id: [rec-a9ed2230-6a8f-4a1f-9990-c2ca852598d2](.artifacts/records/project__check-run/rec-a9ed2230-6a8f-4a1f-9990-c2ca852598d2.md))_
+
+## retry-engine-contract
+
+### Acceptance
+- **retry-engine-contract**: Optional attempts is on work-item; skill invocations stay contract-legal; consistency tests green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-a40b0635-99ac-481f-a4fb-855a830b6fa1](.artifacts/records/project__acceptance/rec-a40b0635-99ac-481f-a4fb-855a830b6fa1.md))_
+
+### Check
+- **retry-engine-contract**: rec-a40b0635-99ac-481f-a4fb-855a830b6fa1; 0077727e7e8d3b25e53d5aa1722b5c8f9ca58577; pass; check _(id: [rec-732dbbeb-f099-4d3a-afe6-cd7f04062180](.artifacts/records/project__check-run/rec-732dbbeb-f099-4d3a-afe6-cd7f04062180.md))_
+
+## review-approval-constraints-spec-gap
+
+### Finding
+- **review-approval-constraints-spec-gap**: spec-gap on approval-constraints: exclusive human-gate constraint wording conflicts with preserved backlog promote/dismiss writes; dashboard-human-gate-writes says only Needs-you clears; backlog.py still supersedes with @current; constraint statement names backlog promote/dismiss as allowed or exclusivity is clarified without contradicting Non-goals, and reviewer re-run passes; none _(id: [rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f](.artifacts/records/project__finding/rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f.md))_
+
+## reviewer-brief
+
+### Acceptance
+- **reviewer-brief**: A test asserts the reviewer brief excludes execution-report, check-run, and assessment content; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k brief _(id: [rec-880e5caf-3938-480b-ae11-a180c0b1ed38](.artifacts/records/project__acceptance/rec-880e5caf-3938-480b-ae11-a180c0b1ed38.md))_
+
+### Check
+- **reviewer-brief**: rec-880e5caf-3938-480b-ae11-a180c0b1ed38; dirty; fail; tdd _(id: [rec-a499089a-467b-44c5-842e-b71c171071f4](.artifacts/records/project__check-run/rec-a499089a-467b-44c5-842e-b71c171071f4.md))_
+- **reviewer-brief**: rec-880e5caf-3938-480b-ae11-a180c0b1ed38; f063d7aa3b3a2311a9bcfdc6973e90c5065bd145; pass; tdd _(id: [rec-df5cf3a1-37b5-49ae-bdf7-aa9daf4ce6bb](.artifacts/records/project__check-run/rec-df5cf3a1-37b5-49ae-bdf7-aa9daf4ce6bb.md))_
+
+## reviewer-execute
+
+### Acceptance
+- **reviewer-execute**: execute-phase invokes the reviewer after closing verification and before merge; parent records method:review / evidence_kind:review check-run at head and findings for NEEDS_WORK; reviewer writes no store records; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k "execute or parent_write or review_check" _(id: [rec-10c147f9-1f69-4746-8444-72e2fe310165](.artifacts/records/project__acceptance/rec-10c147f9-1f69-4746-8444-72e2fe310165.md))_
+
+### Check
+- **reviewer-execute**: rec-10c147f9-1f69-4746-8444-72e2fe310165; dirty; fail; tdd _(id: [rec-28c1dffc-6ced-43ed-838d-1ce61d9f2acc](.artifacts/records/project__check-run/rec-28c1dffc-6ced-43ed-838d-1ce61d9f2acc.md))_
+- **reviewer-execute**: rec-10c147f9-1f69-4746-8444-72e2fe310165; 2eaa40ff59e34104c88b041622de2b51b24f18e0; pass; tdd _(id: [rec-77136380-2e02-4e65-9a92-f5d3b61847f8](.artifacts/records/project__check-run/rec-77136380-2e02-4e65-9a92-f5d3b61847f8.md))_
+
+## reviewer-execute-fix
+
+### Acceptance
+- **reviewer-execute-fix**: Fixable NEEDS_WORK creates fix work-items under the retry budget; reviewer re-runs once after fixes; exhausted budget escalates without reopening done tasks; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k "fix_task or rerun or budget" _(id: [rec-7d0c4862-c22a-4fd3-bcae-3679c065e527](.artifacts/records/project__acceptance/rec-7d0c4862-c22a-4fd3-bcae-3679c065e527.md))_
+
+### Check
+- **reviewer-execute-fix**: rec-7d0c4862-c22a-4fd3-bcae-3679c065e527; dirty; fail; tdd _(id: [rec-2cc1e133-c736-4d61-865a-bd41be2b3493](.artifacts/records/project__check-run/rec-2cc1e133-c736-4d61-865a-bd41be2b3493.md))_
+- **reviewer-execute-fix**: rec-7d0c4862-c22a-4fd3-bcae-3679c065e527; 2eaa40ff59e34104c88b041622de2b51b24f18e0; pass; tdd _(id: [rec-e1b9e60d-af01-48e4-a5a2-d02e91765703](.artifacts/records/project__check-run/rec-e1b9e60d-af01-48e4-a5a2-d02e91765703.md))_
+
+## reviewer-execute-gate
+
+### Acceptance
+- **reviewer-execute-gate**: Phase gate requires a passing review check-run at the phase head SHA before merge; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k gate _(id: [rec-4fe99528-e397-4b36-b07f-f93d2b1291f9](.artifacts/records/project__acceptance/rec-4fe99528-e397-4b36-b07f-f93d2b1291f9.md))_
+
+### Check
+- **reviewer-execute-gate**: rec-4fe99528-e397-4b36-b07f-f93d2b1291f9; dirty; fail; tdd _(id: [rec-0f807325-5bee-4853-a175-e0d84bc3f006](.artifacts/records/project__check-run/rec-0f807325-5bee-4853-a175-e0d84bc3f006.md))_
+- **reviewer-execute-gate**: rec-4fe99528-e397-4b36-b07f-f93d2b1291f9; 2eaa40ff59e34104c88b041622de2b51b24f18e0; pass; tdd _(id: [rec-6042c68a-2624-42a7-8996-f9ebd5ee5766](.artifacts/records/project__check-run/rec-6042c68a-2624-42a7-8996-f9ebd5ee5766.md))_
+
+## reviewer-execute-integration
+
+### Acceptance
+- **reviewer-execute-integration**: Integration-report body is filled from the reviewer integration section; skill/contract consistency stays green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py tests/test_skill_contract_consistency.py -q -k "integration or test_skill_contract" _(id: [rec-87416dee-0be6-4e6a-bf05-d567fac451bf](.artifacts/records/project__acceptance/rec-87416dee-0be6-4e6a-bf05-d567fac451bf.md))_
+
+### Check
+- **reviewer-execute-integration**: rec-87416dee-0be6-4e6a-bf05-d567fac451bf; 2eaa40ff59e34104c88b041622de2b51b24f18e0; pass; check _(id: [rec-b69d1c07-b6e6-45d0-a8fe-29fe94c45625](.artifacts/records/project__check-run/rec-b69d1c07-b6e6-45d0-a8fe-29fe94c45625.md))_
+
 ## rj-join
 
 ### Acceptance
@@ -1305,6 +1593,55 @@ print("phase checks only")
 
 ### Check
 - **route-through-discuss**: rec-aac400ee-30c6-4fd2-a3ba-9fbd756f740a; 8c697bc88db7147f17a058311b0323cd4a191fee; pass; tdd _(id: [rec-4faad849-e58b-43c3-971c-0273f995955c](.artifacts/records/project__check-run/rec-4faad849-e58b-43c3-971c-0273f995955c.md))_
+
+## se-reviewer-agent
+
+### Acceptance
+- **se-reviewer-agent**: agents/se-reviewer.md exists without Write/Edit tools and forbids store writes; sync-plugin.sh installs the agents/ directory; check; workflow-loop; test -f agents/se-reviewer.md && grep -qiE "no Write|without Write" agents/se-reviewer.md && grep -q agents/ scripts/sync-plugin.sh && d=$(mktemp -d) && bash scripts/sync-plugin.sh "$d/p" && test -f "$d/p/agents/se-reviewer.md" _(id: [rec-b06d589a-93d4-47e0-b2a4-5e1bf1fd8f21](.artifacts/records/project__acceptance/rec-b06d589a-93d4-47e0-b2a4-5e1bf1fd8f21.md))_
+
+### Check
+- **se-reviewer-agent**: rec-b06d589a-93d4-47e0-b2a4-5e1bf1fd8f21; f063d7aa3b3a2311a9bcfdc6973e90c5065bd145; pass; check _(id: [rec-03654543-d5c3-4c12-9c95-d11fecb0ce53](.artifacts/records/project__check-run/rec-03654543-d5c3-4c12-9c95-d11fecb0ce53.md))_
+- **se-reviewer-agent**: rec-b06d589a-93d4-47e0-b2a4-5e1bf1fd8f21; f063d7aa3b3a2311a9bcfdc6973e90c5065bd145; pass; check _(id: [rec-79c540d0-ba3c-4c3f-b914-523a542dc06e](.artifacts/records/project__check-run/rec-79c540d0-ba3c-4c3f-b914-523a542dc06e.md))_
+
+## se-workflow-check
+
+### Acceptance
+- **se-workflow-check**: se-workflow check on a throwaway store produces pass and fail check-runs with revision and runner fields through the CLI entry point; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_se_workflow_check.py -q -k "pass or fail or integration or cli" _(id: [rec-b5d23174-3de0-41c1-8cfd-028492fc5d87](.artifacts/records/project__acceptance/rec-b5d23174-3de0-41c1-8cfd-028492fc5d87.md))_
+
+### Check
+- **se-workflow-check**: rec-b5d23174-3de0-41c1-8cfd-028492fc5d87; c600c3ec9c7a7a01736618697ca4b3d5aebb9beb; pass; tdd _(id: [rec-5ece32a4-c85c-4570-a10d-bba1c2548df9](.artifacts/records/project__check-run/rec-5ece32a4-c85c-4570-a10d-bba1c2548df9.md))_
+
+## se-workflow-check-dirty
+
+### Acceptance
+- **se-workflow-check-dirty**: Dirty pass is refused without --allow-dirty; with override the check-run has revision dirty and diff_sha256; fail may be dirty; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_se_workflow_check.py -q -k dirty _(id: [rec-6b1e869a-6b06-49a6-9d3f-33e8326e05c1](.artifacts/records/project__acceptance/rec-6b1e869a-6b06-49a6-9d3f-33e8326e05c1.md))_
+
+### Check
+- **se-workflow-check-dirty**: rec-6b1e869a-6b06-49a6-9d3f-33e8326e05c1; c600c3ec9c7a7a01736618697ca4b3d5aebb9beb; pass; tdd _(id: [rec-69f95f94-1349-4bd6-997f-edb71cbe9ad3](.artifacts/records/project__check-run/rec-69f95f94-1349-4bd6-997f-edb71cbe9ad3.md))_
+
+## se-workflow-check-entry
+
+### Acceptance
+- **se-workflow-check-entry**: bin/se-workflow exists, sync-plugin copies bin and se_workflow, and README documents the entry point; check; workflow-loop; uv run --with pytest python -m pytest tests/test_se_workflow_check.py -q -k "entry or sync or install or bin" _(id: [rec-28b0ca39-45c6-4c7c-ac2d-bf41ba33cdf4](.artifacts/records/project__acceptance/rec-28b0ca39-45c6-4c7c-ac2d-bf41ba33cdf4.md))_
+
+### Check
+- **se-workflow-check-entry**: rec-28b0ca39-45c6-4c7c-ac2d-bf41ba33cdf4; c600c3ec9c7a7a01736618697ca4b3d5aebb9beb; pass; check _(id: [rec-8101f194-ab18-4e13-ae54-60e3565ab681](.artifacts/records/project__check-run/rec-8101f194-ab18-4e13-ae54-60e3565ab681.md))_
+
+## se-workflow-check-manual
+
+### Acceptance
+- **se-workflow-check-manual**: se-workflow check refuses method=manual and does not write a binary check-run for it; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_se_workflow_check.py -q -k manual _(id: [rec-8eee9825-6a0d-4e05-9a8e-0d7558c7ed45](.artifacts/records/project__acceptance/rec-8eee9825-6a0d-4e05-9a8e-0d7558c7ed45.md))_
+
+### Check
+- **se-workflow-check-manual**: rec-8eee9825-6a0d-4e05-9a8e-0d7558c7ed45; c600c3ec9c7a7a01736618697ca4b3d5aebb9beb; pass; tdd _(id: [rec-20a0c965-e869-4427-949a-3f333d850bca](.artifacts/records/project__check-run/rec-20a0c965-e869-4427-949a-3f333d850bca.md))_
+
+## se-workflow-check-runner-fields
+
+### Acceptance
+- **se-workflow-check-runner-fields**: A tdd/check check-run written by se-workflow check has result derived from the process outcome and populated revision, exit_code, duration_s, output_sha256, and runner (plus requirement/evidence_kind when present on the acceptance); tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_se_workflow_check.py -q -k "runner or fields or metadata or exit_code" _(id: [rec-7715368f-94c3-4b3d-9692-5061c4cabafe](.artifacts/records/project__acceptance/rec-7715368f-94c3-4b3d-9692-5061c4cabafe.md))_
+
+### Check
+- **se-workflow-check-runner-fields**: rec-7715368f-94c3-4b3d-9692-5061c4cabafe; c600c3ec9c7a7a01736618697ca4b3d5aebb9beb; pass; tdd _(id: [rec-e3bd1a4b-1d3a-41c2-99b0-a675670cbccd](.artifacts/records/project__check-run/rec-e3bd1a4b-1d3a-41c2-99b0-a675670cbccd.md))_
 
 ## skill-needs-clear
 
@@ -1351,6 +1688,14 @@ print("phase checks only")
 
 ### Check
 - **skills-backlog-promote**: rec-9dcc1726-0246-424d-a8f7-edd8b8c98ea6; cdb10d65ed56a425a426d5c291c0f5c1a8e69b71; pass; check _(id: [rec-0821a163-8752-41df-a60a-9421a9b67f50](.artifacts/records/project__check-run/rec-0821a163-8752-41df-a60a-9421a9b67f50.md))_
+
+## skills-red-first
+
+### Acceptance
+- **skills-red-first**: verify-work documents enforced red-first close fields and refusal; skill/contract consistency stays green; wording no longer says the engine does not enforce red-first; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_assess_routing.py -q _(id: [rec-4106666c-c561-474e-a8fd-4291869e42db](.artifacts/records/project__acceptance/rec-4106666c-c561-474e-a8fd-4291869e42db.md))_
+
+### Check
+- **skills-red-first**: rec-4106666c-c561-474e-a8fd-4291869e42db; c14dedbd9ec027e7e79b8eb1508b24d0d65063fc; pass; check _(id: [rec-5b667532-d22d-4457-9115-c3258f78d31b](.artifacts/records/project__check-run/rec-5b667532-d22d-4457-9115-c3258f78d31b.md))_
 
 ## spec-model
 
@@ -1447,6 +1792,15 @@ print("phase checks only")
 ### Finding
 - **status-tabs**: status-tabs gap closed: 7 tabs, keys 1-7, left/right and README landed at 75e530c; Execution report rec-10a142d4 and a parent re-run of 116 passing tests at 75e530c; A tab, key or README row from the description is missing; none _(id: [rec-94362ae8-0f01-4ad1-bfcd-cffa426566b8](.artifacts/records/project__finding/rec-94362ae8-0f01-4ad1-bfcd-cffa426566b8.md))_
 
+## status-tabs-fixture
+
+### Acceptance
+- **status-tabs-fixture**: status-tabs fixture yields NEEDS_WORK with a spec-gap finding; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k status_tabs _(id: [rec-a6aabc11-4cb5-47dd-84da-5c01fd225ab5](.artifacts/records/project__acceptance/rec-a6aabc11-4cb5-47dd-84da-5c01fd225ab5.md))_
+
+### Check
+- **status-tabs-fixture**: rec-a6aabc11-4cb5-47dd-84da-5c01fd225ab5; dirty; fail; tdd _(id: [rec-08bd8014-2867-4ca6-931c-09db1591de04](.artifacts/records/project__check-run/rec-08bd8014-2867-4ca6-931c-09db1591de04.md))_
+- **status-tabs-fixture**: rec-a6aabc11-4cb5-47dd-84da-5c01fd225ab5; 11a147e75daa100a2fbca2202399205b480b42e9; pass; tdd _(id: [rec-925cc63c-17c3-4ab7-8b23-b9c66e8e0c93](.artifacts/records/project__check-run/rec-925cc63c-17c3-4ab7-8b23-b9c66e8e0c93.md))_
+
 ## stepper-wrap
 
 ### Acceptance
@@ -1468,6 +1822,14 @@ print("phase checks only")
 
 ### Observation
 - **table-focus**: After an empty status tab hides #tasks, a tab that shows it again leaves app.focused None; arrows do nothing and enter opens row 0. Root cause: select_status_tab never refocuses the table after fill_tasks hides it.; dashboard-bugfix _(id: [rec-2c0c2c80-ff18-40fe-801a-e3f95f11e0e0](.artifacts/records/project__investigation-observation/rec-2c0c2c80-ff18-40fe-801a-e3f95f11e0e0.md))_
+
+## task-commit
+
+### Acceptance
+- **task-commit**: execute-phase documents a commit per task on the phase branch before verify, and the dedicated tests for that rule pass; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_task_commit.py tests/test_execute_landing.py tests/test_skill_contract_consistency.py -q -k 'commit or landing or task_commit' _(id: [rec-34f5bd84-dee8-4fa6-bf3a-1f646de23f5e](.artifacts/records/project__acceptance/rec-34f5bd84-dee8-4fa6-bf3a-1f646de23f5e.md))_
+
+### Check
+- **task-commit**: rec-34f5bd84-dee8-4fa6-bf3a-1f646de23f5e; 4ba5a390c79e1a6841c74467844b029055941985; pass; tdd _(id: [rec-116c845e-beb1-492c-bd63-156a5ccba707](.artifacts/records/project__check-run/rec-116c845e-beb1-492c-bd63-156a5ccba707.md))_
 
 ## task-detail-links
 
@@ -1551,6 +1913,85 @@ print("phase checks only")
 
 ### Check
 - **test-suite-speed**: rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99; 6cb58b4; pass; check _(id: [rec-e81acb74-ed4a-4e0f-bb5c-9ea42abfa56e](.artifacts/records/project__check-run/rec-e81acb74-ed4a-4e0f-bb5c-9ea42abfa56e.md))_
+
+## tier2-dashboard
+
+### Acceptance
+- **tier2-dashboard**: At 60 and 120 columns, a phase header shows tier-2 running / passed@SHA / failed@SHA from seeded store state; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k tier2 _(id: [rec-b5eb3ea3-6ec1-4431-ab56-fcb60d7b1574](.artifacts/records/project__acceptance/rec-b5eb3ea3-6ec1-4431-ab56-fcb60d7b1574.md))_
+
+### Check
+- **tier2-dashboard**: rec-b5eb3ea3-6ec1-4431-ab56-fcb60d7b1574; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; tdd _(id: [rec-557c638d-ef97-48d0-8892-54706a5542b2](.artifacts/records/project__check-run/rec-557c638d-ef97-48d0-8892-54706a5542b2.md))_
+- **tier2-dashboard**: rec-b5eb3ea3-6ec1-4431-ab56-fcb60d7b1574; dirty; fail; tdd _(id: [rec-c7a6acac-a090-445c-9efa-ff2f72cf3516](.artifacts/records/project__check-run/rec-c7a6acac-a090-445c-9efa-ff2f72cf3516.md))_
+
+## tier2-engine
+
+### Acceptance
+- **tier2-engine**: Parent starts a background tmux full-suite run in the phase worktree after reviewer pass without blocking the agent session, and records one tier-2 check-run at the phase head SHA with exit code, duration, output digest, and failing node IDs when failed; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "runner or background or check_run or tmux" _(id: [rec-66d14411-07cd-479e-bb45-abfd3ee105f3](.artifacts/records/project__acceptance/rec-66d14411-07cd-479e-bb45-abfd3ee105f3.md))_
+
+### Check
+- **tier2-engine**: rec-66d14411-07cd-479e-bb45-abfd3ee105f3; dirty; fail; tdd _(id: [rec-48587139-b25f-4095-84d6-f09a5fad4399](.artifacts/records/project__check-run/rec-48587139-b25f-4095-84d6-f09a5fad4399.md))_
+- **tier2-engine**: rec-66d14411-07cd-479e-bb45-abfd3ee105f3; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; tdd _(id: [rec-5a5855fb-5dd7-499b-9c69-2b323dde9ee0](.artifacts/records/project__check-run/rec-5a5855fb-5dd7-499b-9c69-2b323dde9ee0.md))_
+
+## tier2-engine-fix
+
+### Acceptance
+- **tier2-engine-fix**: A tier-2 failure creates fix work-item(s) under the retry-loop budget clustered by failing test file/module, with no inline fix-and-rerun inside the verification step; after fixes tier-2 is expected to rerun at the new head; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "fix or cluster or budget" _(id: [rec-e54af7a4-185c-4adc-93b9-6ca9417d5f0f](.artifacts/records/project__acceptance/rec-e54af7a4-185c-4adc-93b9-6ca9417d5f0f.md))_
+
+### Check
+- **tier2-engine-fix**: rec-e54af7a4-185c-4adc-93b9-6ca9417d5f0f; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; tdd _(id: [rec-2ab5c73a-c1a5-4393-9cc7-1d2334a71432](.artifacts/records/project__check-run/rec-2ab5c73a-c1a5-4393-9cc7-1d2334a71432.md))_
+- **tier2-engine-fix**: rec-e54af7a4-185c-4adc-93b9-6ca9417d5f0f; dirty; fail; tdd _(id: [rec-51ae3745-10a9-4740-ba5d-2965a47905b6](.artifacts/records/project__check-run/rec-51ae3745-10a9-4740-ba5d-2965a47905b6.md))_
+
+## tier2-engine-gate
+
+### Acceptance
+- **tier2-engine-gate**: Phase gate requires every active phase acceptance to have a passing runner check-run at the phase head SHA and a passing tier-2 check-run at that same SHA before merge; missing or failing tier-2 blocks merge; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k gate _(id: [rec-5ad44d4e-6fd3-4829-be3e-95e48379990b](.artifacts/records/project__acceptance/rec-5ad44d4e-6fd3-4829-be3e-95e48379990b.md))_
+
+### Check
+- **tier2-engine-gate**: rec-5ad44d4e-6fd3-4829-be3e-95e48379990b; dirty; fail; tdd _(id: [rec-504fe546-d509-44bb-af08-7830343269b8](.artifacts/records/project__check-run/rec-504fe546-d509-44bb-af08-7830343269b8.md))_
+- **tier2-engine-gate**: rec-5ad44d4e-6fd3-4829-be3e-95e48379990b; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; tdd _(id: [rec-deacd1a7-dd90-434b-b6de-bf7e06e1f237](.artifacts/records/project__check-run/rec-deacd1a7-dd90-434b-b6de-bf7e06e1f237.md))_
+
+## tier2-engine-meta
+
+### Acceptance
+- **tier2-engine-meta**: The tier-2 check-run carries runner metadata: revision = phase head SHA, exit_code, duration_s, output_sha256, and failing node IDs when failed, with evidence_kind integration; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "meta or fields or evidence_kind or digest" _(id: [rec-f434ce3c-77ee-4e17-80d6-ad308eadb1f2](.artifacts/records/project__acceptance/rec-f434ce3c-77ee-4e17-80d6-ad308eadb1f2.md))_
+
+### Check
+- **tier2-engine-meta**: rec-f434ce3c-77ee-4e17-80d6-ad308eadb1f2; dirty; fail; tdd _(id: [rec-013637c5-73ac-4c16-b70e-82fc55eaf098](.artifacts/records/project__check-run/rec-013637c5-73ac-4c16-b70e-82fc55eaf098.md))_
+- **tier2-engine-meta**: rec-f434ce3c-77ee-4e17-80d6-ad308eadb1f2; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; tdd _(id: [rec-1f7b0d92-ecc5-419d-89a3-42a302d2b53b](.artifacts/records/project__check-run/rec-1f7b0d92-ecc5-419d-89a3-42a302d2b53b.md))_
+
+## tier2-engine-scoped
+
+### Acceptance
+- **tier2-engine-scoped**: Skills/README/test_verify_budget keep per-task verification scoped (no whole-suite per-task verify_command) while documenting the required phase-level tier-2 full run; skill↔contract consistency stays green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_budget.py tests/test_skill_contract_consistency.py -q _(id: [rec-97b46204-7027-47b9-bf84-e4b585da8849](.artifacts/records/project__acceptance/rec-97b46204-7027-47b9-bf84-e4b585da8849.md))_
+
+### Check
+- **tier2-engine-scoped**: rec-97b46204-7027-47b9-bf84-e4b585da8849; dirty; pass; check _(id: [rec-31522e93-58ea-4e24-83d5-28c4df9fbc85](.artifacts/records/project__check-run/rec-31522e93-58ea-4e24-83d5-28c4df9fbc85.md))_
+- **tier2-engine-scoped**: rec-97b46204-7027-47b9-bf84-e4b585da8849; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; check _(id: [rec-6a37cb49-2c89-4c26-9228-8047de254e26](.artifacts/records/project__check-run/rec-6a37cb49-2c89-4c26-9228-8047de254e26.md))_
+
+## tiered-verification-review
+
+### Check
+- **tiered-verification-review**: tiered-verification-review; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; review _(id: [rec-05620909-2f20-41d8-9e42-a7aa6720812a](.artifacts/records/project__check-run/rec-05620909-2f20-41d8-9e42-a7aa6720812a.md))_
+- **tiered-verification-review**: tiered-verification-review; 6d43454d3673e4e693fce13d5d4ea328f36943a3; pass; review _(id: [rec-216b86b7-5b0a-42ef-a2b4-cf0d3fbfbea0](.artifacts/records/project__check-run/rec-216b86b7-5b0a-42ef-a2b4-cf0d3fbfbea0.md))_
+- **tiered-verification-review**: tiered-verification-review; a19db351754f233dec442631abd4d94f28575f1c; pass; review _(id: [rec-24715006-cbd1-4a2f-9bf3-1ef1ac73a981](.artifacts/records/project__check-run/rec-24715006-cbd1-4a2f-9bf3-1ef1ac73a981.md))_
+- **tiered-verification-review**: tiered-verification-review; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; review _(id: [rec-af99ba51-538e-40fb-84b3-ce8525aa5cd6](.artifacts/records/project__check-run/rec-af99ba51-538e-40fb-84b3-ce8525aa5cd6.md))_
+- **tiered-verification-review**: tiered-verification-review; 5e07f9a48bc4b935d6a3a90f7fc7ef4edcfc0246; pass; review _(id: [rec-b0010871-e548-46b2-88e7-4dfc9b2d16b5](.artifacts/records/project__check-run/rec-b0010871-e548-46b2-88e7-4dfc9b2d16b5.md))_
+- **tiered-verification-review**: tiered-verification-review; 8ea0179b2e0b93b47df97d43ba7973e0875fe449; pass; review _(id: [rec-d3d21029-e99b-463c-8359-a7cc03e11f7a](.artifacts/records/project__check-run/rec-d3d21029-e99b-463c-8359-a7cc03e11f7a.md))_
+
+## tiered-verification-tier2
+
+### Check
+- **tiered-verification-tier2**: tiered-verification-tier2; dirty; fail; check _(id: [rec-22e4965f-ca79-4bb0-9cc7-f479ff1b8ed1](.artifacts/records/project__check-run/rec-22e4965f-ca79-4bb0-9cc7-f479ff1b8ed1.md))_
+- **tiered-verification-tier2**: tiered-verification-tier2; 8ea0179b2e0b93b47df97d43ba7973e0875fe449; pass; check _(id: [rec-7d0ee8e0-42cb-4a53-bc2e-aab7573071e2](.artifacts/records/project__check-run/rec-7d0ee8e0-42cb-4a53-bc2e-aab7573071e2.md))_
+- **tiered-verification-tier2**: tiered-verification-tier2; dirty; fail; check _(id: [rec-a24a9ec0-30f8-41e7-a2dc-c8552984c3ae](.artifacts/records/project__check-run/rec-a24a9ec0-30f8-41e7-a2dc-c8552984c3ae.md))_
+- **tiered-verification-tier2**: tiered-verification-tier2; 5e07f9a48bc4b935d6a3a90f7fc7ef4edcfc0246; fail; check _(id: [rec-b029a228-d2e6-4916-a21c-0ee8d8d8e59d](.artifacts/records/project__check-run/rec-b029a228-d2e6-4916-a21c-0ee8d8d8e59d.md))_
+- **tiered-verification-tier2**: tiered-verification-tier2; 2f7404eab494720b703ffd0e2e01078236a876ab; fail; check _(id: [rec-db63b61e-ff54-44f5-8f57-39dbb9737ba5](.artifacts/records/project__check-run/rec-db63b61e-ff54-44f5-8f57-39dbb9737ba5.md))_
+- **tiered-verification-tier2**: tiered-verification-tier2; 6d43454d3673e4e693fce13d5d4ea328f36943a3; fail; check _(id: [rec-fd72157e-80df-43c2-aac6-744fbac2d367](.artifacts/records/project__check-run/rec-fd72157e-80df-43c2-aac6-744fbac2d367.md))_
+
+## tiered-verification-tier2-budget
+
+### Finding
+- **tiered-verification-tier2-budget**: Tier-2 fix-task budget exhausted with remaining failing modules; tier-2 check-run rec-a24a9ec0-30f8-41e7-a2dc-c8552984c3ae failed with 10 node ids across 7 modules; created 3 fix tasks (dashboard_app, dashboard_journal, discuss_skill); remaining: evidence_loop, plan_landing, plan_wave_rules, verify_authority; remaining modules fixed and tier-2 passes at phase head, or human accepts scoped waiver; none _(id: [rec-b8101acf-ff6c-4dbc-8042-6499702bd5e5](.artifacts/records/project__finding/rec-b8101acf-ff6c-4dbc-8042-6499702bd5e5.md))_
 
 ## tm-cli
 
@@ -1641,6 +2082,14 @@ print("phase checks only")
 ### Observation
 - **unsigned-check-label**: _needs_you built unsigned-check text from the raw criterion_id and used the check-run subject, so the panel showed a rec- id instead of the criterion and task.; dashboard-bugfix _(id: [rec-45a1d50b-0dae-47ec-88c3-19cab12238ba](.artifacts/records/project__investigation-observation/rec-45a1d50b-0dae-47ec-88c3-19cab12238ba.md))_
 
+## verify-authority
+
+### Acceptance
+- **verify-authority**: verify-work and close_batch use runner-produced check-runs for tdd/check and do not invent binary results; skill-contract consistency tests pass; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_authority.py tests/test_skill_contract_consistency.py -q _(id: [rec-88c394e4-ca2e-45c8-a222-073b4b621bdd](.artifacts/records/project__acceptance/rec-88c394e4-ca2e-45c8-a222-073b4b621bdd.md))_
+
+### Check
+- **verify-authority**: rec-88c394e4-ca2e-45c8-a222-073b4b621bdd; 4bd42b96e925562686c726d6da61a27b99481255; pass; tdd _(id: [rec-36df2410-3b45-4803-bf95-3fca393989fe](.artifacts/records/project__check-run/rec-36df2410-3b45-4803-bf95-3fca393989fe.md))_
+
 ## verify-backlog-capture
 
 ### Acceptance
@@ -1673,6 +2122,46 @@ print("phase checks only")
 ### Check
 - **verify-backlog-capture-skills**: rec-f9cf16cd-69d0-4a84-86aa-b134b078c167; 2ba3f658a6c7a374ef157640f4dd4a3024588e90; pass; check _(id: [rec-077b461e-5d00-4c30-8e8d-b8fab0b2e996](.artifacts/records/project__check-run/rec-077b461e-5d00-4c30-8e8d-b8fab0b2e996.md))_
 
+## verify-check-runner
+
+### Acceptance
+- **verify-check-runner**: se-workflow check produces pass/fail/blocked check-runs with revision and runner fields for a throwaway store, observed through the CLI entry point; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_se_workflow_check.py -q -k "pass or fail or blocked or integration or cli" _(id: [rec-89a78033-b672-4f71-9f59-10deea6ef8bf](.artifacts/records/project__acceptance/rec-89a78033-b672-4f71-9f59-10deea6ef8bf.md))_
+
+### Check
+- **verify-check-runner**: rec-89a78033-b672-4f71-9f59-10deea6ef8bf; 4bd42b96e925562686c726d6da61a27b99481255; pass; tdd _(id: [rec-1cf0921c-d6f8-4b07-91c0-982887547c2b](.artifacts/records/project__check-run/rec-1cf0921c-d6f8-4b07-91c0-982887547c2b.md))_
+
+## verify-check-runner-commit
+
+### Acceptance
+- **verify-check-runner-commit**: execute-phase requires per-task commit; its tests cover that rule; check; workflow-loop; uv run --with pytest python -m pytest tests/test_task_commit.py tests/test_execute_landing.py tests/test_skill_contract_consistency.py -q -k "commit or landing or task_commit" _(id: [rec-efdf2173-e187-41a1-a65f-9539da56742e](.artifacts/records/project__acceptance/rec-efdf2173-e187-41a1-a65f-9539da56742e.md))_
+
+### Check
+- **verify-check-runner-commit**: rec-efdf2173-e187-41a1-a65f-9539da56742e; 4bd42b96e925562686c726d6da61a27b99481255; pass; check _(id: [rec-3317616f-d1b1-4f1e-b6dd-28d4e910cbef](.artifacts/records/project__check-run/rec-3317616f-d1b1-4f1e-b6dd-28d4e910cbef.md))_
+
+## verify-check-runner-contract
+
+### Acceptance
+- **verify-check-runner-contract**: Contract rejects illegal result/method; self-consistency and enum tests pass; check; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py tests/test_evidence_loop.py tests/test_assess_routing.py -q -k "enum or result or method or contract" _(id: [rec-d00ce191-345a-46ed-9dc8-4c0242f31984](.artifacts/records/project__acceptance/rec-d00ce191-345a-46ed-9dc8-4c0242f31984.md))_
+
+### Check
+- **verify-check-runner-contract**: rec-d00ce191-345a-46ed-9dc8-4c0242f31984; 4bd42b96e925562686c726d6da61a27b99481255; pass; check _(id: [rec-cd7664df-a8ea-42c5-8d6c-bd73a246680d](.artifacts/records/project__check-run/rec-cd7664df-a8ea-42c5-8d6c-bd73a246680d.md))_
+
+## verify-check-runner-dirty
+
+### Acceptance
+- **verify-check-runner-dirty**: Dirty pass refused without override; override records dirty plus diff_sha256; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_se_workflow_check.py -q -k dirty _(id: [rec-5c18090c-ca0b-43a3-aa61-78ebd2383d7e](.artifacts/records/project__acceptance/rec-5c18090c-ca0b-43a3-aa61-78ebd2383d7e.md))_
+
+### Check
+- **verify-check-runner-dirty**: rec-5c18090c-ca0b-43a3-aa61-78ebd2383d7e; 4bd42b96e925562686c726d6da61a27b99481255; pass; tdd _(id: [rec-a82aad47-82a2-4024-9f31-14314ea0c2ab](.artifacts/records/project__check-run/rec-a82aad47-82a2-4024-9f31-14314ea0c2ab.md))_
+
+## verify-check-runner-skills
+
+### Acceptance
+- **verify-check-runner-skills**: verify-work and close_batch use CLI-produced check-runs for tdd/check; skill-contract tests pass; check; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_authority.py tests/test_skill_contract_consistency.py -q _(id: [rec-a831be0f-059e-414e-90bb-36c485017676](.artifacts/records/project__acceptance/rec-a831be0f-059e-414e-90bb-36c485017676.md))_
+
+### Check
+- **verify-check-runner-skills**: rec-a831be0f-059e-414e-90bb-36c485017676; 4bd42b96e925562686c726d6da61a27b99481255; pass; check _(id: [rec-ce3653a8-b5bd-40e1-a2af-0f37ef5045a8](.artifacts/records/project__check-run/rec-ce3653a8-b5bd-40e1-a2af-0f37ef5045a8.md))_
+
 ## verify-dashboard-actions-phase
 
 ### Acceptance
@@ -1688,6 +2177,39 @@ print("phase checks only")
 
 ### Check
 - **verify-dashboard-actions-phase-signoff**: rec-aa7012e9-f5d9-427c-a0d5-74e173544519; 03d561c; pass; manual; ayin _(id: [rec-78f4574a-6127-4ae1-96c4-73dc987b5fb5](.artifacts/records/project__check-run/rec-78f4574a-6127-4ae1-96c4-73dc987b5fb5.md))_
+
+## verify-dashboard-approvals
+
+### Acceptance
+- **verify-dashboard-approvals**: Through the Textual dashboard app entry point: list d opens detail with no write; confirm/cancel and Approve/Reject/Sign/Accept-risk behave as specified with notes; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k approval _(id: [rec-5b8ab6e4-d17d-479a-b038-38d2f8a03d1e](.artifacts/records/project__acceptance/rec-5b8ab6e4-d17d-479a-b038-38d2f8a03d1e.md))_
+
+### Check
+- **verify-dashboard-approvals**: rec-5b8ab6e4-d17d-479a-b038-38d2f8a03d1e; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; tdd _(id: [rec-9c48b2f5-2c80-48c2-9307-e09626304985](.artifacts/records/project__check-run/rec-9c48b2f5-2c80-48c2-9307-e09626304985.md))_
+
+## verify-dashboard-approvals-constraints
+
+### Acceptance
+- **verify-dashboard-approvals-constraints**: Stale never-writes dashboard constraints superseded; dashboard-human-gate-writes active with human-gate write policy; check; workflow-loop; /home/andrewyin/adaptive-artifacts/bin/adaptive-artifacts --store /home/andrewyin/se-workflow/.artifacts list --type project:constraint --state active | python3 -c "import sys,json; d=json.load(sys.stdin); stmts=[(r['subject'], (r.get('payload') or {}).get('statement') or '') for r in d['records']]; assert any(s=='dashboard-human-gate-writes' for s,_ in stmts); hg=[t for s,t in stmts if s=='dashboard-human-gate-writes']; assert hg and ('human Needs-you' in hg[0] or 'human-gate' in hg[0].lower()); old={'dashboard-read-only','dashboard-read-only-dashboard-bugfix','dashboard-read-only-dashboard-features'}; assert not any('never writes' in t.lower() for s,t in stmts if s in old); assert all('Retired' in t or 'dashboard-human-gate-writes' in t for s,t in stmts if s in old)" _(id: [rec-9c7c3c55-1e86-41fd-bb53-3c6f41567cf4](.artifacts/records/project__acceptance/rec-9c7c3c55-1e86-41fd-bb53-3c6f41567cf4.md))_
+
+### Check
+- **verify-dashboard-approvals-constraints**: rec-9c7c3c55-1e86-41fd-bb53-3c6f41567cf4; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; check _(id: [rec-3dedc0b5-6009-4849-95dc-65f6e62f939d](.artifacts/records/project__check-run/rec-3dedc0b5-6009-4849-95dc-65f6e62f939d.md))_
+- **verify-dashboard-approvals-constraints**: rec-9c7c3c55-1e86-41fd-bb53-3c6f41567cf4; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; check _(id: [rec-a640fb3c-6ccb-44b0-b00e-2b19a18336a8](.artifacts/records/project__check-run/rec-a640fb3c-6ccb-44b0-b00e-2b19a18336a8.md))_
+
+## verify-dashboard-approvals-docs
+
+### Acceptance
+- **verify-dashboard-approvals-docs**: README keys updated; skill↔contract consistency green when skills mention the new optional note fields; check; workflow-loop; grep -E 'Approve|Reject|Accept risk' README.md && uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-a764fa17-a012-4fec-8c30-4b0eb791b434](.artifacts/records/project__acceptance/rec-a764fa17-a012-4fec-8c30-4b0eb791b434.md))_
+
+### Check
+- **verify-dashboard-approvals-docs**: rec-a764fa17-a012-4fec-8c30-4b0eb791b434; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; check _(id: [rec-2217d59f-1402-4be9-933a-989549a02264](.artifacts/records/project__check-run/rec-2217d59f-1402-4be9-933a-989549a02264.md))_
+
+## verify-dashboard-approvals-revision
+
+### Acceptance
+- **verify-dashboard-approvals-revision**: Stale displayed revision shows a visible message and skips the write; no @current retry; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k 'approval and stale' _(id: [rec-84aa203e-910a-40ea-a99b-1e0c3efdda28](.artifacts/records/project__acceptance/rec-84aa203e-910a-40ea-a99b-1e0c3efdda28.md))_
+
+### Check
+- **verify-dashboard-approvals-revision**: rec-84aa203e-910a-40ea-a99b-1e0c3efdda28; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; tdd _(id: [rec-dbe073f3-68cf-48fe-95cc-be9663767655](.artifacts/records/project__check-run/rec-dbe073f3-68cf-48fe-95cc-be9663767655.md))_
 
 ## verify-dashboard-package
 
@@ -2045,6 +2567,49 @@ print("phase checks only")
 ### Acceptance
 - **verify-phase-landing-plan**: plan-phase requires a Landing section before plan review, and incidental work skips it; tdd; workflow-loop; python3 -m pytest tests/test_plan_landing.py -q _(id: [rec-58522d3a-4f28-4cd8-bcf8-4f8ab951dd54](.artifacts/records/project__acceptance/rec-58522d3a-4f28-4cd8-bcf8-4f8ab951dd54.md))_
 
+## verify-phase-reviewer
+
+### Acceptance
+- **verify-phase-reviewer**: Through pytest entry point, phase-reviewer tests prove brief limits, parent review check-run/findings, fix routing, one re-run, gate, and integration-report from reviewer output; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q _(id: [rec-a5b4ff28-4664-45b7-9b25-489d4f58af19](.artifacts/records/project__acceptance/rec-a5b4ff28-4664-45b7-9b25-489d4f58af19.md))_
+
+### Check
+- **verify-phase-reviewer**: rec-a5b4ff28-4664-45b7-9b25-489d4f58af19; e5b769d5e7bf6a24f52d7ec7abc6b77190aad96a; fail; tdd _(id: [rec-1f4f33ef-460a-44cc-8c60-c7beee639790](.artifacts/records/project__check-run/rec-1f4f33ef-460a-44cc-8c60-c7beee639790.md))_
+- **verify-phase-reviewer**: rec-a5b4ff28-4664-45b7-9b25-489d4f58af19; 11a147e75daa100a2fbca2202399205b480b42e9; pass; tdd _(id: [rec-ffac3710-847f-458c-a367-9a5061c23261](.artifacts/records/project__check-run/rec-ffac3710-847f-458c-a367-9a5061c23261.md))_
+
+## verify-phase-reviewer-agent
+
+### Acceptance
+- **verify-phase-reviewer-agent**: Reviewer agent exists with restricted tools and sync-plugin installs it; execute-phase documents phase-end invocation after verification; check; workflow-loop; test -f agents/se-reviewer.md && grep -qiE "no Write|without Write" agents/se-reviewer.md && grep -q agents/ scripts/sync-plugin.sh && grep -qiE "reviewer|se-reviewer" skills/execute-phase/SKILL.md _(id: [rec-1c47f604-3a3d-43ce-b488-7f0dc461180e](.artifacts/records/project__acceptance/rec-1c47f604-3a3d-43ce-b488-7f0dc461180e.md))_
+
+### Check
+- **verify-phase-reviewer-agent**: rec-1c47f604-3a3d-43ce-b488-7f0dc461180e; 11a147e75daa100a2fbca2202399205b480b42e9; pass; check _(id: [rec-5078fe00-d85e-49a7-b9ea-e9793ef902eb](.artifacts/records/project__check-run/rec-5078fe00-d85e-49a7-b9ea-e9793ef902eb.md))_
+
+## verify-phase-reviewer-contract
+
+### Acceptance
+- **verify-phase-reviewer-contract**: Skill and contract consistency stay green with review check-run and phase-end reviewer writes; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-5fe7f197-7081-4e2e-a8dd-bd9014170eaf](.artifacts/records/project__acceptance/rec-5fe7f197-7081-4e2e-a8dd-bd9014170eaf.md))_
+
+### Check
+- **verify-phase-reviewer-contract**: rec-5fe7f197-7081-4e2e-a8dd-bd9014170eaf; 11a147e75daa100a2fbca2202399205b480b42e9; pass; check _(id: [rec-3012d3ea-a62d-4087-8c33-d3422223f820](.artifacts/records/project__check-run/rec-3012d3ea-a62d-4087-8c33-d3422223f820.md))_
+
+## verify-phase-reviewer-fixture
+
+### Acceptance
+- **verify-phase-reviewer-fixture**: status-tabs fixture returns NEEDS_WORK / spec-gap; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k status_tabs _(id: [rec-14227c0e-f22a-4354-92b7-eb89f4eba878](.artifacts/records/project__acceptance/rec-14227c0e-f22a-4354-92b7-eb89f4eba878.md))_
+
+### Check
+- **verify-phase-reviewer-fixture**: rec-14227c0e-f22a-4354-92b7-eb89f4eba878; 11a147e75daa100a2fbca2202399205b480b42e9; pass; tdd _(id: [rec-5b936122-cc58-4c04-871d-68359835b5da](.artifacts/records/project__check-run/rec-5b936122-cc58-4c04-871d-68359835b5da.md))_
+- **verify-phase-reviewer-fixture**: rec-14227c0e-f22a-4354-92b7-eb89f4eba878; e5b769d5e7bf6a24f52d7ec7abc6b77190aad96a; fail; tdd _(id: [rec-cc0d0a68-bc39-41f2-aefa-ab1e8a01c42f](.artifacts/records/project__check-run/rec-cc0d0a68-bc39-41f2-aefa-ab1e8a01c42f.md))_
+
+## verify-phase-reviewer-gate
+
+### Acceptance
+- **verify-phase-reviewer-gate**: Phase gate requires passing review at head before merge; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_phase_reviewer.py -q -k gate _(id: [rec-47250685-0161-4993-80af-7bd73bdce32b](.artifacts/records/project__acceptance/rec-47250685-0161-4993-80af-7bd73bdce32b.md))_
+
+### Check
+- **verify-phase-reviewer-gate**: rec-47250685-0161-4993-80af-7bd73bdce32b; e5b769d5e7bf6a24f52d7ec7abc6b77190aad96a; fail; tdd _(id: [rec-59db4225-ccae-4eb8-b66a-5ae39fc0f6df](.artifacts/records/project__check-run/rec-59db4225-ccae-4eb8-b66a-5ae39fc0f6df.md))_
+- **verify-phase-reviewer-gate**: rec-47250685-0161-4993-80af-7bd73bdce32b; 11a147e75daa100a2fbca2202399205b480b42e9; pass; tdd _(id: [rec-e4302069-0e0a-4871-bc13-0bda3c12a807](.artifacts/records/project__check-run/rec-e4302069-0e0a-4871-bc13-0bda3c12a807.md))_
+
 ## verify-phase-selector
 
 ### Acceptance
@@ -2071,6 +2636,22 @@ print("phase checks only")
 
 ### Acceptance
 - **verify-phase-selector-suite**: Full non-tmux and tmux test suites pass; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m not tmux && uv run --with textual --with pytest python -m pytest tests -q -m tmux _(id: [rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9](.artifacts/records/project__acceptance/rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9.md))_
+
+## verify-plugin-dep-marketplace
+
+### Acceptance
+- **verify-plugin-dep-marketplace**: claude plugin validate . succeeds with both plugins listed and adaptive-artifacts dependency declared (exit criterion 1, real entry point); check; packaging; claude plugin validate . && python3 -c "import json;p=json.load(open('.claude-plugin/plugin.json'));d=p.get('dependencies',[]);assert 'adaptive-artifacts' in d or any(isinstance(x,dict) and x.get('name')=='adaptive-artifacts' for x in d);m=json.load(open('.claude-plugin/marketplace.json'));assert {x.get('name') for x in m['plugins']}>= {'se-workflow','adaptive-artifacts'}" _(id: [rec-463ee27b-5093-4184-bbf6-7b80770d43ac](.artifacts/records/project__acceptance/rec-463ee27b-5093-4184-bbf6-7b80770d43ac.md))_
+
+### Check
+- **verify-plugin-dep-marketplace**: rec-463ee27b-5093-4184-bbf6-7b80770d43ac; 40db2970236ac7ff04afd9eaf08292f072a912a2; pass; check _(id: [rec-b1f44839-d82d-48a0-86c5-662ab8a5aa40](.artifacts/records/project__check-run/rec-b1f44839-d82d-48a0-86c5-662ab8a5aa40.md))_
+
+## verify-plugin-dep-marketplace-readme
+
+### Acceptance
+- **verify-plugin-dep-marketplace-readme**: README Install matches manifests: single Claude marketplace add; Cursor does not claim dependency auto-install (exit criteria 2-3); check; packaging; grep -q 'claude plugin marketplace add andrewy1n/se-workflow' README.md && grep -qi Cursor README.md && ! grep -qiE 'Cursor.*(auto-?install|plugin dependenc).*adaptive-artifacts' README.md _(id: [rec-c30aaca7-94df-4c02-a6f3-fcce0c8d6b00](.artifacts/records/project__acceptance/rec-c30aaca7-94df-4c02-a6f3-fcce0c8d6b00.md))_
+
+### Check
+- **verify-plugin-dep-marketplace-readme**: rec-c30aaca7-94df-4c02-a6f3-fcce0c8d6b00; 40db2970236ac7ff04afd9eaf08292f072a912a2; pass; check _(id: [rec-78e62280-8d1d-4f1d-95ba-eabd70e4efeb](.artifacts/records/project__check-run/rec-78e62280-8d1d-4f1d-95ba-eabd70e4efeb.md))_
 
 ## verify-quiet-header
 
@@ -2125,6 +2706,76 @@ print("phase checks only")
 
 ### Check
 - **verify-readable-layout-phase-signoff**: rec-83820e9f-6ff5-407c-aa8f-deb4e441d5a5; 360ebcc; pass; manual; ayin _(id: [rec-ca53b246-7587-4e4e-9c59-75ca4deed553](.artifacts/records/project__check-run/rec-ca53b246-7587-4e4e-9c59-75ca4deed553.md))_
+
+## verify-red-first
+
+### Acceptance
+- **verify-red-first**: Through close_batch.py CLI/entry, pass-only tdd done without finding exits 2 and names the criterion; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_pass_only _(id: [rec-c954223e-18ce-4392-ba4a-051f35046275](.artifacts/records/project__acceptance/rec-c954223e-18ce-4392-ba4a-051f35046275.md))_
+
+### Check
+- **verify-red-first**: rec-c954223e-18ce-4392-ba4a-051f35046275; b3159b685f2992638a84ad36d56a81f9ed8e8151; fail; tdd _(id: [rec-28189b12-afcd-4c2b-a2c5-9800c98bf66b](.artifacts/records/project__check-run/rec-28189b12-afcd-4c2b-a2c5-9800c98bf66b.md))_
+- **verify-red-first**: rec-c954223e-18ce-4392-ba4a-051f35046275; c14dedbd9ec027e7e79b8eb1508b24d0d65063fc; pass; tdd _(id: [rec-7ee60230-c110-4f33-b770-23ed56cf32bb](.artifacts/records/project__check-run/rec-7ee60230-c110-4f33-b770-23ed56cf32bb.md))_
+
+## verify-red-first-escape
+
+### Acceptance
+- **verify-red-first-escape**: Finding escape permits close without red and forces needs human; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_escape _(id: [rec-964973af-b0ff-4bdc-b880-c49820487c8a](.artifacts/records/project__acceptance/rec-964973af-b0ff-4bdc-b880-c49820487c8a.md))_
+
+### Check
+- **verify-red-first-escape**: rec-964973af-b0ff-4bdc-b880-c49820487c8a; b3159b685f2992638a84ad36d56a81f9ed8e8151; fail; tdd _(id: [rec-1cff2ee9-9d3b-4ca1-b202-6ad73892bc91](.artifacts/records/project__check-run/rec-1cff2ee9-9d3b-4ca1-b202-6ad73892bc91.md))_
+- **verify-red-first-escape**: rec-964973af-b0ff-4bdc-b880-c49820487c8a; c14dedbd9ec027e7e79b8eb1508b24d0d65063fc; pass; tdd _(id: [rec-acd4ed29-d9f3-456b-bec8-9d7269cb547a](.artifacts/records/project__check-run/rec-acd4ed29-d9f3-456b-bec8-9d7269cb547a.md))_
+
+## verify-red-first-methods
+
+### Acceptance
+- **verify-red-first-methods**: check and manual closes remain valid without red_check_run_id; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_other_methods _(id: [rec-9167287b-ab92-4409-89bd-e19a6db7f820](.artifacts/records/project__acceptance/rec-9167287b-ab92-4409-89bd-e19a6db7f820.md))_
+
+### Check
+- **verify-red-first-methods**: rec-9167287b-ab92-4409-89bd-e19a6db7f820; b3159b685f2992638a84ad36d56a81f9ed8e8151; fail; tdd _(id: [rec-98211ba1-fc74-4a39-80ce-91eab05e1526](.artifacts/records/project__check-run/rec-98211ba1-fc74-4a39-80ce-91eab05e1526.md))_
+- **verify-red-first-methods**: rec-9167287b-ab92-4409-89bd-e19a6db7f820; c14dedbd9ec027e7e79b8eb1508b24d0d65063fc; pass; tdd _(id: [rec-be32d9b7-5a1f-47e1-8095-3353c79104fa](.artifacts/records/project__check-run/rec-be32d9b7-5a1f-47e1-8095-3353c79104fa.md))_
+
+## verify-red-first-order
+
+### Acceptance
+- **verify-red-first-order**: Fail→pass with valid ancestry or dirty red+diff_sha256 accepted; wrong order/non-ancestor refused; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_close_batch.py -q -k red_first_order _(id: [rec-cb28d166-0f0f-49ed-8751-925ad1e8d708](.artifacts/records/project__acceptance/rec-cb28d166-0f0f-49ed-8751-925ad1e8d708.md))_
+
+### Check
+- **verify-red-first-order**: rec-cb28d166-0f0f-49ed-8751-925ad1e8d708; c14dedbd9ec027e7e79b8eb1508b24d0d65063fc; pass; tdd _(id: [rec-449bcc1e-5bc3-4938-86e4-9db40d324a2f](.artifacts/records/project__check-run/rec-449bcc1e-5bc3-4938-86e4-9db40d324a2f.md))_
+- **verify-red-first-order**: rec-cb28d166-0f0f-49ed-8751-925ad1e8d708; b3159b685f2992638a84ad36d56a81f9ed8e8151; fail; tdd _(id: [rec-bb86ff24-33c3-4950-b075-453cfc1ceaff](.artifacts/records/project__check-run/rec-bb86ff24-33c3-4950-b075-453cfc1ceaff.md))_
+
+## verify-red-first-skills
+
+### Acceptance
+- **verify-red-first-skills**: verify-work matches enforced red-first; skill/contract consistency green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_assess_routing.py -q _(id: [rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e](.artifacts/records/project__acceptance/rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e.md))_
+
+### Check
+- **verify-red-first-skills**: rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e; c14dedbd9ec027e7e79b8eb1508b24d0d65063fc; pass; check _(id: [rec-423e77e6-9e33-4dd6-b9be-7823d6b85ac6](.artifacts/records/project__check-run/rec-423e77e6-9e33-4dd6-b9be-7823d6b85ac6.md))_
+
+## verify-retry-loop
+
+### Acceptance
+- **verify-retry-loop**: Through pytest entry point, retry-loop tests prove redispatch, amendment, attempts, fix_task, budget, and next_plan; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_retry_loop.py -q _(id: [rec-882f6075-f91a-479c-b426-a0eee0ffba59](.artifacts/records/project__acceptance/rec-882f6075-f91a-479c-b426-a0eee0ffba59.md))_
+
+### Check
+- **verify-retry-loop**: rec-882f6075-f91a-479c-b426-a0eee0ffba59; ee1a41be208bfdae700e1b78f9340296d82dae91; fail; tdd _(id: [rec-06ceed68-9985-49ab-8afe-cb6f5ae46934](.artifacts/records/project__check-run/rec-06ceed68-9985-49ab-8afe-cb6f5ae46934.md))_
+- **verify-retry-loop**: rec-882f6075-f91a-479c-b426-a0eee0ffba59; 0077727e7e8d3b25e53d5aa1722b5c8f9ca58577; pass; tdd _(id: [rec-1f8ce933-3053-4082-acc2-205434fa5917](.artifacts/records/project__check-run/rec-1f8ce933-3053-4082-acc2-205434fa5917.md))_
+
+## verify-retry-loop-contract
+
+### Acceptance
+- **verify-retry-loop-contract**: Skill and contract consistency stay green with optional attempts declared; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_contract_self_consistency.py -q _(id: [rec-0b667469-29df-4007-a46b-05a8b860091a](.artifacts/records/project__acceptance/rec-0b667469-29df-4007-a46b-05a8b860091a.md))_
+
+### Check
+- **verify-retry-loop-contract**: rec-0b667469-29df-4007-a46b-05a8b860091a; 0077727e7e8d3b25e53d5aa1722b5c8f9ca58577; pass; check _(id: [rec-88071789-8032-4b6c-b4cf-208f9d56ad30](.artifacts/records/project__check-run/rec-88071789-8032-4b6c-b4cf-208f9d56ad30.md))_
+
+## verify-retry-loop-dashboard
+
+### Acceptance
+- **verify-retry-loop-dashboard**: Dashboard shows attempt n/budget on retried rows; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_app.py -q -k "attempt_row or attempt_budget or attempt_snapshot or attempt_title" _(id: [rec-7d873780-5fa8-4f70-af41-851701195ec5](.artifacts/records/project__acceptance/rec-7d873780-5fa8-4f70-af41-851701195ec5.md))_
+
+### Check
+- **verify-retry-loop-dashboard**: rec-7d873780-5fa8-4f70-af41-851701195ec5; ee1a41be208bfdae700e1b78f9340296d82dae91; fail; tdd _(id: [rec-64f16e57-2fb5-429d-a774-fbe5113cef83](.artifacts/records/project__check-run/rec-64f16e57-2fb5-429d-a774-fbe5113cef83.md))_
+- **verify-retry-loop-dashboard**: rec-7d873780-5fa8-4f70-af41-851701195ec5; 0077727e7e8d3b25e53d5aa1722b5c8f9ca58577; pass; tdd _(id: [rec-8ff6e514-0880-4828-8e5b-ca7a6c8dca7b](.artifacts/records/project__check-run/rec-8ff6e514-0880-4828-8e5b-ca7a6c8dca7b.md))_
 
 ## verify-run-facts
 
@@ -2248,6 +2899,42 @@ print("phase checks only")
 
 ### Check
 - **verify-task-rows-phase**: rec-92df6b15-9068-4342-b3fa-899bc28247b3; e6591ab8dd58b85e63d1bed9702b6edaf0b236a1; pass; check _(id: [rec-07e2fbea-ed1f-4ea9-95b1-0b6416449996](.artifacts/records/project__check-run/rec-07e2fbea-ed1f-4ea9-95b1-0b6416449996.md))_
+
+## verify-tiered-verification
+
+### Acceptance
+- **verify-tiered-verification**: Through the pytest entry point, background tier-2 run records a check-run at phase head without blocking the agent session for the suite duration; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "runner or background or check_run" _(id: [rec-e094b9fe-4161-4ebd-81ad-00b66dce7444](.artifacts/records/project__acceptance/rec-e094b9fe-4161-4ebd-81ad-00b66dce7444.md))_
+
+### Check
+- **verify-tiered-verification**: rec-e094b9fe-4161-4ebd-81ad-00b66dce7444; dirty; fail; tdd _(id: [rec-3e568900-d5ec-445c-9d0c-ba14ccaeae3f](.artifacts/records/project__check-run/rec-3e568900-d5ec-445c-9d0c-ba14ccaeae3f.md))_
+- **verify-tiered-verification**: rec-e094b9fe-4161-4ebd-81ad-00b66dce7444; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; tdd _(id: [rec-a20e2413-ec98-4a31-ab42-c74cd5d6c8bd](.artifacts/records/project__check-run/rec-a20e2413-ec98-4a31-ab42-c74cd5d6c8bd.md))_
+
+## verify-tiered-verification-fix
+
+### Acceptance
+- **verify-tiered-verification-fix**: Tier-2 failure creates fix work-item(s) under retry budget with no inline verifier fix loop; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "fix or cluster or budget" _(id: [rec-3441488d-4728-4c7e-855a-ef05fc967f31](.artifacts/records/project__acceptance/rec-3441488d-4728-4c7e-855a-ef05fc967f31.md))_
+
+### Check
+- **verify-tiered-verification-fix**: rec-3441488d-4728-4c7e-855a-ef05fc967f31; dirty; fail; tdd _(id: [rec-60a08648-2453-4612-b2a3-9cc4610430ef](.artifacts/records/project__check-run/rec-60a08648-2453-4612-b2a3-9cc4610430ef.md))_
+- **verify-tiered-verification-fix**: rec-3441488d-4728-4c7e-855a-ef05fc967f31; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; tdd _(id: [rec-b050a616-916d-499f-8922-b9a2917b1a95](.artifacts/records/project__check-run/rec-b050a616-916d-499f-8922-b9a2917b1a95.md))_
+
+## verify-tiered-verification-gate
+
+### Acceptance
+- **verify-tiered-verification-gate**: Phase gate requires head-SHA acceptance passes and a passing tier-2 check-run before merge; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k gate _(id: [rec-6c629730-fc3a-4ca1-9d42-88c84c5b8b34](.artifacts/records/project__acceptance/rec-6c629730-fc3a-4ca1-9d42-88c84c5b8b34.md))_
+
+### Check
+- **verify-tiered-verification-gate**: rec-6c629730-fc3a-4ca1-9d42-88c84c5b8b34; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; tdd _(id: [rec-2774e5e4-c77b-434e-b925-10be104a10cc](.artifacts/records/project__check-run/rec-2774e5e4-c77b-434e-b925-10be104a10cc.md))_
+- **verify-tiered-verification-gate**: rec-6c629730-fc3a-4ca1-9d42-88c84c5b8b34; dirty; fail; tdd _(id: [rec-de87e2d2-4a36-4ff8-9e04-33e7452816a3](.artifacts/records/project__check-run/rec-de87e2d2-4a36-4ff8-9e04-33e7452816a3.md))_
+
+## verify-tiered-verification-surfaces
+
+### Acceptance
+- **verify-tiered-verification-surfaces**: Dashboard shows tier-2 status on the phase header; skills/README/verify-budget stay scoped for per-task checks; skill↔contract consistency green; CI-owned tier-2 remains future/non-goal; check; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k tier2 && uv run --with pytest python -m pytest tests/test_verify_budget.py tests/test_skill_contract_consistency.py -q _(id: [rec-07249524-c6b9-49bf-8823-074594abbd01](.artifacts/records/project__acceptance/rec-07249524-c6b9-49bf-8823-074594abbd01.md))_
+
+### Check
+- **verify-tiered-verification-surfaces**: rec-07249524-c6b9-49bf-8823-074594abbd01; dirty; fail; check _(id: [rec-2b894e41-e3ec-4ceb-b87d-ff1946dd257f](.artifacts/records/project__check-run/rec-2b894e41-e3ec-4ceb-b87d-ff1946dd257f.md))_
+- **verify-tiered-verification-surfaces**: rec-07249524-c6b9-49bf-8823-074594abbd01; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; check _(id: [rec-c8aff61d-c10a-4960-9f58-9e583315e4d1](.artifacts/records/project__check-run/rec-c8aff61d-c10a-4960-9f58-9e583315e4d1.md))_
 
 ## verify-tmux-integration-phase
 

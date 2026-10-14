@@ -1,7 +1,7 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:009a10b8033c90e5f79c5b71636412bcb3833f8f524413efebde3fdc8e5b12f2
+> Store state: sha256:9a1b3ad6818e0e7ced4c914e564312dde6a1ffb0ef433e06e270bcf6e81215f8
 
 ## dashboard-view
 
@@ -10,6 +10,12 @@
 - **label-view-fields**: Render labeled field values in views; dashboard-view; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-1ea0c6a8-4e70-48b4-ae81-b917f7001812](.artifacts/records/project__work-item/rec-1ea0c6a8-4e70-48b4-ae81-b917f7001812.md))_
 - **recency-selection**: Select records by a relative recorded_at window; dashboard-view; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-8b3c6ad3-7773-4131-990f-022678cce735](.artifacts/records/project__work-item/rec-8b3c6ad3-7773-4131-990f-022678cce735.md))_
 - **verify-dashboard-view-phase**: Integration-test the dashboard view and verify phase 1; dashboard-view; deliver; dashboard; state: done; ready: True; wave: 3; criteria: 4 pass / 1 fail _(id: [rec-2de00cad-7bcc-4242-8ac2-4139a4d2867b](.artifacts/records/project__work-item/rec-2de00cad-7bcc-4242-8ac2-4139a4d2867b.md))_
+
+## plugin-dep-marketplace
+
+### Work
+- **claude-shared-marketplace**: Shared marketplace manifests + README; plugin-dep-marketplace; deliver; packaging; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-dc9849df-5539-4ed7-86b3-23ecf520b96b](.artifacts/records/project__work-item/rec-dc9849df-5539-4ed7-86b3-23ecf520b96b.md))_
+- **verify-plugin-dep-marketplace**: Verify plugin-dep-marketplace; plugin-dep-marketplace; deliver; packaging; state: done; ready: True; wave: 2; criteria: 2 pass / 0 fail _(id: [rec-5504f534-0cdb-4d0c-8b1d-7b0f286b272c](.artifacts/records/project__work-item/rec-5504f534-0cdb-4d0c-8b1d-7b0f286b272c.md))_
 
 ## transcript-metrics
 
@@ -126,7 +132,7 @@
 ### Work
 - **keyboard-focus**: Move through tasks and Activity with the keyboard; task-navigation; repair; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-3bb86fe4-f0e0-448b-adc4-ce7d6a011b8e](.artifacts/records/project__work-item/rec-3bb86fe4-f0e0-448b-adc4-ce7d6a011b8e.md))_
 - **phase-sections**: Group tasks into collapsible phase sections; task-navigation; deliver; dashboard; state: done; ready: True; wave: 3; criteria: 1 pass / 0 fail _(id: [rec-baab6106-6c7b-49a2-9302-444524bf9255](.artifacts/records/project__work-item/rec-baab6106-6c7b-49a2-9302-444524bf9255.md))_
-- **status-tabs**: Replace the tiles with status tabs that filter tasks; task-navigation; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 2 pass / 0 fail _(id: [rec-e1da106a-6277-4a24-91b4-db97b2f81c4c](.artifacts/records/project__work-item/rec-e1da106a-6277-4a24-91b4-db97b2f81c4c.md))_
+- **status-tabs**: Replace the tiles with status tabs that filter tasks; task-navigation; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 3 pass / 1 fail _(id: [rec-e1da106a-6277-4a24-91b4-db97b2f81c4c](.artifacts/records/project__work-item/rec-e1da106a-6277-4a24-91b4-db97b2f81c4c.md))_
 - **verify-task-navigation-phase**: Integration-test task navigation and verify the phase; task-navigation; deliver; dashboard; state: done; ready: True; wave: 4; criteria: 3 pass / 0 fail _(id: [rec-e73cbcef-26ef-49b9-8600-e28baca9d0a5](.artifacts/records/project__work-item/rec-e73cbcef-26ef-49b9-8600-e28baca9d0a5.md))_
 
 ## bugfix-table-state
@@ -193,6 +199,15 @@
 - **needs-you-records**: Carry type, body and task on needs-you items; features-needs-you; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-5c810449-2a50-46d3-a816-d26e92fa7a84](.artifacts/records/project__work-item/rec-5c810449-2a50-46d3-a816-d26e92fa7a84.md))_
 - **verify-needs-you-phase**: Integration-test Needs you and finished efforts and verify the phase; features-needs-you; deliver; dashboard; state: done; ready: True; wave: 3; criteria: 1 pass / 0 fail _(id: [rec-74df5b9c-cfe6-45a9-b8fe-5b99eb7a0a9a](.artifacts/records/project__work-item/rec-74df5b9c-cfe6-45a9-b8fe-5b99eb7a0a9a.md))_
 
+## check-runner
+
+### Work
+- **check-run-contract**: Contract enums and runner fields for check-runs; check-runner; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-8532278d-9e44-4c33-8f06-12f4c5c1abdd](.artifacts/records/project__work-item/rec-8532278d-9e44-4c33-8f06-12f4c5c1abdd.md))_
+- **se-workflow-check**: se-workflow CLI check subcommand; check-runner; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 5 pass / 0 fail _(id: [rec-cee9a85f-4a46-475f-9343-b77df3affcd4](.artifacts/records/project__work-item/rec-cee9a85f-4a46-475f-9343-b77df3affcd4.md))_
+- **task-commit**: execute-phase requires per-task commit; check-runner; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-8a171076-7b60-47f4-bbec-a2727b51b1a5](.artifacts/records/project__work-item/rec-8a171076-7b60-47f4-bbec-a2727b51b1a5.md))_
+- **verify-authority**: verify-work and close_batch use CLI check-runs; check-runner; deliver; workflow-loop; state: done; ready: True; wave: 3; criteria: 1 pass / 0 fail _(id: [rec-04b9c734-de57-4e79-9c09-fce97c8a40dc](.artifacts/records/project__work-item/rec-04b9c734-de57-4e79-9c09-fce97c8a40dc.md))_
+- **verify-check-runner**: Verify check-runner phase; check-runner; deliver; workflow-loop; state: done; ready: True; wave: 4; criteria: 5 pass / 0 fail _(id: [rec-92af95c9-a870-4647-87a7-b2e9f87c483b](.artifacts/records/project__work-item/rec-92af95c9-a870-4647-87a7-b2e9f87c483b.md))_
+
 ## features-task-rows
 
 ### Work
@@ -208,6 +223,13 @@
 - **task-detail-links**: Open dependencies, blocked tasks and the phase from task detail; features-navigation; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-d3142831-0d17-4f6c-b817-f6de2d18af53](.artifacts/records/project__work-item/rec-d3142831-0d17-4f6c-b817-f6de2d18af53.md))_
 - **verify-navigation-phase**: Integration-test detail navigation and verify the phase; features-navigation; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 1 pass / 0 fail _(id: [rec-7563785b-a801-4c18-8f1b-b67741bd4aba](.artifacts/records/project__work-item/rec-7563785b-a801-4c18-8f1b-b67741bd4aba.md))_
 
+## red-first
+
+### Work
+- **close-red-first**: Red-first refusal in close_batch; red-first; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 5 pass / 5 fail _(id: [rec-6c3cef08-0e61-48e6-bea1-039b4a8083c4](.artifacts/records/project__work-item/rec-6c3cef08-0e61-48e6-bea1-039b4a8083c4.md))_
+- **skills-red-first**: Document enforced red-first in verify-work; red-first; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 1 pass / 0 fail _(id: [rec-f60f7448-24e4-4522-bd96-e5dd67434ff7](.artifacts/records/project__work-item/rec-f60f7448-24e4-4522-bd96-e5dd67434ff7.md))_
+- **verify-red-first**: Verify red-first phase; red-first; deliver; workflow-loop; state: done; ready: True; wave: 3; criteria: 5 pass / 4 fail _(id: [rec-ae46bb2b-6cb6-4e26-823b-cd37cf14a27c](.artifacts/records/project__work-item/rec-ae46bb2b-6cb6-4e26-823b-cd37cf14a27c.md))_
+
 ## features-layout
 
 ### Work
@@ -216,6 +238,13 @@
 - **status-tab-row**: Lay status tabs out in one row with number keys; features-layout; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-06f1652a-43d7-4151-a079-05f7d7be7024](.artifacts/records/project__work-item/rec-06f1652a-43d7-4151-a079-05f7d7be7024.md))_
 - **stepper-wrap**: Wrap the phase stepper by pane width; features-layout; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-1e346ecd-2cb3-4c53-9142-85eb687451a4](.artifacts/records/project__work-item/rec-1e346ecd-2cb3-4c53-9142-85eb687451a4.md))_
 - **verify-layout-phase**: Integration-test the layout polish and verify the phase; features-layout; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 1 pass / 0 fail _(id: [rec-665681fe-aa56-4009-94db-91bca04cb90b](.artifacts/records/project__work-item/rec-665681fe-aa56-4009-94db-91bca04cb90b.md))_
+
+## retry-loop
+
+### Work
+- **retry-dashboard**: Show attempt n/budget on retried rows; retry-loop; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 4 pass / 1 fail _(id: [rec-21f72d1e-dcbb-49a9-ba4f-52cf0a213488](.artifacts/records/project__work-item/rec-21f72d1e-dcbb-49a9-ba4f-52cf0a213488.md))_
+- **retry-engine**: Contract attempts + retry skills and tests; retry-loop; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 1 fail _(id: [rec-8a49c9d9-9656-4756-94b2-8503fc2ca108](.artifacts/records/project__work-item/rec-8a49c9d9-9656-4756-94b2-8503fc2ca108.md))_
+- **verify-retry-loop**: Verify retry-loop; retry-loop; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 3 pass / 2 fail _(id: [rec-e552f97c-2356-4027-99c6-9451cf55804c](.artifacts/records/project__work-item/rec-e552f97c-2356-4027-99c6-9451cf55804c.md))_
 
 ## dashboard-package
 
@@ -226,6 +255,29 @@
 - **task-table-module**: Split the task table code out of app.py; dashboard-package; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 1 pass / 0 fail _(id: [rec-43489199-dd56-4be8-a238-9903276a117d](.artifacts/records/project__work-item/rec-43489199-dd56-4be8-a238-9903276a117d.md))_
 - **verify-dashboard-package**: Verify Move the dashboard code out of scripts; dashboard-package; deliver; dashboard; state: done; ready: True; wave: 4; criteria: 5 pass / 0 fail _(id: [rec-75cd523e-7383-4d8b-b045-6ea551e21cba](.artifacts/records/project__work-item/rec-75cd523e-7383-4d8b-b045-6ea551e21cba.md))_
 
+## phase-reviewer
+
+### Work
+- **reviewer-brief**: Build restricted reviewer brief; phase-reviewer; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-2b429abb-cb04-4516-98f7-a8ea37fd4b0c](.artifacts/records/project__work-item/rec-2b429abb-cb04-4516-98f7-a8ea37fd4b0c.md))_
+- **reviewer-execute**: Wire phase-end reviewer into execute-phase; phase-reviewer; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 4 pass / 3 fail _(id: [rec-546c72b0-10b9-4021-a373-07fa75aa11c6](.artifacts/records/project__work-item/rec-546c72b0-10b9-4021-a373-07fa75aa11c6.md))_
+- **se-reviewer-agent**: Ship read-only se-reviewer agent file; phase-reviewer; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-1d31adc6-6f8a-4acc-b352-4eec292a1858](.artifacts/records/project__work-item/rec-1d31adc6-6f8a-4acc-b352-4eec292a1858.md))_
+- **status-tabs-fixture**: status-tabs NEEDS_WORK / spec-gap fixture; phase-reviewer; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 1 pass / 1 fail _(id: [rec-18ccd738-2055-480d-9cda-d3bbdd47ef75](.artifacts/records/project__work-item/rec-18ccd738-2055-480d-9cda-d3bbdd47ef75.md))_
+- **verify-phase-reviewer**: Verify phase-end independent reviewer; phase-reviewer; deliver; workflow-loop; state: done; ready: True; wave: 3; criteria: 5 pass / 3 fail _(id: [rec-366155af-fa6c-46a6-ae03-dc91eb6022f5](.artifacts/records/project__work-item/rec-366155af-fa6c-46a6-ae03-dc91eb6022f5.md))_
+
+## tiered-verification
+
+### Work
+- **fix-test_dashboard_app**: Fix tier-2 failures in test_dashboard_app; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-8c44cf95-1a96-4c1f-92f2-fe979fafd1a2](.artifacts/records/project__work-item/rec-8c44cf95-1a96-4c1f-92f2-fe979fafd1a2.md))_
+- **fix-test_dashboard_journal**: Fix tier-2 failure in test_dashboard_journal; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-45e726ef-e8c7-4fb6-bde5-d1b5157d2302](.artifacts/records/project__work-item/rec-45e726ef-e8c7-4fb6-bde5-d1b5157d2302.md))_
+- **fix-test_discuss_skill**: Fix tier-2 failure in test_discuss_skill; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-93b65e63-ebd3-4419-972f-e66bc47908fc](.artifacts/records/project__work-item/rec-93b65e63-ebd3-4419-972f-e66bc47908fc.md))_
+- **fix-test_evidence_loop**: Fix tier-2 failure in test_evidence_loop; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-37a5e6f1-eaf7-4e20-ac2e-97ce645a7e3b](.artifacts/records/project__work-item/rec-37a5e6f1-eaf7-4e20-ac2e-97ce645a7e3b.md))_
+- **fix-test_plan_landing**: Fix tier-2 failure in test_plan_landing; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-24fa4c5c-c359-4082-9ee2-9f8c1e9fc999](.artifacts/records/project__work-item/rec-24fa4c5c-c359-4082-9ee2-9f8c1e9fc999.md))_
+- **fix-test_plan_wave_rules**: Fix tier-2 failure in test_plan_wave_rules; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-58876434-4aa3-4ff5-a84f-e368144119c4](.artifacts/records/project__work-item/rec-58876434-4aa3-4ff5-a84f-e368144119c4.md))_
+- **fix-test_verify_authority**: Fix tier-2 failures in test_verify_authority; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-17027986-b1b7-4220-bd75-d6498506a3fe](.artifacts/records/project__work-item/rec-17027986-b1b7-4220-bd75-d6498506a3fe.md))_
+- **tier2-dashboard**: Show tier-2 status on phase header; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-b5b0bd7d-5cdf-44b3-bbd2-11f3ccd326c4](.artifacts/records/project__work-item/rec-b5b0bd7d-5cdf-44b3-bbd2-11f3ccd326c4.md))_
+- **tier2-engine**: Background tier-2 suite, gate, and fix tasks; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 6 pass / 4 fail _(id: [rec-b378e1d0-fd4e-470b-81e7-4051ebbaf634](.artifacts/records/project__work-item/rec-b378e1d0-fd4e-470b-81e7-4051ebbaf634.md))_
+- **verify-tiered-verification**: Verify tiered verification at phase head; tiered-verification; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 4 pass / 4 fail _(id: [rec-dc6cb033-154a-4def-ba5a-abf81d109042](.artifacts/records/project__work-item/rec-dc6cb033-154a-4def-ba5a-abf81d109042.md))_
+
 ## tmux-plugin-entry
 
 ### Work
@@ -233,6 +285,16 @@
 - **tmux-conf-removal**: Move the tmux tests and sync-plugin.sh to the script and delete tmux.conf; tmux-plugin-entry; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 2 pass / 0 fail _(id: [rec-6c985f64-da0c-4112-a5ea-f0abb0e315b0](.artifacts/records/project__work-item/rec-6c985f64-da0c-4112-a5ea-f0abb0e315b0.md))_
 - **tmux-entry-script**: Write the se-workflow.tmux entry script; tmux-plugin-entry; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-37c83088-9e03-48f3-8ccf-dfb5facf3e12](.artifacts/records/project__work-item/rec-37c83088-9e03-48f3-8ccf-dfb5facf3e12.md))_
 - **verify-tmux-plugin-entry**: Verify TPM entry script and quick start; tmux-plugin-entry; deliver; dashboard; state: done; ready: True; wave: 4; criteria: 5 pass / 0 fail _(id: [rec-624555dc-a6c2-470c-8c29-08cecff29655](.artifacts/records/project__work-item/rec-624555dc-a6c2-470c-8c29-08cecff29655.md))_
+
+## dashboard-approvals
+
+### Work
+- **approval-confirm-ux**: Detail-first confirm UX and README keys; dashboard-approvals; deliver; workflow-loop; state: done; ready: True; wave: 3; criteria: 3 pass / 0 fail _(id: [rec-94f9d4a8-1ff8-4e31-95a7-2d354bfefed8](.artifacts/records/project__work-item/rec-94f9d4a8-1ff8-4e31-95a7-2d354bfefed8.md))_
+- **approval-constraints**: Supersede dashboard-read-only constraints; dashboard-approvals; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-8e8b430f-8041-4205-8ad3-a76e24723f46](.artifacts/records/project__work-item/rec-8e8b430f-8041-4205-8ad3-a76e24723f46.md))_
+- **approval-contract**: Optional note fields on gate records; dashboard-approvals; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 3 pass / 1 fail _(id: [rec-9a4b086e-3108-42f7-8320-77048d3744de](.artifacts/records/project__work-item/rec-9a4b086e-3108-42f7-8320-77048d3744de.md))_
+- **approval-dismiss**: Dismiss CLI with revision and notes; dashboard-approvals; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 2 pass / 0 fail _(id: [rec-3aabaa06-d6f4-4a09-8e86-4a26c2612071](.artifacts/records/project__work-item/rec-3aabaa06-d6f4-4a09-8e86-4a26c2612071.md))_
+- **fix-human-gate-constraint**: Clarify human-gate constraint vs backlog writes; dashboard-approvals; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-0b63919e-3372-4082-b229-a0b27783b1f4](.artifacts/records/project__work-item/rec-0b63919e-3372-4082-b229-a0b27783b1f4.md))_
+- **verify-dashboard-approvals**: Verify dashboard approvals with evidence; dashboard-approvals; deliver; workflow-loop; state: done; ready: True; wave: 4; criteria: 5 pass / 0 fail _(id: [rec-ef2fcd76-093d-4558-9cf3-752512a66c3c](.artifacts/records/project__work-item/rec-ef2fcd76-093d-4558-9cf3-752512a66c3c.md))_
 
 ## quiet-header
 
