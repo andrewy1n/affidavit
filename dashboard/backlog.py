@@ -6,7 +6,7 @@ import json
 import subprocess
 from dataclasses import dataclass
 
-from dashboard.artifact_store import Target, binary
+from dashboard.artifact_store import Target, aa_command
 from dashboard.model import BacklogItem
 
 BACKLOG_TYPE = "project:backlog-item"
@@ -41,7 +41,7 @@ def prompt(item: BacklogItem, effort: str | None = None) -> str:
 
 
 def _cli(target: Target, *args: str) -> subprocess.CompletedProcess[str]:
-    command = [binary(), *target.cli_args(), *args]
+    command = [*aa_command(), *target.cli_args(), *args]
     try:
         return subprocess.run(command, capture_output=True, text=True, timeout=30)
     except (OSError, subprocess.TimeoutExpired) as exc:

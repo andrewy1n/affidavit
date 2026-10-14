@@ -3,42 +3,20 @@
 from __future__ import annotations
 
 import json
-import os
-import shutil
 import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
 from dashboard.artifact_store import StoreBindingError, resolve
+from se_workflow.aa_resolve import resolve_aa_command
 
-
-def resolve_aa_command() -> list[str]:
-    override = os.environ.get("ADAPTIVE_ARTIFACTS_BIN")
-    if override:
-        path = Path(override)
-        if path.name.endswith(".py"):
-            return [sys.executable, str(path)]
-        return [str(path)]
-    root = os.environ.get("ADAPTIVE_ARTIFACTS_ROOT")
-    if root:
-        tools = Path(root).expanduser() / "tools" / "artifacts.py"
-        if tools.is_file():
-            return [sys.executable, str(tools)]
-    checkout = Path.home() / "adaptive-artifacts" / "bin" / "adaptive-artifacts"
-    if os.access(checkout, os.X_OK):
-        return [str(checkout)]
-    which = shutil.which("adaptive-artifacts")
-    if which:
-        return [which]
-    tools = Path.home() / "adaptive-artifacts" / "tools" / "artifacts.py"
-    if tools.is_file():
-        return [sys.executable, str(tools)]
-    raise FileNotFoundError(
-        "adaptive-artifacts not found. Install it on PATH, set "
-        "ADAPTIVE_ARTIFACTS_BIN, or set ADAPTIVE_ARTIFACTS_ROOT."
-    )
-
+__all__ = [
+    "resolve_aa_command",
+    "find_store_root",
+    "run_aa",
+    "get_record",
+    "create_record",
+]
 
 def find_store_root(start: Path) -> Path:
     """Walk up from start for a project root that resolves to a store."""

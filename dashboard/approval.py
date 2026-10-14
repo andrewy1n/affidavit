@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from dashboard.artifact_store import Target, binary
+from dashboard.artifact_store import Target, aa_command
 from dashboard.dismiss import (
     ACTION_ACCEPT,
     ACTION_APPROVE,
@@ -83,7 +83,7 @@ def _section(body: str, heading: str) -> str:
 
 
 def _cli_json(target: Target, *args: str) -> dict[str, Any]:
-    command = [binary(), *target.cli_args(), *args]
+    command = [*aa_command(), *target.cli_args(), *args]
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=30)
     except (OSError, subprocess.TimeoutExpired):

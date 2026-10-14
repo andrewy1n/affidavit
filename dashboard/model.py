@@ -11,7 +11,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from dashboard.artifact_store import Target, binary
+from dashboard.artifact_store import Target, aa_command
 
 RECENT = timedelta(hours=24)
 TASK_ORDER = ("running", "ready", "waiting", "done", "withdrawn")
@@ -170,7 +170,7 @@ def change_token(target: Target) -> str:
 
 
 def _run(target: Target, *args: str) -> dict[str, Any]:
-    command = [binary(), *target.cli_args(), *args]
+    command = [*aa_command(), *target.cli_args(), *args]
     label = " ".join(args[:3])
     try:
         result = subprocess.run(command, capture_output=True, text=True, timeout=30)

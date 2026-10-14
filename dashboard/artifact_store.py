@@ -151,11 +151,17 @@ def resolve(directory: Path, env: dict[str, str] | None = None) -> Target:
     return Target(root, None, None, None)
 
 
+def aa_command() -> list[str]:
+    """Full argv for adaptive-artifacts (shared resolve order)."""
+    from se_workflow.aa_resolve import resolve_aa_command
+
+    return resolve_aa_command()
+
+
 def binary() -> str:
-    override = os.environ.get("ADAPTIVE_ARTIFACTS_BIN")
-    if override:
-        return override
-    checkout = Path.home() / "adaptive-artifacts" / "bin" / "adaptive-artifacts"
-    if os.access(checkout, os.X_OK):
-        return str(checkout)
-    return shutil.which("adaptive-artifacts") or "adaptive-artifacts"
+    """Legacy single-token form; prefer `aa_command()` for subprocesses."""
+    try:
+        argv = aa_command()
+    except FileNotFoundError:
+        return shutil.which("adaptive-artifacts") or "adaptive-artifacts"
+    return argv[0] if len(argv) == 1 else argv[-1]
