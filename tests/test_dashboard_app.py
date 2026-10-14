@@ -3455,11 +3455,29 @@ def _seed_dismiss_human(cli, defs):
     return question, finding, check
 
 
-async def _dismiss_highlighted(app, pilot, text):
+async def _confirm_modal(app, pilot, *, note: str = "", key: str = "d"):
+    """From Needs-you detail, press ``key`` then confirm (optional note)."""
+    await pilot.press(key)
+    await _until(pilot, lambda: isinstance(app.screen, app_module.NeedsConfirmModal))
+    modal = app.screen
+    if note:
+        modal.query_one("#confirm-note").value = note
+    modal.action_confirm()
+    await pilot.pause()
+    await _wait_workers(app)
+
+
+async def _dismiss_highlighted(app, pilot, text, *, note: str = ""):
+    """Detail-first dismiss: list ``d`` opens detail, then confirm clears the item."""
     await _focus_needs(app, pilot, text)
     item_id = _item(app, text).id
+    kind = _item(app, text).kind
     await pilot.press("d")
-    await _wait_workers(app)
+    await _needs_shown(app, pilot)
+    confirm_note = note
+    if not confirm_note and kind == "needs-human":
+        confirm_note = "accept risk from pilot"
+    await _confirm_modal(app, pilot, note=confirm_note)
     await _until(pilot, lambda: all(
         item.id != item_id for view in (app.snapshot.efforts if app.snapshot else []) for item in view.needs_you
     ))
@@ -3501,8 +3519,7 @@ def test_dismiss_from_needs_you_detail_clears_a_question(store, cli, defs):
         await pilot.press("enter")
         screen = await _needs_shown(app, pilot)
         item_id = screen.item.id
-        await pilot.press("d")
-        await _wait_workers(app)
+        await _confirm_modal(app, pilot)
         await _until(pilot, lambda: not isinstance(app.screen, app_module.NeedsYouDetailScreen))
         await _until(pilot, lambda: all(
             item.id != item_id for view in app.snapshot.efforts for item in view.needs_you
@@ -3549,21 +3566,19 @@ def test_dismiss_cli_failure_keeps_item_and_shows_error(store, cli, defs, monkey
         await _until(pilot, lambda: app.query_one("#needs-you").option_count == 3)
         await _focus_needs(app, pilot, "dismiss-question")
         item_id = _item(app, "dismiss-question").id
+        # List ``d`` opens detail only — no CLI write yet.
         await pilot.press("d")
-        await pilot.pause()
+        screen = await _needs_shown(app, pilot)
         assert any(item.id == item_id for view in app.snapshot.efforts for item in view.needs_you)
         assert app.query_one("#needs-you").option_count == 3
-        assert any("failed" in note.lower() or "permission" in note.lower() or "boom" in note.lower()
-                   for note in _notices(app))
 
-        await _focus_needs(app, pilot, "dismiss-question")
-        await pilot.press("enter")
-        screen = await _needs_shown(app, pilot)
-        await pilot.press("d")
+        await _confirm_modal(app, pilot)
         await pilot.pause()
         assert isinstance(app.screen, app_module.NeedsYouDetailScreen)
         assert screen.query_one("#needs-error").display
         assert any(item.id == item_id for view in app.snapshot.efforts for item in view.needs_you)
+        assert any("failed" in note.lower() or "permission" in note.lower() or "boom" in note.lower()
+                   for note in _notices(app))
 
     _detail_run(store, (120, 40), scenario)
 
@@ -3910,3 +3925,290 @@ def test_approval_stale_revision_raises_clear_error_without_retry(monkeypatch):
     write_calls = [c for c in calls if any(part in {"update", "correct", "create"} for part in c)]
     assert len(write_calls) == 1
     assert all("@current" not in c for c in calls)
+
+
+# --- approval-confirm-ux: detail-first, confirm/cancel, actions ---
+
+def _phase_body_with_landing(defs) -> str:
+    base = h.generic_body(defs["project:phase"]) or ""
+    return (
+        base
+        + "\n\n## Approach\n\nShip approvals with evidence.\n\n"
+        + "## Landing\n\n"
+        + "- Branch: `phase/dashboard-approvals`\n"
+        + "- Worktree: `/tmp/se-workflow--dashboard-approvals`\n"
+        + "- Base: `main`\n"
+    )
+
+
+def _finding_body(defs) -> str:
+    base = h.generic_body(defs["project:finding"]) or ""
+    return (
+        base
+        + "\n\n## Evidence\n\nManual review found residual risk.\n\n"
+        + "## Consequence\n\nDispatch stays blocked until accept-risk.\n"
+    )
+
+
+def _seed_approval_plan_review(cli, defs):
+    h.create_generic_record(
+        cli, defs, "project:active-goal", subject="alpha",
+        extra_payload={"goal": "ship approvals", "kind": "deliver"},
+    )
+    phase = _record(
+        cli, defs, "project:phase", "appr-phase",
+        {"title": "Approvals", "ordinal": 1, "effort": "alpha"},
+        _phase_body_with_landing(defs),
+    )
+    h.transition(cli, "project:phase", phase, "in_progress")
+    _work_item(cli, defs, "alpha", "appr-task", "appr-phase")
+    question = _record(
+        cli, defs, "project:continuity-question", "alpha",
+        {"subject": "alpha", "owner": "ayin", "blocking": True, "scope": "plan-review:appr-phase"},
+    )
+    return question
+
+
+def _seed_approval_human_gates(cli, defs):
+    h.create_generic_record(
+        cli, defs, "project:active-goal", subject="alpha",
+        extra_payload={"goal": "ship approvals", "kind": "deliver"},
+    )
+    phase = _record(
+        cli, defs, "project:phase", "appr-phase",
+        {"title": "Approvals", "ordinal": 1, "effort": "alpha"},
+        _phase_body_with_landing(defs),
+    )
+    h.transition(cli, "project:phase", phase, "in_progress")
+    question = _record(
+        cli, defs, "project:continuity-question", "alpha",
+        {"subject": "alpha", "owner": "ayin", "blocking": True, "scope": "plan-review:appr-phase"},
+    )
+    finding = _record(
+        cli, defs, "project:finding", "appr-finding",
+        {
+            "claim": "residual risk", "basis": "unsigned edge", "needs": "human",
+            "effort": "alpha", "invalidated_when": "accepted",
+        },
+        _finding_body(defs),
+    )
+    acceptance = _record(
+        cli, defs, "project:acceptance", "appr-task",
+        {
+            "criterion": "pages render", "method": "manual", "verify_command": "",
+            "effort": "alpha", "phase": "appr-phase",
+        },
+    )
+    check = _record(
+        cli, defs, "project:check-run", "appr-check",
+        {
+            "criterion_id": acceptance["id"], "method": "manual", "result": "pass",
+            "signed_by": "", "revision": "abc1234deadbeef", "effort": "alpha",
+        },
+        "## Output\n\nmanual check body",
+    )
+    return question, finding, check
+
+
+def _write_calls(calls):
+    return [
+        c for c in calls
+        if any(part in {"update", "correct", "create", "supersede"} for part in c)
+    ]
+
+
+def test_approval_detail_first_d_opens_detail_without_cli_write(store, cli, defs, monkeypatch):
+    stamped_store(store, "approval-detail-first", lambda root, c, d: _seed_approval_human_gates(c, d))
+    calls: list[list[str]] = []
+    real = app_module.dismiss_module.subprocess.run
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        return real(cmd, **kwargs)
+
+    monkeypatch.setattr(app_module.dismiss_module.subprocess, "run", fake_run)
+
+    async def scenario(app, pilot):
+        await _until(pilot, lambda: app.query_one("#needs-you").option_count >= 1)
+        await _focus_needs(app, pilot, "plan-review:appr-phase")
+        before = len(_write_calls(calls))
+        await pilot.press("d")
+        screen = await _needs_shown(app, pilot)
+        assert screen.item.kind == "blocking-question"
+        assert len(_write_calls(calls)) == before
+        # Evidence panel includes plan body for plan-review.
+        evidence = screen.query_one("#needs-evidence Markdown").source
+        assert "Approach" in evidence or "Landing" in evidence or "Ship approvals" in evidence
+
+    _detail_run(store, (120, 40), scenario)
+
+
+def test_approval_confirm_writes_after_detail_and_cancel_makes_no_cli_call(
+    store, cli, defs, monkeypatch,
+):
+    stamped_store(store, "approval-confirm-cancel", lambda root, c, d: _seed_approval_human_gates(c, d))
+    calls: list[list[str]] = []
+    real = app_module.dismiss_module.subprocess.run
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        return real(cmd, **kwargs)
+
+    monkeypatch.setattr(app_module.dismiss_module.subprocess, "run", fake_run)
+
+    async def scenario(app, pilot):
+        await _until(pilot, lambda: app.query_one("#needs-you").option_count >= 3)
+        await _focus_needs(app, pilot, "plan-review:appr-phase")
+        await pilot.press("d")
+        await _needs_shown(app, pilot)
+        before = len(_write_calls(calls))
+        await pilot.press("d")
+        await _until(pilot, lambda: isinstance(app.screen, app_module.NeedsConfirmModal))
+        await pilot.press("escape")
+        await pilot.pause()
+        assert isinstance(app.screen, app_module.NeedsYouDetailScreen)
+        assert len(_write_calls(calls)) == before
+
+        item_id = app.screen.item.id
+        await _confirm_modal(app, pilot, note="approved in pilot")
+        await _until(pilot, lambda: all(
+            item.id != item_id for view in app.snapshot.efforts for item in view.needs_you
+        ))
+        writes = _write_calls(calls)
+        assert writes
+        assert any("update" in c and "--expected-revision" in c for c in writes)
+        assert all("@current" not in c for c in writes)
+
+    _detail_run(store, (120, 40), scenario)
+
+
+def test_approval_approve_plan_review_answers_with_note(store, cli, defs, monkeypatch):
+    monkeypatch.setenv("SE_WORKFLOW_SIGNED_BY", "pilot-signer")
+    stamped_store(store, "approval-approve", lambda root, c, d: _seed_approval_plan_review(c, d))
+
+    async def scenario(app, pilot):
+        await _until(pilot, lambda: app.query_one("#needs-you").option_count >= 1)
+        await _focus_needs(app, pilot, "plan-review:appr-phase")
+        await pilot.press("d")
+        await _needs_shown(app, pilot)
+        item_id = app.screen.item.id
+        await _confirm_modal(app, pilot, note="ship it", key="a")
+        await _until(pilot, lambda: all(
+            item.id != item_id for view in app.snapshot.efforts for item in view.needs_you
+        ))
+        assert "plan-review:appr-phase" not in _needs_text(app)
+
+    _detail_run(store, (120, 40), scenario)
+
+
+def test_approval_reject_requires_note_and_keeps_question_open(store, cli, defs):
+    stamped_store(store, "approval-reject", lambda root, c, d: _seed_approval_plan_review(c, d))
+
+    async def scenario(app, pilot):
+        await _until(pilot, lambda: app.query_one("#needs-you").option_count >= 1)
+        await _focus_needs(app, pilot, "plan-review:appr-phase")
+        await pilot.press("d")
+        await _needs_shown(app, pilot)
+        question_id = app.screen.item.id
+        await pilot.press("x")
+        await _until(pilot, lambda: isinstance(app.screen, app_module.NeedsConfirmModal))
+        # Empty note refused for Reject.
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, app_module.NeedsConfirmModal)
+        assert app.screen.query_one("#confirm-error").display
+
+        app.screen.query_one("#confirm-note").value = "rework approach"
+        await pilot.press("enter")
+        await _wait_workers(app)
+        await _wait_workers(app)
+        # Continuity-question remains; routing finding appears after refresh.
+        app.reload()
+        await _wait_workers(app)
+        await _until(pilot, lambda: any(
+            item.id == question_id for view in app.snapshot.efforts for item in view.needs_you
+        ))
+        await _until(pilot, lambda: any(
+            item.kind == "needs-human"
+            for view in app.snapshot.efforts for item in view.needs_you
+        ))
+        assert any(item.id == question_id for view in app.snapshot.efforts for item in view.needs_you)
+
+    _detail_run(store, (120, 40), scenario)
+
+
+def test_approval_sign_unsigned_check_via_confirm(store, cli, defs, monkeypatch):
+    monkeypatch.setenv("SE_WORKFLOW_SIGNED_BY", "pilot-signer")
+    stamped_store(store, "approval-sign", lambda root, c, d: _seed_approval_human_gates(c, d))
+
+    async def scenario(app, pilot):
+        await _until(pilot, lambda: app.query_one("#needs-you").option_count >= 3)
+        await _focus_needs(app, pilot, "pages render pass")
+        await pilot.press("d")
+        screen = await _needs_shown(app, pilot)
+        assert screen.item.kind == "unsigned-check"
+        evidence = screen.query_one("#needs-evidence Markdown").source
+        assert "Acceptance" in evidence or "pages render" in evidence
+        assert "Revision" in evidence or "HEAD" in evidence
+        item_id = screen.item.id
+        await _confirm_modal(app, pilot, note="signed ok", key="s")
+        await _until(pilot, lambda: all(
+            item.id != item_id for view in app.snapshot.efforts for item in view.needs_you
+        ))
+
+    _detail_run(store, (120, 40), scenario)
+
+
+def test_approval_accept_risk_requires_note(store, cli, defs):
+    stamped_store(store, "approval-accept", lambda root, c, d: _seed_approval_human_gates(c, d))
+
+    async def scenario(app, pilot):
+        await _until(pilot, lambda: app.query_one("#needs-you").option_count >= 3)
+        await _focus_needs(app, pilot, "residual risk")
+        await pilot.press("d")
+        screen = await _needs_shown(app, pilot)
+        assert screen.item.kind == "needs-human"
+        evidence = screen.query_one("#needs-evidence Markdown").source
+        assert "Claim" in evidence or "residual risk" in evidence
+        assert "Basis" in evidence or "Evidence" in evidence
+        item_id = screen.item.id
+        await pilot.press("a")
+        await _until(pilot, lambda: isinstance(app.screen, app_module.NeedsConfirmModal))
+        await pilot.press("enter")
+        await pilot.pause()
+        assert isinstance(app.screen, app_module.NeedsConfirmModal)
+        app.screen.query_one("#confirm-note").value = "accepted residual"
+        await pilot.press("enter")
+        await _wait_workers(app)
+        await _until(pilot, lambda: all(
+            item.id != item_id for view in app.snapshot.efforts for item in view.needs_you
+        ))
+
+    _detail_run(store, (120, 40), scenario)
+
+
+def test_approval_stale_confirm_shows_changed_message_and_refreshes(store, cli, defs, monkeypatch):
+    stamped_store(store, "approval-stale-ui", lambda root, c, d: _seed_approval_plan_review(c, d))
+
+    def boom(target, item, **kwargs):
+        raise app_module.dismiss_module.DismissError(app_module.dismiss_module.STALE_MESSAGE)
+
+    monkeypatch.setattr(app_module.dismiss_module, "dismiss_item", boom)
+
+    async def scenario(app, pilot):
+        await _until(pilot, lambda: app.query_one("#needs-you").option_count >= 1)
+        await _focus_needs(app, pilot, "plan-review:appr-phase")
+        await pilot.press("d")
+        screen = await _needs_shown(app, pilot)
+        item_id = screen.item.id
+        await _confirm_modal(app, pilot, note="too late")
+        await pilot.pause()
+        assert isinstance(app.screen, app_module.NeedsYouDetailScreen)
+        assert screen.query_one("#needs-error").display
+        banner = str(screen.query_one("#needs-error").render())
+        assert "changed since opened" in banner.lower() or "stale" in banner.lower()
+        assert any(item.id == item_id for view in app.snapshot.efforts for item in view.needs_you)
+        assert any("changed since opened" in note.lower() or "stale" in note.lower()
+                   for note in _notices(app))
+
+    _detail_run(store, (120, 40), scenario)

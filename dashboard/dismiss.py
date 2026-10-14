@@ -103,7 +103,8 @@ def _displayed_revision(item: NeedsYouItem) -> str:
     return revision
 
 
-def _default_action(kind: str) -> str:
+def default_action(kind: str) -> str:
+    """Primary confirm action for a human-dismissible Needs-you kind."""
     if kind in ("blocking-question", "open-question"):
         return ACTION_APPROVE
     if kind == "needs-human":
@@ -112,7 +113,7 @@ def _default_action(kind: str) -> str:
 
 
 def _resolve_action(item: NeedsYouItem, action: str | None) -> str:
-    resolved = (action or _default_action(item.kind)).strip().lower()
+    resolved = (action or default_action(item.kind)).strip().lower()
     if item.kind in ("blocking-question", "open-question"):
         if resolved not in (ACTION_APPROVE, ACTION_REJECT):
             raise DismissError(f"unsupported action {resolved!r} for {item.kind}")

@@ -10,6 +10,7 @@ import time
 from datetime import datetime, timezone
 from pathlib import Path
 
+from dashboard import approval as approval_module
 from dashboard import artifact_store
 from dashboard import backlog as backlog_module
 from dashboard import dismiss as dismiss_module
@@ -36,10 +37,10 @@ from textual.binding import Binding
 from textual.app import App, ComposeResult
 from textual.containers import Container, Horizontal, Vertical, VerticalScroll
 from textual.css.query import NoMatches
-from textual.screen import Screen
+from textual.screen import ModalScreen, Screen
 from textual.widgets._tabbed_content import ContentTabs
 from textual.widgets import (
-    DataTable, Footer, Input, Markdown, OptionList, ProgressBar, Static, TabbedContent, TabPane,
+    DataTable, Footer, Input, Label, Markdown, OptionList, ProgressBar, Static, TabbedContent, TabPane,
 )
 from textual.widgets.option_list import Option
 
@@ -478,10 +479,67 @@ class FilterInput(Input):
         self.app.clear_filter()
 
 
+class NeedsConfirmModal(ModalScreen[tuple[str, str] | None]):
+    """Confirm a human-gate action with an optional/required one-line note.
+
+    Returns ``(action, note)`` on confirm, or ``None`` on cancel.
+    """
+
+    CSS = """
+    NeedsConfirmModal { align: center middle; }
+    #confirm-dialog {
+        width: 64; height: auto; max-height: 20;
+        border: thick $primary; background: $surface; padding: 1 2;
+    }
+    #confirm-title { text-style: bold; margin-bottom: 1; }
+    #confirm-hint { color: $text-muted; margin-bottom: 1; }
+    #confirm-error { color: $error; display: none; margin-bottom: 1; }
+    #confirm-note { margin-bottom: 1; }
+    """
+    BINDINGS = [
+        Binding("escape", "cancel", "Cancel", show=True),
+        Binding("enter", "confirm", "Confirm", show=True),
+    ]
+
+    def __init__(self, action: str, *, note_required: bool) -> None:
+        super().__init__()
+        self.action = action
+        self.note_required = note_required
+        self.label = approval_module.action_label(action)
+
+    def compose(self) -> ComposeResult:
+        required = "required" if self.note_required else "optional"
+        with Vertical(id="confirm-dialog"):
+            yield Label(f"{self.label} this Needs-you item?", id="confirm-title")
+            yield Label(f"Enter confirms · Esc cancels · note {required}", id="confirm-hint")
+            yield Label("", id="confirm-error")
+            yield Input(placeholder="one-line note", id="confirm-note")
+            yield Footer()
+
+    def on_mount(self) -> None:
+        self.query_one("#confirm-note", Input).focus()
+
+    def on_input_submitted(self, event: Input.Submitted) -> None:
+        event.stop()
+        self.action_confirm()
+
+    def action_cancel(self) -> None:
+        self.dismiss(None)
+
+    def action_confirm(self) -> None:
+        note = self.query_one("#confirm-note", Input).value.strip()
+        if self.note_required and not note:
+            err = self.query_one("#confirm-error", Label)
+            err.update("Note required for this action")
+            err.display = True
+            return
+        self.dismiss((self.action, note))
+
+
 class NeedsList(OptionList):
     BINDINGS = [
         Binding("escape", "app.leave_needs", "back", show=False),
-        Binding("d", "app.dismiss_needs", "dismiss"),
+        Binding("d", "app.dismiss_needs", "detail / confirm"),
         Binding("j", "cursor_down", "down", show=False),
         Binding("k", "cursor_up", "up", show=False),
     ]
@@ -611,7 +669,10 @@ class NeedsYouDetailScreen(Screen[None]):
     AUTO_FOCUS = "#needs-detail"
     BINDINGS = [
         Binding("escape", "back", "back"),
-        Binding("d", "app.dismiss_needs", "dismiss"),
+        Binding("a", "app.needs_approve", "Approve / Accept risk"),
+        Binding("x", "app.needs_reject", "Reject"),
+        Binding("s", "app.needs_sign", "Sign"),
+        Binding("d", "app.dismiss_needs", "confirm primary"),
         Binding("c", "app.copy_slug", "copy prompt"),
         Binding("r", "app.refresh", "refresh"),
     ]
@@ -632,6 +693,10 @@ class NeedsYouDetailScreen(Screen[None]):
             body = Vertical(Markdown(), id="needs-body", classes="needs-panel")
             body.border_title = "Body"
             yield body
+            evidence = Vertical(Markdown(), id="needs-evidence", classes="needs-panel")
+            evidence.border_title = "Evidence"
+            evidence.display = False
+            yield evidence
         yield Footer()
 
     async def on_mount(self) -> None:
@@ -677,6 +742,18 @@ class NeedsYouDetailScreen(Screen[None]):
         await self.query_one("#needs-text Markdown", Markdown).update(item.text)
         self.query_one("#needs-body").display = bool(item.body.strip())
         await self.query_one("#needs-body Markdown", Markdown).update(item.body.strip())
+        panels = approval_module.evidence_panels(
+            self.app.target, item, root=self.app.target.root, view=view,
+        )
+        evidence = self.query_one("#needs-evidence")
+        if panels:
+            title, markdown = panels[0]
+            evidence.border_title = title
+            evidence.display = True
+            await self.query_one("#needs-evidence Markdown", Markdown).update(markdown)
+        else:
+            evidence.display = False
+            await self.query_one("#needs-evidence Markdown", Markdown).update("")
         self.loaded = True
 
 
@@ -1152,28 +1229,104 @@ class DashboardApp(App[None]):
             return self.focused.highlighted_item()
         return None
 
-    def action_dismiss_needs(self) -> None:
-        item = self._needs_dismiss_item()
-        if item is None:
+    def _open_needs_detail(self, item: model.NeedsYouItem) -> None:
+        if isinstance(self.screen, NeedsYouDetailScreen):
             return
-        if not dismiss_module.is_dismissible(item.kind):
-            message = f"Cannot dismiss {item.kind}"
-            self._surface_dismiss_error(message)
+        effort = item.subject
+        if isinstance(self.focused, NeedsList):
+            pane = self.focused.query_ancestor(EffortPane)
+            if pane is not None:
+                effort = pane.effort
+        self.push_screen(NeedsYouDetailScreen(item, effort))
+
+    def _open_needs_confirm(self, item: model.NeedsYouItem, action: str) -> None:
+        if not isinstance(self.screen, NeedsYouDetailScreen):
+            self._open_needs_detail(item)
             return
+        allowed = {choice.action for choice in approval_module.confirm_choices(item)}
+        if action not in allowed:
+            self._surface_dismiss_error(f"Cannot {approval_module.action_label(action)} {item.kind}")
+            return
+
+        def on_result(result: tuple[str, str] | None) -> None:
+            if result is None:
+                return
+            confirmed_action, note = result
+            self._apply_needs_confirm(item, confirmed_action, note)
+
+        self.push_screen(
+            NeedsConfirmModal(
+                action, note_required=approval_module.note_required_for(action),
+            ),
+            on_result,
+        )
+
+    def _apply_needs_confirm(self, item: model.NeedsYouItem, action: str, note: str) -> None:
+        # Prefer the item currently shown on the detail screen (displayed revision).
+        screen = self.screen
+        if isinstance(screen, NeedsYouDetailScreen) and screen.item.id == item.id:
+            item = screen.item
         try:
-            dismiss_module.dismiss_item(self.target, item)
+            dismiss_module.dismiss_item(
+                self.target, item, action=action, note=note or None,
+            )
         except dismiss_module.DismissError as exc:
-            self._surface_dismiss_error(str(exc))
+            message = str(exc)
+            self._surface_dismiss_error(message)
+            if dismiss_module.STALE_MESSAGE in message or "changed since opened" in message.lower():
+                self.reload()
             return
         self.reload()
         if isinstance(self.screen, NeedsYouDetailScreen):
             self.pop_screen()
             self.call_after_refresh(self.refocus)
 
+    def action_dismiss_needs(self) -> None:
+        """List ``d`` opens detail (no write). Detail ``d`` opens confirm for the primary action."""
+        item = self._needs_dismiss_item()
+        if item is None:
+            return
+        if not dismiss_module.is_dismissible(item.kind):
+            self._surface_dismiss_error(f"Cannot dismiss {item.kind}")
+            return
+        if not isinstance(self.screen, NeedsYouDetailScreen):
+            self._open_needs_detail(item)
+            return
+        self._open_needs_confirm(item, dismiss_module.default_action(item.kind))
+
+    def action_needs_approve(self) -> None:
+        item = self._needs_dismiss_item()
+        if item is None or not isinstance(self.screen, NeedsYouDetailScreen):
+            return
+        if item.kind == "needs-human":
+            self._open_needs_confirm(item, dismiss_module.ACTION_ACCEPT)
+            return
+        if item.kind in ("blocking-question", "open-question"):
+            self._open_needs_confirm(item, dismiss_module.ACTION_APPROVE)
+
+    def action_needs_reject(self) -> None:
+        item = self._needs_dismiss_item()
+        if item is None or not isinstance(self.screen, NeedsYouDetailScreen):
+            return
+        if item.kind in ("blocking-question", "open-question"):
+            self._open_needs_confirm(item, dismiss_module.ACTION_REJECT)
+
+    def action_needs_sign(self) -> None:
+        item = self._needs_dismiss_item()
+        if item is None or not isinstance(self.screen, NeedsYouDetailScreen):
+            return
+        if item.kind == "unsigned-check":
+            self._open_needs_confirm(item, dismiss_module.ACTION_SIGN)
+
     def _surface_dismiss_error(self, message: str) -> None:
         screen = self.screen
         if isinstance(screen, NeedsYouDetailScreen):
             screen.show_dismiss_error(message)
+        elif isinstance(screen, NeedsConfirmModal):
+            # Pop modal so the detail banner is visible.
+            self.pop_screen()
+            if isinstance(self.screen, NeedsYouDetailScreen):
+                self.screen.show_dismiss_error(message)
         self.notify(message, severity="error", timeout=4)
 
     def _backlog_action_item(self) -> model.BacklogItem | None:

@@ -26,12 +26,17 @@ class _LandingState(Protocol):
     merged: bool
 
 
-def _plan_review_slug(item: NeedsYouItem) -> str | None:
+def plan_review_slug(item: NeedsYouItem) -> str | None:
+    """Phase slug when the question scope is ``plan-review:<slug>``."""
     if item.kind not in ("blocking-question", "open-question"):
         return None
     if not item.text.startswith(PLAN_REVIEW_PREFIX):
         return None
     return item.text[len(PLAN_REVIEW_PREFIX):]
+
+
+# Compat alias for older call sites / tests.
+_plan_review_slug = plan_review_slug
 
 
 def _phase_title(view: EffortView, slug: str) -> str:

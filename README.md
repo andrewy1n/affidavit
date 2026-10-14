@@ -342,7 +342,10 @@ It needs `uv`. The first run downloads `textual`.
 | `p` | Open the phase detail (stage strip, specification, requirements, body, decisions, constraints, tasks) for the selected row |
 | `n` | Focus the Needs you list; arrows or `j` / `k` move, `esc` returns to the task table |
 | `enter` on a Needs you item | Open the requirement detail for a route, the task detail when the item has a task, else the Needs you detail (kind, record type, full text, body) |
-| `d` on a Needs you item | Dismiss a human gate (question, needs:human finding, or unsigned manual check) via `adaptive-artifacts`; refused for merge/integration/route items |
+| `d` on a Needs you item | Open the Needs you detail for a human gate (question, needs:human finding, or unsigned manual check) — no store write; refused for merge/integration/route items |
+| Needs you detail evidence | Kind-specific panels: plan-review shows phase approach/tasks/Landing/run facts; manual check shows acceptance, check body, and revision vs HEAD; finding shows claim, basis, Evidence/Consequence |
+| `a` / `x` / `s` / `d` in Needs you detail | Open a confirm modal: Approve (`a`) or Reject (`x`) for questions/plan-review; Sign (`s`) for unsigned checks; Accept risk (`a`) for findings; `d` confirms the primary action. Cancel (Esc) makes no CLI call |
+| Confirm note | One-line note required for Reject and Accept risk; optional for Approve and Sign. Writes use the displayed record revision (never `@current`); stale revision refreshes and shows that the item changed since opened |
 | `enter` on a phase-detail requirement | Open the requirement detail |
 | `/` | Filter tasks by title or subject; `enter` keeps it, `esc` clears it |
 | `1`-`6` / `left` / `right` / click | Pick a status tab; the filter applies on top |
