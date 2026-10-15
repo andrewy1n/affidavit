@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:5b36935b640bf157edf7eddb2b666bb763c1c8cb7efe32387d9909d9e7ae01a5
+> Store state: sha256:f1458ad263e5e620d5f5fa8eb3bf4af6509df100884db99ea6aa81a300ed4e7e
 
 ## dashboard
 
@@ -11,17 +11,18 @@
 ### Position
 - **dashboard**: store-binding done; repo pinned local via store-binding.json; effort _(id: [rec-2956e86d-f425-45d9-9415-1ebec4be7272](.artifacts/records/project__current-position/rec-2956e86d-f425-45d9-9415-1ebec4be7272.md))_
 
+### Backlog
+- **journal-detail-xdist-flake**: dashboard; open _(id: [rec-3d8b654b-bf85-4203-9fe8-f0aeeead64f4](.artifacts/records/project__backlog-item/rec-3d8b654b-bf85-4203-9fe8-f0aeeead64f4.md))_
+
 ## packaging
 
 ### Goal
 - **packaging**: se-workflow and adaptive-artifacts install as versioned plugins with declared dependencies, stable plugin-root paths, a single CLI surface for skills, and compatible version checks; effort; deliver _(id: [rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc](.artifacts/records/project__active-goal/rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc.md))_
 
 ### Position
-- **packaging**: plugin-dep-marketplace done; backlog remains (plugin-root-paths, rename, versions, …); effort _(id: [rec-1e135d18-12a8-4a7e-b7ba-146c9fd01e57](.artifacts/records/project__current-position/rec-1e135d18-12a8-4a7e-b7ba-146c9fd01e57.md))_
+- **packaging**: plugin-root-and-cli done; next up: discuss/plan next packaging backlog item; effort _(id: [rec-996e9262-d73c-4208-94fe-2383af4e1a19](.artifacts/records/project__current-position/rec-996e9262-d73c-4208-94fe-2383af4e1a19.md))_
 
 ### Backlog
-- **close-batch-subcommand**: packaging; open _(id: [rec-7fd510b5-a37a-419f-b45f-453807923fcc](.artifacts/records/project__backlog-item/rec-7fd510b5-a37a-419f-b45f-453807923fcc.md))_
-- **plugin-root-paths**: packaging; open _(id: [rec-27f88ac4-58dd-47b7-9c00-92acdd63716f](.artifacts/records/project__backlog-item/rec-27f88ac4-58dd-47b7-9c00-92acdd63716f.md))_
 - **pyproject-pypi**: packaging; open _(id: [rec-9a7a3a13-44fc-42bc-9336-9c96b1a217fb](.artifacts/records/project__backlog-item/rec-9a7a3a13-44fc-42bc-9336-9c96b1a217fb.md))_
 - **rename-agent-affidavit**: packaging; open _(id: [rec-9c53ebd4-7f22-4b79-b5fe-53ae50044f55](.artifacts/records/project__backlog-item/rec-9c53ebd4-7f22-4b79-b5fe-53ae50044f55.md))_
 - **version-compat-check**: packaging; open _(id: [rec-ee7c1916-1baa-47a7-b7b2-31974bf0339a](.artifacts/records/project__backlog-item/rec-ee7c1916-1baa-47a7-b7b2-31974bf0339a.md))_

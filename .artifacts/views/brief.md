@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:efdeb0cafdb7e3ae50fc597231713262e3cec081d0fc6d95d7cb656d64f3f203
+> Store state: sha256:ed8b5c45054b30837473cdb822f98bed8596519f8ca120619401a3cd1d8da685
 
 ## activity-failures
 
@@ -168,6 +168,11 @@
 
 ### Acceptance
 - **claude-shared-marketplace-readme**: README Claude install uses a single marketplace add for se-workflow; Cursor subsection does not claim dependency auto-install; check; packaging; grep -q 'claude plugin marketplace add andrewy1n/se-workflow' README.md && grep -qi Cursor README.md && ! grep -qiE 'Cursor.*(auto-?install|plugin dependenc).*adaptive-artifacts' README.md _(id: [rec-49384b6f-6de8-4e22-b43c-f27f3e8f06ad](.artifacts/records/project__acceptance/rec-49384b6f-6de8-4e22-b43c-f27f3e8f06ad.md))_
+
+## close-batch-cli
+
+### Acceptance
+- **close-batch-cli**: bin/se-workflow close-batch builds NDJSON batches and preserves red-first refusal exit codes through the CLI entry; tdd; packaging; uv run --with pytest python -m pytest tests/test_close_batch.py -q _(id: [rec-45b51bb0-0c79-4f85-9120-374742d1d297](.artifacts/records/project__acceptance/rec-45b51bb0-0c79-4f85-9120-374742d1d297.md))_
 
 ## close-red-first
 
@@ -572,6 +577,11 @@
 ### Acceptance
 - **fix-human-gate-constraint**: Active dashboard-human-gate-writes names Needs-you human gates and preserves backlog promote/dismiss as allowed (or clarifies exclusivity without contradicting Non-goals); old never-writes subjects stay retired; check; workflow-loop; /home/andrewyin/adaptive-artifacts/bin/adaptive-artifacts --store /home/andrewyin/se-workflow/.artifacts list --type project:constraint --state active | python3 -c "import sys,json; d=json.load(sys.stdin); stmts=[(r['subject'], (r.get('payload') or {}).get('statement') or '') for r in d['records']]; hg=[t for s,t in stmts if s=='dashboard-human-gate-writes']; assert hg; t=hg[0].lower(); assert 'needs-you' in t or 'human' in t; assert 'backlog' in t and (('promote' in t) or ('dismiss' in t)); old={'dashboard-read-only','dashboard-read-only-dashboard-bugfix','dashboard-read-only-dashboard-features'}; assert not any('never writes' in x.lower() for s,x in stmts if s in old)" _(id: [rec-7cd14081-b40c-4643-9c77-8ead22c68483](.artifacts/records/project__acceptance/rec-7cd14081-b40c-4643-9c77-8ead22c68483.md))_
 
+## fix-journal-pager-timeout
+
+### Acceptance
+- **fix-journal-pager-timeout**: test_journal_detail_pager_pages_record_with_stub passes with raised pilot timeout; tdd; packaging; uv run --with textual --with pytest python -m pytest tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub -q _(id: [rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff](.artifacts/records/project__acceptance/rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff.md))_
+
 ## fix-test_dashboard_app
 
 ### Acceptance
@@ -606,6 +616,11 @@
 
 ### Acceptance
 - **fix-test_verify_authority**: Cleared: test_skill_close_request_references_check_run_id_for_runner_methods; test_close_batch_does_not_emit_check_run_create_for_runner_methods; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_authority.py -q -k 'skill_close_request_references_check_run_id or close_batch_does_not_emit_check_run_create' _(id: [rec-e09c9aac-f876-43da-9856-41ed79b75404](.artifacts/records/project__acceptance/rec-e09c9aac-f876-43da-9856-41ed79b75404.md))_
+
+## fix-verify-authority-close-batch-import
+
+### Acceptance
+- **fix-verify-authority-close-batch-import**: tests/test_verify_authority.py collects and passes without scripts/close_batch import; tdd; packaging; uv run --with pytest python -m pytest tests/test_verify_authority.py -q _(id: [rec-a33322af-14f2-44fd-a072-5bc4073fa8a2](.artifacts/records/project__acceptance/rec-a33322af-14f2-44fd-a072-5bc4073fa8a2.md))_
 
 ## gates-landing
 
@@ -837,7 +852,7 @@ print("phase checks only")
 ## packaging
 
 ### Position
-- **packaging**: plugin-dep-marketplace done; backlog remains (plugin-root-paths, rename, versions, …); effort _(id: [rec-1e135d18-12a8-4a7e-b7ba-146c9fd01e57](.artifacts/records/project__current-position/rec-1e135d18-12a8-4a7e-b7ba-146c9fd01e57.md))_
+- **packaging**: plugin-root-and-cli done; next up: discuss/plan next packaging backlog item; effort _(id: [rec-996e9262-d73c-4208-94fe-2383af4e1a19](.artifacts/records/project__current-position/rec-996e9262-d73c-4208-94fe-2383af4e1a19.md))_
 
 ## pane-width-stable
 
@@ -1102,6 +1117,11 @@ print("phase checks only")
 ### Position
 - **session-analysis**: All four phases done. Run the analyze-sessions skill to review sessions. Code and skill are uncommitted. Two findings are open: the join is approximate, and the skill has minor judgment gaps.; repo _(id: [rec-428082e4-c07e-4c73-81c0-ffcb6c5e876c](.artifacts/records/project__current-position/rec-428082e4-c07e-4c73-81c0-ffcb6c5e876c.md))_
 
+## shared-aa-resolver
+
+### Acceptance
+- **shared-aa-resolver**: Shared resolver follows env → plugin-root/sibling → PATH; home checkout is not a quiet primary fallback; both aa.py and dashboard.artifact_store use it; tdd; packaging; uv run --with pytest python -m pytest tests/test_aa_resolve.py -q _(id: [rec-15f765d5-4785-4b60-8e28-1e0c176acff4](.artifacts/records/project__acceptance/rec-15f765d5-4785-4b60-8e28-1e0c176acff4.md))_
+
 ## skill-needs-clear
 
 ### Acceptance
@@ -1122,6 +1142,21 @@ print("phase checks only")
 
 ### Acceptance
 - **skill-needs-clear-opens**: discuss, plan-phase, verify-work, and execute-phase document the clear command next to each human-gate they open; check; workflow-loop; uv run --with pytest python -m pytest tests/test_discuss_skill.py tests/test_skill_contract_consistency.py -q _(id: [rec-e154ee7d-d057-4d26-bd3e-9962592157f0](.artifacts/records/project__acceptance/rec-e154ee7d-d057-4d26-bd3e-9962592157f0.md))_
+
+## skill-plugin-paths
+
+### Acceptance
+- **skill-plugin-paths**: ensure-store documents CLAUDE_PLUGIN_ROOT and CURSOR_PLUGIN_ROOT; Plugin root section does not hardcode ~/.cursor/plugins/local/se-workflow as a numbered step; check; packaging; grep -q CLAUDE_PLUGIN_ROOT skills/ensure-store.md && grep -q CURSOR_PLUGIN_ROOT skills/ensure-store.md && ! grep -E '^[0-9]+\. .*\.cursor/plugins/local/se-workflow' skills/ensure-store.md _(id: [rec-1dc4bf40-0968-4e85-845f-c345a81a9768](.artifacts/records/project__acceptance/rec-1dc4bf40-0968-4e85-845f-c345a81a9768.md))_
+
+## skill-plugin-paths-close
+
+### Acceptance
+- **skill-plugin-paths-close**: verify-work documents se-workflow close-batch and does not call scripts/close_batch.py; check; packaging; grep -qE "se-workflow close-batch|bin/se-workflow close-batch" skills/verify-work/SKILL.md && ! grep -q scripts/close_batch.py skills/verify-work/SKILL.md _(id: [rec-05718b54-2ff0-42df-9d90-5563f4509289](.artifacts/records/project__acceptance/rec-05718b54-2ff0-42df-9d90-5563f4509289.md))_
+
+## skill-plugin-paths-contract
+
+### Acceptance
+- **skill-plugin-paths-contract**: skill/contract consistency passes after skill edits; check; packaging; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-3b720bda-fcdb-4cab-9cb2-e965636a73b0](.artifacts/records/project__acceptance/rec-3b720bda-fcdb-4cab-9cb2-e965636a73b0.md))_
 
 ## skills-backlog
 
@@ -1302,6 +1337,16 @@ print("phase checks only")
 
 ### Acceptance
 - **tier2-engine-scoped**: Skills/README/test_verify_budget keep per-task verification scoped (no whole-suite per-task verify_command) while documenting the required phase-level tier-2 full run; skill↔contract consistency stays green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_budget.py tests/test_skill_contract_consistency.py -q _(id: [rec-97b46204-7027-47b9-bf84-e4b585da8849](.artifacts/records/project__acceptance/rec-97b46204-7027-47b9-bf84-e4b585da8849.md))_
+
+## tier2-journal-pager-flake
+
+### Finding
+- **tier2-journal-pager-flake**: test_journal_detail_pager_pages_record_with_stub timed out under tier-2 parallel load; tier-2 at 3379fcf still fails same test after 40s timeout; screen never loads under xdist; test passes stably under same suite or human accepts waiver; none _(id: [rec-c174fd42-e8c9-41ea-bb43-8aee75770421](.artifacts/records/project__finding/rec-c174fd42-e8c9-41ea-bb43-8aee75770421.md))_
+
+## tier2-plugin-root-and-cli
+
+### Finding
+- **tier2-plugin-root-and-cli**: tier-2 failed at phase head: verify_authority import of scripts/close_batch + journal pager flake; exit 1; nodes ['tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub', 'tests/test_verify_authority.py']; tier-2 passes at new phase head; none _(id: [rec-c8de37ab-a66a-4589-ab5a-2299788a4be9](.artifacts/records/project__finding/rec-c8de37ab-a66a-4589-ab5a-2299788a4be9.md))_
 
 ## tiered-verification-tier2-budget
 
@@ -1735,6 +1780,21 @@ print("phase checks only")
 
 ### Acceptance
 - **verify-plugin-dep-marketplace-readme**: README Install matches manifests: single Claude marketplace add; Cursor does not claim dependency auto-install (exit criteria 2-3); check; packaging; grep -q 'claude plugin marketplace add andrewy1n/se-workflow' README.md && grep -qi Cursor README.md && ! grep -qiE 'Cursor.*(auto-?install|plugin dependenc).*adaptive-artifacts' README.md _(id: [rec-c30aaca7-94df-4c02-a6f3-fcce0c8d6b00](.artifacts/records/project__acceptance/rec-c30aaca7-94df-4c02-a6f3-fcce0c8d6b00.md))_
+
+## verify-plugin-root-and-cli
+
+### Acceptance
+- **verify-plugin-root-and-cli**: Exit 1: shared AA resolve order and plugin-root docs hold (unit + grep gates); tdd; packaging; uv run --with pytest python -m pytest tests/test_aa_resolve.py -q && grep -q CLAUDE_PLUGIN_ROOT skills/ensure-store.md && grep -q CURSOR_PLUGIN_ROOT skills/ensure-store.md && ! grep -E '^[0-9]+\. .*\.cursor/plugins/local/se-workflow' skills/ensure-store.md && ! grep -n "Path.home() / \"adaptive-artifacts\"" se_workflow/aa.py dashboard/artifact_store.py _(id: [rec-d1532551-f82b-44a4-94c5-de313a93d078](.artifacts/records/project__acceptance/rec-d1532551-f82b-44a4-94c5-de313a93d078.md))_
+
+## verify-plugin-root-and-cli-close
+
+### Acceptance
+- **verify-plugin-root-and-cli-close**: Exit 2: bin/se-workflow close-batch works through CLI; skills do not call scripts/close_batch.py; tdd; packaging; uv run --with pytest python -m pytest tests/test_close_batch.py -q && grep -qE 'se-workflow close-batch|bin/se-workflow close-batch' skills/verify-work/SKILL.md && ! grep -q scripts/close_batch.py skills/verify-work/SKILL.md && uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-db3cca7b-c7b5-482b-be36-b59f59c5621b](.artifacts/records/project__acceptance/rec-db3cca7b-c7b5-482b-be36-b59f59c5621b.md))_
+
+## verify-plugin-root-and-cli-landing
+
+### Acceptance
+- **verify-plugin-root-and-cli-landing**: Exit 3: phase branch merged to main and store committed on primary checkout (Landing); manual; packaging _(id: [rec-e2174663-bdbf-4250-aa23-5075f95e0c8d](.artifacts/records/project__acceptance/rec-e2174663-bdbf-4250-aa23-5075f95e0c8d.md))_
 
 ## verify-quiet-header
 

@@ -1,7 +1,7 @@
 # Project Verification
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:d9f1dbd769d66a0a3dacf8efb936c83d65b3a8b75051a80e93ddc53c1dca0166
+> Store state: sha256:d8f5544db236d8d53f0b88f94fef5eb73f5d942e820c43b8629b251a3393a079
 
 ## activity-failures
 
@@ -262,6 +262,15 @@
 
 ### Check
 - **claude-shared-marketplace-readme**: rec-49384b6f-6de8-4e22-b43c-f27f3e8f06ad; 40db2970236ac7ff04afd9eaf08292f072a912a2; pass; check _(id: [rec-afd46d92-057c-4b40-8961-34c19871e95d](.artifacts/records/project__check-run/rec-afd46d92-057c-4b40-8961-34c19871e95d.md))_
+
+## close-batch-cli
+
+### Acceptance
+- **close-batch-cli**: bin/se-workflow close-batch builds NDJSON batches and preserves red-first refusal exit codes through the CLI entry; tdd; packaging; uv run --with pytest python -m pytest tests/test_close_batch.py -q _(id: [rec-45b51bb0-0c79-4f85-9120-374742d1d297](.artifacts/records/project__acceptance/rec-45b51bb0-0c79-4f85-9120-374742d1d297.md))_
+
+### Check
+- **close-batch-cli**: rec-45b51bb0-0c79-4f85-9120-374742d1d297; dirty; fail; tdd _(id: [rec-644ce7a2-d954-465f-bb8c-f2899f253d92](.artifacts/records/project__check-run/rec-644ce7a2-d954-465f-bb8c-f2899f253d92.md))_
+- **close-batch-cli**: rec-45b51bb0-0c79-4f85-9120-374742d1d297; 23c6f922d2a051135dc323f67924f2364b3788db; pass; tdd _(id: [rec-7637c340-cead-4240-9940-0a3c34093d3f](.artifacts/records/project__check-run/rec-7637c340-cead-4240-9940-0a3c34093d3f.md))_
 
 ## close-red-first
 
@@ -854,6 +863,15 @@
 ### Check
 - **fix-human-gate-constraint**: rec-7cd14081-b40c-4643-9c77-8ead22c68483; a27e7b9c4852347de20f4ce2ca3b6fae8ff58d3d; pass; check _(id: [rec-1ed320a3-c828-48d4-8de2-9969706b2fa7](.artifacts/records/project__check-run/rec-1ed320a3-c828-48d4-8de2-9969706b2fa7.md))_
 
+## fix-journal-pager-timeout
+
+### Acceptance
+- **fix-journal-pager-timeout**: test_journal_detail_pager_pages_record_with_stub passes with raised pilot timeout; tdd; packaging; uv run --with textual --with pytest python -m pytest tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub -q _(id: [rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff](.artifacts/records/project__acceptance/rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff.md))_
+
+### Check
+- **fix-journal-pager-timeout**: rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff; dirty; fail; tdd _(id: [rec-2483b603-ab08-40c0-b787-865baebd1002](.artifacts/records/project__check-run/rec-2483b603-ab08-40c0-b787-865baebd1002.md))_
+- **fix-journal-pager-timeout**: rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff; 3379fcf8a1d882d91330bec6e66a2889c71d3ece; pass; tdd _(id: [rec-67c47e4a-2545-4d89-93a9-c83f34293e09](.artifacts/records/project__check-run/rec-67c47e4a-2545-4d89-93a9-c83f34293e09.md))_
+
 ## fix-test_dashboard_app
 
 ### Acceptance
@@ -916,6 +934,15 @@
 ### Check
 - **fix-test_verify_authority**: rec-e09c9aac-f876-43da-9856-41ed79b75404; dirty; pass; tdd _(id: [rec-5e5e7943-0cfe-47be-bdc1-7c6c5ca5fe32](.artifacts/records/project__check-run/rec-5e5e7943-0cfe-47be-bdc1-7c6c5ca5fe32.md))_
 - **fix-test_verify_authority**: rec-e09c9aac-f876-43da-9856-41ed79b75404; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; tdd _(id: [rec-9dbbcb14-8061-4f28-87e0-56bbddc01a16](.artifacts/records/project__check-run/rec-9dbbcb14-8061-4f28-87e0-56bbddc01a16.md))_
+
+## fix-verify-authority-close-batch-import
+
+### Acceptance
+- **fix-verify-authority-close-batch-import**: tests/test_verify_authority.py collects and passes without scripts/close_batch import; tdd; packaging; uv run --with pytest python -m pytest tests/test_verify_authority.py -q _(id: [rec-a33322af-14f2-44fd-a072-5bc4073fa8a2](.artifacts/records/project__acceptance/rec-a33322af-14f2-44fd-a072-5bc4073fa8a2.md))_
+
+### Check
+- **fix-verify-authority-close-batch-import**: rec-a33322af-14f2-44fd-a072-5bc4073fa8a2; 8109e9aae50c888bd17a06bfb3b8f9e2f55665ab; pass; tdd _(id: [rec-5e5de649-bc10-4d3b-b158-d8f754e7c6c1](.artifacts/records/project__check-run/rec-5e5de649-bc10-4d3b-b158-d8f754e7c6c1.md))_
+- **fix-verify-authority-close-batch-import**: rec-a33322af-14f2-44fd-a072-5bc4073fa8a2; dirty; fail; tdd _(id: [rec-774d2cea-d57a-49c8-93c4-0f7cb73285ac](.artifacts/records/project__check-run/rec-774d2cea-d57a-49c8-93c4-0f7cb73285ac.md))_
 
 ## gates-landing
 
@@ -1419,6 +1446,21 @@ print("phase checks only")
 ### Check
 - **plan-wave-rules**: rec-b1c39c5f-6758-426d-bdcf-0ff6c57bcbc5; dirty; pass; tdd _(id: [rec-89b14150-1845-47bc-aff7-14a220d85c8d](.artifacts/records/project__check-run/rec-89b14150-1845-47bc-aff7-14a220d85c8d.md))_
 
+## plugin-root-and-cli-review
+
+### Check
+- **plugin-root-and-cli-review**: plugin-root-and-cli-review; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; review _(id: [rec-3c873e15-1bea-4d72-a177-9f32a90677b6](.artifacts/records/project__check-run/rec-3c873e15-1bea-4d72-a177-9f32a90677b6.md))_
+- **plugin-root-and-cli-review**: plugin-root-and-cli-review; 3379fcf8a1d882d91330bec6e66a2889c71d3ece; pass; review _(id: [rec-3d55b74a-4806-47bc-8350-6063559d96a2](.artifacts/records/project__check-run/rec-3d55b74a-4806-47bc-8350-6063559d96a2.md))_
+- **plugin-root-and-cli-review**: plugin-root-and-cli-review; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; review _(id: [rec-7051e337-86c9-4da4-b95b-b54d42acc8d3](.artifacts/records/project__check-run/rec-7051e337-86c9-4da4-b95b-b54d42acc8d3.md))_
+
+## plugin-root-and-cli-tier2
+
+### Check
+- **plugin-root-and-cli-tier2**: plugin-root-and-cli-tier2; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; fail; check _(id: [rec-03c48fcc-54d8-468e-a2bd-31ecdfcd48b8](.artifacts/records/project__check-run/rec-03c48fcc-54d8-468e-a2bd-31ecdfcd48b8.md))_
+- **plugin-root-and-cli-tier2**: plugin-root-and-cli-tier2; 8109e9aae50c888bd17a06bfb3b8f9e2f55665ab; fail; check _(id: [rec-04c9b0b0-d9f6-46a2-ad1e-8c1ad0db624e](.artifacts/records/project__check-run/rec-04c9b0b0-d9f6-46a2-ad1e-8c1ad0db624e.md))_
+- **plugin-root-and-cli-tier2**: plugin-root-and-cli-tier2; 3379fcf8a1d882d91330bec6e66a2889c71d3ece; pass; manual; user _(id: [rec-af24fcc0-9a26-4be6-9737-fa78976f6316](.artifacts/records/project__check-run/rec-af24fcc0-9a26-4be6-9737-fa78976f6316.md))_
+- **plugin-root-and-cli-tier2**: plugin-root-and-cli-tier2; 3379fcf8a1d882d91330bec6e66a2889c71d3ece; fail; check _(id: [rec-cc94529d-5679-4111-8618-30f3392e2f08](.artifacts/records/project__check-run/rec-cc94529d-5679-4111-8618-30f3392e2f08.md))_
+
 ## readme-lifecycle
 
 ### Acceptance
@@ -1643,6 +1685,16 @@ print("phase checks only")
 ### Check
 - **se-workflow-check-runner-fields**: rec-7715368f-94c3-4b3d-9692-5061c4cabafe; c600c3ec9c7a7a01736618697ca4b3d5aebb9beb; pass; tdd _(id: [rec-e3bd1a4b-1d3a-41c2-99b0-a675670cbccd](.artifacts/records/project__check-run/rec-e3bd1a4b-1d3a-41c2-99b0-a675670cbccd.md))_
 
+## shared-aa-resolver
+
+### Acceptance
+- **shared-aa-resolver**: Shared resolver follows env → plugin-root/sibling → PATH; home checkout is not a quiet primary fallback; both aa.py and dashboard.artifact_store use it; tdd; packaging; uv run --with pytest python -m pytest tests/test_aa_resolve.py -q _(id: [rec-15f765d5-4785-4b60-8e28-1e0c176acff4](.artifacts/records/project__acceptance/rec-15f765d5-4785-4b60-8e28-1e0c176acff4.md))_
+
+### Check
+- **shared-aa-resolver**: rec-15f765d5-4785-4b60-8e28-1e0c176acff4; dirty; fail; tdd _(id: [rec-570c80b2-13ad-4e0c-ad09-ddb8e3f82bb7](.artifacts/records/project__check-run/rec-570c80b2-13ad-4e0c-ad09-ddb8e3f82bb7.md))_
+- **shared-aa-resolver**: rec-15f765d5-4785-4b60-8e28-1e0c176acff4; 23c6f922d2a051135dc323f67924f2364b3788db; pass; tdd _(id: [rec-5a71810f-915b-4628-b05b-538d32faa74b](.artifacts/records/project__check-run/rec-5a71810f-915b-4628-b05b-538d32faa74b.md))_
+- **shared-aa-resolver**: rec-15f765d5-4785-4b60-8e28-1e0c176acff4; dirty; fail; tdd _(id: [rec-a9a1ceb3-58a7-4c54-bbf5-c3e778574d60](.artifacts/records/project__check-run/rec-a9a1ceb3-58a7-4c54-bbf5-c3e778574d60.md))_
+
 ## skill-needs-clear
 
 ### Acceptance
@@ -1672,6 +1724,30 @@ print("phase checks only")
 
 ### Check
 - **skill-needs-clear-opens**: rec-e154ee7d-d057-4d26-bd3e-9962592157f0; 8799ca930443a9a3144434eaf3b9e30e497adbce; pass; check _(id: [rec-91b822ea-acd7-4c65-81d6-fa35a64f4129](.artifacts/records/project__check-run/rec-91b822ea-acd7-4c65-81d6-fa35a64f4129.md))_
+
+## skill-plugin-paths
+
+### Acceptance
+- **skill-plugin-paths**: ensure-store documents CLAUDE_PLUGIN_ROOT and CURSOR_PLUGIN_ROOT; Plugin root section does not hardcode ~/.cursor/plugins/local/se-workflow as a numbered step; check; packaging; grep -q CLAUDE_PLUGIN_ROOT skills/ensure-store.md && grep -q CURSOR_PLUGIN_ROOT skills/ensure-store.md && ! grep -E '^[0-9]+\. .*\.cursor/plugins/local/se-workflow' skills/ensure-store.md _(id: [rec-1dc4bf40-0968-4e85-845f-c345a81a9768](.artifacts/records/project__acceptance/rec-1dc4bf40-0968-4e85-845f-c345a81a9768.md))_
+
+### Check
+- **skill-plugin-paths**: rec-1dc4bf40-0968-4e85-845f-c345a81a9768; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; check _(id: [rec-3d166850-209a-42d1-85c0-d13eebf7102a](.artifacts/records/project__check-run/rec-3d166850-209a-42d1-85c0-d13eebf7102a.md))_
+
+## skill-plugin-paths-close
+
+### Acceptance
+- **skill-plugin-paths-close**: verify-work documents se-workflow close-batch and does not call scripts/close_batch.py; check; packaging; grep -qE "se-workflow close-batch|bin/se-workflow close-batch" skills/verify-work/SKILL.md && ! grep -q scripts/close_batch.py skills/verify-work/SKILL.md _(id: [rec-05718b54-2ff0-42df-9d90-5563f4509289](.artifacts/records/project__acceptance/rec-05718b54-2ff0-42df-9d90-5563f4509289.md))_
+
+### Check
+- **skill-plugin-paths-close**: rec-05718b54-2ff0-42df-9d90-5563f4509289; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; check _(id: [rec-2fd379a5-8ec6-415d-b321-f9aa2fd3e4e5](.artifacts/records/project__check-run/rec-2fd379a5-8ec6-415d-b321-f9aa2fd3e4e5.md))_
+
+## skill-plugin-paths-contract
+
+### Acceptance
+- **skill-plugin-paths-contract**: skill/contract consistency passes after skill edits; check; packaging; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-3b720bda-fcdb-4cab-9cb2-e965636a73b0](.artifacts/records/project__acceptance/rec-3b720bda-fcdb-4cab-9cb2-e965636a73b0.md))_
+
+### Check
+- **skill-plugin-paths-contract**: rec-3b720bda-fcdb-4cab-9cb2-e965636a73b0; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; check _(id: [rec-3ca9c3cb-a02a-47bf-9ac9-79d2bf5d2a00](.artifacts/records/project__check-run/rec-3ca9c3cb-a02a-47bf-9ac9-79d2bf5d2a00.md))_
 
 ## skills-backlog
 
@@ -1967,6 +2043,16 @@ print("phase checks only")
 ### Check
 - **tier2-engine-scoped**: rec-97b46204-7027-47b9-bf84-e4b585da8849; dirty; pass; check _(id: [rec-31522e93-58ea-4e24-83d5-28c4df9fbc85](.artifacts/records/project__check-run/rec-31522e93-58ea-4e24-83d5-28c4df9fbc85.md))_
 - **tier2-engine-scoped**: rec-97b46204-7027-47b9-bf84-e4b585da8849; 87fb88a22889fc016d21b6dbece2e02836fca56a; pass; check _(id: [rec-6a37cb49-2c89-4c26-9228-8047de254e26](.artifacts/records/project__check-run/rec-6a37cb49-2c89-4c26-9228-8047de254e26.md))_
+
+## tier2-journal-pager-flake
+
+### Finding
+- **tier2-journal-pager-flake**: test_journal_detail_pager_pages_record_with_stub timed out under tier-2 parallel load; tier-2 at 3379fcf still fails same test after 40s timeout; screen never loads under xdist; test passes stably under same suite or human accepts waiver; none _(id: [rec-c174fd42-e8c9-41ea-bb43-8aee75770421](.artifacts/records/project__finding/rec-c174fd42-e8c9-41ea-bb43-8aee75770421.md))_
+
+## tier2-plugin-root-and-cli
+
+### Finding
+- **tier2-plugin-root-and-cli**: tier-2 failed at phase head: verify_authority import of scripts/close_batch + journal pager flake; exit 1; nodes ['tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub', 'tests/test_verify_authority.py']; tier-2 passes at new phase head; none _(id: [rec-c8de37ab-a66a-4589-ab5a-2299788a4be9](.artifacts/records/project__finding/rec-c8de37ab-a66a-4589-ab5a-2299788a4be9.md))_
 
 ## tiered-verification-review
 
@@ -2653,6 +2739,35 @@ print("phase checks only")
 ### Check
 - **verify-plugin-dep-marketplace-readme**: rec-c30aaca7-94df-4c02-a6f3-fcce0c8d6b00; 40db2970236ac7ff04afd9eaf08292f072a912a2; pass; check _(id: [rec-78e62280-8d1d-4f1d-95ba-eabd70e4efeb](.artifacts/records/project__check-run/rec-78e62280-8d1d-4f1d-95ba-eabd70e4efeb.md))_
 
+## verify-plugin-root-and-cli
+
+### Acceptance
+- **verify-plugin-root-and-cli**: Exit 1: shared AA resolve order and plugin-root docs hold (unit + grep gates); tdd; packaging; uv run --with pytest python -m pytest tests/test_aa_resolve.py -q && grep -q CLAUDE_PLUGIN_ROOT skills/ensure-store.md && grep -q CURSOR_PLUGIN_ROOT skills/ensure-store.md && ! grep -E '^[0-9]+\. .*\.cursor/plugins/local/se-workflow' skills/ensure-store.md && ! grep -n "Path.home() / \"adaptive-artifacts\"" se_workflow/aa.py dashboard/artifact_store.py _(id: [rec-d1532551-f82b-44a4-94c5-de313a93d078](.artifacts/records/project__acceptance/rec-d1532551-f82b-44a4-94c5-de313a93d078.md))_
+
+### Check
+- **verify-plugin-root-and-cli**: rec-d1532551-f82b-44a4-94c5-de313a93d078; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; tdd _(id: [rec-2c5ab419-57ca-454c-bb77-b31fa827c8f9](.artifacts/records/project__check-run/rec-2c5ab419-57ca-454c-bb77-b31fa827c8f9.md))_
+- **verify-plugin-root-and-cli**: rec-d1532551-f82b-44a4-94c5-de313a93d078; dirty; fail; tdd _(id: [rec-48b7e94c-45cb-4821-a3ed-6419005cf989](.artifacts/records/project__check-run/rec-48b7e94c-45cb-4821-a3ed-6419005cf989.md))_
+- **verify-plugin-root-and-cli**: rec-d1532551-f82b-44a4-94c5-de313a93d078; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; tdd _(id: [rec-63797327-51f1-4c0f-82ef-e872e3955d6e](.artifacts/records/project__check-run/rec-63797327-51f1-4c0f-82ef-e872e3955d6e.md))_
+- **verify-plugin-root-and-cli**: rec-e2174663-bdbf-4250-aa23-5075f95e0c8d; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; manual; inline _(id: [rec-f6cba71a-4b1d-46dc-bf7d-aa1ca14e1b26](.artifacts/records/project__check-run/rec-f6cba71a-4b1d-46dc-bf7d-aa1ca14e1b26.md))_
+
+## verify-plugin-root-and-cli-close
+
+### Acceptance
+- **verify-plugin-root-and-cli-close**: Exit 2: bin/se-workflow close-batch works through CLI; skills do not call scripts/close_batch.py; tdd; packaging; uv run --with pytest python -m pytest tests/test_close_batch.py -q && grep -qE 'se-workflow close-batch|bin/se-workflow close-batch' skills/verify-work/SKILL.md && ! grep -q scripts/close_batch.py skills/verify-work/SKILL.md && uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-db3cca7b-c7b5-482b-be36-b59f59c5621b](.artifacts/records/project__acceptance/rec-db3cca7b-c7b5-482b-be36-b59f59c5621b.md))_
+
+### Check
+- **verify-plugin-root-and-cli-close**: rec-db3cca7b-c7b5-482b-be36-b59f59c5621b; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; tdd _(id: [rec-03d83276-1c06-4e72-8435-27ec1f7d47dd](.artifacts/records/project__check-run/rec-03d83276-1c06-4e72-8435-27ec1f7d47dd.md))_
+- **verify-plugin-root-and-cli-close**: rec-db3cca7b-c7b5-482b-be36-b59f59c5621b; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; tdd _(id: [rec-a6dede01-8956-457b-8b51-e0c8892a835b](.artifacts/records/project__check-run/rec-a6dede01-8956-457b-8b51-e0c8892a835b.md))_
+- **verify-plugin-root-and-cli-close**: rec-db3cca7b-c7b5-482b-be36-b59f59c5621b; dirty; fail; tdd _(id: [rec-be6d0d5a-d576-41c7-9466-22e2c25a6304](.artifacts/records/project__check-run/rec-be6d0d5a-d576-41c7-9466-22e2c25a6304.md))_
+
+## verify-plugin-root-and-cli-landing
+
+### Acceptance
+- **verify-plugin-root-and-cli-landing**: Exit 3: phase branch merged to main and store committed on primary checkout (Landing); manual; packaging _(id: [rec-e2174663-bdbf-4250-aa23-5075f95e0c8d](.artifacts/records/project__acceptance/rec-e2174663-bdbf-4250-aa23-5075f95e0c8d.md))_
+
+### Check
+- **verify-plugin-root-and-cli-landing**: rec-e2174663-bdbf-4250-aa23-5075f95e0c8d; 269ab7bde409ee04e1d7fa5de38363d9acb46c1e; pass; manual; inline _(id: [rec-50bafa17-3590-4c1e-8b34-946abf764d36](.artifacts/records/project__check-run/rec-50bafa17-3590-4c1e-8b34-946abf764d36.md))_
+
 ## verify-quiet-header
 
 ### Acceptance
@@ -3050,6 +3165,7 @@ print("phase checks only")
 - **verify-watch-renderer-phase**: rec-02bac654-25f6-4bc0-b6ec-5efa03a4941e; 227523b; pass; check _(id: [rec-5e3ceb64-1808-4d83-b107-c53695f20ae2](.artifacts/records/project__check-run/rec-5e3ceb64-1808-4d83-b107-c53695f20ae2.md))_
 - **verify-watch-renderer-phase**: rec-cadda757-0424-444f-8ae1-31d415d18e6d; 227523b; pass; tdd _(id: [rec-61d5c15f-2e8c-444c-a58b-aa9eeccae777](.artifacts/records/project__check-run/rec-61d5c15f-2e8c-444c-a58b-aa9eeccae777.md))_
 - **verify-watch-renderer-phase**: rec-02bac654-25f6-4bc0-b6ec-5efa03a4941e; 227523b; tdd; check rec-cadda757-0424-444f-8ae1-31d415d18e6d _(id: [rec-c5dbe94f-0573-4d20-b91b-25ada50fd363](.artifacts/records/project__check-run/rec-c5dbe94f-0573-4d20-b91b-25ada50fd363.md))_
+- **verify-watch-renderer-phase**: rec-02bac654-25f6-4bc0-b6ec-5efa03a4941e; 227523b; pass; check _(id: [rec-c8eab97a-7fef-4703-b22a-527699417339](.artifacts/records/project__check-run/rec-c8eab97a-7fef-4703-b22a-527699417339.md))_
 
 ## verify-watch-renderer-phase-suites
 

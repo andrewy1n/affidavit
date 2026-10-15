@@ -1,7 +1,7 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:9a1b3ad6818e0e7ced4c914e564312dde6a1ffb0ef433e06e270bcf6e81215f8
+> Store state: sha256:f2c9cf504b7bb2d6d289d43da33907af756cc8f16f6de5439f1cb493ff0a62ed
 
 ## dashboard-view
 
@@ -32,6 +32,16 @@
 - **dashboard-closed-goals**: Dashboard model drops closed efforts; goal-close; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-0aa2b513-5469-44d1-a9f9-db1c1cc31d9c](.artifacts/records/project__work-item/rec-0aa2b513-5469-44d1-a9f9-db1c1cc31d9c.md))_
 - **goal-status-field**: Optional status on goal and position, hidden when closed; goal-close; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-e367229c-f98e-4855-bbee-69a8faed4a78](.artifacts/records/project__work-item/rec-e367229c-f98e-4855-bbee-69a8faed4a78.md))_
 
+## plugin-root-and-cli
+
+### Work
+- **close-batch-cli**: se-workflow close-batch subcommand; plugin-root-and-cli; deliver; packaging; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-0947b15d-e851-4684-bfda-f40ba755ad42](.artifacts/records/project__work-item/rec-0947b15d-e851-4684-bfda-f40ba755ad42.md))_
+- **fix-journal-pager-timeout**: Raise journal record-detail pilot timeout; plugin-root-and-cli; repair; packaging; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-57d089a0-7819-4787-8445-e6b841591e6b](.artifacts/records/project__work-item/rec-57d089a0-7819-4787-8445-e6b841591e6b.md))_
+- **fix-verify-authority-close-batch-import**: Fix verify_authority close_batch import; plugin-root-and-cli; repair; packaging; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-782b9188-eb77-4bcf-bb00-c41620bdf6cc](.artifacts/records/project__work-item/rec-782b9188-eb77-4bcf-bb00-c41620bdf6cc.md))_
+- **shared-aa-resolver**: Unify AA binary resolution; plugin-root-and-cli; deliver; packaging; state: done; ready: True; wave: 1; criteria: 1 pass / 2 fail _(id: [rec-014e1d63-a5ad-448a-ab83-3147f0bababb](.artifacts/records/project__work-item/rec-014e1d63-a5ad-448a-ab83-3147f0bababb.md))_
+- **skill-plugin-paths**: Skill docs: plugin-root + close-batch; plugin-root-and-cli; deliver; packaging; state: done; ready: True; wave: 2; criteria: 3 pass / 0 fail _(id: [rec-95ff5469-8194-44b1-85d7-cf5c9a3fbb21](.artifacts/records/project__work-item/rec-95ff5469-8194-44b1-85d7-cf5c9a3fbb21.md))_
+- **verify-plugin-root-and-cli**: Verify plugin-root-and-cli; plugin-root-and-cli; deliver; packaging; state: done; ready: True; wave: 3; criteria: 6 pass / 2 fail _(id: [rec-f43dd292-8d0e-4e2e-8cd1-b50f404e55fc](.artifacts/records/project__work-item/rec-f43dd292-8d0e-4e2e-8cd1-b50f404e55fc.md))_
+
 ## record-join
 
 ### Work
@@ -43,7 +53,7 @@
 
 ### Work
 - **terminal-view-format**: Format a rendered view for the terminal; watch-renderer; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-7aecc4e7-7c12-472e-8387-8839fc4baf53](.artifacts/records/project__work-item/rec-7aecc4e7-7c12-472e-8387-8839fc4baf53.md))_
-- **verify-watch-renderer-phase**: Integration-test watch and verify phase 2; watch-renderer; deliver; dashboard; state: done; ready: True; wave: 3; criteria: 3 pass / 0 fail _(id: [rec-770f99e7-a6a6-43ec-8125-9568d03e1e27](.artifacts/records/project__work-item/rec-770f99e7-a6a6-43ec-8125-9568d03e1e27.md))_
+- **verify-watch-renderer-phase**: Integration-test watch and verify phase 2; watch-renderer; deliver; dashboard; state: done; ready: True; wave: 3; criteria: 4 pass / 0 fail _(id: [rec-770f99e7-a6a6-43ec-8125-9568d03e1e27](.artifacts/records/project__work-item/rec-770f99e7-a6a6-43ec-8125-9568d03e1e27.md))_
 - **watch-command**: Add a watch command that redraws a view on change; watch-renderer; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 1 pass / 0 fail _(id: [rec-84fa883d-0533-4aa0-8cfe-4d528702af10](.artifacts/records/project__work-item/rec-84fa883d-0533-4aa0-8cfe-4d528702af10.md))_
 
 ## aggregate-report
