@@ -184,6 +184,26 @@ def _run(target: Target, *args: str) -> dict[str, Any]:
         raise ModelError(f"{label} returned unreadable output") from exc
 
 
+def _declared_record_types(target: Target) -> frozenset[str] | None:
+    """Record type ids from the bound contract, or None if the contract is unreadable.
+
+    Used so list calls for se-workflow types (phase, work-item, …) are no-ops on
+    foreign stores whose contract does not declare them, instead of failing with
+    adaptive-artifacts unknown_type.
+    """
+    if target.contract is None:
+        return None
+    try:
+        records = json.loads(target.contract.read_text()).get("records") or []
+    except (OSError, ValueError, AttributeError):
+        return None
+    return frozenset(
+        record["id"]
+        for record in records
+        if isinstance(record, dict) and isinstance(record.get("id"), str)
+    )
+
+
 def _list(
     target: Target,
     record_type: str,
@@ -192,6 +212,9 @@ def _list(
     where: tuple[str, ...] = (),
     full: bool | None = None,
 ) -> list[dict[str, Any]]:
+    declared = _declared_record_types(target)
+    if declared is not None and record_type not in declared:
+        return []
     args = ["list", "--type", record_type]
     use_full = record_type in FULL_TYPES if full is None else full
     if use_full:

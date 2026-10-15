@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sys
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import pytest
 
@@ -1330,6 +1331,53 @@ def test_evidence_legacy_store_loads_when_types_are_rejected(monkeypatch):
             model.load_snapshot(_target(root))
     finally:
         shutil.rmtree(root, ignore_errors=True)
+
+
+def test_list_skips_types_absent_from_bound_contract(tmp_path, monkeypatch):
+    """Foreign continuity stores (e.g. adaptive-artifacts) lack project:phase.
+
+    Dashboard must skip undeclared types instead of calling list and failing
+    with unknown_type.
+    """
+    contract = tmp_path / "resolved-contract.json"
+    contract.write_text(json.dumps({
+        "records": [{"id": "project:active-goal", "name": "active-goal"}],
+        "views": [],
+    }))
+    store = tmp_path / ".artifacts"
+    store.mkdir()
+    (store / "meta.json").write_text(json.dumps({
+        "store_version": 1,
+        "contract": str(contract),
+    }))
+    target = artifact_store.Target(root=tmp_path, store=store, contract=contract)
+
+    calls: list[tuple[str, ...]] = []
+
+    def boom(tgt, *args):
+        calls.append(args)
+        raise model.ModelError("list should not be called for undeclared types")
+
+    monkeypatch.setattr(model, "_run", boom)
+    assert model._list(target, "project:phase") == []
+    assert model._list(target, "project:work-item") == []
+    assert calls == []
+
+    # Declared types still go through the CLI path.
+    with pytest.raises(model.ModelError, match="should not be called"):
+        model._list(target, "project:active-goal")
+    assert calls == [("list", "--type", "project:active-goal")]
+
+
+def test_snapshot_loads_against_adaptive_artifacts_store():
+    """Live adaptive-artifacts checkout must not die on project:phase list."""
+    root = Path.home() / "adaptive-artifacts"
+    if not (root / ".artifacts" / "meta.json").is_file():
+        pytest.skip("adaptive-artifacts store not present")
+    target = artifact_store.resolve(root)
+    assert "project:phase" not in (model._declared_record_types(target) or ())
+    snapshot = model.load_snapshot(target)
+    assert isinstance(snapshot.efforts, list)
 
 
 def test_evidence_stage_returns_each_rule(store, cli, defs):
