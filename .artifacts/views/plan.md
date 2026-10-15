@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:3c29ac9c95bdb99021f263dd733201d205dc372b1934d8d063614ac2602b5a00
+> Store state: sha256:f1680661c9f5baa20a426213d7b8921f8f7374e0dc942417a4a5d18d12603009
 
 ## dashboard-view
 
@@ -104,6 +104,25 @@
 - **e2e-scripted-run**: After each step the live side pane shows exactly the expected section map within 5 s and the status segment shows the matching counts; tdd; dashboard; cd ~/se-workflow && python3 -m pytest tests -q -k e2e _(id: [rec-5f7f36da-ec22-4619-b31b-8ff7fb3b85ee](.artifacts/records/project__acceptance/rec-5f7f36da-ec22-4619-b31b-8ff7fb3b85ee.md))_
 - **verify-end-to-end-phase**: Scripted end-to-end test and both full suites pass; check; dashboard; cd ~/adaptive-artifacts && python3 -m pytest tools/runtime/tests -q && cd ~/se-workflow && python3 -m pytest tests -q _(id: [rec-a5e71d14-1f25-4868-a42e-3a2b17e16616](.artifacts/records/project__acceptance/rec-a5e71d14-1f25-4868-a42e-3a2b17e16616.md))_
 - **verify-end-to-end-phase-clear**: The watch-dashboard dashboard shows no Open Question, Needs Human, or Unsigned Manual Check; check; dashboard; ~/se-workflow/scripts/dashboard-status ~/se-workflow _(id: [rec-9dce7bb8-9cc7-4a4d-9ebd-48a749f7cc85](.artifacts/records/project__acceptance/rec-9dce7bb8-9cc7-4a4d-9ebd-48a749f7cc85.md))_
+
+## rename-agent-affidavit
+
+### Phase
+- **rename-agent-affidavit**: Rename to affidavit (CLI aff); 4; packaging _(id: [rec-cc678b81-ba64-4324-a4ff-2c45e22b0458](.artifacts/records/project__phase/rec-cc678b81-ba64-4324-a4ff-2c45e22b0458.md))_
+
+### Work
+- **rename-identity-surfaces**: Plugin, contract project id, and docs → affidavit; rename-agent-affidavit; deliver; packaging _(id: [rec-a404db30-e8c2-491d-b7b0-17b18f794489](.artifacts/records/project__work-item/rec-a404db30-e8c2-491d-b7b0-17b18f794489.md))_
+- **rename-package-cli**: Rename se_workflow package and CLI to affidavit / aff; rename-agent-affidavit; deliver; packaging _(id: [rec-b4e323ec-86bf-4114-8bfd-8e75636fbfcb](.artifacts/records/project__work-item/rec-b4e323ec-86bf-4114-8bfd-8e75636fbfcb.md))_
+- **rename-tests**: Rename tests and sync paths for affidavit; rename-agent-affidavit; deliver; packaging _(id: [rec-1e8bb900-3ee6-4221-acb8-5bb7f61f800d](.artifacts/records/project__work-item/rec-1e8bb900-3ee6-4221-acb8-5bb7f61f800d.md))_
+- **verify-rename-agent-affidavit**: Verify rename to affidavit; rename-agent-affidavit; deliver; packaging _(id: [rec-198a44f2-852e-4671-a3b7-fe89331ef728](.artifacts/records/project__work-item/rec-198a44f2-852e-4671-a3b7-fe89331ef728.md))_
+
+### Acceptance
+- **rename-identity-surfaces**: Claude/Cursor plugin and marketplace names are affidavit; check; packaging; python3 -c "import json; from pathlib import Path\nps=[Path('.claude-plugin/plugin.json'), Path('.cursor-plugin/plugin.json')]\nfor p in ps:\n d=json.loads(p.read_text()); assert d['name']=='affidavit', p\nms=[Path('.claude-plugin/marketplace.json'), Path('.cursor-plugin/marketplace.json')]\nfor p in ms:\n m=json.loads(p.read_text()); names={m.get('name')}|{x.get('name') for x in m.get('plugins',[])}; assert 'affidavit' in names, (p, names)" _(id: [rec-57328b34-853e-4ba0-978d-19d5dc67a396](.artifacts/records/project__acceptance/rec-57328b34-853e-4ba0-978d-19d5dc67a396.md))_
+- **rename-identity-surfaces-contract**: Bundled and live design project field is affidavit; ensure-store gates on affidavit not se-workflow; check; packaging; python3 -c "import json; from pathlib import Path\nfor p in [Path('contract/project-design.json'), Path('.artifacts/project-design.json')]:\n assert json.loads(p.read_text())['project']=='affidavit', p" && grep -q affidavit skills/ensure-store.md && ! grep -n 'other than .se-workflow\|"project" is `se-workflow`' skills/ensure-store.md _(id: [rec-037fac04-00c1-4097-9c17-5d49622584df](.artifacts/records/project__acceptance/rec-037fac04-00c1-4097-9c17-5d49622584df.md))_
+- **rename-package-cli**: bin/aff exists and --help for check and close-batch succeed; bin/se-workflow is gone; Python imports use affidavit not se_workflow; tdd; packaging; test -x bin/aff && ! test -e bin/se-workflow && bin/aff check --help >/dev/null && bin/aff close-batch --help >/dev/null && uv run --with pytest python -m pytest tests/test_aa_resolve.py tests/test_close_batch.py -q --collect-only 2>/dev/null | head -5; uv run --with pytest python -c "import affidavit, affidavit.cli; assert not __import__('importlib.util').find_spec('se_workflow')" _(id: [rec-fa93899c-8721-4377-99f1-a99a14cbf1a2](.artifacts/records/project__acceptance/rec-fa93899c-8721-4377-99f1-a99a14cbf1a2.md))_
+- **rename-tests**: Renamed affidavit CLI/package tests collect and pass; sync script names affidavit; tdd; packaging; uv run --with pytest python -m pytest tests/test_aa_resolve.py tests/test_close_batch.py tests/test_skill_contract_consistency.py -q && grep -q affidavit scripts/sync-plugin.sh && ! grep -E 'se-workflow|se_workflow' scripts/sync-plugin.sh _(id: [rec-322f6c86-d91a-4ab6-95bb-82a9bbcd348f](.artifacts/records/project__acceptance/rec-322f6c86-d91a-4ab6-95bb-82a9bbcd348f.md))_
+- **verify-rename-agent-affidavit**: Real entry point bin/aff check and close-batch --help succeed; se-workflow bin and package gone; tdd; packaging; test -x bin/aff && ! test -e bin/se-workflow && bin/aff check --help >/dev/null && bin/aff close-batch --help >/dev/null && python3 -c "import importlib.util as u; assert u.find_spec('affidavit'); assert u.find_spec('se_workflow') is None" _(id: [rec-d5e70a1b-64c9-4d59-9de9-81f5d57e751f](.artifacts/records/project__acceptance/rec-d5e70a1b-64c9-4d59-9de9-81f5d57e751f.md))_
+- **verify-rename-agent-affidavit-identity**: Plugin names and contract project are affidavit; ensure-store and skill-contract consistency green; check; packaging; python3 -c "import json; from pathlib import Path\nassert json.loads(Path('.claude-plugin/plugin.json').read_text())['name']=='affidavit'\nassert json.loads(Path('contract/project-design.json').read_text())['project']=='affidavit'" && uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-63816a0d-c37b-4fb3-8bbf-a0a33a762939](.artifacts/records/project__acceptance/rec-63816a0d-c37b-4fb3-8bbf-a0a33a762939.md))_
 
 ## discuss-step
 

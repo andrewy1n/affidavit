@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:f1458ad263e5e620d5f5fa8eb3bf4af6509df100884db99ea6aa81a300ed4e7e
+> Store state: sha256:6e78b2929e8c56b668fe84928566ebbb6216a1011c353b3df10515dfc9aa71b7
 
 ## dashboard
 
@@ -20,12 +20,12 @@
 - **packaging**: se-workflow and adaptive-artifacts install as versioned plugins with declared dependencies, stable plugin-root paths, a single CLI surface for skills, and compatible version checks; effort; deliver _(id: [rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc](.artifacts/records/project__active-goal/rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc.md))_
 
 ### Position
-- **packaging**: plugin-root-and-cli done; next up: discuss/plan next packaging backlog item; effort _(id: [rec-996e9262-d73c-4208-94fe-2383af4e1a19](.artifacts/records/project__current-position/rec-996e9262-d73c-4208-94fe-2383af4e1a19.md))_
+- **packaging**: rename-agent-affidavit discussed: affidavit + aff, clean break incl. GitHub rename; ready for plan-phase; effort _(id: [rec-6e321107-7e89-4387-9189-2b60e2ab8957](.artifacts/records/project__current-position/rec-6e321107-7e89-4387-9189-2b60e2ab8957.md))_
+- **rename-agent-affidavit**: code+verify+review PASS at ff37be68a378225c1b065efdeef9e4f611898e19; Landing human stops next (GitHub rename, plugin resync, AA docs); then merge+store commit; phase _(id: [rec-171be925-f0aa-4465-99bf-ea74cc7dffb2](.artifacts/records/project__current-position/rec-171be925-f0aa-4465-99bf-ea74cc7dffb2.md))_
 
 ### Backlog
 - **pyproject-pypi**: packaging; open _(id: [rec-9a7a3a13-44fc-42bc-9336-9c96b1a217fb](.artifacts/records/project__backlog-item/rec-9a7a3a13-44fc-42bc-9336-9c96b1a217fb.md))_
-- **rename-agent-affidavit**: packaging; open _(id: [rec-9c53ebd4-7f22-4b79-b5fe-53ae50044f55](.artifacts/records/project__backlog-item/rec-9c53ebd4-7f22-4b79-b5fe-53ae50044f55.md))_
-- **version-compat-check**: packaging; open _(id: [rec-ee7c1916-1baa-47a7-b7b2-31974bf0339a](.artifacts/records/project__backlog-item/rec-ee7c1916-1baa-47a7-b7b2-31974bf0339a.md))_
+- **version-compat-check**: packaging; open _(id: [rec-31762a2f-52c6-42cc-bf76-04b3969fe925](.artifacts/records/project__backlog-item/rec-31762a2f-52c6-42cc-bf76-04b3969fe925.md))_
 - **version-tag-releases**: packaging; open _(id: [rec-e88d3ac2-fce4-46a7-9064-99458fe30c39](.artifacts/records/project__backlog-item/rec-e88d3ac2-fce4-46a7-9064-99458fe30c39.md))_
 
 ## session-analysis

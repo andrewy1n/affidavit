@@ -1,13 +1,13 @@
 {
   "format": "adaptive-artifacts/resolved-contract@0.3.0",
-  "project": "se-workflow",
+  "project": "affidavit",
   "resolution": {
     "catalog_version": "0.7.0",
     "project_design_format": "0.3.0",
     "resolved_contract_format": "0.3.0",
     "traits_version": "0.4.0",
     "backends_version": "0.4.0",
-    "design_digest": "sha256:1d3c7799f1397dfb88d46b2db02ecb1907211e02dde55eaf083d467236e9fe12",
+    "design_digest": "sha256:64a6959fcdab9c9f19d0b78e79307162fc194d4ea4645daa87f549bf4e654c3a",
     "source_lock": {
       "catalog_version": "0.7.0",
       "catalog": "sha256:d7f0f1d05f8c67f638c0ff1b4ad738161f43c1ec970729709f8f2afc1d8c1eb1",

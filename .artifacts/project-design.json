@@ -1,6 +1,6 @@
 {
   "format": "adaptive-artifacts/project-design@0.3.0",
-  "project": "se-workflow",
+  "project": "affidavit",
   "kind": "software_engineering",
   "assessment": {
     "discontinuity": "high",
