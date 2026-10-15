@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:ed8b5c45054b30837473cdb822f98bed8596519f8ca120619401a3cd1d8da685
+> Store state: sha256:a02e7125baac2b559860e7f98287dcb1d977f666b9ba77c5ef0231855d235019
 
 ## activity-failures
 
@@ -852,7 +852,7 @@ print("phase checks only")
 ## packaging
 
 ### Position
-- **packaging**: plugin-root-and-cli done; next up: discuss/plan next packaging backlog item; effort _(id: [rec-996e9262-d73c-4208-94fe-2383af4e1a19](.artifacts/records/project__current-position/rec-996e9262-d73c-4208-94fe-2383af4e1a19.md))_
+- **packaging**: rename-agent-affidavit done and merged; next packaging backlog open (pyproject-pypi, version-compat-check, version-tag-releases); effort _(id: [rec-6e321107-7e89-4387-9189-2b60e2ab8957](.artifacts/records/project__current-position/rec-6e321107-7e89-4387-9189-2b60e2ab8957.md))_
 
 ## pane-width-stable
 
@@ -973,6 +973,31 @@ print("phase checks only")
 
 ### Acceptance
 - **recency-selection**: A role with a 24h recorded_at window selects a record recorded 1h ago and skips one recorded 48h ago; a malformed window fails contract resolution; tdd; dashboard; cd ~/adaptive-artifacts && python3 -m pytest tools/runtime/tests -q _(id: [rec-d854ca7d-767b-4729-92e1-18ef8853d92c](.artifacts/records/project__acceptance/rec-d854ca7d-767b-4729-92e1-18ef8853d92c.md))_
+
+## rename-agent-affidavit
+
+### Position
+- **rename-agent-affidavit**: rename-agent-affidavit done; merged to main at 3c8a5c2; GitHub andrewy1n/affidavit; plugins synced; AA docs updated; phase _(id: [rec-171be925-f0aa-4465-99bf-ea74cc7dffb2](.artifacts/records/project__current-position/rec-171be925-f0aa-4465-99bf-ea74cc7dffb2.md))_
+
+## rename-identity-surfaces
+
+### Acceptance
+- **rename-identity-surfaces**: Claude/Cursor plugin and marketplace names are affidavit; check; packaging; python3 scripts/check_affidavit_plugin_names.py _(id: [rec-57328b34-853e-4ba0-978d-19d5dc67a396](.artifacts/records/project__acceptance/rec-57328b34-853e-4ba0-978d-19d5dc67a396.md))_
+
+## rename-identity-surfaces-contract
+
+### Acceptance
+- **rename-identity-surfaces-contract**: Bundled and live design project field is affidavit; ensure-store gates on affidavit not se-workflow; check; packaging; python3 scripts/check_affidavit_contract_project.py && grep -q affidavit skills/ensure-store.md && ! grep -E 'other than .se-workflow|project. is .se-workflow' skills/ensure-store.md _(id: [rec-037fac04-00c1-4097-9c17-5d49622584df](.artifacts/records/project__acceptance/rec-037fac04-00c1-4097-9c17-5d49622584df.md))_
+
+## rename-package-cli
+
+### Acceptance
+- **rename-package-cli**: bin/aff exists and --help for check and close-batch succeed; bin/se-workflow is gone; Python imports use affidavit not se_workflow; tdd; packaging; test -x bin/aff && ! test -e bin/se-workflow && bin/aff check --help >/dev/null && bin/aff close-batch --help >/dev/null && uv run --with pytest python -m pytest tests/test_aa_resolve.py tests/test_close_batch.py -q --collect-only >/dev/null && python3 -c "import importlib.util as u; import affidavit, affidavit.cli; assert u.find_spec('affidavit'); assert u.find_spec('se_workflow') is None" _(id: [rec-fa93899c-8721-4377-99f1-a99a14cbf1a2](.artifacts/records/project__acceptance/rec-fa93899c-8721-4377-99f1-a99a14cbf1a2.md))_
+
+## rename-tests
+
+### Acceptance
+- **rename-tests**: Renamed affidavit CLI/package tests collect and pass; sync script names affidavit; tdd; packaging; uv run --with pytest python -m pytest tests/test_aa_resolve.py tests/test_close_batch.py tests/test_skill_contract_consistency.py -q && grep -q affidavit scripts/sync-plugin.sh && ! grep -E 'se-workflow|se_workflow' scripts/sync-plugin.sh _(id: [rec-322f6c86-d91a-4ab6-95bb-82a9bbcd348f](.artifacts/records/project__acceptance/rec-322f6c86-d91a-4ab6-95bb-82a9bbcd348f.md))_
 
 ## requirement-links
 
@@ -1860,6 +1885,16 @@ print("phase checks only")
 
 ### Acceptance
 - **verify-red-first-skills**: verify-work matches enforced red-first; skill/contract consistency green; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_assess_routing.py -q _(id: [rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e](.artifacts/records/project__acceptance/rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e.md))_
+
+## verify-rename-agent-affidavit
+
+### Acceptance
+- **verify-rename-agent-affidavit**: Real entry point bin/aff check and close-batch --help succeed; se-workflow bin and package gone; tdd; packaging; test -x bin/aff && ! test -e bin/se-workflow && bin/aff check --help >/dev/null && bin/aff close-batch --help >/dev/null && python3 -c "import importlib.util as u; assert u.find_spec('affidavit'); assert u.find_spec('se_workflow') is None" _(id: [rec-d5e70a1b-64c9-4d59-9de9-81f5d57e751f](.artifacts/records/project__acceptance/rec-d5e70a1b-64c9-4d59-9de9-81f5d57e751f.md))_
+
+## verify-rename-agent-affidavit-identity
+
+### Acceptance
+- **verify-rename-agent-affidavit-identity**: Plugin names and contract project are affidavit; ensure-store and skill-contract consistency green; check; packaging; python3 scripts/check_affidavit_plugin_names.py && python3 scripts/check_affidavit_contract_project.py && uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-63816a0d-c37b-4fb3-8bbf-a0a33a762939](.artifacts/records/project__acceptance/rec-63816a0d-c37b-4fb3-8bbf-a0a33a762939.md))_
 
 ## verify-retry-loop
 

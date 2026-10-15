@@ -1,7 +1,7 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:f2c9cf504b7bb2d6d289d43da33907af756cc8f16f6de5439f1cb493ff0a62ed
+> Store state: sha256:e8072079a8b6d5b3217b4192152ac861c7b25fb01e05ff24677887a7e30b9cb5
 
 ## dashboard-view
 
@@ -92,6 +92,14 @@
 - **e2e-real-execute-run**: Watch a real execute-phase wave on a scratch effort; end-to-end-verification; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-dd7d93f0-b730-41ab-ab53-987be33a4ba1](.artifacts/records/project__work-item/rec-dd7d93f0-b730-41ab-ab53-987be33a4ba1.md))_
 - **e2e-scripted-run**: Drive the full dashboard chain in one scripted test; end-to-end-verification; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-dd4fcd94-68f4-47e2-aa6d-f86998cf25fd](.artifacts/records/project__work-item/rec-dd4fcd94-68f4-47e2-aa6d-f86998cf25fd.md))_
 - **verify-end-to-end-phase**: Verify the end-to-end phase and the final effort state; end-to-end-verification; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 3 pass / 1 fail _(id: [rec-6344af8c-3dfc-4b36-be4b-522c79d92073](.artifacts/records/project__work-item/rec-6344af8c-3dfc-4b36-be4b-522c79d92073.md))_
+
+## rename-agent-affidavit
+
+### Work
+- **rename-identity-surfaces**: Plugin, contract project id, and docs → affidavit; rename-agent-affidavit; deliver; packaging; state: done; ready: True; wave: 2; criteria: 2 pass / 2 fail _(id: [rec-a404db30-e8c2-491d-b7b0-17b18f794489](.artifacts/records/project__work-item/rec-a404db30-e8c2-491d-b7b0-17b18f794489.md))_
+- **rename-package-cli**: Rename se_workflow package and CLI to affidavit / aff; rename-agent-affidavit; deliver; packaging; state: done; ready: True; wave: 1; criteria: 2 pass / 3 fail _(id: [rec-b4e323ec-86bf-4114-8bfd-8e75636fbfcb](.artifacts/records/project__work-item/rec-b4e323ec-86bf-4114-8bfd-8e75636fbfcb.md))_
+- **rename-tests**: Rename tests and sync paths for affidavit; rename-agent-affidavit; deliver; packaging; state: done; ready: True; wave: 3; criteria: 1 pass / 1 fail _(id: [rec-1e8bb900-3ee6-4221-acb8-5bb7f61f800d](.artifacts/records/project__work-item/rec-1e8bb900-3ee6-4221-acb8-5bb7f61f800d.md))_
+- **verify-rename-agent-affidavit**: Verify rename to affidavit; rename-agent-affidavit; deliver; packaging; state: done; ready: True; wave: 4; criteria: 2 pass / 2 fail _(id: [rec-198a44f2-852e-4671-a3b7-fe89331ef728](.artifacts/records/project__work-item/rec-198a44f2-852e-4671-a3b7-fe89331ef728.md))_
 
 ## discuss-step
 

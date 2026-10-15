@@ -1,7 +1,7 @@
 # Project Verification
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:d8f5544db236d8d53f0b88f94fef5eb73f5d942e820c43b8629b251a3393a079
+> Store state: sha256:16d4439a65ee7211c15e77cf65cfcd3b5ba59003cbe876df9b9eec271077b5ba
 
 ## activity-failures
 
@@ -1488,6 +1488,55 @@ print("phase checks only")
 ### Observation
 - **recency-selection**: View state digests hash store contents only; a recorded_at within-window role changes membership with time alone, so a digest-driven watch will not redraw when a done item ages out; watch-dashboard _(id: [rec-5b58d86c-922d-4747-8533-4f3b685d1c0d](.artifacts/records/project__investigation-observation/rec-5b58d86c-922d-4747-8533-4f3b685d1c0d.md))_
 
+## rename-agent-affidavit-review
+
+### Check
+- **rename-agent-affidavit-review**: rename-agent-affidavit-review; ff37be68a378225c1b065efdeef9e4f611898e19; pass; review _(id: [rec-4b72cd48-8ce9-4b27-926d-7bb12e738e8a](.artifacts/records/project__check-run/rec-4b72cd48-8ce9-4b27-926d-7bb12e738e8a.md))_
+
+## rename-agent-affidavit-tier2
+
+### Check
+- **rename-agent-affidavit-tier2**: rename-agent-affidavit-tier2; 3c8a5c2b46205e537b4b68926bc3f475d34b527f; pass; check _(id: [rec-0ea8ba6e-4ca8-424b-9f8a-0d4a2b617f56](.artifacts/records/project__check-run/rec-0ea8ba6e-4ca8-424b-9f8a-0d4a2b617f56.md))_
+
+## rename-identity-surfaces
+
+### Acceptance
+- **rename-identity-surfaces**: Claude/Cursor plugin and marketplace names are affidavit; check; packaging; python3 scripts/check_affidavit_plugin_names.py _(id: [rec-57328b34-853e-4ba0-978d-19d5dc67a396](.artifacts/records/project__acceptance/rec-57328b34-853e-4ba0-978d-19d5dc67a396.md))_
+
+### Check
+- **rename-identity-surfaces**: rec-57328b34-853e-4ba0-978d-19d5dc67a396; 8c627a74e0bd084d4ebd103a6657af05bcf9d0e3; pass; check _(id: [rec-38b3fee1-194b-430e-94da-0d2c618a2c17](.artifacts/records/project__check-run/rec-38b3fee1-194b-430e-94da-0d2c618a2c17.md))_
+- **rename-identity-surfaces**: rec-57328b34-853e-4ba0-978d-19d5dc67a396; 063e9925e6004a9432860c669ee84062986dbaa4; fail; check _(id: [rec-68ffe66c-bf9c-4e2d-b590-b529415d18e0](.artifacts/records/project__check-run/rec-68ffe66c-bf9c-4e2d-b590-b529415d18e0.md))_
+
+## rename-identity-surfaces-contract
+
+### Acceptance
+- **rename-identity-surfaces-contract**: Bundled and live design project field is affidavit; ensure-store gates on affidavit not se-workflow; check; packaging; python3 scripts/check_affidavit_contract_project.py && grep -q affidavit skills/ensure-store.md && ! grep -E 'other than .se-workflow|project. is .se-workflow' skills/ensure-store.md _(id: [rec-037fac04-00c1-4097-9c17-5d49622584df](.artifacts/records/project__acceptance/rec-037fac04-00c1-4097-9c17-5d49622584df.md))_
+
+### Check
+- **rename-identity-surfaces-contract**: rec-037fac04-00c1-4097-9c17-5d49622584df; 063e9925e6004a9432860c669ee84062986dbaa4; fail; check _(id: [rec-3516f920-52f9-42bb-b5c6-32fadbfcfc99](.artifacts/records/project__check-run/rec-3516f920-52f9-42bb-b5c6-32fadbfcfc99.md))_
+- **rename-identity-surfaces-contract**: rec-037fac04-00c1-4097-9c17-5d49622584df; 8c627a74e0bd084d4ebd103a6657af05bcf9d0e3; pass; check _(id: [rec-76c7330a-fe10-46e7-bb1d-7f1ac19524cd](.artifacts/records/project__check-run/rec-76c7330a-fe10-46e7-bb1d-7f1ac19524cd.md))_
+
+## rename-package-cli
+
+### Acceptance
+- **rename-package-cli**: bin/aff exists and --help for check and close-batch succeed; bin/se-workflow is gone; Python imports use affidavit not se_workflow; tdd; packaging; test -x bin/aff && ! test -e bin/se-workflow && bin/aff check --help >/dev/null && bin/aff close-batch --help >/dev/null && uv run --with pytest python -m pytest tests/test_aa_resolve.py tests/test_close_batch.py -q --collect-only >/dev/null && python3 -c "import importlib.util as u; import affidavit, affidavit.cli; assert u.find_spec('affidavit'); assert u.find_spec('se_workflow') is None" _(id: [rec-fa93899c-8721-4377-99f1-a99a14cbf1a2](.artifacts/records/project__acceptance/rec-fa93899c-8721-4377-99f1-a99a14cbf1a2.md))_
+
+### Check
+- **rename-package-cli**: rec-fa93899c-8721-4377-99f1-a99a14cbf1a2; e7604b05f15bedb13b9392681a2e950d415ebb4e; fail; tdd _(id: [rec-02c3f250-9fc5-4bb4-bac0-fb0d7e40e1d0](.artifacts/records/project__check-run/rec-02c3f250-9fc5-4bb4-bac0-fb0d7e40e1d0.md))_
+- **rename-package-cli**: rec-fa93899c-8721-4377-99f1-a99a14cbf1a2; dirty; fail; tdd _(id: [rec-56ab10c0-fe2e-41f1-afe9-7e23d3a31d51](.artifacts/records/project__check-run/rec-56ab10c0-fe2e-41f1-afe9-7e23d3a31d51.md))_
+- **rename-package-cli**: rec-fa93899c-8721-4377-99f1-a99a14cbf1a2; e7604b05f15bedb13b9392681a2e950d415ebb4e; pass; tdd _(id: [rec-5d1264d7-2fad-4bf4-b36f-41caddfe0211](.artifacts/records/project__check-run/rec-5d1264d7-2fad-4bf4-b36f-41caddfe0211.md))_
+- **rename-package-cli**: rec-fa93899c-8721-4377-99f1-a99a14cbf1a2; e7604b05f15bedb13b9392681a2e950d415ebb4e; pass; tdd _(id: [rec-952b2548-e136-48f9-8eae-27ae0543945f](.artifacts/records/project__check-run/rec-952b2548-e136-48f9-8eae-27ae0543945f.md))_
+- **rename-package-cli**: rec-fa93899c-8721-4377-99f1-a99a14cbf1a2; b25294a293fa584e95618865ade2ba4fab3e5ef9; fail; tdd _(id: [rec-a4362c08-8555-4a4f-a5a9-6b42d7695eac](.artifacts/records/project__check-run/rec-a4362c08-8555-4a4f-a5a9-6b42d7695eac.md))_
+
+## rename-tests
+
+### Acceptance
+- **rename-tests**: Renamed affidavit CLI/package tests collect and pass; sync script names affidavit; tdd; packaging; uv run --with pytest python -m pytest tests/test_aa_resolve.py tests/test_close_batch.py tests/test_skill_contract_consistency.py -q && grep -q affidavit scripts/sync-plugin.sh && ! grep -E 'se-workflow|se_workflow' scripts/sync-plugin.sh _(id: [rec-322f6c86-d91a-4ab6-95bb-82a9bbcd348f](.artifacts/records/project__acceptance/rec-322f6c86-d91a-4ab6-95bb-82a9bbcd348f.md))_
+
+### Check
+- **rename-tests**: rec-322f6c86-d91a-4ab6-95bb-82a9bbcd348f; ff37be68a378225c1b065efdeef9e4f611898e19; pass; tdd _(id: [rec-01a7d00a-b0ca-4610-8d73-d72713dc46f9](.artifacts/records/project__check-run/rec-01a7d00a-b0ca-4610-8d73-d72713dc46f9.md))_
+- **rename-tests**: rec-322f6c86-d91a-4ab6-95bb-82a9bbcd348f; dirty; fail; tdd _(id: [rec-c915d276-1da0-45e5-9a16-5720f2fc4aa8](.artifacts/records/project__check-run/rec-c915d276-1da0-45e5-9a16-5720f2fc4aa8.md))_
+
 ## requirement-links
 
 ### Acceptance
@@ -2865,6 +2914,24 @@ print("phase checks only")
 
 ### Check
 - **verify-red-first-skills**: rec-5990039c-6afc-47d7-9a08-43aafa3d1a8e; c14dedbd9ec027e7e79b8eb1508b24d0d65063fc; pass; check _(id: [rec-423e77e6-9e33-4dd6-b9be-7823d6b85ac6](.artifacts/records/project__check-run/rec-423e77e6-9e33-4dd6-b9be-7823d6b85ac6.md))_
+
+## verify-rename-agent-affidavit
+
+### Acceptance
+- **verify-rename-agent-affidavit**: Real entry point bin/aff check and close-batch --help succeed; se-workflow bin and package gone; tdd; packaging; test -x bin/aff && ! test -e bin/se-workflow && bin/aff check --help >/dev/null && bin/aff close-batch --help >/dev/null && python3 -c "import importlib.util as u; assert u.find_spec('affidavit'); assert u.find_spec('se_workflow') is None" _(id: [rec-d5e70a1b-64c9-4d59-9de9-81f5d57e751f](.artifacts/records/project__acceptance/rec-d5e70a1b-64c9-4d59-9de9-81f5d57e751f.md))_
+
+### Check
+- **verify-rename-agent-affidavit**: rec-d5e70a1b-64c9-4d59-9de9-81f5d57e751f; ff37be68a378225c1b065efdeef9e4f611898e19; pass; tdd _(id: [rec-7c95d9c8-1ea1-4342-9be3-e88dbfebd173](.artifacts/records/project__check-run/rec-7c95d9c8-1ea1-4342-9be3-e88dbfebd173.md))_
+- **verify-rename-agent-affidavit**: rec-d5e70a1b-64c9-4d59-9de9-81f5d57e751f; dirty; fail; tdd _(id: [rec-ed1ff607-9aa3-4ce2-a15f-42e74cb302e2](.artifacts/records/project__check-run/rec-ed1ff607-9aa3-4ce2-a15f-42e74cb302e2.md))_
+
+## verify-rename-agent-affidavit-identity
+
+### Acceptance
+- **verify-rename-agent-affidavit-identity**: Plugin names and contract project are affidavit; ensure-store and skill-contract consistency green; check; packaging; python3 scripts/check_affidavit_plugin_names.py && python3 scripts/check_affidavit_contract_project.py && uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-63816a0d-c37b-4fb3-8bbf-a0a33a762939](.artifacts/records/project__acceptance/rec-63816a0d-c37b-4fb3-8bbf-a0a33a762939.md))_
+
+### Check
+- **verify-rename-agent-affidavit-identity**: rec-63816a0d-c37b-4fb3-8bbf-a0a33a762939; ff37be68a378225c1b065efdeef9e4f611898e19; fail; check _(id: [rec-1ff5d32d-498d-4e09-ad97-0a7206b3004d](.artifacts/records/project__check-run/rec-1ff5d32d-498d-4e09-ad97-0a7206b3004d.md))_
+- **verify-rename-agent-affidavit-identity**: rec-63816a0d-c37b-4fb3-8bbf-a0a33a762939; ff37be68a378225c1b065efdeef9e4f611898e19; pass; check _(id: [rec-ae7b25fa-5520-4ffc-8d4d-5e06eb1ce477](.artifacts/records/project__check-run/rec-ae7b25fa-5520-4ffc-8d4d-5e06eb1ce477.md))_
 
 ## verify-retry-loop
 
