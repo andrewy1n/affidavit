@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:48a1e0e22fe732394845b07c564d3e3e117e91b6d763eb6367545ed292b268d4
+> Store state: sha256:34b207fe0abce97be12c571d38045da803e7a7458285c87b81ff1a62e2a59a65
 
 ## dashboard-view
 
@@ -120,6 +120,22 @@
 ### Acceptance
 - **discuss-skill**: skills/discuss/SKILL.md exists and every adaptive-artifacts invocation in it passes the skill/contract consistency test; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_discuss_skill.py -q _(id: [rec-29f17960-fd84-4c12-9d0b-9589e7b71980](.artifacts/records/project__acceptance/rec-29f17960-fd84-4c12-9d0b-9589e7b71980.md))_
 - **route-through-discuss**: engage, plan-phase, execute-phase and README route through discuss and the review gate; consistency tests pass; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_discuss_skill.py -q _(id: [rec-aac400ee-30c6-4fd2-a3ba-9fbd756f740a](.artifacts/records/project__acceptance/rec-aac400ee-30c6-4fd2-a3ba-9fbd756f740a.md))_
+
+## pyproject-pypi
+
+### Acceptance
+- **aa-installable-package**: adaptive-artifacts has pyproject.toml defining an installable package and adaptive-artifacts console-script entry point; check; packaging; test -f ~/adaptive-artifacts/pyproject.toml && grep -q adaptive-artifacts ~/adaptive-artifacts/pyproject.toml && grep -qE "scripts|entry.points|project.scripts" ~/adaptive-artifacts/pyproject.toml _(id: [rec-5926eafe-efb8-47ac-a314-50c1ff066f90](.artifacts/records/project__acceptance/rec-5926eafe-efb8-47ac-a314-50c1ff066f90.md))_
+- **aa-installable-package-plugin-bin**: plugin bin/adaptive-artifacts still runs the CLI (--help); check; packaging; ~/adaptive-artifacts/bin/adaptive-artifacts --help >/dev/null _(id: [rec-de0125fd-b020-48fc-bd52-f66a04de6cbf](.artifacts/records/project__acceptance/rec-de0125fd-b020-48fc-bd52-f66a04de6cbf.md))_
+- **aa-installable-package-tools-shim**: checkout tools/artifacts.py shim still runs the CLI (ADAPTIVE_ARTIFACTS_ROOT discovery path); check; packaging; python3 ~/adaptive-artifacts/tools/artifacts.py --help >/dev/null _(id: [rec-d7737207-7463-4fa3-828f-647c738784bf](.artifacts/records/project__acceptance/rec-d7737207-7463-4fa3-828f-647c738784bf.md))_
+- **aa-packaging-amendment**: adaptive-artifacts store has an approved packaging amendment covering pyproject layout, entry point, and compatibility shims before AA merge; manual; packaging _(id: [rec-f9dc41e0-3e64-4707-b78a-db7b4f48eeb4](.artifacts/records/project__acceptance/rec-f9dc41e0-3e64-4707-b78a-db7b4f48eeb4.md))_
+- **aa-uv-tool-install-proof**: uv tool install from the AA git URL places adaptive-artifacts on PATH without a sibling checkout; check; packaging; test -x ~/adaptive-artifacts/scripts/prove_uv_tool_install.sh && ~/adaptive-artifacts/scripts/prove_uv_tool_install.sh _(id: [rec-33598676-02a1-45b7-9d6f-379587854c4e](.artifacts/records/project__acceptance/rec-33598676-02a1-45b7-9d6f-379587854c4e.md))_
+- **aa-uv-tool-install-proof-store**: Installed adaptive-artifacts --help succeeds and one store-touching command succeeds on a temp store; check; packaging; ~/adaptive-artifacts/scripts/prove_uv_tool_install.sh _(id: [rec-d9c4add2-b3a0-4106-8778-46d3711d3c7e](.artifacts/records/project__acceptance/rec-d9c4add2-b3a0-4106-8778-46d3711d3c7e.md))_
+- **affidavit-readme-git-tool**: README documents git+ uv tool install for adaptive-artifacts and states PyPI is deferred; repo has no pyproject.toml; check; packaging; grep -qiE 'uv tool install' README.md && grep -qiE 'git\+https://github.com/andrewy1n/adaptive-artifacts' README.md && grep -qiE 'PyPI.*(defer|later|not yet|wait)' README.md && ! test -f pyproject.toml _(id: [rec-7e5deb60-6cc8-4796-9c46-325a846307cb](.artifacts/records/project__acceptance/rec-7e5deb60-6cc8-4796-9c46-325a846307cb.md))_
+- **affidavit-readme-git-tool-nopypi**: This phase does not publish to PyPI and does not add affidavit packaging metadata; check; packaging; ! test -f pyproject.toml && ! grep -qiE 'twine upload|uv publish|pypi.org/project/adaptive-artifacts' README.md _(id: [rec-53c95333-c05e-4e8d-ad66-cd3d97bfc055](.artifacts/records/project__acceptance/rec-53c95333-c05e-4e8d-ad66-cd3d97bfc055.md))_
+- **verify-pyproject-pypi**: Exit 1: uv tool install from AA git URL yields working adaptive-artifacts CLI (--help + store-touch) without sibling checkout; check; packaging; ~/adaptive-artifacts/scripts/prove_uv_tool_install.sh _(id: [rec-080abeb4-e1c8-4c6d-a325-fa84f67bf3a5](.artifacts/records/project__acceptance/rec-080abeb4-e1c8-4c6d-a325-fa84f67bf3a5.md))_
+- **verify-pyproject-pypi-aa-gate**: Exit 4: AA packaging amendment captured and approved before adaptive-artifacts merge; manual; packaging _(id: [rec-cd94256a-2af1-4b2a-894c-58ebd9cb594f](.artifacts/records/project__acceptance/rec-cd94256a-2af1-4b2a-894c-58ebd9cb594f.md))_
+- **verify-pyproject-pypi-readme**: Exit 3: affidavit README documents git+ install and deferred PyPI; no affidavit pyproject.toml; check; packaging; grep -qiE "uv tool install" README.md && grep -qiE "git\+https://github.com/andrewy1n/adaptive-artifacts" README.md && grep -qiE "PyPI.*(defer|later|not yet|wait)" README.md && ! test -f pyproject.toml _(id: [rec-df1c71df-699a-42b3-ae6d-8c7d0a764007](.artifacts/records/project__acceptance/rec-df1c71df-699a-42b3-ae6d-8c7d0a764007.md))_
+- **verify-pyproject-pypi-shims**: Exit 2: plugin bin/adaptive-artifacts and tools/artifacts.py still run the CLI; check; packaging; ~/adaptive-artifacts/bin/adaptive-artifacts --help >/dev/null && python3 ~/adaptive-artifacts/tools/artifacts.py --help >/dev/null _(id: [rec-064ae8ac-d426-4a95-a9a5-71cd77ec4dfd](.artifacts/records/project__acceptance/rec-064ae8ac-d426-4a95-a9a5-71cd77ec4dfd.md))_
 
 ## readable-layout
 

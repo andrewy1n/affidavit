@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:89f5474b9e1a2bf9a68b21bca883e701cc0f4e09f74b4e3ddb3f632cf662b46f
+> Store state: sha256:50f0b2714ab444c435199ea354dfd6a2b36049b9e30c147cfc6e2bd7e22c2853
 
 ## dashboard
 
@@ -21,11 +21,10 @@
 - **packaging**: se-workflow and adaptive-artifacts install as versioned plugins with declared dependencies, stable plugin-root paths, a single CLI surface for skills, and compatible version checks; effort; deliver _(id: [rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc](.artifacts/records/project__active-goal/rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc.md))_
 
 ### Position
-- **packaging**: rename-agent-affidavit done and merged; next packaging backlog open (pyproject-pypi, version-compat-check, version-tag-releases); effort _(id: [rec-6e321107-7e89-4387-9189-2b60e2ab8957](.artifacts/records/project__current-position/rec-6e321107-7e89-4387-9189-2b60e2ab8957.md))_
+- **packaging**: pyproject-pypi done; version-compat and version-tag still parked; effort _(id: [rec-6ac41720-f6b0-494e-8b4b-46bae427376e](.artifacts/records/project__current-position/rec-6ac41720-f6b0-494e-8b4b-46bae427376e.md))_
 - **rename-agent-affidavit**: rename-agent-affidavit done; merged to main at 3c8a5c2; GitHub andrewy1n/affidavit; plugins synced; AA docs updated; phase _(id: [rec-171be925-f0aa-4465-99bf-ea74cc7dffb2](.artifacts/records/project__current-position/rec-171be925-f0aa-4465-99bf-ea74cc7dffb2.md))_
 
 ### Backlog
-- **pyproject-pypi**: packaging; open _(id: [rec-9a7a3a13-44fc-42bc-9336-9c96b1a217fb](.artifacts/records/project__backlog-item/rec-9a7a3a13-44fc-42bc-9336-9c96b1a217fb.md))_
 - **version-compat-check**: packaging; open _(id: [rec-31762a2f-52c6-42cc-bf76-04b3969fe925](.artifacts/records/project__backlog-item/rec-31762a2f-52c6-42cc-bf76-04b3969fe925.md))_
 - **version-tag-releases**: packaging; open _(id: [rec-e88d3ac2-fce4-46a7-9064-99458fe30c39](.artifacts/records/project__backlog-item/rec-e88d3ac2-fce4-46a7-9064-99458fe30c39.md))_
 

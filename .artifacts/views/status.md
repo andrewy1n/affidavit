@@ -1,7 +1,7 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:24afbfb38076878db13efa553f65a602bd5399531aac82bf9d3ef915d919befe
+> Store state: sha256:2448837e6c5f5d4a51dd5019eb70a10cda773351bf343ba10de2826522d95311
 
 ## dashboard-view
 
@@ -106,6 +106,16 @@
 ### Work
 - **discuss-skill**: discuss skill settles the approach before planning; discuss-step; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-16df788d-cf05-44bf-9f57-490039d76af8](.artifacts/records/project__work-item/rec-16df788d-cf05-44bf-9f57-490039d76af8.md))_
 - **route-through-discuss**: Route new phases through discuss and a plan review gate; discuss-step; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 1 pass / 0 fail _(id: [rec-2254fa38-4f06-459f-b5a5-cfc81390a67b](.artifacts/records/project__work-item/rec-2254fa38-4f06-459f-b5a5-cfc81390a67b.md))_
+
+## pyproject-pypi
+
+### Work
+- **aa-installable-package**: AA pyproject + package move + shims; pyproject-pypi; deliver; packaging; state: withdrawn; ready: True; wave: 2; criteria: 0 pass / 0 fail _(id: [rec-38ca6655-8664-41c0-9ef5-fdf152721dad](.artifacts/records/project__work-item/rec-38ca6655-8664-41c0-9ef5-fdf152721dad.md))_
+- **aa-installable-package**: AA pyproject + package move + shims; pyproject-pypi; deliver; packaging; state: in_progress; ready: True; wave: 2; criteria: 0 pass / 0 fail _(id: [rec-e8de6975-cde7-463a-b529-bc108fa372af](.artifacts/records/project__work-item/rec-e8de6975-cde7-463a-b529-bc108fa372af.md))_
+- **aa-packaging-amendment**: Capture AA packaging amendment + approval; pyproject-pypi; deliver; packaging; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-15698ece-c98e-48f5-ae51-097ae7d87b09](.artifacts/records/project__work-item/rec-15698ece-c98e-48f5-ae51-097ae7d87b09.md))_
+- **aa-uv-tool-install-proof**: Prove uv tool install from git; pyproject-pypi; deliver; packaging; state: planned; ready: False; wave: 3; criteria: 0 pass / 0 fail _(id: [rec-e61fee92-200d-4f16-a38a-0f0f50b1ab6a](.artifacts/records/project__work-item/rec-e61fee92-200d-4f16-a38a-0f0f50b1ab6a.md))_
+- **affidavit-readme-git-tool**: Document AA git+ uv tool install; pyproject-pypi; deliver; packaging; state: done; ready: True; wave: 1; criteria: 2 pass / 0 fail _(id: [rec-34ac288b-d802-4b5c-b66a-8a086999faea](.artifacts/records/project__work-item/rec-34ac288b-d802-4b5c-b66a-8a086999faea.md))_
+- **verify-pyproject-pypi**: Verify pyproject-pypi; pyproject-pypi; deliver; packaging; state: planned; ready: False; wave: 4; criteria: 0 pass / 0 fail _(id: [rec-11f13452-a72a-4643-8996-ae4e26b8f91c](.artifacts/records/project__work-item/rec-11f13452-a72a-4643-8996-ae4e26b8f91c.md))_
 
 ## readable-layout
 
