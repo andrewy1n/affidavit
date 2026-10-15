@@ -68,8 +68,9 @@ uv tool install "git+https://github.com/andrewy1n/adaptive-artifacts.git@<ref>"
 ```
 
 Replace `<ref>` with a branch, tag, or commit. Plugin and git-checkout
-install paths below still work. Publishing adaptive-artifacts to PyPI
-is deferred until the package format settles and outsiders use it.
+install paths below still work.
+PyPI publish for adaptive-artifacts is deferred until the package format
+settles and outsiders use it.
 
 ### Claude Code
 
