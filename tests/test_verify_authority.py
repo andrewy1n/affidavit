@@ -1,7 +1,7 @@
 """Fail closed if verify-work or close_batch invent binary check-runs for tdd/check.
 
 R5 / check-run-authority: tdd/check check-runs come only from
-`se-workflow check` (or an already runner-produced id). Agents write
+`aff check` (or an already runner-produced id). Agents write
 assessments, not invented pass/fail.
 """
 
@@ -31,7 +31,7 @@ def _normalized(text: str) -> str:
 def test_skill_documents_affidavit_check_for_tdd_and_check():
     text = _skill()
     flat = _normalized(text)
-    assert "se-workflow check" in text
+    assert "aff check" in text
     assert "--acceptance" in text
     assert "Do **not** `adaptive-artifacts create --type" in text
     assert "project:check-run` for `method` `tdd` or `check`" in flat or (
@@ -53,7 +53,7 @@ def test_skill_does_not_document_hand_create_for_tdd_or_check_methods():
         method = inv["payload"].get("method")
         assert method == "manual", (
             f"verify-work must not document create with method={method!r}; "
-            "tdd/check check-runs come from se-workflow check"
+            "tdd/check check-runs come from aff check"
         )
 
 
@@ -160,7 +160,7 @@ def test_close_batch_does_not_emit_check_run_create_for_runner_methods():
                     "red_check_run_id": "rec-red-cr",
                     "red_result": "fail",
                     "red_revision": "abc123",
-                    "red_runner": "se-workflow",
+                    "red_runner": "aff",
                 }
             ],
             "finding": None,
@@ -198,6 +198,6 @@ def test_close_batch_still_creates_manual_check_runs():
 
 def test_close_batch_source_mentions_runner_authority():
     src = SCRIPT.read_text()
-    assert "se-workflow check" in src or "runner-produced" in src
+    assert "aff check" in src or "runner-produced" in src
     assert "check_run_id" in src
     assert "RUNNER_METHODS" in src

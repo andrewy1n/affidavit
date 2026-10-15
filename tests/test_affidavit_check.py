@@ -1,4 +1,4 @@
-"""Tests for bin/se-workflow check: policy, CLI integration, install packaging."""
+"""Tests for bin/aff check: policy, CLI integration, install packaging."""
 
 from __future__ import annotations
 
@@ -348,6 +348,6 @@ def test_sync_plugin_install_copies_bin_and_affidavit(tmp_path):
 
 def test_readme_documents_bin_affidavit_entry():
     text = (REPO_ROOT / "README.md").read_text()
-    assert "bin/se-workflow" in text
-    assert "se-workflow check" in text or "bin/se-workflow check" in text
+    assert "bin/aff" in text
+    assert "aff check" in text or "bin/aff check" in text
     assert "dashboard/bin" in text

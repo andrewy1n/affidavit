@@ -27,7 +27,7 @@ materialized as `work-item` + `acceptance`.
    - Without TPM, clone the repo and add this to `~/.tmux.conf`:
 
      ```tmux
-     run-shell ~/affidavit/se-workflow.tmux
+     run-shell ~/affidavit/affidavit.tmux
      ```
 
 4. In your project, run the `init` skill once. It creates the store the dashboard reads.

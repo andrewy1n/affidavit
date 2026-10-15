@@ -31,7 +31,7 @@ cp -a "$ROOT/dashboard/." "$DEST/dashboard/"
 cp -a "$ROOT/bin/." "$DEST/bin/"
 cp -a "$ROOT/affidavit/." "$DEST/affidavit/"
 cp -a "$ROOT/agents/." "$DEST/agents/"
-cp -a "$ROOT/se-workflow.tmux" "$DEST/"
+cp -a "$ROOT/affidavit.tmux" "$DEST/"
 find "$DEST" -name '__pycache__' -type d -prune -exec rm -rf {} +
 cp -a "$ROOT/.claude-plugin/." "$DEST/.claude-plugin/"
 cp -a "$ROOT/.cursor-plugin/." "$DEST/.cursor-plugin/"

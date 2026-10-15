@@ -9,7 +9,7 @@ from session_aggregate import aggregate
 
 TARGETS = ROOT / "skills" / "analyze-sessions" / "targets.md"
 HEADINGS = [
-    "se-workflow skills",
+    "affidavit skills",
     "artifact contract",
     "CLAUDE.md and steering files",
     "automated checks",

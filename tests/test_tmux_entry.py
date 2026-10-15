@@ -1,4 +1,4 @@
-"""Load se-workflow.tmux into an isolated tmux server and read back the key bindings."""
+"""Load affidavit.tmux into an isolated tmux server and read back the key bindings."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from conftest import REPO_ROOT
 
 pytestmark = pytest.mark.skipif(shutil.which("tmux") is None, reason="tmux is not installed")
 
-ENTRY = REPO_ROOT / "se-workflow.tmux"
+ENTRY = REPO_ROOT / "affidavit.tmux"
 
 
 class Server:
