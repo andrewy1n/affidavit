@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:a02e7125baac2b559860e7f98287dcb1d977f666b9ba77c5ef0231855d235019
+> Store state: sha256:2d6876374dfb5e338f803c9cdf7b0cc6e51822c786fae1bc79ba2881c9dd1133
 
 ## activity-failures
 
@@ -22,6 +22,11 @@
 
 ### Acceptance
 - **add-dashboard-view-render**: Against a seeded store with one record per section, view --id project:dashboard renders every section in order with labeled fields, and a done item older than 24h is absent; tdd; dashboard; cd ~/se-workflow && python3 -m pytest tests -q -k dashboard _(id: [rec-1dceda28-8bfd-43df-b3ca-53d3a7740286](.artifacts/records/project__acceptance/rec-1dceda28-8bfd-43df-b3ca-53d3a7740286.md))_
+
+## advisory-suite-verification-policy
+
+### Finding
+- **advisory-suite-verification-policy**: advisory suite fail for verification-policy-suite; exit_code=1; failing journal pager tests under full suite; suite check-run passes at phase head, or human clears; none _(id: [rec-bc32b08c-6674-4bef-ac01-5f0442fae56c](.artifacts/records/project__finding/rec-bc32b08c-6674-4bef-ac01-5f0442fae56c.md))_
 
 ## ag-aggregate-cli
 
@@ -582,6 +587,11 @@
 ### Acceptance
 - **fix-journal-pager-timeout**: test_journal_detail_pager_pages_record_with_stub passes with raised pilot timeout; tdd; packaging; uv run --with textual --with pytest python -m pytest tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub -q _(id: [rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff](.artifacts/records/project__acceptance/rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff.md))_
 
+## fix-phase-gate-defaults
+
+### Acceptance
+- **fix-phase-gate-defaults**: Bundled contract phase_gate.suite is mode=none empty command; live .artifacts/project-design.json is full+advisory with pytest in command; tests assert both from real JSON (not only a local constant); tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py -q -k phase_gate && python3 -c "import json; from pathlib import Path; b=json.loads(Path('contract/project-design.json').read_text())['phase_gate']['suite']; assert b['mode']=='none' and b.get('command','')==''; a=json.loads(Path('.artifacts/project-design.json').read_text())['phase_gate']['suite']; assert a['mode']=='full' and a['gate']=='advisory' and 'pytest' in a['command']" _(id: [rec-bf2a6f65-d5f0-4838-ad1f-4c257fcf5ce1](.artifacts/records/project__acceptance/rec-bf2a6f65-d5f0-4838-ad1f-4c257fcf5ce1.md))_
+
 ## fix-test_dashboard_app
 
 ### Acceptance
@@ -864,6 +874,16 @@ print("phase checks only")
 ### Acceptance
 - **phase-detail-tasks**: Pilot tests: in a phase detail, arrows move through tasks, enter opens the task detail, and esc returns to the phase detail; the tests fail before the change; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k phase_task _(id: [rec-2356a60d-0eda-499f-b3ab-ee4746d6aa45](.artifacts/records/project__acceptance/rec-2356a60d-0eda-499f-b3ab-ee4746d6aa45.md))_
 
+## phase-gate-contract
+
+### Acceptance
+- **phase-gate-contract**: project-design has phase_gate.suite; enums and defaults documented; this repo full+advisory; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py -q -k phase_gate _(id: [rec-6e293e6f-8e8d-48c3-9344-25b4e7b8e35d](.artifacts/records/project__acceptance/rec-6e293e6f-8e8d-48c3-9344-25b4e7b8e35d.md))_
+
+## phase-gate-contract-repo
+
+### Acceptance
+- **phase-gate-contract-repo**: This repo live design (.artifacts/project-design.json) suite.mode=full and suite.gate=advisory with pytest in command; bundled contract remains mode=none; check; workflow-loop; python3 -c "import json; from pathlib import Path; b=json.loads(Path('contract/project-design.json').read_text())['phase_gate']['suite']; assert b['mode']=='none'; s=json.loads(Path('.artifacts/project-design.json').read_text())['phase_gate']['suite']; assert s['mode']=='full' and s['gate']=='advisory' and 'pytest' in s['command']" _(id: [rec-a77cfc8e-569f-4671-b7c7-dc7a2481c024](.artifacts/records/project__acceptance/rec-a77cfc8e-569f-4671-b7c7-dc7a2481c024.md))_
+
 ## phase-model-selection
 
 ### Acceptance
@@ -1038,6 +1058,21 @@ print("phase checks only")
 
 ### Finding
 - **review-approval-constraints-spec-gap**: spec-gap on approval-constraints: exclusive human-gate constraint wording conflicts with preserved backlog promote/dismiss writes; dashboard-human-gate-writes says only Needs-you clears; backlog.py still supersedes with @current; constraint statement names backlog promote/dismiss as allowed or exclusivity is clarified without contradicting Non-goals, and reviewer re-run passes; none _(id: [rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f](.artifacts/records/project__finding/rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f.md))_
+
+## review-phase-gate-contract-behavior-bug
+
+### Finding
+- **review-phase-gate-contract-behavior-bug**: behavior-bug on phase-gate-contract: bundled contract ships full+advisory instead of mode=none; contract/project-design.json phase_gate.suite is full+advisory; ensure-store copies it to consumers; README claims mode=none default; bundled contract defaults to mode=none empty command; this repo pin full+advisory lives in live .artifacts design (or equivalent separated pin); reviewer re-run passes; none _(id: [rec-a9e2e213-922d-4157-96ac-2c835adba9d4](.artifacts/records/project__finding/rec-a9e2e213-922d-4157-96ac-2c835adba9d4.md))_
+
+## review-phase-gate-contract-missing-test
+
+### Finding
+- **review-phase-gate-contract-missing-test**: missing-test on phase-gate-contract: plugin defaults test does not read bundled JSON; test_phase_gate_suite_plugin_defaults asserts a local constant only; this-repo test locks contract to full+advisory; tests assert bundled JSON mode=none separately from this-repo full+advisory pin; reviewer re-run passes; none _(id: [rec-2c6ee5f7-c7cb-4684-9b5c-d65c7bed255f](.artifacts/records/project__finding/rec-2c6ee5f7-c7cb-4684-9b5c-d65c7bed255f.md))_
+
+## review-phase-gate-contract-spec-gap
+
+### Finding
+- **review-phase-gate-contract-spec-gap**: spec-gap on phase-gate-contract: live .artifacts/project-design.json not synced with this-repo suite pin; worktree .artifacts/project-design.json lacks phase_gate; runtime falls through to contract/; live design carries this-repo full+advisory (or documented equivalent) and resolve/pin is current; reviewer re-run passes; none _(id: [rec-56c5d5cb-3545-4a20-83d8-8e9fb3aa5ca3](.artifacts/records/project__finding/rec-56c5d5cb-3545-4a20-83d8-8e9fb3aa5ca3.md))_
 
 ## reviewer-brief
 
@@ -1269,6 +1304,26 @@ print("phase checks only")
 
 ### Acceptance
 - **stepper-wrap**: Pilot test at 60 columns: every stepper line starts with a phase glyph and no line ends with a bare glyph, and no line is wider than the pane; the test fails before the change; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k stepper _(id: [rec-c2df3f61-8b0b-44d8-89b3-f3033ebcf9d0](.artifacts/records/project__acceptance/rec-c2df3f61-8b0b-44d8-89b3-f3033ebcf9d0.md))_
+
+## suite-dashboard
+
+### Acceptance
+- **suite-dashboard**: Phase header shows suite running / ok@SHA / fail@SHA from seeded <phase>-suite check-runs; tdd; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k suite _(id: [rec-2f993e5a-c83f-41e2-823b-8518a7b7d413](.artifacts/records/project__acceptance/rec-2f993e5a-c83f-41e2-823b-8518a7b7d413.md))_
+
+## suite-docs-tests
+
+### Acceptance
+- **suite-docs-tests**: README documents phase_gate suite policy; verify-budget + skill-contract consistency pass; check; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_budget.py tests/test_skill_contract_consistency.py -q _(id: [rec-918209be-d62b-4b51-ae01-3ebf361b6e6d](.artifacts/records/project__acceptance/rec-918209be-d62b-4b51-ae01-3ebf361b6e6d.md))_
+
+## suite-engine
+
+### Acceptance
+- **suite-engine**: Runner/skill honor mode none/smoke/full/external and gate required/advisory/deferred; check-run subject uses -suite; required blocks and advisory does not; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "suite or gate or advisory or policy or mode" _(id: [rec-859d8cde-214e-470d-b492-8896741e83df](.artifacts/records/project__acceptance/rec-859d8cde-214e-470d-b492-8896741e83df.md))_
+
+## suite-engine-authority
+
+### Acceptance
+- **suite-engine-authority**: execute-phase documents that agents must not waive suite policy; red-first for tdd unchanged in close-batch path; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_close_batch.py -q -k "tier2 or suite or red_first or red-first or phase_gate" _(id: [rec-f03a59ca-7763-49e7-9670-5e1fdbc30575](.artifacts/records/project__acceptance/rec-f03a59ca-7763-49e7-9670-5e1fdbc30575.md))_
 
 ## table-focus
 
@@ -2044,6 +2099,21 @@ print("phase checks only")
 ### Acceptance
 - **verify-tmux-plugin-entry-readme**: The README has a numbered Quick start that covers TPM and run-shell.; check; dashboard; grep -q '^## Quick start' README.md && grep -q "@plugin 'andrewy1n/se-workflow'" README.md && grep -q 'run-shell' README.md _(id: [rec-81b6561f-39c6-4892-91e4-e2a043e7dd9b](.artifacts/records/project__acceptance/rec-81b6561f-39c6-4892-91e4-e2a043e7dd9b.md))_
 
+## verify-verification-policy
+
+### Acceptance
+- **verify-verification-policy**: Through pytest entry point: suite policy modes and gate hardness (none skip, required block, advisory non-block) hold; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_tiered_verification.py -q -k "suite or gate or advisory or policy or mode" _(id: [rec-fd7dcee3-a0a0-44f8-9fda-fad42f6c1aca](.artifacts/records/project__acceptance/rec-fd7dcee3-a0a0-44f8-9fda-fad42f6c1aca.md))_
+
+## verify-verification-policy-contract
+
+### Acceptance
+- **verify-verification-policy-contract**: Contract declares phase_gate; bundled mode=none; this repo live design full+advisory; check; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py -q -k phase_gate && python3 -c "import json; from pathlib import Path; b=json.loads(Path('contract/project-design.json').read_text())['phase_gate']['suite']; assert b['mode']=='none'; s=json.loads(Path('.artifacts/project-design.json').read_text())['phase_gate']['suite']; assert s['mode']=='full' and s['gate']=='advisory'" _(id: [rec-6992e9a1-3262-42cf-97d9-ae33c2935da4](.artifacts/records/project__acceptance/rec-6992e9a1-3262-42cf-97d9-ae33c2935da4.md))_
+
+## verify-verification-policy-surfaces
+
+### Acceptance
+- **verify-verification-policy-surfaces**: Dashboard suite chrome + verify-budget + skill-contract consistency green; red-first for tdd unchanged; check; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k suite && uv run --with pytest python -m pytest tests/test_verify_budget.py tests/test_skill_contract_consistency.py -q _(id: [rec-0e593cda-ace5-410a-b548-a5ab4c5c18fd](.artifacts/records/project__acceptance/rec-0e593cda-ace5-410a-b548-a5ab4c5c18fd.md))_
+
 ## verify-verify-budget
 
 ### Acceptance
@@ -2121,4 +2191,4 @@ print("phase checks only")
 ## workflow-loop
 
 ### Position
-- **workflow-loop**: dashboard-approvals done; no further phase planned; effort _(id: [rec-bb67a79c-7d06-4d76-8b70-7d2625a9ad9d](.artifacts/records/project__current-position/rec-bb67a79c-7d06-4d76-8b70-7d2625a9ad9d.md))_
+- **workflow-loop**: verification-policy done; no further phase is currently named — ask whether more phases follow; effort _(id: [rec-ee9d13fa-81d8-4786-8601-3854e5244104](.artifacts/records/project__current-position/rec-ee9d13fa-81d8-4786-8601-3854e5244104.md))_

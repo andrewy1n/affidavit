@@ -1,7 +1,7 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:e8072079a8b6d5b3217b4192152ac861c7b25fb01e05ff24677887a7e30b9cb5
+> Store state: sha256:24afbfb38076878db13efa553f65a602bd5399531aac82bf9d3ef915d919befe
 
 ## dashboard-view
 
@@ -328,6 +328,17 @@
 - **requirement-links**: Open the requirement screen from phase detail, Needs you, and task detail; evidence-view; deliver; dashboard; state: done; ready: True; wave: 3; criteria: 3 pass / 3 fail _(id: [rec-53721903-e653-4295-a5fa-aa6d774d9442](.artifacts/records/project__work-item/rec-53721903-e653-4295-a5fa-aa6d774d9442.md))_
 - **requirement-screen**: Requirement detail screen; evidence-view; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 1 pass / 0 fail _(id: [rec-84297b1d-931b-4155-a7db-defae8356207](.artifacts/records/project__work-item/rec-84297b1d-931b-4155-a7db-defae8356207.md))_
 - **verify-evidence-view**: Verify the evidence view; evidence-view; deliver; dashboard; state: done; ready: True; wave: 4; criteria: 6 pass / 0 fail _(id: [rec-f1c9b3ac-caa5-4eaf-831b-bf8c2fae6f8e](.artifacts/records/project__work-item/rec-f1c9b3ac-caa5-4eaf-831b-bf8c2fae6f8e.md))_
+
+## verification-policy
+
+### Work
+- **fix-phase-gate-defaults**: Separate bundled suite default (none) from this-repo full+advisory pin; verification-policy; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 1 fail _(id: [rec-b1539c26-bf6e-491e-bcf0-194a99d958f6](.artifacts/records/project__work-item/rec-b1539c26-bf6e-491e-bcf0-194a99d958f6.md))_
+- **phase-gate-contract**: Add phase_gate.suite to project design; verification-policy; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 4 pass / 1 fail _(id: [rec-55371815-1590-4cf2-98ec-2ee9c9c211dc](.artifacts/records/project__work-item/rec-55371815-1590-4cf2-98ec-2ee9c9c211dc.md))_
+- **phase-gate-contract**: Add phase_gate.suite to project design; verification-policy; deliver; workflow-loop; state: withdrawn; ready: True; wave: 1; criteria: 4 pass / 1 fail _(id: [rec-ce9eca42-633b-42de-bba1-37766315b751](.artifacts/records/project__work-item/rec-ce9eca42-633b-42de-bba1-37766315b751.md))_
+- **suite-dashboard**: Dashboard suite status chrome; verification-policy; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 2 pass / 1 fail _(id: [rec-7154f69a-d9d6-4e79-9590-e17f2113bca6](.artifacts/records/project__work-item/rec-7154f69a-d9d6-4e79-9590-e17f2113bca6.md))_
+- **suite-docs-tests**: README + budget/skill suite docs and tests; verification-policy; deliver; workflow-loop; state: done; ready: True; wave: 3; criteria: 2 pass / 0 fail _(id: [rec-3c483d7d-ca0f-4703-a880-a08805382a65](.artifacts/records/project__work-item/rec-3c483d7d-ca0f-4703-a880-a08805382a65.md))_
+- **suite-engine**: Suite runner + execute-phase policy; verification-policy; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 6 pass / 0 fail _(id: [rec-2a54cba9-557d-4084-a868-1445f625ad15](.artifacts/records/project__work-item/rec-2a54cba9-557d-4084-a868-1445f625ad15.md))_
+- **verify-verification-policy**: Verify verification-policy; verification-policy; deliver; workflow-loop; state: done; ready: True; wave: 4; criteria: 7 pass / 0 fail _(id: [rec-01a1fc51-76a5-4752-bee0-0474d8ee37dd](.artifacts/records/project__work-item/rec-01a1fc51-76a5-4752-bee0-0474d8ee37dd.md))_
 
 ## run-facts
 
