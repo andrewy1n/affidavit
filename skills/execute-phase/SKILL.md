@@ -313,8 +313,8 @@ adaptive-artifacts create --type project:execution-report \
 
    last implementation wave → closing verification → reviewer →
    integration-report from the reviewer `integration` section →
-   tier-2 (background full suite) → phase gate (acceptances@head +
-   review@head + tier-2@head) → Landing merge.
+   suite (per `phase_gate.suite` policy) → phase gate (acceptances@head +
+   review@head + suite@head when gate=required) → Landing merge.
 
    The verification task is the work-item that `depends_on` every
    other phase work-item. An implementation wave is a dispatch wave
@@ -324,9 +324,9 @@ adaptive-artifacts create --type project:execution-report \
    before verification — that content comes from the reviewer below).
 
    After the closing verification task succeeds (`done`), and before
-   merge, run the phase-end reviewer once, then tier-2. Skip the
-   reviewer, review check-run, integration-report, and tier-2 when
-   incidental.
+   merge, run the phase-end reviewer once, then the contracted suite.
+   Skip the reviewer, review check-run, integration-report, and suite
+   when incidental.
 
    Parent only — the reviewer writes no store records:
 
@@ -410,39 +410,71 @@ adaptive-artifacts create --type project:integration-report \
    escalate as above).
 
    After the reviewer passes (and the integration-report is written),
-   start **tier-2** once before the merge gate. Parent only — do not
-   block the agent session on the suite: start a detached tmux window
-   in the phase worktree running the README full suite (fast non-tmux,
-   then serial tmux), poll/reattach for completion, then record **one**
-   `project:check-run` at the phase-head SHA. Subject is
-   `<phase-slug>-tier2`; `evidence_kind` is `integration`; include
+   honor the contracted **suite** policy once before the merge gate.
+   Parent only. Agents must **not** waive suite policy — do not skip,
+   soften, or override `phase_gate.suite`; change the project design
+   (contract) instead. Load policy with `affidavit.suite.load_suite_policy`
+   (same project-design path resolution as other project metadata).
+   Missing `phase_gate.suite` or `mode=none` → skip the suite step.
+   `mode=external` or `gate=deferred` → do **not** run locally.
+   `gate=deferred` is a Landing human stop (ask before merge; do not
+   invent a local pass). When `mode` is `smoke` or `full` and a
+   `command` is set, start a detached tmux window in the phase
+   worktree running that contracted command (not a per-task
+   `verify_command`), poll/reattach for completion, then record
+   **one** `project:check-run` at the phase-head SHA. Subject is
+   `<phase-slug>-suite`; `evidence_kind` is `integration`; include
    runner metadata (`revision`, `exit_code`, `duration_s`,
    `output_sha256`, and `failing_node_ids` when failed). Use
-   `affidavit.tier2` (`start_tier2_background`, `poll_tier2` /
-   `collect_tier2`, `record_tier2_check_run`). Dirty-only pass is
+   `affidavit.suite` (`start_suite_background`, `poll_suite` /
+   `collect_suite`, `record_suite_check_run`). Dirty-only pass is
    refused the same way as `aff check` (commit first, or
-   `--allow-dirty` → `revision=dirty` + `diff_sha256`).
+   `--allow-dirty` → `revision=dirty` + `diff_sha256`). The phase
+   suite is never red-first (red-first stays `method: tdd` only).
+
+   Gate behavior after the check-run (when a local run happened):
+   - `gate=required` — missing or failing suite at the phase head
+     blocks Landing merge. On `fail`, create fix work-item(s) under
+     the **Retry loop** fix-task budget, clustered by failing test
+     file/module (one fix subject per module). Never reopen `done`.
+     No inline fix-and-rerun. After fixes land and are verified,
+     re-run the suite at the new phase head. When the fix-task
+     budget is exhausted, escalate with the budget-exhaustion
+     Needs-you path and stop.
+   - `gate=advisory` — record the check-run; on `fail` also create a
+     `project:finding` (advisory suite fail). Do **not** block merge
+     and do **not** create required-gate fix-task storms.
+   - `gate=deferred` — no local run; Landing human stop.
 
    If the tmux job is orphaned, reattach with
-   `tmux attach -t se-tier2-<phase-slug>` (or inspect the log / exit
-   files under the worktree `.tier2/`), then re-start tier-2 in the
-   phase worktree if the session is gone. Do **not** fix-and-rerun
+   `tmux attach -t se-suite-<phase-slug>` (or inspect the log / exit
+   files under the worktree `.suite/`), then re-start the suite in
+   the phase worktree if the session is gone. Do **not** fix-and-rerun
    inside this verification step.
 
 ```bash
 adaptive-artifacts create --type project:check-run \
-  --subject "<phase-slug>-tier2" \
-  --payload '{"criterion_id":"<phase-slug>-tier2","revision":"<phase-head-sha>","result":"<pass|fail|blocked>","effort":"<focus>","method":"check","signed_by":"","evidence_kind":"integration","runner":"affidavit","exit_code":0,"duration_s":0,"output_sha256":"<digest>","failing_node_ids":"[]"}' \
+  --subject "<phase-slug>-suite" \
+  --payload '{"criterion_id":"<phase-slug>-suite","revision":"<phase-head-sha>","result":"<pass|fail|blocked>","effort":"<focus>","method":"check","signed_by":"","evidence_kind":"integration","runner":"affidavit","exit_code":0,"duration_s":0,"output_sha256":"<digest>","failing_node_ids":"[]"}' \
   --body "<suite output tail; failing node ids when failed>"
 ```
 
-   On tier-2 `fail`, create fix work-item(s) under the **Retry loop**
-   fix-task budget, clustered by failing test file/module (one fix
-   subject per module). Never reopen `done`. There is no inline
-   fix-and-rerun inside the tier-2 step. After those fixes land and
-   are verified, re-run tier-2 at the new phase head. When the
-   fix-task budget is exhausted, escalate with the budget-exhaustion
-   Needs-you path and stop.
+```bash
+adaptive-artifacts create --type project:finding \
+  --subject "suite-advisory-<phase-slug>" \
+  --payload '{"claim":"advisory suite fail for <phase-slug>-suite","basis":"<exit_code and failing node ids>","invalidated_when":"suite check-run passes at phase head, or human clears","effort":"<focus>","needs":"none"}' \
+  --body "## Evidence
+
+<suite output tail>
+
+## Consequence
+
+Advisory only — Landing is not blocked by this suite fail.
+
+## Follow-up
+
+Fix opportunistically or clear the finding; do not open a required-gate fix-task storm."
+```
 
    When no `planned`/`in_progress` same-focus work-items
    remain in this phase (or the incidental task is closed), check the
@@ -479,10 +511,13 @@ adaptive-artifacts list --type project:check-run \
    - A passing `method: review` / `evidence_kind: review` check-run
      exists whose `revision` is the phase-head SHA (required before
      merge; skip this bullet for incidental).
-   - A passing tier-2 check-run (`subject` `<phase-slug>-tier2`,
+   - When `phase_gate.suite.gate` is `required` (and mode is not
+     `none`), a passing suite check-run (`subject` `<phase-slug>-suite`,
      `evidence_kind: integration`) exists whose `revision` is that
-     same phase-head SHA. Missing or failing tier-2 blocks merge
-     (skip this bullet for incidental).
+     same phase-head SHA. Missing or failing suite blocks merge.
+     When gate is `advisory`, suite fail does not block. When gate is
+     `deferred` or mode is `none`, skip this bullet. (Skip for
+     incidental.)
 
    When the user signs an unsigned manual check, clear it at the event
    (kinds-and-focus, Needs-you clears):
@@ -496,10 +531,12 @@ adaptive-artifacts correct --type project:check-run --id <check-run-id> \
    user which criterion has no check-run, a failing latest check-run,
    or no signature, that the verification task is missing, that the
    phase lacks a passing review check-run at the phase head, or that
-   tier-2 is missing or failing at the phase head. Then
+   a required suite is missing or failing at the phase head. Then
    stop. Do not close the phase to move on. `deliver` and `repair`
-   phases always need the verification task, a passing review at
-   head, and a passing tier-2 at head. Skip the gate for incidental work.
+   phases always need the verification task and a passing review at
+   head; a passing suite at head is required only when
+   `phase_gate.suite.gate` is `required`. Skip the gate for incidental
+   work. Do not waive suite policy to force a close.
 
    When the gate holds and `## Landing` is present, commit the phase
    branch from the worktree. That commit excludes `.artifacts`. From
@@ -759,15 +796,19 @@ Never transition a `done` work-item back to `in_progress` or
   `integration` section
 - Merge (or close the phase) without a passing `method: review`
   check-run at the phase-head SHA
-- Merge (or close the phase) without a passing tier-2 check-run
-  (`<phase-slug>-tier2`, `evidence_kind: integration`) at the
-  phase-head SHA
+- Merge (or close the phase) without a passing suite check-run
+  (`<phase-slug>-suite`, `evidence_kind: integration`) at the
+  phase-head SHA when `phase_gate.suite.gate` is `required`
+- Waive, skip, or override contracted `phase_gate.suite` policy
+  (mode/command/gate). Agents enforce the design; only a contract
+  edit changes it
 - Let the reviewer call `adaptive-artifacts` or write `.artifacts`
 - Re-run the reviewer more than once after fix tasks for the same
   phase-end pass
-- Fix-and-rerun inside the tier-2 verification step (create fix
-  work-items under the retry budget instead; rerun tier-2 at the
-  new head after fixes)
+- Fix-and-rerun inside the suite verification step (for `gate=required`,
+  create fix work-items under the retry budget instead; rerun suite
+  at the new head after fixes; for `gate=advisory`, record finding
+  only — no fix-task storm)
 - Create a branch or worktree when the phase body has no Landing section
 - Let code writes leave the worktree when `## Landing` is present
 - Write `.artifacts` anywhere but the primary checkout, or include
@@ -784,4 +825,5 @@ Never transition a `done` work-item back to `in_progress` or
 - Skip the retryable `in_progress` pass and only select `planned`
   ready work
 - Put a whole-suite command on a per-task `verify_command` — per-task
-  checks stay scoped; the full suite is the phase-level tier-2 run
+  checks stay scoped; the suite is the phase-level
+  `phase_gate.suite` run

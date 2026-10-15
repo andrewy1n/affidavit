@@ -11,6 +11,13 @@
     "concurrency": "high",
     "verification_cost": "high"
   },
+  "phase_gate": {
+    "suite": {
+      "mode": "none",
+      "command": "",
+      "gate": "required"
+    }
+  },
   "records": [
     {
       "name": "active-goal",

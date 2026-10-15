@@ -55,7 +55,7 @@ class PhaseRow:
     body: str = ""
     elapsed_minutes: int | None = None
     unset_estimates: int = 0
-    tier2: str = ""
+    suite: str = ""
 
 
 DEFAULT_RETRY_MAX_REDISPATCHES = 2
@@ -470,12 +470,15 @@ def sitting_phrase(body: str) -> str:
     return ""
 
 
-# Tier-2 check-run convention (shared with tier2-engine):
-# subject `<phase>-tier2`, evidence_kind `integration`, revision = phase head SHA.
-# In-flight: result `blocked` and body contains the marker below (no final pass/fail yet).
-TIER2_SUBJECT_SUFFIX = "-tier2"
-TIER2_EVIDENCE_KIND = "integration"
-TIER2_RUNNING_MARKER = "tier2-running"
+# Suite check-run convention (shared with suite-engine):
+# subject `<phase>-suite`, evidence_kind `integration`, revision = phase head SHA.
+# Legacy `<phase>-tier2` is read for display only when no suite check-run exists.
+# In-flight: result `blocked` and body contains a running marker (no final pass/fail yet).
+SUITE_SUBJECT_SUFFIX = "-suite"
+LEGACY_TIER2_SUBJECT_SUFFIX = "-tier2"
+SUITE_EVIDENCE_KIND = "integration"
+SUITE_RUNNING_MARKER = "suite-running"
+LEGACY_TIER2_RUNNING_MARKER = "tier2-running"
 
 
 def _short_revision(revision: str) -> str:
@@ -485,27 +488,39 @@ def _short_revision(revision: str) -> str:
     return rev[:7]
 
 
-def tier2_status_label(phase: str, checks: list[dict[str, Any]]) -> str:
-    """Compact tier-2 chrome for a phase header: t2 run / t2 ok@SHA / t2 fail@SHA."""
-    matched = [
-        record for record in checks
-        if record.get("lifecycle_state") not in INACTIVE_STATES
-        and record.get("subject") == f"{phase}{TIER2_SUBJECT_SUFFIX}"
-        and (_payload(record).get("evidence_kind") or "") == TIER2_EVIDENCE_KIND
-    ]
-    record = _newest(matched)
+def _suite_check_for_phase(phase: str, checks: list[dict[str, Any]]) -> dict[str, Any] | None:
+    """Newest active suite check-run for phase; fall back to legacy `-tier2`."""
+    def matching(suffix: str) -> list[dict[str, Any]]:
+        return [
+            record for record in checks
+            if record.get("lifecycle_state") not in INACTIVE_STATES
+            and record.get("subject") == f"{phase}{suffix}"
+            and (_payload(record).get("evidence_kind") or "") == SUITE_EVIDENCE_KIND
+        ]
+
+    record = _newest(matching(SUITE_SUBJECT_SUFFIX))
+    if record is not None:
+        return record
+    return _newest(matching(LEGACY_TIER2_SUBJECT_SUFFIX))
+
+
+def suite_status_label(phase: str, checks: list[dict[str, Any]]) -> str:
+    """Compact suite chrome for a phase header: suite running / suite ok@SHA / suite fail@SHA."""
+    record = _suite_check_for_phase(phase, checks)
     if record is None:
         return ""
     payload = _payload(record)
     result = payload.get("result") or ""
     body = record.get("body") or ""
-    if result == "blocked" and TIER2_RUNNING_MARKER in body:
-        return "t2 run"
+    if result == "blocked" and (
+        SUITE_RUNNING_MARKER in body or LEGACY_TIER2_RUNNING_MARKER in body
+    ):
+        return "suite running"
     short = _short_revision(payload.get("revision") or "")
     if result == "pass":
-        return f"t2 ok@{short}"
+        return f"suite ok@{short}"
     if result == "fail":
-        return f"t2 fail@{short}"
+        return f"suite fail@{short}"
     return ""
 
 
@@ -713,7 +728,7 @@ def _phase_rows(
             evidence=evidence_by_phase.get(record["subject"]),
             sitting=sitting_phrase(body), body=body,
             elapsed_minutes=elapsed_minutes, unset_estimates=unset_estimates,
-            tier2=tier2_status_label(record["subject"], checks or []),
+            suite=suite_status_label(record["subject"], checks or []),
         ))
     rows.sort(key=lambda row: (row.ordinal, row.subject))
     return rows

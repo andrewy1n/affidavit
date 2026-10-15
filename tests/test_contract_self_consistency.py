@@ -206,3 +206,60 @@ def test_approval_optional_payload_note_fields_accepted(
     assert readback.returncode == 0, readback.stdout + readback.stderr
     stored = json.loads(readback.stdout)
     assert stored["payload"].get(field) == note
+
+
+# phase_gate.suite — top-level project-design policy (not a record type).
+# Enums and plugin defaults are encoded here; JSON cannot carry comments.
+PHASE_GATE_SUITE_MODES = ("none", "smoke", "full", "external")
+PHASE_GATE_SUITE_GATES = ("required", "advisory", "deferred")
+LIVE_DESIGN_PATH = CONTRACT_PATH.parent.parent / ".artifacts" / "project-design.json"
+
+
+def _bundled_design() -> dict:
+    return json.loads(CONTRACT_PATH.read_text())
+
+
+def _live_design() -> dict:
+    return json.loads(LIVE_DESIGN_PATH.read_text())
+
+
+def test_phase_gate_suite_present_with_mode_command_gate():
+    suite = _bundled_design()["phase_gate"]["suite"]
+    assert set(suite) >= {"mode", "command", "gate"}
+    assert isinstance(suite["command"], str)
+    assert suite["mode"] in PHASE_GATE_SUITE_MODES
+    assert suite["gate"] in PHASE_GATE_SUITE_GATES
+
+
+def test_phase_gate_suite_plugin_defaults():
+    """Bundled contract default is mode=none (empty command). When mode is
+    not none and command is non-empty, omitted gate means required."""
+    suite = _bundled_design()["phase_gate"]["suite"]
+    assert suite["mode"] == "none"
+    assert suite.get("command", "") == ""
+    assert suite["gate"] == "required"
+    configured = {"mode": "smoke", "command": "pytest -q"}
+    assert configured.get("gate", "required") == "required"
+
+
+def test_phase_gate_suite_this_repo_full_advisory():
+    """This repo's full+advisory pin lives in live .artifacts design (R6),
+    not in the bundled consumer default (R2)."""
+    suite = _live_design()["phase_gate"]["suite"]
+    assert suite["mode"] == "full"
+    assert suite["gate"] == "advisory"
+    assert "pytest" in suite["command"]
+    assert "tmux" in suite["command"]
+
+
+def test_phase_gate_tolerated_by_resolve_like_assessment():
+    """Top-level phase_gate is design metadata; resolve must still succeed."""
+    design = _bundled_design()
+    assert "assessment" in design
+    assert "phase_gate" in design
+    tmp = Path(tempfile.mkdtemp(prefix="se-workflow-phase-gate-"))
+    design_dir = tmp / ".artifacts"
+    design_dir.mkdir()
+    (design_dir / "project-design.json").write_text(CONTRACT_PATH.read_text())
+    result = run_cli("resolve", root=tmp)
+    assert result.returncode == 0, result.stdout + result.stderr

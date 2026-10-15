@@ -463,14 +463,27 @@ uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -
   && uv run --with textual --with pytest python -m pytest tests -q -m tmux
 ```
 
-That full chain is the **phase-level tier-2** suite. Per-task
-`verify_command` values stay narrowly scoped (specific files and `-k`
-filters). Do not put this whole-suite command on a work-item
+That full chain is the **phase-level suite** (`phase_gate.suite`).
+Per-task `verify_command` values stay narrowly scoped (specific files
+and `-k` filters). Do not put this whole-suite command on a work-item
 acceptance. After closing verification and the phase-end reviewer
-pass, `execute-phase` starts this suite in a detached tmux window in
-the phase worktree, records one tier-2 check-run
-(`subject` `<phase>-tier2`, `evidence_kind: integration`) at the phase
-head SHA, and requires that pass before merge.
+pass, `execute-phase` honors the contracted suite policy — agents must
+not waive it; change the project design instead.
+
+`phase_gate.suite` fields:
+
+| Field | Values | Behavior |
+|---|---|---|
+| `mode` | `none`, `smoke`, `full`, `external` | `none` skips; `smoke`/`full` run the contracted `command` in a detached tmux window in the phase worktree; `external` does not run locally |
+| `gate` | `required`, `advisory`, `deferred` | `required` blocks Landing merge on missing/failing suite@head; `advisory` records the check-run (and a finding on fail) without blocking; `deferred` is a Landing human stop with no local run |
+
+The bundled `contract/project-design.json` defaults to `mode=none`
+(skip) for consumers. When a suite is configured (`mode` not `none`
+and `command` set) and `gate` is omitted, gate defaults to `required`.
+This repo's live `.artifacts/project-design.json` sets `mode=full` and
+`gate=advisory` with the full-suite command above. The suite check-run
+uses `subject` `<phase>-suite` (`evidence_kind: integration`) at the
+phase head SHA.
 
 By default it looks for the runtime at `~/adaptive-artifacts`. Point it
 elsewhere with `ADAPTIVE_ARTIFACTS_ROOT`:

@@ -2218,7 +2218,7 @@ def test_attempt_snapshot_reads_payload_and_run_facts(store, cli, defs):
     assert tasks["fresh-task"].retry_budget == 3
 
 
-def _tier2_check(
+def _suite_check(
     subject: str, result: str, revision: str = "abc1234deadbeef", *, body: str = "",
 ) -> dict:
     return {
@@ -2227,7 +2227,7 @@ def _tier2_check(
         "lifecycle_state": "recorded",
         "recorded_at": "2026-01-01T12:00:00+00:00",
         "payload": {
-            "criterion_id": "tier2",
+            "criterion_id": "suite",
             "revision": revision,
             "result": result,
             "effort": "alpha",
@@ -2239,34 +2239,46 @@ def _tier2_check(
     }
 
 
-def test_tier2_status_label_pass_fail_running():
-    assert model.tier2_status_label("p-ok", [_tier2_check("p-ok-tier2", "pass", "abcdef0123456789")]) == "t2 ok@abcdef0"
-    assert model.tier2_status_label("p-bad", [_tier2_check("p-bad-tier2", "fail", "deadbeef")]) == "t2 fail@deadbee"
-    assert model.tier2_status_label(
+def test_suite_status_label_pass_fail_running():
+    assert model.suite_status_label("p-ok", [_suite_check("p-ok-suite", "pass", "abcdef0123456789")]) == "suite ok@abcdef0"
+    assert model.suite_status_label("p-bad", [_suite_check("p-bad-suite", "fail", "deadbeef")]) == "suite fail@deadbee"
+    assert model.suite_status_label(
         "p-run",
-        [_tier2_check("p-run-tier2", "blocked", body="tier2-running in worktree")],
-    ) == "t2 run"
-    assert model.tier2_status_label("p-none", []) == ""
-    assert model.tier2_status_label("p-ok", [_tier2_check("other-tier2", "pass")]) == ""
-    wrong_kind = _tier2_check("p-ok-tier2", "pass")
+        [_suite_check("p-run-suite", "blocked", body="suite-running in worktree")],
+    ) == "suite running"
+    assert model.suite_status_label("p-none", []) == ""
+    assert model.suite_status_label("p-ok", [_suite_check("other-suite", "pass")]) == ""
+    wrong_kind = _suite_check("p-ok-suite", "pass")
     wrong_kind["payload"]["evidence_kind"] = "unit"
-    assert model.tier2_status_label("p-ok", [wrong_kind]) == ""
+    assert model.suite_status_label("p-ok", [wrong_kind]) == ""
+    # Legacy `-tier2` subjects still display (suite labels).
+    assert model.suite_status_label(
+        "p-legacy",
+        [_suite_check("p-legacy-tier2", "pass", "feedface")],
+    ) == "suite ok@feedfac"
+    assert model.suite_status_label(
+        "p-pref",
+        [
+            _suite_check("p-pref-tier2", "fail", "deadbeef"),
+            _suite_check("p-pref-suite", "pass", "abcdef0123456789"),
+        ],
+    ) == "suite ok@abcdef0"
 
 
-def test_tier2_phase_row_from_snapshot(store, cli, defs):
+def test_suite_phase_row_from_snapshot(store, cli, defs):
     _goal(cli, defs, "alpha")
     phase = _record(
-        cli, defs, "project:phase", "t2p",
-        {"title": "Tier2 phase", "ordinal": 1, "effort": "alpha"},
+        cli, defs, "project:phase", "sp",
+        {"title": "Suite phase", "ordinal": 1, "effort": "alpha"},
     )
     h.transition(cli, "project:phase", phase, "in_progress")
-    _record(cli, defs, "project:work-item", "t2p-task", {
-        "title": "Task", "phase": "t2p", "kind": "deliver", "assignee": "", "effort": "alpha",
+    _record(cli, defs, "project:work-item", "sp-task", {
+        "title": "Task", "phase": "sp", "kind": "deliver", "assignee": "", "effort": "alpha",
     })
-    _record(cli, defs, "project:check-run", "t2p-tier2", {
-        "criterion_id": "tier2", "revision": "abc1234deadbeef", "result": "pass",
+    _record(cli, defs, "project:check-run", "sp-suite", {
+        "criterion_id": "suite", "revision": "abc1234deadbeef", "result": "pass",
         "effort": "alpha", "method": "check", "signed_by": "", "evidence_kind": "integration",
     })
     view = _effort(model.load_snapshot(_target(store)), "alpha")
-    row = next(p for p in view.phases if p.subject == "t2p")
-    assert row.tier2 == "t2 ok@abc1234"
+    row = next(p for p in view.phases if p.subject == "sp")
+    assert row.suite == "suite ok@abc1234"
