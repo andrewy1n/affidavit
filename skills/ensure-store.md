@@ -9,11 +9,11 @@ Requires `adaptive-artifacts` on PATH.
 
 ## Which store
 
-Dashboard and `se_workflow.aa` resolve **one** store: `local`
+Dashboard and `affidavit.aa` resolve **one** store: `local`
 (`<repo>/.artifacts`) or `global` (`~/.artifacts/<repo-name>`). See
 the README (store binding). Skills that shell out to
 `adaptive-artifacts` should use the resolved store — pass `--store`
-and `--contract` explicitly, or call through `se_workflow.aa` — so a
+and `--contract` explicitly, or call through `affidavit.aa` — so a
 personal shell function that forces `--store ~/.artifacts/$proj`
 cannot redirect writes. For a new work repo, `init` creates the
 **local** store under `<repo>/.artifacts`; pin it with

@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from se_workflow.aa_resolve import resolve_aa_command
-from se_workflow import aa
+from affidavit.aa_resolve import resolve_aa_command
+from affidavit import aa
 from dashboard import artifact_store
 
 

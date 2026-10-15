@@ -1,4 +1,4 @@
-"""Subcommand dispatcher for the se-workflow CLI."""
+"""Subcommand dispatcher for the aff CLI."""
 
 from __future__ import annotations
 
@@ -7,14 +7,14 @@ import json
 import sys
 from pathlib import Path
 
-from se_workflow.check import DEFAULT_TIMEOUT_S, run_check
-from se_workflow.close_batch import main as close_batch_main
+from affidavit.check import DEFAULT_TIMEOUT_S, run_check
+from affidavit.close_batch import main as close_batch_main
 
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="se-workflow",
-        description="se-workflow CLI (plugin-local; shells to adaptive-artifacts).",
+        prog="aff",
+        description="aff CLI (plugin-local; shells to adaptive-artifacts).",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 

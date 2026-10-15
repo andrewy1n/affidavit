@@ -11,9 +11,9 @@ from pathlib import Path
 import helpers as h
 from conftest import AA_ROOT, REPO_ROOT, git, resolve_contract, run_cli
 
-from se_workflow.policy import dirty_pass_decision, manual_refuse_message, map_process_outcome
+from affidavit.policy import dirty_pass_decision, manual_refuse_message, map_process_outcome
 
-BIN = REPO_ROOT / "bin" / "se-workflow"
+BIN = REPO_ROOT / "bin" / "aff"
 SYNC = REPO_ROOT / "scripts" / "sync-plugin.sh"
 
 
@@ -24,7 +24,7 @@ def _cli_env() -> dict[str, str]:
     return env
 
 
-def _run_se_workflow(*args: str, cwd: Path, timeout: float = 60) -> subprocess.CompletedProcess:
+def _run_affidavit(*args: str, cwd: Path, timeout: float = 60) -> subprocess.CompletedProcess:
     return subprocess.run(
         [sys.executable, str(BIN), *args],
         capture_output=True,
@@ -173,12 +173,12 @@ def test_cli_integration_pass_check_run(store, cli, resolved_contract):
     )
     head = git(store, "rev-parse", "HEAD").stdout.strip()
     assert not git(store, "status", "--porcelain").stdout.strip()
-    result = _run_se_workflow("check", "--acceptance", acceptance["id"], cwd=store)
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
     assert result.returncode == 0, result.stdout + result.stderr
     record = _parse_check_stdout(result)
     assert record["payload"]["result"] == "pass"
     assert record["payload"]["revision"] == head
-    assert record["payload"]["runner"] == "se-workflow"
+    assert record["payload"]["runner"] == "aff"
     assert record["payload"]["exit_code"] == 0
     assert "duration_s" in record["payload"]
     assert "output_sha256" in record["payload"]
@@ -189,12 +189,12 @@ def test_cli_integration_fail_check_run(store, cli, resolved_contract):
     acceptance = _seed_acceptance(
         store, cli, resolved_contract, subject="fail-task", verify_command="false",
     )
-    result = _run_se_workflow("check", "--acceptance", acceptance["id"], cwd=store)
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
     assert result.returncode == 1, result.stdout + result.stderr
     record = _parse_check_stdout(result)
     assert record["payload"]["result"] == "fail"
     assert record["payload"]["exit_code"] != 0
-    assert record["payload"]["runner"] == "se-workflow"
+    assert record["payload"]["runner"] == "aff"
 
 
 def test_cli_blocked_missing_command(store, cli, resolved_contract):
@@ -206,7 +206,7 @@ def test_cli_blocked_missing_command(store, cli, resolved_contract):
         verify_command="se-workflow-definitely-missing-binary-xyz",
         method="check",
     )
-    result = _run_se_workflow("check", "--acceptance", acceptance["id"], cwd=store)
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
     assert result.returncode == 2, result.stdout + result.stderr
     record = _parse_check_stdout(result)
     assert record["payload"]["result"] == "blocked"
@@ -218,7 +218,7 @@ def test_dirty_pass_refused_without_allow_dirty(store, cli, resolved_contract):
     )
     (store / "dirt.txt").write_text("dirty\n")
     before = _list_check_runs(store)
-    result = _run_se_workflow("check", "--acceptance", acceptance["id"], cwd=store)
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
     assert result.returncode == 3, result.stdout + result.stderr
     assert "dirty" in (result.stderr + result.stdout).lower()
     after = _list_check_runs(store)
@@ -230,7 +230,7 @@ def test_dirty_pass_with_allow_dirty_sets_revision_and_diff(store, cli, resolved
         store, cli, resolved_contract, subject="dirty-allow", verify_command="true",
     )
     (store / "dirt.txt").write_text("dirty\n")
-    result = _run_se_workflow(
+    result = _run_affidavit(
         "check", "--acceptance", acceptance["id"], "--allow-dirty", cwd=store,
     )
     assert result.returncode == 0, result.stdout + result.stderr
@@ -246,7 +246,7 @@ def test_dirty_fail_may_be_recorded(store, cli, resolved_contract):
         store, cli, resolved_contract, subject="dirty-fail", verify_command="false",
     )
     (store / "dirt.txt").write_text("dirty\n")
-    result = _run_se_workflow("check", "--acceptance", acceptance["id"], cwd=store)
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
     assert result.returncode == 1, result.stdout + result.stderr
     record = _parse_check_stdout(result)
     assert record["payload"]["result"] == "fail"
@@ -264,7 +264,7 @@ def test_manual_acceptance_refused_no_check_run(store, cli, resolved_contract):
         method="manual",
     )
     before = _list_check_runs(store)
-    result = _run_se_workflow("check", "--acceptance", acceptance["id"], cwd=store)
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
     assert result.returncode == 3, result.stdout + result.stderr
     combined = result.stderr + result.stdout
     assert "manual" in combined.lower()
@@ -283,7 +283,7 @@ def test_runner_fields_and_metadata_on_pass(store, cli, resolved_contract):
         requirement="R9",
         method="check",
     )
-    result = _run_se_workflow("check", "--acceptance", acceptance["id"], cwd=store)
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
     assert result.returncode == 0, result.stdout + result.stderr
     record = _parse_check_stdout(result)
     payload = record["payload"]
@@ -292,7 +292,7 @@ def test_runner_fields_and_metadata_on_pass(store, cli, resolved_contract):
     assert isinstance(payload["duration_s"], (int, float))
     assert payload["duration_s"] >= 0
     assert len(payload["output_sha256"]) == 64
-    assert payload["runner"] == "se-workflow"
+    assert payload["runner"] == "aff"
     assert payload["requirement"] == "R9"
     assert payload["method"] == "check"
     assert payload["revision"]
@@ -307,7 +307,7 @@ def test_exit_code_field_matches_process_for_fail(store, cli, resolved_contract)
         subject="exit-code-task",
         verify_command="sh -c 'exit 7'",
     )
-    result = _run_se_workflow("check", "--acceptance", acceptance["id"], cwd=store)
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
     assert result.returncode == 1
     record = _parse_check_stdout(result)
     assert record["payload"]["exit_code"] == 7
@@ -317,7 +317,7 @@ def test_exit_code_field_matches_process_for_fail(store, cli, resolved_contract)
 # --- entry / sync / install / bin ------------------------------------------
 
 
-def test_bin_se_workflow_entry_exists_and_is_executable():
+def test_bin_affidavit_entry_exists_and_is_executable():
     assert BIN.is_file()
     assert os.access(BIN, os.X_OK)
     result = subprocess.run(
@@ -331,7 +331,7 @@ def test_bin_se_workflow_entry_exists_and_is_executable():
     assert "check" in result.stdout
 
 
-def test_sync_plugin_install_copies_bin_and_se_workflow(tmp_path):
+def test_sync_plugin_install_copies_bin_and_affidavit(tmp_path):
     dest = tmp_path / "plugin"
     result = subprocess.run(
         ["bash", str(SYNC), str(dest)],
@@ -340,13 +340,13 @@ def test_sync_plugin_install_copies_bin_and_se_workflow(tmp_path):
         cwd=str(REPO_ROOT),
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert (dest / "bin" / "se-workflow").is_file()
-    assert os.access(dest / "bin" / "se-workflow", os.X_OK)
-    assert (dest / "se_workflow" / "cli.py").is_file()
-    assert (dest / "se_workflow" / "check.py").is_file()
+    assert (dest / "bin" / "aff").is_file()
+    assert os.access(dest / "bin" / "aff", os.X_OK)
+    assert (dest / "affidavit" / "cli.py").is_file()
+    assert (dest / "affidavit" / "check.py").is_file()
 
 
-def test_readme_documents_bin_se_workflow_entry():
+def test_readme_documents_bin_affidavit_entry():
     text = (REPO_ROOT / "README.md").read_text()
     assert "bin/se-workflow" in text
     assert "se-workflow check" in text or "bin/se-workflow check" in text

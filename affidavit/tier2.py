@@ -17,16 +17,16 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-from se_workflow import aa
-from se_workflow.check import (
+from affidavit import aa
+from affidavit.check import (
     OUTPUT_BODY_CHARS,
     RUNNER,
     git_diff_sha256,
     git_head,
     git_is_dirty,
 )
-from se_workflow.policy import dirty_pass_decision, map_process_outcome
-from se_workflow.reviewer import _revision_matches
+from affidavit.policy import dirty_pass_decision, map_process_outcome
+from affidavit.reviewer import _revision_matches
 
 EVIDENCE_KIND = "integration"
 SUBJECT_SUFFIX = "-tier2"

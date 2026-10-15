@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from dashboard.artifact_store import StoreBindingError, resolve
-from se_workflow.aa_resolve import resolve_aa_command
+from affidavit.aa_resolve import resolve_aa_command
 
 __all__ = [
     "resolve_aa_command",

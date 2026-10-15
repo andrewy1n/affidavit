@@ -14,10 +14,10 @@ import pytest
 
 from conftest import REPO_ROOT
 from skill_extraction import extract_invocations
-from se_workflow import close_batch
+from affidavit import close_batch
 
 SKILL = REPO_ROOT / "skills" / "verify-work" / "SKILL.md"
-SCRIPT = REPO_ROOT / "se_workflow" / "close_batch.py"
+SCRIPT = REPO_ROOT / "affidavit" / "close_batch.py"
 
 
 def _skill() -> str:
@@ -28,7 +28,7 @@ def _normalized(text: str) -> str:
     return re.sub(r"\s+", " ", text)
 
 
-def test_skill_documents_se_workflow_check_for_tdd_and_check():
+def test_skill_documents_affidavit_check_for_tdd_and_check():
     text = _skill()
     flat = _normalized(text)
     assert "se-workflow check" in text

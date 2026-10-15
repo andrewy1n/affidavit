@@ -12,7 +12,7 @@ from skill_extraction import extract_invocations
 
 sys.path.insert(0, str(REPO_ROOT))
 
-from se_workflow.reviewer import (  # noqa: E402
+from affidavit.reviewer import (  # noqa: E402
     build_finding_payload,
     build_review_check_run_payload,
     build_reviewer_brief,

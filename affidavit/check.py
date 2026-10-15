@@ -1,4 +1,4 @@
-"""Implement `se-workflow check`: run verify_command and write a check-run."""
+"""Implement `aff check`: run verify_command and write a check-run."""
 
 from __future__ import annotations
 
@@ -9,14 +9,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from se_workflow import aa
-from se_workflow.policy import (
+from affidavit import aa
+from affidavit.policy import (
     dirty_pass_decision,
     manual_refuse_message,
     map_process_outcome,
 )
 
-RUNNER = "se-workflow"
+RUNNER = "aff"
 DEFAULT_TIMEOUT_S = 600.0
 OUTPUT_BODY_CHARS = 8000
 
@@ -86,15 +86,15 @@ def run_verify_command(
             out += exc.stdout if isinstance(exc.stdout, str) else exc.stdout.decode("utf-8", "replace")
         if exc.stderr:
             out += exc.stderr if isinstance(exc.stderr, str) else exc.stderr.decode("utf-8", "replace")
-        out += f"\n[se-workflow check] timed out after {timeout}s\n"
+        out += f"\n[aff check] timed out after {timeout}s\n"
         return None, duration, out, True, False
     except FileNotFoundError:
         duration = time.monotonic() - started
-        return None, duration, f"[se-workflow check] command not found: {command!r}\n", False, True
+        return None, duration, f"[aff check] command not found: {command!r}\n", False, True
     except OSError as exc:
         duration = time.monotonic() - started
         # shell=True usually absorbs missing binaries as non-zero; treat other OS errors as blocked
-        return None, duration, f"[se-workflow check] could not run command: {exc}\n", False, True
+        return None, duration, f"[aff check] could not run command: {exc}\n", False, True
 
 
 def _output_sha256(output: str) -> str:

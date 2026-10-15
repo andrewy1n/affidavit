@@ -1,4 +1,4 @@
-"""se_workflow.aa passes --store/--contract from store binding resolve."""
+"""affidavit.aa passes --store/--contract from store binding resolve."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ import pytest
 
 from conftest import make_git_repo
 from dashboard import artifact_store as artifact_store_mod
-from se_workflow import aa
+from affidavit import aa
 
 
 def _meta(store: Path) -> Path:
@@ -56,7 +56,7 @@ def test_run_aa_passes_bound_store_and_contract(home, tmp_path):
         return real_run(cmd, *args, **kwargs)
 
     with patch.object(aa, "resolve_aa_command", return_value=["aa"]), patch(
-        "se_workflow.aa.subprocess.run", side_effect=fake_run
+        "affidavit.aa.subprocess.run", side_effect=fake_run
     ):
         aa.run_aa("list", "--type", "project:active-goal", root=repo)
 

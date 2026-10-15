@@ -330,7 +330,7 @@ adaptive-artifacts create --type project:execution-report \
 
    Parent only — the reviewer writes no store records:
 
-   1. Build the restricted brief with `se_workflow.reviewer.build_reviewer_brief`
+   1. Build the restricted brief with `affidavit.reviewer.build_reviewer_brief`
       (work-item descriptions/Approach, acceptances, requirements/
       invariants, and `git diff <base>..<phase-head>` only — no
       execution-report, check-run, assessment, or assignment text).
@@ -418,7 +418,7 @@ adaptive-artifacts create --type project:integration-report \
    `<phase-slug>-tier2`; `evidence_kind` is `integration`; include
    runner metadata (`revision`, `exit_code`, `duration_s`,
    `output_sha256`, and `failing_node_ids` when failed). Use
-   `se_workflow.tier2` (`start_tier2_background`, `poll_tier2` /
+   `affidavit.tier2` (`start_tier2_background`, `poll_tier2` /
    `collect_tier2`, `record_tier2_check_run`). Dirty-only pass is
    refused the same way as `se-workflow check` (commit first, or
    `--allow-dirty` → `revision=dirty` + `diff_sha256`).

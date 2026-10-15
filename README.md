@@ -361,7 +361,7 @@ It needs `uv`. The first run downloads `textual`.
 `dashboard/bin/dashboard --interval S` sets the seconds between change checks
 (default 2).
 
-The launcher (and `se_workflow.aa`) pick **one** store for the git
+The launcher (and `affidavit.aa`) pick **one** store for the git
 toplevel — local (`<toplevel>/.artifacts`) or global
 (`~/.artifacts/<toplevel name>`), never both.
 
@@ -381,7 +381,7 @@ not fall through to the other store. This repository pins local in
 If a personal shell function wraps `adaptive-artifacts` and forces
 `--store ~/.artifacts/<name>`, it bypasses this binding for bare CLI
 calls. Prefer `command adaptive-artifacts`, or pass `--store` /
-`--contract` from the resolved target (as `se_workflow.aa.run_aa`
+`--contract` from the resolved target (as `affidavit.aa.run_aa`
 does).
 
 It runs the app from the toplevel. The app finds the runtime binary in

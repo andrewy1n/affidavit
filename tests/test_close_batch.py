@@ -21,11 +21,11 @@ import pytest
 
 import helpers as h
 from conftest import REPO_ROOT
-from se_workflow import close_batch
+from affidavit import close_batch
 
-CLI = REPO_ROOT / "bin" / "se-workflow"
+CLI = REPO_ROOT / "bin" / "aff"
 
-RUNNER = "se-workflow"
+RUNNER = "aff"
 
 
 def _tdd_pass_only_entry(**extra):
@@ -364,7 +364,7 @@ def _seed_runner_check_run(cli, defs, subject, acceptance, execution_report, *, 
         "effort": acceptance["payload"]["effort"],
         "method": acceptance["payload"]["method"],
         "signed_by": "",
-        "runner": "se-workflow",
+        "runner": "aff",
     }
     args = [
         "create",
@@ -439,7 +439,7 @@ def test_end_to_end_all_pass_closes_the_work_item_to_done(cli, resolved_contract
     assert len(check_runs) == 2
     by_id = {cr["id"]: cr for cr in check_runs}
     assert by_id[green_cr["id"]]["payload"]["result"] == "pass"
-    assert by_id[green_cr["id"]]["payload"].get("runner") == "se-workflow"
+    assert by_id[green_cr["id"]]["payload"].get("runner") == "aff"
     assert by_id[red_cr["id"]]["payload"]["result"] == "fail"
 
 

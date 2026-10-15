@@ -12,7 +12,7 @@ from skill_extraction import extract_invocations
 
 sys.path.insert(0, str(REPO_ROOT))
 
-from se_workflow.tier2 import (  # noqa: E402
+from affidavit.tier2 import (  # noqa: E402
     EVIDENCE_KIND,
     METHOD,
     build_tier2_check_run_payload,
@@ -142,7 +142,7 @@ def test_runner_records_tier2_check_run_payload_fields():
     assert payload["output_sha256"] == "deadbeef" * 8
     assert payload["evidence_kind"] == EVIDENCE_KIND == "integration"
     assert payload["method"] == METHOD
-    assert payload["runner"] == "se-workflow"
+    assert payload["runner"] == "aff"
     assert json.loads(payload["failing_node_ids"]) == [
         "tests/test_foo.py::test_a",
         "tests/test_bar.py::test_b",
@@ -248,14 +248,14 @@ def test_phase_gate_requires_acceptances_and_tier2_at_head():
             "revision": HEAD,
             "result": "pass",
             "method": "tdd",
-            "runner": "se-workflow",
+            "runner": "aff",
         },
         {
             "criterion_id": "acc-b",
             "revision": HEAD,
             "result": "pass",
             "method": "check",
-            "runner": "se-workflow",
+            "runner": "aff",
         },
         {
             "subject": tier2_subject(PHASE),
@@ -264,7 +264,7 @@ def test_phase_gate_requires_acceptances_and_tier2_at_head():
             "result": "pass",
             "method": "check",
             "evidence_kind": "integration",
-            "runner": "se-workflow",
+            "runner": "aff",
         },
     ]
     assert (
@@ -347,7 +347,7 @@ def test_execute_phase_documents_tier2_after_reviewer_and_check_run():
     flat = _skill_flat()
     assert "tier-2" in flat
     assert "background" in flat or "detached tmux" in flat
-    assert "se_workflow.tier2" in text or "start_tier2_background" in text
+    assert "affidavit.tier2" in text or "start_tier2_background" in text
     review_at = flat.index("reviewer")
     tier_at = flat.index("tier-2")
     # Phase-end order names reviewer before tier-2.

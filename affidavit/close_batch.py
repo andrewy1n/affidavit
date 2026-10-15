@@ -4,7 +4,7 @@ Reads a close-request JSON describing the work-item's active acceptances,
 each criterion's evidence, and the transition to apply.
 
 For `method` `tdd` or `check`, the binary check-run must already exist
-(from `se-workflow check`). The request references that runner-produced
+(from `aff check`). The request references that runner-produced
 `check_run_id` and copies its `result` for the refusal gate — this
 script does not invent pass/fail or emit a `project:check-run` create
 for those methods.
@@ -40,7 +40,7 @@ from pathlib import Path
 from typing import Any
 
 RUNNER_METHODS = frozenset({"tdd", "check"})
-RUNNER_MARKER = "se-workflow"
+RUNNER_MARKER = "aff"
 
 
 class CloseRequestError(Exception):
@@ -164,7 +164,7 @@ def build_batch(
                 raise CloseRequestError(
                     f"criteria entry {criterion_id!r} method={method!r} must "
                     "reference a runner-produced check_run_id (from "
-                    "se-workflow check); do not invent pass/fail"
+                    "aff check); do not invent pass/fail"
                 )
             if "result" not in entry:
                 raise CloseRequestError(

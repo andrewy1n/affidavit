@@ -15,7 +15,7 @@ mkdir -p \
   "$DEST/scripts" \
   "$DEST/dashboard" \
   "$DEST/bin" \
-  "$DEST/se_workflow" \
+  "$DEST/affidavit" \
   "$DEST/agents" \
   "$DEST/.claude-plugin" \
   "$DEST/.cursor-plugin"
@@ -29,7 +29,7 @@ cp -a "$ROOT/scripts/." "$DEST/scripts/"
 rm -f "$DEST/scripts/sync-plugin.sh"
 cp -a "$ROOT/dashboard/." "$DEST/dashboard/"
 cp -a "$ROOT/bin/." "$DEST/bin/"
-cp -a "$ROOT/se_workflow/." "$DEST/se_workflow/"
+cp -a "$ROOT/affidavit/." "$DEST/affidavit/"
 cp -a "$ROOT/agents/." "$DEST/agents/"
 cp -a "$ROOT/se-workflow.tmux" "$DEST/"
 find "$DEST" -name '__pycache__' -type d -prune -exec rm -rf {} +
