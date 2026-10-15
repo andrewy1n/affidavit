@@ -72,6 +72,9 @@ def test_per_task_verify_stays_scoped_while_phase_suite_is_documented():
     assert "verify_command" in execute
     assert "tier-2" not in execute and "tier2" not in execute
 
+    reviewer = (REPO_ROOT / "agents" / "se-reviewer.md").read_text()
+    assert "tier-2" not in reviewer and "tier2" not in reviewer
+
     readme = _testing_section("README.md")
     assert "phase_gate.suite" in readme
     assert "phase-level" in readme or "phase level" in readme

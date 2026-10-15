@@ -4,7 +4,7 @@ description: >-
   Read-only phase-end reviewer for affidavit. Compares phase specs,
   acceptances, invariants, and the phase diff to the tree. Returns structured
   PASS/NEEDS_WORK. Invoked by execute-phase after closing verification and
-  before merge (and before tier-2 when that phase exists).
+  before merge (and before the phase suite when that step exists).
 tools: Read, Grep, Glob, Bash
 ---
 
