@@ -38,6 +38,7 @@ from affidavit.suite import (  # noqa: E402
 SKILL = REPO_ROOT / "skills" / "execute-phase" / "SKILL.md"
 README = REPO_ROOT / "README.md"
 CONTRACT = REPO_ROOT / "contract" / "project-design.json"
+LIVE_DESIGN = REPO_ROOT / ".artifacts" / "project-design.json"
 
 HEAD = "abcdef0123456789abcdef0123456789abcdef01"
 PHASE = "verification-policy"
@@ -448,13 +449,17 @@ def test_policy_defaults_missing_mode_none_omitted_gate_required():
 
 
 def test_this_repo_suite_policy_full_advisory_from_design():
-    design = json.loads(CONTRACT.read_text())
+    # R6: this-repo pin is live design; R2: bundled contract stays mode=none.
+    design = json.loads(LIVE_DESIGN.read_text())
     suite = design["phase_gate"]["suite"]
     policy = normalize_suite_policy(suite)
     assert policy.mode == "full"
     assert policy.gate == "advisory"
     assert policy.blocks_merge is False
     assert policy.run_locally is True
+    bundled = json.loads(CONTRACT.read_text())["phase_gate"]["suite"]
+    assert bundled["mode"] == "none"
+    assert bundled.get("command", "") == ""
 
 
 def test_fix_cluster_budget_no_inline_rerun_for_required_gate():

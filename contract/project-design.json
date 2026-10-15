@@ -13,9 +13,9 @@
   },
   "phase_gate": {
     "suite": {
-      "mode": "full",
-      "command": "uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m \"not tmux\" && uv run --with textual --with pytest python -m pytest tests -q -m tmux",
-      "gate": "advisory"
+      "mode": "none",
+      "command": "",
+      "gate": "required"
     }
   },
   "records": [

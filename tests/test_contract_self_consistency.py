@@ -212,16 +212,19 @@ def test_approval_optional_payload_note_fields_accepted(
 # Enums and plugin defaults are encoded here; JSON cannot carry comments.
 PHASE_GATE_SUITE_MODES = ("none", "smoke", "full", "external")
 PHASE_GATE_SUITE_GATES = ("required", "advisory", "deferred")
-# Plugin/bundled default when a fresh design has not configured a suite.
-PHASE_GATE_SUITE_DEFAULTS = {"mode": "none", "command": "", "gate": "required"}
+LIVE_DESIGN_PATH = CONTRACT_PATH.parent.parent / ".artifacts" / "project-design.json"
 
 
-def _design() -> dict:
+def _bundled_design() -> dict:
     return json.loads(CONTRACT_PATH.read_text())
 
 
+def _live_design() -> dict:
+    return json.loads(LIVE_DESIGN_PATH.read_text())
+
+
 def test_phase_gate_suite_present_with_mode_command_gate():
-    suite = _design()["phase_gate"]["suite"]
+    suite = _bundled_design()["phase_gate"]["suite"]
     assert set(suite) >= {"mode", "command", "gate"}
     assert isinstance(suite["command"], str)
     assert suite["mode"] in PHASE_GATE_SUITE_MODES
@@ -229,17 +232,20 @@ def test_phase_gate_suite_present_with_mode_command_gate():
 
 
 def test_phase_gate_suite_plugin_defaults():
-    """Bundled default is mode=none (empty command). When mode is not none
-    and command is non-empty, omitted gate means required."""
-    assert PHASE_GATE_SUITE_DEFAULTS["mode"] == "none"
-    assert PHASE_GATE_SUITE_DEFAULTS["command"] == ""
-    assert PHASE_GATE_SUITE_DEFAULTS["gate"] == "required"
+    """Bundled contract default is mode=none (empty command). When mode is
+    not none and command is non-empty, omitted gate means required."""
+    suite = _bundled_design()["phase_gate"]["suite"]
+    assert suite["mode"] == "none"
+    assert suite.get("command", "") == ""
+    assert suite["gate"] == "required"
     configured = {"mode": "smoke", "command": "pytest -q"}
     assert configured.get("gate", "required") == "required"
 
 
 def test_phase_gate_suite_this_repo_full_advisory():
-    suite = _design()["phase_gate"]["suite"]
+    """This repo's full+advisory pin lives in live .artifacts design (R6),
+    not in the bundled consumer default (R2)."""
+    suite = _live_design()["phase_gate"]["suite"]
     assert suite["mode"] == "full"
     assert suite["gate"] == "advisory"
     assert "pytest" in suite["command"]
@@ -248,7 +254,7 @@ def test_phase_gate_suite_this_repo_full_advisory():
 
 def test_phase_gate_tolerated_by_resolve_like_assessment():
     """Top-level phase_gate is design metadata; resolve must still succeed."""
-    design = _design()
+    design = _bundled_design()
     assert "assessment" in design
     assert "phase_gate" in design
     tmp = Path(tempfile.mkdtemp(prefix="se-workflow-phase-gate-"))

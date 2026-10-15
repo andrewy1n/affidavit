@@ -477,11 +477,13 @@ not waive it; change the project design instead.
 | `mode` | `none`, `smoke`, `full`, `external` | `none` skips; `smoke`/`full` run the contracted `command` in a detached tmux window in the phase worktree; `external` does not run locally |
 | `gate` | `required`, `advisory`, `deferred` | `required` blocks Landing merge on missing/failing suite@head; `advisory` records the check-run (and a finding on fail) without blocking; `deferred` is a Landing human stop with no local run |
 
-Consumer default is `mode=none` (skip). When a suite is configured
-(`mode` not `none` and `command` set) and `gate` is omitted, gate
-defaults to `required`. This repo sets `mode=full` and
-`gate=advisory`. The suite check-run uses `subject` `<phase>-suite`
-(`evidence_kind: integration`) at the phase head SHA.
+The bundled `contract/project-design.json` defaults to `mode=none`
+(skip) for consumers. When a suite is configured (`mode` not `none`
+and `command` set) and `gate` is omitted, gate defaults to `required`.
+This repo's live `.artifacts/project-design.json` sets `mode=full` and
+`gate=advisory` with the full-suite command above. The suite check-run
+uses `subject` `<phase>-suite` (`evidence_kind: integration`) at the
+phase head SHA.
 
 By default it looks for the runtime at `~/adaptive-artifacts`. Point it
 elsewhere with `ADAPTIVE_ARTIFACTS_ROOT`:
