@@ -1370,12 +1370,14 @@ def test_list_skips_types_absent_from_bound_contract(tmp_path, monkeypatch):
 
 
 def test_snapshot_loads_against_adaptive_artifacts_store():
-    """Live adaptive-artifacts checkout must not die on project:phase list."""
+    """Live adaptive-artifacts checkout must load even when its design declares phases."""
     root = Path.home() / "adaptive-artifacts"
     if not (root / ".artifacts" / "meta.json").is_file():
         pytest.skip("adaptive-artifacts store not present")
     target = artifact_store.resolve(root)
-    assert "project:phase" not in (model._declared_record_types(target) or ())
+    # AA may use the se-workflow/affidavit design (has project:phase) or an older
+    # foreign design without it. Either way load_snapshot must not die.
+    _ = model._declared_record_types(target)
     snapshot = model.load_snapshot(target)
     assert isinstance(snapshot.efforts, list)
 
