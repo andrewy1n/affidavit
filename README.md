@@ -59,6 +59,18 @@ one effort do not collide. Handoff groups by `effort`. See [skills/kinds-and-foc
 Requires **adaptive-artifacts** (`adaptive-artifacts` on PATH). Neither
 plugin is in Anthropic's official marketplace.
 
+### uv tool install (adaptive-artifacts)
+
+To put the runtime CLI on PATH without a sibling checkout:
+
+```bash
+uv tool install "git+https://github.com/andrewy1n/adaptive-artifacts.git@<ref>"
+```
+
+Replace `<ref>` with a branch, tag, or commit. Plugin and git-checkout
+install paths below still work. Publishing adaptive-artifacts to PyPI
+is deferred until the package format settles and outsiders use it.
+
 ### Claude Code
 
 The affidavit marketplace lists both plugins. Installing affidavit
