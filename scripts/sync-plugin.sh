@@ -5,7 +5,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DEST="${1:-${HOME}/.cursor/plugins/local/se-workflow}"
+DEST="${1:-${HOME}/.cursor/plugins/local/affidavit}"
 
 mkdir -p "$(dirname "$DEST")"
 rm -rf "$DEST"

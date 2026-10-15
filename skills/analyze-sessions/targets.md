@@ -2,7 +2,7 @@
 
 Read this at the mapping step. Map each metric pattern to one target. Output is proposals only.
 
-## se-workflow skills
+## affidavit skills
 
 Fix goes in `skills/*/SKILL.md`.
 

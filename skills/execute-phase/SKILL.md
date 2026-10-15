@@ -1,7 +1,7 @@
 ---
 name: execute-phase
 description: >-
-  Dispatches se-workflow work-items whose derived.ready is true, in
+  Dispatches affidavit work-items whose derived.ready is true, in
   dependency order, each wave inline in this session or as one
   subagent per task, recording an assignment and execution-report
   per dispatch. Parent session writes records; subagents return
@@ -11,7 +11,7 @@ description: >-
 
 # Execute the focused effort
 
-Requires `artifact-runtime` and a live se-workflow store. If missing,
+Requires `artifact-runtime` and a live affidavit store. If missing,
 follow [ensure-store.md](../ensure-store.md) then `init` (if no goal
 for the focus) and `plan-phase`. Follow
 [kinds-and-focus.md](../kinds-and-focus.md). Follow `verify-work`
@@ -420,7 +420,7 @@ adaptive-artifacts create --type project:integration-report \
    `output_sha256`, and `failing_node_ids` when failed). Use
    `affidavit.tier2` (`start_tier2_background`, `poll_tier2` /
    `collect_tier2`, `record_tier2_check_run`). Dirty-only pass is
-   refused the same way as `se-workflow check` (commit first, or
+   refused the same way as `aff check` (commit first, or
    `--allow-dirty` → `revision=dirty` + `diff_sha256`).
 
    If the tmux job is orphaned, reattach with
@@ -432,7 +432,7 @@ adaptive-artifacts create --type project:integration-report \
 ```bash
 adaptive-artifacts create --type project:check-run \
   --subject "<phase-slug>-tier2" \
-  --payload '{"criterion_id":"<phase-slug>-tier2","revision":"<phase-head-sha>","result":"<pass|fail|blocked>","effort":"<focus>","method":"check","signed_by":"","evidence_kind":"integration","runner":"se-workflow","exit_code":0,"duration_s":0,"output_sha256":"<digest>","failing_node_ids":"[]"}' \
+  --payload '{"criterion_id":"<phase-slug>-tier2","revision":"<phase-head-sha>","result":"<pass|fail|blocked>","effort":"<focus>","method":"check","signed_by":"","evidence_kind":"integration","runner":"affidavit","exit_code":0,"duration_s":0,"output_sha256":"<digest>","failing_node_ids":"[]"}' \
   --body "<suite output tail; failing node ids when failed>"
 ```
 

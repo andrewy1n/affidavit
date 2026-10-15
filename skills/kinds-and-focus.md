@@ -1,6 +1,6 @@
 # Kinds and focus
 
-Shared rules for every se-workflow skill. Do not invent extra skills for
+Shared rules for every affidavit skill. Do not invent extra skills for
 bugs, one-offs, or evals.
 
 ## Kinds

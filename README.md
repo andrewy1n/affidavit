@@ -1,4 +1,4 @@
-# se-workflow
+# affidavit
 
 Agent skills for a software-engineering loop on adaptive-artifacts:
 classify the ask, plan only the focused effort, execute independent
@@ -15,19 +15,19 @@ materialized as `work-item` + `acceptance`.
 
 ## Quick start
 
-1. Install the **adaptive-artifacts** and **se-workflow** plugins (see Install).
+1. Install the **adaptive-artifacts** and **affidavit** plugins (see Install).
 2. Install [uv](https://docs.astral.sh/uv/getting-started/installation/). It runs the dashboard and fetches Textual.
 3. Add the dashboard keys to tmux. Pick one:
    - With [TPM](https://github.com/tmux-plugins/tpm), add this to `~/.tmux.conf`, then press prefix + `I`:
 
      ```tmux
-     set -g @plugin 'andrewy1n/se-workflow'
+     set -g @plugin 'andrewy1n/affidavit'
      ```
 
    - Without TPM, clone the repo and add this to `~/.tmux.conf`:
 
      ```tmux
-     run-shell ~/se-workflow/se-workflow.tmux
+     run-shell ~/affidavit/se-workflow.tmux
      ```
 
 4. In your project, run the `init` skill once. It creates the store the dashboard reads.
@@ -35,7 +35,7 @@ materialized as `work-item` + `acceptance`.
 
 A Claude Code plugin install alone does not give you the tmux keys. Use TPM or a clone for step 3.
 Without tmux, run `dashboard/bin/dashboard` from inside your repo.
-Run acceptance checks with `bin/se-workflow check` (same plugin root as `dashboard/bin`).
+Run acceptance checks with `bin/aff check` (same plugin root as `dashboard/bin`).
 
 ## Kinds
 
@@ -61,19 +61,19 @@ plugin is in Anthropic's official marketplace.
 
 ### Claude Code
 
-The se-workflow marketplace lists both plugins. Installing se-workflow
+The affidavit marketplace lists both plugins. Installing affidavit
 pulls `adaptive-artifacts` as a declared dependency (same marketplace):
 
 ```bash
-claude plugin marketplace add andrewy1n/se-workflow
-claude plugin install se-workflow@se-workflow -y
+claude plugin marketplace add andrewy1n/affidavit
+claude plugin install affidavit@affidavit -y
 ```
 
-Install id is `se-workflow@se-workflow`. If a marketplace with that name
-already points elsewhere: `claude plugin marketplace remove se-workflow`
+Install id is `affidavit@affidavit`. If a marketplace with that name
+already points elsewhere: `claude plugin marketplace remove affidavit`
 then add again.
 
-To install only the runtime (without se-workflow), use its own
+To install only the runtime (without affidavit), use its own
 marketplace: `claude plugin marketplace add andrewy1n/adaptive-artifacts`
 then `claude plugin install adaptive-artifacts@adaptive-artifacts -y`.
 
@@ -86,11 +86,11 @@ or sync **both** repos and put `adaptive-artifacts` on PATH:
 git clone https://github.com/andrewy1n/adaptive-artifacts.git
 # put adaptive-artifacts/bin on PATH (see that repo's README)
 
-git clone https://github.com/andrewy1n/se-workflow.git
+git clone https://github.com/andrewy1n/affidavit.git
 ./se-workflow/scripts/sync-plugin.sh
 ```
 
-Then reload Cursor so it picks up `~/.cursor/plugins/local/se-workflow`.
+Then reload Cursor so it picks up `~/.cursor/plugins/local/affidavit`.
 Or install from the repository URL in the Cursor plugin flow.
 
 #### Codex / other Agent Skills hosts
@@ -149,7 +149,7 @@ records. An interrupt or a chore that may span chats gets
 `kind=incidental` on its **own** subject. Subagents must not call
 `adaptive-artifacts` (single-writer store).
 
-Existing se-workflow stores created before staged task lifecycle,
+Existing affidavit stores created before staged task lifecycle,
 phase records, and dependency edges existed need a human-approved
 contract replace (`ensure-store.md`).
 
@@ -251,15 +251,15 @@ Shared first-run steps: [skills/ensure-store.md](skills/ensure-store.md).
 
 ## CLI
 
-`bin/se-workflow` is the plugin CLI entry (installed next to
+`bin/aff` is the plugin CLI entry (installed next to
 `dashboard/bin` by `scripts/sync-plugin.sh`). It dispatches subcommands
 and shells to `adaptive-artifacts` for store reads/writes.
 
 ```bash
 # From a clone or a sync-plugin install root, inside the project with the store:
-bin/se-workflow check --acceptance <acceptance-id>
-bin/se-workflow check --acceptance <id> --cwd /path/to/phase-worktree
-bin/se-workflow check --acceptance <id> --allow-dirty   # pass on dirty tree
+bin/aff check --acceptance <acceptance-id>
+bin/aff check --acceptance <id> --cwd /path/to/phase-worktree
+bin/aff check --acceptance <id> --allow-dirty   # pass on dirty tree
 ```
 
 `check` runs the acceptance's `verify_command` (methods `tdd` / `check`
@@ -404,7 +404,7 @@ tmux popups run a non-interactive shell, so shell functions and aliases
 do not apply there. If the launcher finds no store or no `uv`, it prints
 the reason and waits for a key.
 
-The keys come from `se-workflow.tmux` at the repo root. TPM runs it
+The keys come from `affidavit.tmux` at the repo root. TPM runs it
 by itself, and `run-shell` runs it without TPM (see Quick start). It adds:
 
 | Keys | Opens |
@@ -442,7 +442,7 @@ It reads Claude Code status JSON on stdin (`workspace.current_dir`, else
 line script that has the status JSON in `$input`, append:
 
 ```bash
-echo "$input" | ~/se-workflow/dashboard/bin/dashboard-status
+echo "$input" | ~/affidavit/dashboard/bin/dashboard-status
 ```
 
 ## Testing

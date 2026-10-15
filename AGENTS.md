@@ -21,7 +21,7 @@ Do not copy `skills/`, rules, or this tree into a work project. The
 bundled contract is `contract/project-design.json`. `init`,
 `plan-phase`, or `engage` copies it into the work repo on first use.
 If that repo's `.artifacts/project-design.json` has a `"project"` other
-than `se-workflow`, stop. Do not overlay a foreign contract. See
+than `affidavit`, stop. Do not overlay a foreign contract. See
 [skills/ensure-store.md](skills/ensure-store.md).
 
 ## Live protocol
@@ -69,7 +69,7 @@ no Landing section.
 
 ## Contract and the runtime
 
-`contract/project-design.json` is the se-workflow design. Record types
+`contract/project-design.json` is the affidavit design. Record types
 are expected to grow. Tests and skills must not hardcode today's type
 list as if it were frozen.
 
@@ -91,10 +91,10 @@ A change to the runtime, catalog, hooks, or adaptive-artifacts skills
 is an extension change. Follow `~/adaptive-artifacts/AGENTS.md`, section
 "Changing the extension": capture it in **that** repo's store and apply
 it only with human approval. Do not patch `~/adaptive-artifacts` mid-task
-from a se-workflow session. `reassess-artifacts` redesigns a project's
+from a affidavit session. `reassess-artifacts` redesigns a project's
 own contract. It does not edit the extension.
 
-If the se-workflow contract can express the need, change
+If the affidavit contract can express the need, change
 `contract/project-design.json` here and leave the runtime alone.
 
 ## Testing

@@ -1,14 +1,14 @@
 {
-  "name": "se-workflow",
-  "displayName": "se-workflow",
+  "name": "affidavit",
+  "displayName": "affidavit",
   "description": "Software-engineering skills: classify work (deliver/repair/evaluate/incidental), plan a focused effort as records, execute with parallel subagents, verify with checks or findings. Requires the adaptive-artifacts plugin.",
   "version": "0.2.0",
   "author": {
     "name": "andrewy1n",
     "email": "andrewyingo@gmail.com"
   },
-  "homepage": "https://github.com/andrewy1n/se-workflow",
-  "repository": "https://github.com/andrewy1n/se-workflow",
+  "homepage": "https://github.com/andrewy1n/affidavit",
+  "repository": "https://github.com/andrewy1n/affidavit",
   "keywords": [
     "skills",
     "planning",

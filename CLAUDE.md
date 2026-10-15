@@ -34,7 +34,7 @@ extension change. That approval is the gate in
 amendment in that repo's store first. `reassess-artifacts` is for a
 project's own contract, not for the runtime.
 
-If se-workflow's `contract/project-design.json` can express the need,
+If affidavit's `contract/project-design.json` can express the need,
 change that file here. After any skill edit, the documented CLI
 invocations must still be legal:
 `python3 -m pytest tests/test_skill_contract_consistency.py -q`.
@@ -45,4 +45,4 @@ Use the installed skills (`engage`, `init`, `discuss`, `plan-phase`,
 `execute-phase`, `verify-work`). Do not copy this repo into the project
 you are building. Shared rules are `skills/kinds-and-focus.md` and
 `skills/ensure-store.md`. If a work repo already has a
-`project-design.json` whose `"project"` is not `se-workflow`, stop.
+`project-design.json` whose `"project"` is not `affidavit`, stop.

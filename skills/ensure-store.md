@@ -1,4 +1,4 @@
-# Ensure the current project has an se-workflow store
+# Ensure the current project has an affidavit store
 
 This plugin is installed once. Do **not** copy skills, rules, or this
 repo into the work project. The store is created in the **current
@@ -31,14 +31,14 @@ Resolve `<plugin>` in order:
 2. `$CURSOR_PLUGIN_ROOT` if that path contains `contract/project-design.json`
 3. Directory two levels above this `SKILL.md` (skill-relative layout)
 
-Do not hardcode `~/.cursor/plugins/local/se-workflow` as a primary
+Do not hardcode `~/.cursor/plugins/local/affidavit` as a primary
 path. Local sync installs still work when skills run from that tree
 via step 3.
 
 ## First run in a work repo
 
 If `.artifacts/project-design.json` exists and `"project"` is
-`se-workflow`, check that the design lists a `phase` record, a
+`affidavit`, check that the design lists a `phase` record, a
 `constraint` record, an `assignment` record, and an `execution-report`
 record, and that `work-item` has `required_sections`. A design is
    current only when it also lists `specification`, `design`,

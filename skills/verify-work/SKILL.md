@@ -1,7 +1,7 @@
 ---
 name: verify-work
 description: >-
-  Captures se-workflow check-run evidence, assesses what it means for
+  Captures aff check-run evidence, assesses what it means for
   each requirement, and closes a work-item when that criterion is met.
   Use when a task needs to be shown done, a campaign was run, a bug was
   diagnosed, or a subagent returned verification evidence.
@@ -9,7 +9,7 @@ description: >-
 
 # Verify work
 
-Requires `artifact-runtime` and a live se-workflow store. If missing,
+Requires `artifact-runtime` and a live affidavit store. If missing,
 follow [ensure-store.md](../ensure-store.md). Follow
 [kinds-and-focus.md](../kinds-and-focus.md). Parent session writes
 records. Git/tests own the code; this skill owns the occurrence that
@@ -22,7 +22,7 @@ a criterion was tested and any diagnose/eval conclusion.
 `live` field.
 
 Red-first (fail before you fix) for `method` `tdd` on a `done` close
-is **enforced** by `se-workflow close-batch`. A pass-only `tdd` close-request
+is **enforced** by `aff close-batch`. A pass-only `tdd` close-request
 without request-carried red evidence is refused (exit 2), the same
 way unmet criteria without a finding are refused. The gate is
 request-carried: the close-request must name a runner-produced fail
@@ -144,12 +144,12 @@ skill. Do not write `level` or `next` on a check-run.
      pass (fails may be dirty without it).
 
 ```bash
-se-workflow check --acceptance <acceptance-record-id> \
+aff check --acceptance <acceptance-record-id> \
   --cwd <repo-or-worktree> \
   --execution-report <execution-report-record-id>
 ```
 
-     Resolve `se-workflow` from the plugin root (`bin/se-workflow`)
+     Resolve `affidavit` from the plugin root (`bin/aff`)
      the same way [ensure-store.md](../ensure-store.md) resolves
      `<plugin>`. Do **not** `adaptive-artifacts create --type
      project:check-run` for `method` `tdd` or `check`. Read the
@@ -193,7 +193,7 @@ adaptive-artifacts correct --type project:check-run --id <check-run-id> \
   --payload '{"signed_by":"<signer>"}'
 ```
 
-   `tdd`/`check` results (from `se-workflow check`) don't need a
+   `tdd`/`check` results (from `aff check`) don't need a
    signer; their `signed_by` stays `""`.
 
    On every path, `result` is `pass`, `fail`, `blocked`, or
@@ -543,7 +543,7 @@ adaptive-artifacts update --type project:work-item --id <id> \
 specification, and incidental work). It skips assessment and release.
 A result other than `pass` is already unmet there; do not route
 `blocked` or `insufficient` through `close`. Structured work gets
-check-runs from `se-workflow check` (or a `manual` create) with
+check-runs from `aff check` (or a `manual` create) with
 `requirement` and `evidence_kind`, then Assess. `close` does not copy
 those fields. Use the simple-work batch once every active acceptance
 for this work-item has a runner-produced check-run (`tdd`/`check`) or
@@ -559,15 +559,15 @@ It also refuses a pass-only `tdd` `done` close that lacks valid
 request-carried red evidence (and has no `finding`). Do not
 hand-write the batch to route around a refusal.
 
-For `tdd`/`check`, `se-workflow close-batch` does **not** invent pass/fail or
+For `tdd`/`check`, `aff close-batch` does **not** invent pass/fail or
 create check-runs. It only references runner-produced `check_run_id`s
-(from `se-workflow check`) and copies each run's `result` for the
+(from `aff check`) and copies each run's `result` for the
 refusal gate. For `tdd` on `done`, also carry red-first fields from a
 prior runner fail (below). `manual` criteria still carry `result` /
 `revision` / `signed_by` so the batch can create those check-runs.
 `check` and `manual` do not require `red_check_run_id`.
 
-CLI: `se-workflow close-batch` (or `<plugin>/bin/se-workflow close-batch`
+CLI: `aff close-batch` (or `<plugin>/bin/aff close-batch`
 after resolving `<plugin>` per [ensure-store.md](../ensure-store.md)).
 
 1. Fetch the active acceptances — superseded ones are retired
@@ -598,7 +598,7 @@ adaptive-artifacts list --type project:check-run --subject "<task-slug>" --full 
 
    Copy from the red check-run into the criteria entry:
    `red_check_run_id` (the red run's `id`), `red_result` (must be
-   `fail`), `red_revision`, `red_runner` (must be `se-workflow`), and
+   `fail`), `red_revision`, `red_runner` (must be `affidavit`), and
    when `red_revision` is `dirty`, non-empty `red_diff_sha256` from
    that run's `diff_sha256`. Copy the green run's `revision` onto the
    criteria entry too — ancestry requires it when red is a SHA (green
@@ -633,7 +633,7 @@ cat > /tmp/close-request.json <<'EOF'
       "red_check_run_id": "<red-runner-check-run-id>",
       "red_result": "fail",
       "red_revision": "<red-sha>",
-      "red_runner": "se-workflow"
+      "red_runner": "affidavit"
     },
     {"criterion_id": "<acceptance-id-2>", "method": "check", "check_run_id": "<runner-check-run-id-2>", "result": "pass"}
   ],
@@ -665,7 +665,7 @@ cat > /tmp/close-request.json <<'EOF'
       "red_check_run_id": "<red-runner-check-run-id>",
       "red_result": "fail",
       "red_revision": "dirty",
-      "red_runner": "se-workflow",
+      "red_runner": "affidavit",
       "red_diff_sha256": "<digest-from-red-check-run-diff_sha256>"
     }
   ],
@@ -706,7 +706,7 @@ EOF
    (default: process cwd):
 
 ```bash
-se-workflow close-batch \
+aff close-batch \
   --input /tmp/close-request.json \
   --out /tmp/close-batch.ndjson \
   --cwd <repo-or-worktree>
@@ -722,7 +722,7 @@ se-workflow close-batch \
 5. Only after a `0` exit, apply the batch — one `project:check-run`
    create per `manual` criterion (each `informed_by` both its
    acceptance and the execution-report); `tdd`/`check` check-runs are
-   already in the store from `se-workflow check` and are not
+   already in the store from `aff check` and are not
    re-created. Then the `finding` if one was given, then the
    work-item transition, all in one process:
 
@@ -736,10 +736,10 @@ adaptive-artifacts apply /tmp/close-batch.ndjson
 
 - Dual-write CI as records if CI already owns the result
 - `create --type project:check-run` for `method` `tdd` or `check` —
-  only `se-workflow check` (or an already runner-produced id) may
+  only `aff check` (or an already runner-produced id) may
   supply those binary results
 - Invent pass/fail in a close-request for `tdd`/`check` without a
-  runner `check_run_id` — `se-workflow close-batch` must reference that id
+  runner `check_run_id` — `aff close-batch` must reference that id
 - Treat a checklist tick as pass without a `check-run` (binary) or
   a `finding` (comparative)
 - Transition a work-item to `done` on an unmet or unverified criterion
@@ -750,10 +750,10 @@ adaptive-artifacts apply /tmp/close-batch.ndjson
   reviewed it — sign it, or it lingers under Unsigned Manual Check
 - Invent `red_*` fields or close a pass-only `tdd` criterion without
   a runner-produced fail preceding the green (or a finding escape) —
-  `se-workflow close-batch` refuses that close; verify the actual command
+  `aff close-batch` refuses that close; verify the actual command
   output and copy ids/fields from real check-runs
 - Close another focus's work-item
-- Skip `se-workflow close-batch` and hand-assemble the `apply` NDJSON for a
+- Skip `aff close-batch` and hand-assemble the `apply` NDJSON for a
   multi-criterion close — that is exactly the ad-hoc path that let a
   `done` work-item carry a failing check-run with no `finding` before
 - Put `level` or `next` on a check-run
@@ -768,4 +768,4 @@ adaptive-artifacts apply /tmp/close-batch.ndjson
 - Edit the tree from a verification task when its check fails. The
   verification executor returns `fail`; leave the work-item
   `in_progress` and use assessment `next` `execute` for that failure
-- Route `manual` criteria through `se-workflow check`
+- Route `manual` criteria through `aff check`
