@@ -970,3 +970,71 @@ def test_missing_result_is_request_error_not_result_optional_pass():
     )
     with pytest.raises(close_batch.CloseRequestError, match="result"):
         _build(request)
+
+
+# -- worktree / --cwd with store on primary --------------------------------
+
+
+def _linked_phase_worktree(primary: Path, tmp_path: Path) -> Path:
+    """Linked worktree for --cwd; store records stay on the primary checkout."""
+    worktree = tmp_path / "phase-worktree"
+    added = subprocess.run(
+        ["git", "-C", str(primary), "worktree", "add", "-b", "phase/close-cwd", str(worktree)],
+        capture_output=True,
+        text=True,
+    )
+    assert added.returncode == 0, added.stderr + added.stdout
+    return worktree
+
+
+def test_close_batch_worktree_cwd_primary_store_authority(
+    cli, store, resolved_contract, tmp_path,
+):
+    """R5: close-batch --cwd=worktree still loads check-runs from primary store."""
+    defs = h.record_defs_by_id(resolved_contract)
+    subject = "wt-close-task"
+    effort = "wt-close-effort"
+    work_item, acceptance, execution_report = _build_work_item_family(
+        cli, defs, subject, effort, method="check"
+    )
+    runner_cr = _seed_runner_check_run(
+        cli, defs, subject, acceptance, execution_report, result="pass"
+    )
+    worktree = _linked_phase_worktree(store, tmp_path)
+
+    request = {
+        "subject": subject,
+        "effort": effort,
+        "work_item_id": work_item["id"],
+        "transition": "done",
+        "execution_report_id": execution_report["id"],
+        "acceptance_ids": [acceptance["id"]],
+        "criteria": [
+            {
+                "criterion_id": acceptance["id"],
+                "method": "check",
+                "check_run_id": runner_cr["id"],
+                "result": "pass",
+            }
+        ],
+        "finding": None,
+    }
+    result, out_path = _run_script(
+        request, tmp_path, cwd=worktree, process_cwd=store
+    )
+    assert result.returncode == 0, result.stderr
+    assert out_path.is_file()
+    ops = [json.loads(line) for line in out_path.read_text().splitlines() if line.strip()]
+    assert ops[-1]["transition"] == "done"
+
+
+def test_close_batch_store_cwd_ignores_worktree_when_resolving(
+    cli, store, resolved_contract, tmp_path,
+):
+    """R5: fabricated id still refused when --cwd is a phase worktree."""
+    worktree = _linked_phase_worktree(store, tmp_path)
+    result, out_path = _run_script(
+        _request(), tmp_path, cwd=worktree, process_cwd=store
+    )
+    assert result.returncode == 2
+    assert not out_path.exists()

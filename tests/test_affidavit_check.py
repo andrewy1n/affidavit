@@ -314,6 +314,155 @@ def test_exit_code_field_matches_process_for_fail(store, cli, resolved_contract)
     assert record["payload"]["result"] == "fail"
 
 
+# --- worktree / --cwd / store discovery / mutant killers -------------------
+
+
+def _linked_phase_worktree(primary: Path, tmp_path: Path) -> tuple[Path, str, str]:
+    """Primary store checkout + linked worktree with a distinct HEAD.
+
+    Acceptance / check-run records are written only on the primary working
+    tree after the worktree is created, so store-from-``--cwd`` mutants miss
+    them when they resolve the store from the worktree snapshot.
+    """
+    primary_head = git(primary, "rev-parse", "HEAD").stdout.strip()
+    worktree = tmp_path / "phase-worktree"
+    added = git(primary, "worktree", "add", "-b", "phase/verify-path", str(worktree))
+    assert added.returncode == 0, added.stderr + added.stdout
+    (worktree / "worktree-only.txt").write_text("phase worktree\n")
+    git(worktree, "add", "worktree-only.txt")
+    committed = git(worktree, "commit", "-qm", "worktree head")
+    assert committed.returncode == 0, committed.stderr
+    worktree_head = git(worktree, "rev-parse", "HEAD").stdout.strip()
+    assert git(primary, "rev-parse", "HEAD").stdout.strip() == primary_head
+    assert worktree_head != primary_head
+    assert not git(worktree, "status", "--porcelain").stdout.strip()
+    return worktree, primary_head, worktree_head
+
+
+def test_check_worktree_cwd_primary_store_revision_from_worktree(
+    store, cli, resolved_contract, tmp_path,
+):
+    """R5: --cwd=worktree, process cwd=primary → revision from worktree, write to primary."""
+    worktree, primary_head, worktree_head = _linked_phase_worktree(store, tmp_path)
+    # Seed after worktree exists so the acceptance lives only on primary.
+    acceptance = _seed_acceptance(
+        store, cli, resolved_contract, subject="wt-check-task", verify_command="true",
+    )
+    before_primary = _list_check_runs(store)
+
+    result = _run_affidavit(
+        "check",
+        "--acceptance",
+        acceptance["id"],
+        "--cwd",
+        str(worktree),
+        cwd=store,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    record = _parse_check_stdout(result)
+    assert record["payload"]["revision"] == worktree_head
+    assert record["payload"]["revision"] != primary_head
+
+    after_primary = _list_check_runs(store)
+    assert len(after_primary) == len(before_primary) + 1
+    assert record["id"] in {r["id"] for r in after_primary}
+    # Worktree checkout must not gain the new check-run record file.
+    wt_check_runs = list((worktree / ".artifacts" / "records").rglob("*check-run*")) if (
+        worktree / ".artifacts" / "records"
+    ).exists() else []
+    assert record["id"] not in "".join(str(p) for p in wt_check_runs)
+
+
+def test_check_store_cwd_discovery_ignores_worktree(
+    store, cli, resolved_contract, tmp_path,
+):
+    """R5/R6: store discovery must use process cwd, not --cwd worktree."""
+    worktree, _primary_head, worktree_head = _linked_phase_worktree(store, tmp_path)
+    acceptance = _seed_acceptance(
+        store, cli, resolved_contract, subject="store-cwd-task", verify_command="true",
+    )
+
+    result = _run_affidavit(
+        "check",
+        "--acceptance",
+        acceptance["id"],
+        "--cwd",
+        str(worktree),
+        cwd=store,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    record = _parse_check_stdout(result)
+    assert record["payload"]["revision"] == worktree_head
+    stored = run_cli("get", "--type", "project:check-run", "--id", record["id"], root=store)
+    assert stored.returncode == 0, stored.stdout + stored.stderr
+
+
+def test_cli_cwd_forwarded_uses_worktree_head(
+    store, cli, resolved_contract, tmp_path,
+):
+    """R6 b-cli-cwd-not-forwarded: CLI --cwd must reach run_check, not Path.cwd()."""
+    worktree, primary_head, worktree_head = _linked_phase_worktree(store, tmp_path)
+    acceptance = _seed_acceptance(
+        store, cli, resolved_contract, subject="cwd-fwd-task", verify_command="true",
+    )
+
+    result = _run_affidavit(
+        "check",
+        "--acceptance",
+        acceptance["id"],
+        "--cwd",
+        str(worktree),
+        cwd=store,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    record = _parse_check_stdout(result)
+    assert record["payload"]["revision"] == worktree_head
+    assert record["payload"]["revision"] != primary_head
+
+
+def test_cli_timeout_maps_to_blocked_timeout(store, cli, resolved_contract):
+    """R6 b-check-timeout-not-blocked: slow verify → result=blocked, exit 2."""
+    acceptance = _seed_acceptance(
+        store,
+        cli,
+        resolved_contract,
+        subject="timeout-task",
+        verify_command="sleep 2",
+        method="check",
+    )
+    result = _run_affidavit(
+        "check",
+        "--acceptance",
+        acceptance["id"],
+        "--timeout",
+        "0.5",
+        cwd=store,
+        timeout=30,
+    )
+    assert result.returncode == 2, result.stdout + result.stderr
+    record = _parse_check_stdout(result)
+    assert record["payload"]["result"] == "blocked"
+
+
+def test_empty_verify_command_refused_no_record(store, cli, resolved_contract):
+    """R6 b-check-empty-verify-ok: blank verify_command → exit 4, no check-run."""
+    acceptance = _seed_acceptance(
+        store,
+        cli,
+        resolved_contract,
+        subject="empty-verify-task",
+        verify_command="",
+        method="tdd",
+    )
+    before = _list_check_runs(store)
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
+    assert result.returncode == 4, result.stdout + result.stderr
+    combined = (result.stderr + result.stdout).lower()
+    assert "empty" in combined or "verify_command" in combined
+    after = _list_check_runs(store)
+    assert len(after) == len(before)
+
+
 # --- entry / sync / install / bin ------------------------------------------
 
 
