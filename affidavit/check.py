@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import subprocess
 import time
 from dataclasses import dataclass
@@ -193,6 +194,13 @@ def run_check(
         check_payload["requirement"] = payload["requirement"]
     if payload.get("evidence_kind"):
         check_payload["evidence_kind"] = payload["evidence_kind"]
+    if result == "fail":
+        # Lazy import: suite imports check helpers at module load.
+        from affidavit.suite import parse_failing_node_ids
+
+        failing_nodes = parse_failing_node_ids(output)
+        if failing_nodes:
+            check_payload["failing_node_ids"] = json.dumps(failing_nodes)
 
     rels = [f"informed_by:{acceptance['id']}"]
     if execution_report:

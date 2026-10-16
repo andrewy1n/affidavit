@@ -314,6 +314,43 @@ def test_exit_code_field_matches_process_for_fail(store, cli, resolved_contract)
     assert record["payload"]["result"] == "fail"
 
 
+def test_failing_node_ids_recorded_on_pytest_assertion_fail(
+    store, cli, resolved_contract,
+):
+    """R2: aff check fail from pytest assert → payload failing_node_ids JSON list."""
+    probe = store / "probe_oracle_assert.py"
+    probe.write_text(
+        "def test_oracle_assertion_red_probe():\n    assert False\n",
+        encoding="utf-8",
+    )
+    acceptance = _seed_acceptance(
+        store,
+        cli,
+        resolved_contract,
+        subject="failing-node-task",
+        verify_command=f"python3 -m pytest {probe.name} -q",
+    )
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
+    assert result.returncode == 1, result.stdout + result.stderr
+    record = _parse_check_stdout(result)
+    assert record["payload"]["result"] == "fail"
+    raw = record["payload"].get("failing_node_ids")
+    assert raw, "expected failing_node_ids on fail"
+    nodes = json.loads(raw)
+    assert isinstance(nodes, list) and nodes
+    assert any("test_oracle_assertion_red_probe" in n for n in nodes)
+
+
+def test_failing_node_ids_absent_on_pass(store, cli, resolved_contract):
+    acceptance = _seed_acceptance(
+        store, cli, resolved_contract, subject="pass-no-nodes", verify_command="true",
+    )
+    result = _run_affidavit("check", "--acceptance", acceptance["id"], cwd=store)
+    assert result.returncode == 0, result.stdout + result.stderr
+    record = _parse_check_stdout(result)
+    assert "failing_node_ids" not in record["payload"]
+
+
 # --- worktree / --cwd / store discovery / mutant killers -------------------
 
 
