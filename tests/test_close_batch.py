@@ -419,6 +419,8 @@ def _seed_runner_check_run(
     result="pass",
     revision="deadbeef",
     diff_sha256=None,
+    body=None,
+    failing_node_ids=None,
 ):
     payload = {
         "criterion_id": acceptance["id"],
@@ -431,6 +433,8 @@ def _seed_runner_check_run(
     }
     if diff_sha256 is not None:
         payload["diff_sha256"] = diff_sha256
+    if failing_node_ids is not None:
+        payload["failing_node_ids"] = failing_node_ids
     args = [
         "create",
         "--type",
@@ -444,9 +448,9 @@ def _seed_runner_check_run(
         "--rel",
         f"informed_by:{execution_report['id']}",
     ]
-    body = h.generic_body(defs["project:check-run"])
-    if body:
-        args.extend(["--body", body])
+    check_body = body if body is not None else h.generic_body(defs["project:check-run"])
+    if check_body:
+        args.extend(["--body", check_body])
     created = cli(*args)
     assert created.returncode == 0, created.stdout + created.stderr
     return json.loads(created.stdout)["record"]
@@ -1293,3 +1297,253 @@ def test_oracle_legacy_without_freeze_fields_skips_gates(tmp_path):
         acceptance=acceptance,
     )
     assert ops[-1]["transition"] == "done"
+
+
+# -- CLI: oracle freeze / assertion-level via real bin/aff close-batch ------
+
+
+def _build_oracle_work_item_family(
+    cli,
+    defs,
+    subject: str,
+    effort: str,
+    *,
+    test_ids: str = ORACLE_NODE,
+    oracle_hashes: str = ORACLE_HASHES_V1,
+):
+    """Work-item family whose acceptance carries oracle freeze fields."""
+    phase = h.create_generic_record(cli, defs, "project:phase", extra_payload={"effort": effort})
+    work_item = h.create_generic_record(
+        cli,
+        defs,
+        "project:work-item",
+        subject=subject,
+        extra_payload={"effort": effort, "phase": phase["subject"], "kind": "deliver"},
+    )
+    work_item = h._apply_transition(
+        cli, defs["project:work-item"], "project:work-item", work_item, "in_progress"
+    )
+    acceptance = h.create_generic_record(
+        cli,
+        defs,
+        "project:acceptance",
+        subject=subject,
+        extra_payload={
+            "effort": effort,
+            "phase": phase["subject"],
+            "method": "tdd",
+            "test_ids": test_ids,
+            "oracle_hashes": oracle_hashes,
+        },
+    )
+    assignment = h.create_generic_record(
+        cli,
+        defs,
+        "project:assignment",
+        subject=subject,
+        extra_payload={"effort": effort, "work_item": subject},
+    )
+    execution_report = h.create_generic_record(
+        cli,
+        defs,
+        "project:execution-report",
+        subject=subject,
+        extra_payload={
+            "work_item": subject,
+            "assignment": assignment["subject"],
+            "result": "pass",
+            "verdict": "pass",
+            "revision": "deadbeef",
+        },
+    )
+    return work_item, acceptance, execution_report
+
+
+def _oracle_cli_close_request(
+    *,
+    subject: str,
+    effort: str,
+    work_item_id: str,
+    execution_report_id: str,
+    acceptance_id: str,
+    green_cr_id: str,
+    green_revision: str,
+    red_cr_id: str,
+    red_diff_sha256: str,
+):
+    return {
+        "subject": subject,
+        "effort": effort,
+        "work_item_id": work_item_id,
+        "transition": "done",
+        "execution_report_id": execution_report_id,
+        "acceptance_ids": [acceptance_id],
+        "criteria": [
+            {
+                "criterion_id": acceptance_id,
+                "method": "tdd",
+                "check_run_id": green_cr_id,
+                "result": "pass",
+                "revision": green_revision,
+                "red_check_run_id": red_cr_id,
+                "red_result": "fail",
+                "red_revision": "dirty",
+                "red_runner": RUNNER,
+                "red_diff_sha256": red_diff_sha256,
+            }
+        ],
+        "finding": None,
+    }
+
+
+def test_cli_oracle_freeze_happy_path_writes_batch(
+    cli, store, resolved_contract, tmp_path
+):
+    """Real close-batch CLI accepts matching freeze hashes + assertion-level red."""
+    repo, green_sha = _oracle_repo(tmp_path)
+    defs = h.record_defs_by_id(resolved_contract)
+    subject = "cli-oracle-happy"
+    effort = "cli-oracle-effort"
+    work_item, acceptance, execution_report = _build_oracle_work_item_family(
+        cli, defs, subject, effort
+    )
+    red_digest = "c" * 64
+    red_cr = _seed_runner_check_run(
+        cli,
+        defs,
+        subject,
+        acceptance,
+        execution_report,
+        result="fail",
+        revision="dirty",
+        diff_sha256=red_digest,
+        body=ASSERTION_RED_BODY,
+        failing_node_ids=json.dumps([ORACLE_NODE]),
+    )
+    green_cr = _seed_runner_check_run(
+        cli,
+        defs,
+        subject,
+        acceptance,
+        execution_report,
+        result="pass",
+        revision=green_sha,
+    )
+    request = _oracle_cli_close_request(
+        subject=subject,
+        effort=effort,
+        work_item_id=work_item["id"],
+        execution_report_id=execution_report["id"],
+        acceptance_id=acceptance["id"],
+        green_cr_id=green_cr["id"],
+        green_revision=green_sha,
+        red_cr_id=red_cr["id"],
+        red_diff_sha256=red_digest,
+    )
+    result, out_path = _run_script(request, tmp_path, cwd=repo, process_cwd=store)
+    assert result.returncode == 0, result.stderr
+    assert out_path.is_file()
+    ops = [json.loads(line) for line in out_path.read_text().splitlines() if line.strip()]
+    assert ops[-1]["transition"] == "done"
+
+
+def test_cli_oracle_refuses_freeze_hash_drift_without_amendment(
+    cli, store, resolved_contract, tmp_path
+):
+    """Real close-batch CLI refuses hash drift when no approved amendment exists."""
+    repo, green_sha = _oracle_repo(tmp_path, content=ORACLE_CONTENT_V2)
+    defs = h.record_defs_by_id(resolved_contract)
+    subject = "cli-oracle-drift"
+    effort = "cli-oracle-effort"
+    work_item, acceptance, execution_report = _build_oracle_work_item_family(
+        cli, defs, subject, effort, oracle_hashes=ORACLE_HASHES_V1
+    )
+    red_digest = "d" * 64
+    red_cr = _seed_runner_check_run(
+        cli,
+        defs,
+        subject,
+        acceptance,
+        execution_report,
+        result="fail",
+        revision="dirty",
+        diff_sha256=red_digest,
+        body=ASSERTION_RED_BODY,
+        failing_node_ids=json.dumps([ORACLE_NODE]),
+    )
+    green_cr = _seed_runner_check_run(
+        cli,
+        defs,
+        subject,
+        acceptance,
+        execution_report,
+        result="pass",
+        revision=green_sha,
+    )
+    request = _oracle_cli_close_request(
+        subject=subject,
+        effort=effort,
+        work_item_id=work_item["id"],
+        execution_report_id=execution_report["id"],
+        acceptance_id=acceptance["id"],
+        green_cr_id=green_cr["id"],
+        green_revision=green_sha,
+        red_cr_id=red_cr["id"],
+        red_diff_sha256=red_digest,
+    )
+    result, out_path = _run_script(request, tmp_path, cwd=repo, process_cwd=store)
+    assert result.returncode == 2
+    assert not out_path.exists()
+    msg = (result.stderr + result.stdout).lower()
+    assert "hash" in msg or "oracle" in msg or "freeze" in msg
+
+
+def test_cli_assertion_level_refuses_import_only_oracle_red(
+    cli, store, resolved_contract, tmp_path
+):
+    """Real close-batch CLI refuses oracle-backed close with import-only red."""
+    repo, green_sha = _oracle_repo(tmp_path)
+    defs = h.record_defs_by_id(resolved_contract)
+    subject = "cli-oracle-import-red"
+    effort = "cli-oracle-effort"
+    work_item, acceptance, execution_report = _build_oracle_work_item_family(
+        cli, defs, subject, effort
+    )
+    red_digest = "e" * 64
+    red_cr = _seed_runner_check_run(
+        cli,
+        defs,
+        subject,
+        acceptance,
+        execution_report,
+        result="fail",
+        revision="dirty",
+        diff_sha256=red_digest,
+        body=IMPORT_RED_BODY,
+        failing_node_ids=json.dumps(["tests/test_oracle_probe.py"]),
+    )
+    green_cr = _seed_runner_check_run(
+        cli,
+        defs,
+        subject,
+        acceptance,
+        execution_report,
+        result="pass",
+        revision=green_sha,
+    )
+    request = _oracle_cli_close_request(
+        subject=subject,
+        effort=effort,
+        work_item_id=work_item["id"],
+        execution_report_id=execution_report["id"],
+        acceptance_id=acceptance["id"],
+        green_cr_id=green_cr["id"],
+        green_revision=green_sha,
+        red_cr_id=red_cr["id"],
+        red_diff_sha256=red_digest,
+    )
+    result, out_path = _run_script(request, tmp_path, cwd=repo, process_cwd=store)
+    assert result.returncode == 2
+    assert not out_path.exists()
+    msg = (result.stderr + result.stdout).lower()
+    assert "assertion" in msg or "oracle" in msg
