@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:bd9be5604164586ea225d1d97fab73283808840e91a86ca3f439c3f4eee40018
+> Store state: sha256:b30b39add5281909cdd86a72565d127959b8807b298a9d63b171a6a489207f01
 
 ## dashboard-view
 
@@ -588,8 +588,22 @@ print("phase checks only")
 
 ## oracle-witnesses
 
-### Phase
-- **oracle-witnesses**: Oracle author, freeze, and amendments; 22; workflow-loop _(id: [rec-b78c4e43-e7d4-4de7-a6f4-f06bd88ffb15](.artifacts/records/project__phase/rec-b78c4e43-e7d4-4de7-a6f4-f06bd88ffb15.md))_
+### Acceptance
+- **fix-contract-record-types**: contract has freeze fields and oracle-amendment under records only; no duplicate record_types catalog; check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());assert 'record_types' not in d;types={t['name']:t for t in d['records']};a=types['acceptance'];assert 'test_ids' in a['payload'] and 'oracle_hashes' in a['payload'];assert 'oracle-amendment' in types" _(id: [rec-bb17c5ee-0385-4c8e-90d2-3fe5f9e2b519](.artifacts/records/project__acceptance/rec-bb17c5ee-0385-4c8e-90d2-3fe5f9e2b519.md))_
+- **fix-oracle-cli-tests**: CLI oracle close-batch tests match verify filter and pass; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'cli and (oracle or freeze or assertion_level or amendment)' _(id: [rec-8aba909a-63ea-4152-a144-11f5d525f8d5](.artifacts/records/project__acceptance/rec-8aba909a-63ea-4152-a144-11f5d525f8d5.md))_
+- **oracle-assertion-red**: tdd; workflow-loop; python3 -m pytest tests/test_oracle_red.py tests/test_affidavit_check.py -q -k 'failing_node or assertion_level or oracle_red' _(id: [rec-e8dc7437-e410-4b96-81c3-62f7914a9a22](.artifacts/records/project__acceptance/rec-e8dc7437-e410-4b96-81c3-62f7914a9a22.md))_
+- **oracle-contract**: check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());types={t['name']:t for t in d['records']};a=types['acceptance'];assert 'test_ids' in a['payload'] and 'oracle_hashes' in a['payload'];assert 'test_ids' in a.get('optional_payload',[]) and 'oracle_hashes' in a.get('optional_payload',[]);am=types['oracle-amendment'];assert set(am['required_sections'])>={'Reason','Change'};assert 'status' in am['payload'];assert set(am.get('payload_enum',{}).get('status',[]))>={'requested','approved','rejected'}" _(id: [rec-753fcb78-34c3-4d72-8da8-948d99fa75f2](.artifacts/records/project__acceptance/rec-753fcb78-34c3-4d72-8da8-948d99fa75f2.md))_
+- **oracle-contract-amendment-type**: check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());am=next(t for t in d['records'] if t['name']=='oracle-amendment');assert am['payload_references'].get('acceptance')=='project:acceptance';assert 'old_hashes' in am['payload'] and 'new_hashes' in am['payload']" _(id: [rec-5cc71e22-8776-4d3e-838c-a4a08812d3cd](.artifacts/records/project__acceptance/rec-5cc71e22-8776-4d3e-838c-a4a08812d3cd.md))_
+- **oracle-freeze-close**: tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'oracle or freeze or assertion_level' _(id: [rec-84698b95-b79b-442a-9166-f2e168797d33](.artifacts/records/project__acceptance/rec-84698b95-b79b-442a-9166-f2e168797d33.md))_
+- **oracle-freeze-close-hashes**: tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'oracle_hash or freeze_hash or amendment' _(id: [rec-08e82b2b-f39f-4c7c-ac4e-b0c758b7f337](.artifacts/records/project__acceptance/rec-08e82b2b-f39f-4c7c-ac4e-b0c758b7f337.md))_
+- **oracle-skills**: check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-f9ef85f0-efd5-4a31-8262-9eb7d6858bee](.artifacts/records/project__acceptance/rec-f9ef85f0-efd5-4a31-8262-9eb7d6858bee.md))_
+- **oracle-skills-execute-amend**: check; workflow-loop; rg -n "oracle-amendment|frozen oracle|oracle_hashes" skills/execute-phase/SKILL.md skills/verify-work/SKILL.md _(id: [rec-53cde3fc-6823-4f72-a863-861b55a3bf11](.artifacts/records/project__acceptance/rec-53cde3fc-6823-4f72-a863-861b55a3bf11.md))_
+- **oracle-skills-mechanical-verify**: check; workflow-loop; rg -n "mechanical|assertion-level|oracle-backed" skills/verify-work/SKILL.md _(id: [rec-d3fde647-9d4d-468a-a9fc-7635ac187eeb](.artifacts/records/project__acceptance/rec-d3fde647-9d4d-468a-a9fc-7635ac187eeb.md))_
+- **oracle-skills-plan-author**: check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q -k 'oracle or freeze or plan_phase' _(id: [rec-0ecbff55-619a-4c5a-ad17-a582ef26dc85](.artifacts/records/project__acceptance/rec-0ecbff55-619a-4c5a-ad17-a582ef26dc85.md))_
+- **verify-oracle-witnesses**: tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'cli and (oracle or freeze or assertion_level or amendment)' _(id: [rec-c295c01e-9f40-460e-b8f9-4b0b26299a6e](.artifacts/records/project__acceptance/rec-c295c01e-9f40-460e-b8f9-4b0b26299a6e.md))_
+- **verify-oracle-witnesses-freeze-fields**: check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());a=next(t for t in d['records'] if t['name']=='acceptance');assert 'test_ids' in a['payload'] and 'oracle_hashes' in a['payload'];assert 'oracle-amendment' in {t['name'] for t in d['records']}" _(id: [rec-702fc0af-6e5d-4df2-ba30-0b17e614f28d](.artifacts/records/project__acceptance/rec-702fc0af-6e5d-4df2-ba30-0b17e614f28d.md))_
+- **verify-oracle-witnesses-mechanical-close**: check; workflow-loop; python3 -m pytest tests/test_close_batch.py tests/test_oracle_red.py -q -k 'oracle or freeze or assertion_level' _(id: [rec-e671315a-55d8-4a48-82a8-29555da56b42](.artifacts/records/project__acceptance/rec-e671315a-55d8-4a48-82a8-29555da56b42.md))_
+- **verify-oracle-witnesses-skills**: check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_oracle_red.py -q _(id: [rec-f05bed1e-a34d-456b-9979-59572fc49c56](.artifacts/records/project__acceptance/rec-f05bed1e-a34d-456b-9979-59572fc49c56.md))_
 
 ## phase-selector
 

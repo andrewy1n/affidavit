@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:3c33eacc05e34339bd8a29ec3020835fc0e5780d24b4d9f170f9859acb9e7c4a
+> Store state: sha256:5a5be23d459147f8d81bb2f06e76afd52fac5c9a6edd39fdfcda74c4793e6697
 
 ## aa-installable-package
 
@@ -163,11 +163,6 @@
 
 ### Acceptance
 - **assess-route**: verify-work keeps level and next off the check-run, raises implementation to design only when a repeat adds no evidence, and writes release ready only when every requirement is verified. test_assess_routing.py passes.; check; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_assess_routing.py -q _(id: [rec-fb7cdbf9-8de6-4066-a413-41f688ed3792](.artifacts/records/project__acceptance/rec-fb7cdbf9-8de6-4066-a413-41f688ed3792.md))_
-
-## atomic-claims
-
-### Position
-- **atomic-claims**: plan review: atomic-claims tasks materialized; phase _(id: [rec-a8e485a6-22c2-4e97-89aa-74c42ddd9244](.artifacts/records/project__current-position/rec-a8e485a6-22c2-4e97-89aa-74c42ddd9244.md))_
 
 ## backlog-lifecycle
 
@@ -647,6 +642,11 @@
 ### Acceptance
 - **finished-effort-view**: Model test: finished is true only when every phase and counted task is done. Pilot tests: a finished effort shows All N tasks done under Active, sorts after a live effort, and has a dimmed label; a live effort with an empty filter still shows No tasks match; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_app.py -q -k finished _(id: [rec-cc216932-78bb-4df8-b80d-8da0eb287a9c](.artifacts/records/project__acceptance/rec-cc216932-78bb-4df8-b80d-8da0eb287a9c.md))_
 
+## fix-contract-record-types
+
+### Acceptance
+- **fix-contract-record-types**: contract has freeze fields and oracle-amendment under records only; no duplicate record_types catalog; check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());assert 'record_types' not in d;types={t['name']:t for t in d['records']};a=types['acceptance'];assert 'test_ids' in a['payload'] and 'oracle_hashes' in a['payload'];assert 'oracle-amendment' in types" _(id: [rec-bb17c5ee-0385-4c8e-90d2-3fe5f9e2b519](.artifacts/records/project__acceptance/rec-bb17c5ee-0385-4c8e-90d2-3fe5f9e2b519.md))_
+
 ## fix-human-gate-constraint
 
 ### Acceptance
@@ -656,6 +656,11 @@
 
 ### Acceptance
 - **fix-journal-pager-timeout**: test_journal_detail_pager_pages_record_with_stub passes with raised pilot timeout; tdd; packaging; uv run --with textual --with pytest python -m pytest tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub -q _(id: [rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff](.artifacts/records/project__acceptance/rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff.md))_
+
+## fix-oracle-cli-tests
+
+### Acceptance
+- **fix-oracle-cli-tests**: CLI oracle close-batch tests match verify filter and pass; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'cli and (oracle or freeze or assertion_level or amendment)' _(id: [rec-8aba909a-63ea-4152-a144-11f5d525f8d5](.artifacts/records/project__acceptance/rec-8aba909a-63ea-4152-a144-11f5d525f8d5.md))_
 
 ## fix-phase-gate-defaults
 
@@ -914,6 +919,51 @@ print("phase checks only")
 ### Acceptance
 - **needs-you-tab-removal**: Six status tabs on keys 1-6 with no Needs you tab; the panel title reads Needs you N for N items, including effort-level questions; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_view.py -q _(id: [rec-e781be72-47b4-4705-8bb4-82f57f1391ef](.artifacts/records/project__acceptance/rec-e781be72-47b4-4705-8bb4-82f57f1391ef.md))_
 
+## oracle-assertion-red
+
+### Acceptance
+- **oracle-assertion-red**: tdd; workflow-loop; python3 -m pytest tests/test_oracle_red.py tests/test_affidavit_check.py -q -k 'failing_node or assertion_level or oracle_red' _(id: [rec-e8dc7437-e410-4b96-81c3-62f7914a9a22](.artifacts/records/project__acceptance/rec-e8dc7437-e410-4b96-81c3-62f7914a9a22.md))_
+
+## oracle-contract
+
+### Acceptance
+- **oracle-contract**: check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());types={t['name']:t for t in d['records']};a=types['acceptance'];assert 'test_ids' in a['payload'] and 'oracle_hashes' in a['payload'];assert 'test_ids' in a.get('optional_payload',[]) and 'oracle_hashes' in a.get('optional_payload',[]);am=types['oracle-amendment'];assert set(am['required_sections'])>={'Reason','Change'};assert 'status' in am['payload'];assert set(am.get('payload_enum',{}).get('status',[]))>={'requested','approved','rejected'}" _(id: [rec-753fcb78-34c3-4d72-8da8-948d99fa75f2](.artifacts/records/project__acceptance/rec-753fcb78-34c3-4d72-8da8-948d99fa75f2.md))_
+
+## oracle-contract-amendment-type
+
+### Acceptance
+- **oracle-contract-amendment-type**: check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());am=next(t for t in d['records'] if t['name']=='oracle-amendment');assert am['payload_references'].get('acceptance')=='project:acceptance';assert 'old_hashes' in am['payload'] and 'new_hashes' in am['payload']" _(id: [rec-5cc71e22-8776-4d3e-838c-a4a08812d3cd](.artifacts/records/project__acceptance/rec-5cc71e22-8776-4d3e-838c-a4a08812d3cd.md))_
+
+## oracle-freeze-close
+
+### Acceptance
+- **oracle-freeze-close**: tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'oracle or freeze or assertion_level' _(id: [rec-84698b95-b79b-442a-9166-f2e168797d33](.artifacts/records/project__acceptance/rec-84698b95-b79b-442a-9166-f2e168797d33.md))_
+
+## oracle-freeze-close-hashes
+
+### Acceptance
+- **oracle-freeze-close-hashes**: tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'oracle_hash or freeze_hash or amendment' _(id: [rec-08e82b2b-f39f-4c7c-ac4e-b0c758b7f337](.artifacts/records/project__acceptance/rec-08e82b2b-f39f-4c7c-ac4e-b0c758b7f337.md))_
+
+## oracle-skills
+
+### Acceptance
+- **oracle-skills**: check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-f9ef85f0-efd5-4a31-8262-9eb7d6858bee](.artifacts/records/project__acceptance/rec-f9ef85f0-efd5-4a31-8262-9eb7d6858bee.md))_
+
+## oracle-skills-execute-amend
+
+### Acceptance
+- **oracle-skills-execute-amend**: check; workflow-loop; rg -n "oracle-amendment|frozen oracle|oracle_hashes" skills/execute-phase/SKILL.md skills/verify-work/SKILL.md _(id: [rec-53cde3fc-6823-4f72-a863-861b55a3bf11](.artifacts/records/project__acceptance/rec-53cde3fc-6823-4f72-a863-861b55a3bf11.md))_
+
+## oracle-skills-mechanical-verify
+
+### Acceptance
+- **oracle-skills-mechanical-verify**: check; workflow-loop; rg -n "mechanical|assertion-level|oracle-backed" skills/verify-work/SKILL.md _(id: [rec-d3fde647-9d4d-468a-a9fc-7635ac187eeb](.artifacts/records/project__acceptance/rec-d3fde647-9d4d-468a-a9fc-7635ac187eeb.md))_
+
+## oracle-skills-plan-author
+
+### Acceptance
+- **oracle-skills-plan-author**: check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q -k 'oracle or freeze or plan_phase' _(id: [rec-0ecbff55-619a-4c5a-ad17-a582ef26dc85](.artifacts/records/project__acceptance/rec-0ecbff55-619a-4c5a-ad17-a582ef26dc85.md))_
+
 ## package-install
 
 ### Acceptance
@@ -1129,6 +1179,21 @@ print("phase checks only")
 ### Finding
 - **review-approval-constraints-spec-gap**: spec-gap on approval-constraints: exclusive human-gate constraint wording conflicts with preserved backlog promote/dismiss writes; dashboard-human-gate-writes says only Needs-you clears; backlog.py still supersedes with @current; constraint statement names backlog promote/dismiss as allowed or exclusivity is clarified without contradicting Non-goals, and reviewer re-run passes; none _(id: [rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f](.artifacts/records/project__finding/rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f.md))_
 
+## review-criterion-views-minor
+
+### Finding
+- **review-criterion-views-minor**: missing-test minor: criterion_optional_in_contract omits view requires_payload; R4 view change landed; named test checks optional_payload only; test asserts brief/plan/verification roles omit criterion; none _(id: [rec-e0c7fb0b-8c5e-4768-a793-1eb732c512d1](.artifacts/records/project__finding/rec-e0c7fb0b-8c5e-4768-a793-1eb732c512d1.md))_
+
+## review-negative-lint-judgment
+
+### Finding
+- **review-negative-lint-judgment**: judgment: no negative tests for compound/fat/missing requirement ids; spec wording vs skills+contract-only decision; positive examples only; human clears or later phase adds close lint; none _(id: [rec-6b971a14-51fd-4e3d-8c00-c07eb58f32f2](.artifacts/records/project__finding/rec-6b971a14-51fd-4e3d-8c00-c07eb58f32f2.md))_
+
+## review-oracle-contract-record-types
+
+### Finding
+- **review-oracle-contract-record-types**: invariant-violation on oracle-contract: dual records/record_types catalogs; contract/project-design.json duplicates full record catalog under record_types; runtime uses records only; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-783374cb-2fc7-4b4a-a849-7ef8c983b528](.artifacts/records/project__finding/rec-783374cb-2fc7-4b4a-a849-7ef8c983b528.md))_
+
 ## review-phase-gate-contract-behavior-bug
 
 ### Finding
@@ -1143,6 +1208,11 @@ print("phase checks only")
 
 ### Finding
 - **review-phase-gate-contract-spec-gap**: spec-gap on phase-gate-contract: live .artifacts/project-design.json not synced with this-repo suite pin; worktree .artifacts/project-design.json lacks phase_gate; runtime falls through to contract/; live design carries this-repo full+advisory (or documented equivalent) and resolve/pin is current; reviewer re-run passes; none _(id: [rec-56c5d5cb-3545-4a20-83d8-8e9fb3aa5ca3](.artifacts/records/project__finding/rec-56c5d5cb-3545-4a20-83d8-8e9fb3aa5ca3.md))_
+
+## review-tests-brief-lock
+
+### Finding
+- **review-tests-brief-lock**: missing-test on tests-claim-chain: R5 original-text brief rules not locked by plan-trace; execute-phase skill updated but no test asserts quote/no-paraphrase wording; fix lands asserting execute-phase original-text brief rules and reviewer re-run passes; none _(id: [rec-e480f9cb-a79e-4c72-9feb-ad15b790c214](.artifacts/records/project__finding/rec-e480f9cb-a79e-4c72-9feb-ad15b790c214.md))_
 
 ## reviewer-brief
 
@@ -1300,26 +1370,23 @@ print("phase checks only")
 
 ## skills-claim-handoff
 
-### Work
-- **skills-claim-handoff**: Skills for atomic ids, thin acceptances, original briefs; atomic-claims; deliver; workflow-loop _(id: [rec-8e0250ec-cac0-4730-a184-9f131356e7ae](.artifacts/records/project__work-item/rec-8e0250ec-cac0-4730-a184-9f131356e7ae.md))_
-
 ### Acceptance
-- **skills-claim-handoff**: deliver/repair work-items always carry atomic requirement ids in plan-phase (description-as-list when no spec); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-7d56f650-967d-4bae-8088-7461b40697de](.artifacts/records/project__acceptance/rec-7d56f650-967d-4bae-8088-7461b40697de.md))_
+- **skills-claim-handoff**: deliver/repair work-items always carry atomic requirement ids in plan-phase (description-as-list when no spec); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-7d56f650-967d-4bae-8088-7461b40697de](.artifacts/records/project__acceptance/rec-7d56f650-967d-4bae-8088-7461b40697de.md))_
 
 ## skills-claim-handoff-briefs
 
 ### Acceptance
-- **skills-claim-handoff-briefs**: execute-phase requires original-text briefs quoting work-item and requirement text by id; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-5b5017ed-6e05-4149-9a16-a76488688d65](.artifacts/records/project__acceptance/rec-5b5017ed-6e05-4149-9a16-a76488688d65.md))_
+- **skills-claim-handoff-briefs**: execute-phase requires original-text briefs quoting work-item and requirement text by id; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-5b5017ed-6e05-4149-9a16-a76488688d65](.artifacts/records/project__acceptance/rec-5b5017ed-6e05-4149-9a16-a76488688d65.md))_
 
 ## skills-claim-handoff-one-id
 
 ### Acceptance
-- **skills-claim-handoff-one-id**: each deliver/repair acceptance names exactly one requirement id; compound ids banned in skill text; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f](.artifacts/records/project__acceptance/rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f.md))_
+- **skills-claim-handoff-one-id**: each deliver/repair acceptance names exactly one requirement id; compound ids banned in skill text; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f](.artifacts/records/project__acceptance/rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f.md))_
 
 ## skills-claim-handoff-thin
 
 ### Acceptance
-- **skills-claim-handoff-thin**: plan-phase examples write thin acceptances (no criterion prose); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-177d102b-7173-412b-b4c0-2b7608eff04c](.artifacts/records/project__acceptance/rec-177d102b-7173-412b-b4c0-2b7608eff04c.md))_
+- **skills-claim-handoff-thin**: plan-phase examples write thin acceptances (no criterion prose); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-177d102b-7173-412b-b4c0-2b7608eff04c](.artifacts/records/project__acceptance/rec-177d102b-7173-412b-b4c0-2b7608eff04c.md))_
 
 ## skills-red-first
 
@@ -1398,10 +1465,20 @@ print("phase checks only")
 ### Acceptance
 - **stepper-wrap**: Pilot test at 60 columns: every stepper line starts with a phase glyph and no line ends with a bare glyph, and no line is wider than the pane; the test fails before the change; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k stepper _(id: [rec-c2df3f61-8b0b-44d8-89b3-f3033ebcf9d0](.artifacts/records/project__acceptance/rec-c2df3f61-8b0b-44d8-89b3-f3033ebcf9d0.md))_
 
+## suite-advisory-atomic-claims
+
+### Finding
+- **suite-advisory-atomic-claims**: advisory suite fail for atomic-claims-suite; exit 1; assess_routing fixed in 0cdee54; remaining dashboard flakes [size0] related panel and journal pager stub; suite check-run passes at phase head, or human clears; none _(id: [rec-e7d8f857-fbb2-4990-946e-49e9f4f9f83e](.artifacts/records/project__finding/rec-e7d8f857-fbb2-4990-946e-49e9f4f9f83e.md))_
+
 ## suite-advisory-claim-witnesses
 
 ### Finding
 - **suite-advisory-claim-witnesses**: advisory suite fail for claim-witnesses-suite; exit_code=1 failing_node_ids=[tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub]; suite check-run passes at phase head, or human clears; none _(id: [rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf](.artifacts/records/project__finding/rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf.md))_
+
+## suite-advisory-oracle-witnesses
+
+### Finding
+- **suite-advisory-oracle-witnesses**: advisory suite fail for oracle-witnesses-suite; exit_code=1 failing_node_ids=[tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub]; suite check-run passes at phase head, or human clears; none _(id: [rec-6d403791-1093-4918-8e27-3fd127ae4c4d](.artifacts/records/project__finding/rec-6d403791-1093-4918-8e27-3fd127ae4c4d.md))_
 
 ## suite-dashboard
 
@@ -1486,10 +1563,20 @@ print("phase checks only")
 ### Acceptance
 - **test-suite-speed**: All 262 tests pass, full suite wall time is at most 158s (half of the 317s clean-HEAD baseline), CPU time stays under 250s, and no timeout or deadline value is larger than before the change; check; test-suite-speed; time uv run --with textual --with pytest python -m pytest tests -q _(id: [rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99](.artifacts/records/project__acceptance/rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99.md))_
 
-## tests-claim-chain
+## tests-brief-lock
 
-### Work
-- **tests-claim-chain**: Plan-trace and consistency tests for claim chain; atomic-claims; deliver; workflow-loop _(id: [rec-7700dcb2-7c0b-4a71-a711-c5e713586f5c](.artifacts/records/project__work-item/rec-7700dcb2-7c0b-4a71-a711-c5e713586f5c.md))_
+### Acceptance
+- **tests-brief-lock**: plan-trace asserts execute-phase original-text brief rules and R4 view requires_payload omit criterion; tdd; workflow-loop; python3 -m pytest tests/test_plan_trace.py tests/test_skill_contract_consistency.py -q _(id: [rec-b760d3e8-594b-491c-b282-aa07923e1a38](.artifacts/records/project__acceptance/rec-b760d3e8-594b-491c-b282-aa07923e1a38.md))_
+
+### Finding
+- **tests-brief-lock**: tests-brief-lock closed done without red-first: predecessor suite verify_command already passed; new assertions are additive; At 3b2f808 the acceptance verify_command (full plan-trace+consistency) exits 0; tip 5030389 adds assertions. No runner fail exists for this criterion_id with ancestry to green.; a later phase requires red-first for additive test-only tasks, or a fail check-run for this criterion precedes green; none _(id: [rec-7c5115ae-6da3-4327-a386-7b7da037b865](.artifacts/records/project__finding/rec-7c5115ae-6da3-4327-a386-7b7da037b865.md))_
+
+## tests-brief-lock-r4
+
+### Acceptance
+- **tests-brief-lock-r4**: criterion_optional_in_contract asserts brief/plan/verification roles omit criterion from requires_payload; check; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k criterion_optional_in_contract -q _(id: [rec-6525fff7-02a2-4ef2-8ae7-1b4fe8a3fe89](.artifacts/records/project__acceptance/rec-6525fff7-02a2-4ef2-8ae7-1b4fe8a3fe89.md))_
+
+## tests-claim-chain
 
 ### Acceptance
 - **tests-claim-chain**: plan-trace and skill-contract consistency enforce R1-R5 and optional criterion; CLI create/capture accepts thin deliver shape; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-14838183-7e65-45e7-8ac1-41a2ff0e912b](.artifacts/records/project__acceptance/rec-14838183-7e65-45e7-8ac1-41a2ff0e912b.md))_
@@ -1600,9 +1687,6 @@ print("phase checks only")
 - **unsigned-check-label**: An unsigned check reads as its acceptance criterion and task slug, never a rec- id, with a fallback when the acceptance is missing; the test fails before the fix; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py -q -k unsigned _(id: [rec-403febb3-cbe5-474d-8413-5687934c29d2](.artifacts/records/project__acceptance/rec-403febb3-cbe5-474d-8413-5687934c29d2.md))_
 
 ## verify-atomic-claims
-
-### Work
-- **verify-atomic-claims**: Verify atomic claims and thin acceptances; atomic-claims; deliver; workflow-loop _(id: [rec-6f1053ba-d841-4c2e-9837-6af07ede98ba](.artifacts/records/project__work-item/rec-6f1053ba-d841-4c2e-9837-6af07ede98ba.md))_
 
 ### Acceptance
 - **verify-atomic-claims**: a planned deliver work-item + thin acceptance shape validates through the real adaptive-artifacts create/capture path used by plan-phase; tdd; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k 'thin_deliver and (capture or create or cli)' -q _(id: [rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca](.artifacts/records/project__acceptance/rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca.md))_
@@ -1944,6 +2028,29 @@ print("phase checks only")
 
 ### Amendment
 - **verify-needs-you-phase**: verify-needs-you-phase; dashboard-features _(id: [rec-3192a53d-1a55-41cb-8f06-71bdbabdcbd2](.artifacts/records/project__assignment-amendment/rec-3192a53d-1a55-41cb-8f06-71bdbabdcbd2.md))_
+
+## verify-oracle-witnesses
+
+### Acceptance
+- **verify-oracle-witnesses**: tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'cli and (oracle or freeze or assertion_level or amendment)' _(id: [rec-c295c01e-9f40-460e-b8f9-4b0b26299a6e](.artifacts/records/project__acceptance/rec-c295c01e-9f40-460e-b8f9-4b0b26299a6e.md))_
+
+### Amendment
+- **verify-oracle-witnesses**: verify-oracle-witnesses; workflow-loop _(id: [rec-56ffac73-b6c4-41cd-bf78-b96f8158430b](.artifacts/records/project__assignment-amendment/rec-56ffac73-b6c4-41cd-bf78-b96f8158430b.md))_
+
+## verify-oracle-witnesses-freeze-fields
+
+### Acceptance
+- **verify-oracle-witnesses-freeze-fields**: check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());a=next(t for t in d['records'] if t['name']=='acceptance');assert 'test_ids' in a['payload'] and 'oracle_hashes' in a['payload'];assert 'oracle-amendment' in {t['name'] for t in d['records']}" _(id: [rec-702fc0af-6e5d-4df2-ba30-0b17e614f28d](.artifacts/records/project__acceptance/rec-702fc0af-6e5d-4df2-ba30-0b17e614f28d.md))_
+
+## verify-oracle-witnesses-mechanical-close
+
+### Acceptance
+- **verify-oracle-witnesses-mechanical-close**: check; workflow-loop; python3 -m pytest tests/test_close_batch.py tests/test_oracle_red.py -q -k 'oracle or freeze or assertion_level' _(id: [rec-e671315a-55d8-4a48-82a8-29555da56b42](.artifacts/records/project__acceptance/rec-e671315a-55d8-4a48-82a8-29555da56b42.md))_
+
+## verify-oracle-witnesses-skills
+
+### Acceptance
+- **verify-oracle-witnesses-skills**: check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_oracle_red.py -q _(id: [rec-f05bed1e-a34d-456b-9979-59572fc49c56](.artifacts/records/project__acceptance/rec-f05bed1e-a34d-456b-9979-59572fc49c56.md))_
 
 ## verify-path-test-gaps
 
@@ -2375,4 +2482,4 @@ print("phase checks only")
 ## workflow-loop
 
 ### Position
-- **workflow-loop**: claim-witnesses done; next up: atomic-claims; effort _(id: [rec-ddcec3d4-70fb-4743-a05f-1098cb9c65da](.artifacts/records/project__current-position/rec-ddcec3d4-70fb-4743-a05f-1098cb9c65da.md))_
+- **workflow-loop**: oracle-witnesses done; next up: evidence-kind; effort _(id: [rec-04c6c12e-665e-4663-9115-dd51a09fa295](.artifacts/records/project__current-position/rec-04c6c12e-665e-4663-9115-dd51a09fa295.md))_
