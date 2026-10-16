@@ -142,30 +142,58 @@ def test_close_batch_refuses_invented_check_fail_without_check_run_id():
 
 
 def test_close_batch_does_not_emit_check_run_create_for_runner_methods():
-    ops = close_batch.build_batch(
-        {
-            "subject": "task-1",
-            "effort": "effort-1",
-            "work_item_id": "rec-wi",
-            "transition": "done",
-            "execution_report_id": "rec-er",
-            "acceptance_ids": ["rec-ac1"],
-            "criteria": [
-                {
-                    "criterion_id": "rec-ac1",
+    request = {
+        "subject": "task-1",
+        "effort": "effort-1",
+        "work_item_id": "rec-wi",
+        "transition": "done",
+        "execution_report_id": "rec-er",
+        "acceptance_ids": ["rec-ac1"],
+        "criteria": [
+            {
+                "criterion_id": "rec-ac1",
+                "method": "tdd",
+                "check_run_id": "rec-runner-cr",
+                "result": "pass",
+                "revision": "abc123",
+                "red_check_run_id": "rec-red-cr",
+                "red_result": "fail",
+                "red_revision": "dirty",
+                "red_runner": "aff",
+                "red_diff_sha256": "c" * 64,
+            }
+        ],
+        "finding": None,
+    }
+
+    def loader(cid: str) -> dict:
+        entry = request["criteria"][0]
+        if cid == entry["check_run_id"]:
+            return {
+                "id": cid,
+                "payload": {
+                    "criterion_id": entry["criterion_id"],
+                    "result": entry["result"],
+                    "runner": "aff",
+                    "revision": entry["revision"],
                     "method": "tdd",
-                    "check_run_id": "rec-runner-cr",
-                    "result": "pass",
-                    "revision": "abc123",
-                    "red_check_run_id": "rec-red-cr",
-                    "red_result": "fail",
-                    "red_revision": "abc123",
-                    "red_runner": "aff",
-                }
-            ],
-            "finding": None,
-        }
-    )
+                },
+            }
+        if cid == entry["red_check_run_id"]:
+            return {
+                "id": cid,
+                "payload": {
+                    "criterion_id": entry["criterion_id"],
+                    "result": entry["red_result"],
+                    "runner": entry["red_runner"],
+                    "revision": entry["red_revision"],
+                    "diff_sha256": entry["red_diff_sha256"],
+                    "method": "tdd",
+                },
+            }
+        raise LookupError(cid)
+
+    ops = close_batch.build_batch(request, load_check_run=loader)
     assert [op["op"] for op in ops] == ["update"]
     assert not any(op.get("type") == "project:check-run" for op in ops)
 

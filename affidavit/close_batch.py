@@ -9,12 +9,17 @@ For `method` `tdd` or `check`, the binary check-run must already exist
 script does not invent pass/fail or emit a `project:check-run` create
 for those methods.
 
+On a `done` transition, each referenced check-run is loaded from the
+artifact store (same discovery as `aff check`: store from process cwd,
+`--cwd` for git ancestry only) and matched on criterion_id, runner,
+result, and revision when the request carries them. Fabricated ids or
+field mismatches refuse the batch.
+
 For `method` `tdd` on a `done` transition, the request must also carry
-red-first evidence (`red_check_run_id` and copied fail fields) whose
-revision precedes the green by git ancestry (or a dirty red with
-`diff_sha256`), unless the request includes a finding escape. Ancestry
-uses the process cwd, or `--cwd` when provided. This script does not
-query the store for prior check-runs.
+red-first evidence (`red_check_run_id` and copied fail fields). The red
+check-run is resolved from the store the same way; ancestry uses the
+store's revisions (or a dirty red with `diff_sha256`), unless the
+request includes a finding escape.
 
 For `method` `manual`, the request carries `result` / `revision` /
 `signed_by` and this script emits one `project:check-run` create per
@@ -37,10 +42,14 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
+
+from affidavit import aa
 
 RUNNER_METHODS = frozenset({"tdd", "check"})
 RUNNER_MARKER = "aff"
+
+CheckRunLoader = Callable[[str], dict[str, Any]]
 
 
 class CloseRequestError(Exception):
@@ -67,12 +76,116 @@ def _is_git_ancestor(ancestor: str, descendant: str, cwd: Path) -> bool:
     return result.returncode == 0
 
 
-def _enforce_red_first(
+def default_load_check_run(
+    check_run_id: str,
+    *,
+    store_root: Path | None = None,
+) -> dict[str, Any]:
+    """Load a check-run via adaptive-artifacts get (store from primary cwd)."""
+    store = store_root if store_root is not None else aa.find_store_root(Path.cwd())
+    return aa.get_record(store, check_run_id, "project:check-run")
+
+
+def _payload(record: dict[str, Any]) -> dict[str, Any]:
+    payload = record.get("payload")
+    return payload if isinstance(payload, dict) else {}
+
+
+def _load_check_run(
+    check_run_id: str,
+    *,
+    criterion_id: Any,
+    label: str,
+    loader: CheckRunLoader,
+) -> dict[str, Any]:
+    try:
+        return loader(check_run_id)
+    except LookupError as exc:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: {label} check_run_id "
+            f"{check_run_id!r} not found in artifact store"
+        ) from exc
+
+
+def _match_field(
+    *,
+    criterion_id: Any,
+    label: str,
+    field: str,
+    requested: Any,
+    stored: Any,
+) -> None:
+    if requested != stored:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: {label} {field} mismatch "
+            f"(request={requested!r}, store={stored!r})"
+        )
+
+
+def _resolve_green_check_run(
     entry: dict[str, Any],
     *,
-    cwd: Path,
-) -> None:
-    """Refuse tdd done closes that lack valid request-carried red evidence."""
+    loader: CheckRunLoader,
+) -> dict[str, Any]:
+    """Load and match the green/primary check-run; return its payload."""
+    criterion_id = entry.get("criterion_id")
+    check_run_id = entry["check_run_id"]
+    record = _load_check_run(
+        check_run_id,
+        criterion_id=criterion_id,
+        label="check_run_id",
+        loader=loader,
+    )
+    payload = _payload(record)
+
+    _match_field(
+        criterion_id=criterion_id,
+        label="check-run",
+        field="criterion_id",
+        requested=criterion_id,
+        stored=payload.get("criterion_id"),
+    )
+    _match_field(
+        criterion_id=criterion_id,
+        label="check-run",
+        field="result",
+        requested=entry.get("result"),
+        stored=payload.get("result"),
+    )
+
+    stored_runner = payload.get("runner")
+    if stored_runner != RUNNER_MARKER:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: check-run is not runner-produced "
+            f"(runner must be {RUNNER_MARKER!r}, got {stored_runner!r})"
+        )
+    if "runner" in entry:
+        _match_field(
+            criterion_id=criterion_id,
+            label="check-run",
+            field="runner",
+            requested=entry.get("runner"),
+            stored=stored_runner,
+        )
+
+    if "revision" in entry:
+        _match_field(
+            criterion_id=criterion_id,
+            label="check-run",
+            field="revision",
+            requested=entry.get("revision"),
+            stored=payload.get("revision"),
+        )
+
+    return payload
+
+
+def _resolve_red_check_run(
+    entry: dict[str, Any],
+    *,
+    loader: CheckRunLoader,
+) -> dict[str, Any]:
+    """Load and match the red check-run; return its payload."""
     criterion_id = entry.get("criterion_id")
     red_id = entry.get("red_check_run_id")
     if not red_id:
@@ -82,28 +195,90 @@ def _enforce_red_first(
             "or a finding escape naming the missing red"
         )
 
-    red_result = entry.get("red_result")
+    record = _load_check_run(
+        red_id,
+        criterion_id=criterion_id,
+        label="red_check_run_id",
+        loader=loader,
+    )
+    payload = _payload(record)
+
+    _match_field(
+        criterion_id=criterion_id,
+        label="red check-run",
+        field="criterion_id",
+        requested=criterion_id,
+        stored=payload.get("criterion_id"),
+    )
+
+    if "red_result" in entry:
+        _match_field(
+            criterion_id=criterion_id,
+            label="red check-run",
+            field="result",
+            requested=entry.get("red_result"),
+            stored=payload.get("result"),
+        )
+    if "red_runner" in entry:
+        _match_field(
+            criterion_id=criterion_id,
+            label="red check-run",
+            field="runner",
+            requested=entry.get("red_runner"),
+            stored=payload.get("runner"),
+        )
+    if "red_revision" in entry:
+        _match_field(
+            criterion_id=criterion_id,
+            label="red check-run",
+            field="revision",
+            requested=entry.get("red_revision"),
+            stored=payload.get("revision"),
+        )
+    if "red_diff_sha256" in entry:
+        _match_field(
+            criterion_id=criterion_id,
+            label="red check-run",
+            field="diff_sha256",
+            requested=entry.get("red_diff_sha256"),
+            stored=payload.get("diff_sha256"),
+        )
+
+    return payload
+
+
+def _enforce_red_first_from_store(
+    entry: dict[str, Any],
+    *,
+    green_payload: dict[str, Any],
+    red_payload: dict[str, Any],
+    cwd: Path,
+) -> None:
+    """Refuse tdd done closes whose store red does not precede store green."""
+    criterion_id = entry.get("criterion_id")
+
+    red_result = red_payload.get("result")
     if red_result != "fail":
         raise CloseRefused(
             f"criterion {criterion_id!r}: red evidence result must be "
             f"'fail', got {red_result!r}"
         )
 
-    red_runner = entry.get("red_runner")
+    red_runner = red_payload.get("runner")
     if red_runner != RUNNER_MARKER:
         raise CloseRefused(
             f"criterion {criterion_id!r}: red check-run is not runner-produced "
             f"(runner must be {RUNNER_MARKER!r}, got {red_runner!r})"
         )
 
-    red_revision = entry.get("red_revision")
+    red_revision = red_payload.get("revision")
     if not red_revision:
         raise CloseRefused(
             f"criterion {criterion_id!r}: red evidence missing revision"
         )
 
     if red_revision == "dirty":
-        digest = entry.get("red_diff_sha256") or ""
+        digest = red_payload.get("diff_sha256") or ""
         if not digest:
             raise CloseRefused(
                 f"criterion {criterion_id!r}: dirty red requires non-empty "
@@ -111,7 +286,14 @@ def _enforce_red_first(
             )
         return
 
-    green_revision = entry.get("revision")
+    # SHA red: request must still carry green revision (anti-gap), and it
+    # must match the store; ancestry uses the store revision.
+    if "revision" not in entry:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: green revision required for "
+            "git-ancestry red-first check"
+        )
+    green_revision = green_payload.get("revision")
     if not green_revision:
         raise CloseRefused(
             f"criterion {criterion_id!r}: green revision required for "
@@ -135,6 +317,8 @@ def build_batch(
     request: dict[str, Any],
     *,
     cwd: str | Path | None = None,
+    store_root: str | Path | None = None,
+    load_check_run: CheckRunLoader | None = None,
 ) -> list[dict[str, Any]]:
     try:
         subject = request["subject"]
@@ -149,6 +333,13 @@ def build_batch(
     execution_report_id = request.get("execution_report_id")
     finding = request.get("finding")
     work_cwd = Path(cwd) if cwd is not None else Path.cwd()
+    resolved_store = Path(store_root) if store_root is not None else None
+
+    if load_check_run is not None:
+        loader: CheckRunLoader = load_check_run
+    else:
+        def loader(check_run_id: str) -> dict[str, Any]:
+            return default_load_check_run(check_run_id, store_root=resolved_store)
 
     for entry in criteria:
         criterion_id = entry.get("criterion_id")
@@ -172,8 +363,8 @@ def build_batch(
                     "copy result from the runner check-run"
                 )
             # Invented create shape: signed_by without going through the
-            # runner — refuse. For tdd, revision may be copied for the
-            # red-first ancestry gate; for check it remains forbidden.
+            # runner — refuse. For tdd, revision may be copied only when
+            # red-first fields are present; for check it remains forbidden.
             if "signed_by" in entry:
                 raise CloseRequestError(
                     f"criteria entry {criterion_id!r} method={method!r} must "
@@ -183,6 +374,17 @@ def build_batch(
                 raise CloseRequestError(
                     f"criteria entry {criterion_id!r} method={method!r} must "
                     "not carry revision/signed_by; reference check_run_id only"
+                )
+            if (
+                method == "tdd"
+                and "revision" in entry
+                and not entry.get("red_check_run_id")
+            ):
+                raise CloseRequestError(
+                    f"criteria entry {criterion_id!r} method=tdd must not "
+                    "carry revision without red-first fields "
+                    "(red_check_run_id); reference check_run_id only or "
+                    "include red evidence"
                 )
         elif method == "manual":
             for field in ("result", "revision"):
@@ -200,13 +402,30 @@ def build_batch(
                 f"criteria entry {criterion_id!r} has unknown method {method!r}"
             )
 
+    # Store authority for done closes: resolve every runner check-run id.
+    green_by_criterion: dict[Any, dict[str, Any]] = {}
+    if transition == "done":
+        for entry in criteria:
+            if entry.get("method") not in RUNNER_METHODS:
+                continue
+            green_by_criterion[entry.get("criterion_id")] = _resolve_green_check_run(
+                entry, loader=loader
+            )
+
     if transition == "done" and not finding:
         for entry in criteria:
             if entry.get("method") != "tdd":
                 continue
             if not _entry_passed(entry):
                 continue
-            _enforce_red_first(entry, cwd=work_cwd)
+            green_payload = green_by_criterion[entry.get("criterion_id")]
+            red_payload = _resolve_red_check_run(entry, loader=loader)
+            _enforce_red_first_from_store(
+                entry,
+                green_payload=green_payload,
+                red_payload=red_payload,
+                cwd=work_cwd,
+            )
 
     passed_ids = {
         entry["criterion_id"] for entry in criteria if _entry_passed(entry)
