@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:cb3f014de4fa99a5cfda27ab70ab35cddb02f4930007814a471bab6627ed7b44
+> Store state: sha256:e738e866b6260d90d72de2081e9c050345c2184c3b969e9a57e39027711ec313
 
 ## dashboard
 
@@ -48,7 +48,11 @@
 
 ### Position
 - **phase-reviewer**: phase-reviewer done; next up: tiered-verification; phase _(id: [rec-db17b780-4178-4359-b4ee-119fb52aba18](.artifacts/records/project__current-position/rec-db17b780-4178-4359-b4ee-119fb52aba18.md))_
-- **workflow-loop**: claim-witnesses done; next up: atomic-claims; effort _(id: [rec-ddcec3d4-70fb-4743-a05f-1098cb9c65da](.artifacts/records/project__current-position/rec-ddcec3d4-70fb-4743-a05f-1098cb9c65da.md))_
+- **workflow-loop**: atomic-claims done; next up: oracle-witnesses; effort _(id: [rec-9de0e2b4-5521-449b-9020-0825da790679](.artifacts/records/project__current-position/rec-9de0e2b4-5521-449b-9020-0825da790679.md))_
+
+### Needs Human
+- **review-negative-lint-judgment**: judgment: no negative tests for compound/fat/missing requirement ids; human _(id: [rec-6b971a14-51fd-4e3d-8c00-c07eb58f32f2](.artifacts/records/project__finding/rec-6b971a14-51fd-4e3d-8c00-c07eb58f32f2.md))_
+- **tests-brief-lock**: tests-brief-lock closed done without red-first: predecessor suite verify_command already passed; new assertions are additive; human _(id: [rec-7c5115ae-6da3-4327-a386-7b7da037b865](.artifacts/records/project__finding/rec-7c5115ae-6da3-4327-a386-7b7da037b865.md))_
 
 ### Backlog
 - **gh-11-verification-loop**: workflow-loop; open _(id: [rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7](.artifacts/records/project__backlog-item/rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7.md))_

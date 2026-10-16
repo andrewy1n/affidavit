@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:bcae15c651b5979e8f4b676af80c62c6c825bdcece5e376978310ac9528bf8ce
+> Store state: sha256:bd9be5604164586ea225d1d97fab73283808840e91a86ca3f439c3f4eee40018
 
 ## dashboard-view
 
@@ -550,8 +550,19 @@ print("phase checks only")
 
 ## atomic-claims
 
-### Phase
-- **atomic-claims**: Atomic claims and thin acceptances; 21; workflow-loop _(id: [rec-c60371d4-2559-4450-a218-ca5c9f7621a7](.artifacts/records/project__phase/rec-c60371d4-2559-4450-a218-ca5c9f7621a7.md))_
+### Acceptance
+- **contract-thin-criterion**: acceptance.criterion is optional; brief/plan/verification acceptance roles do not list criterion in requires_payload; check; workflow-loop; python3 -c "import json; from pathlib import Path; d=json.loads(Path('contract/project-design.json').read_text()); acc=next(r for r in d['records'] if r['name']=='acceptance'); assert 'criterion' in acc['optional_payload']; assert 'criterion' not in (set(acc['payload'])-set(acc['optional_payload'])); views={v.get('name') or v.get('id'): v for v in (d['views'] if isinstance(d['views'], list) else list(d['views'].values()))}; bad=[n for n,v in views.items() for r in v.get('roles',[]) if (r.get('occupant')=='acceptance' or r.get('name')=='acceptance') and 'criterion' in r.get('requires_payload',[])]; assert not bad, bad" _(id: [rec-c79b18fc-3e2f-4a36-8417-9799d980ae1d](.artifacts/records/project__acceptance/rec-c79b18fc-3e2f-4a36-8417-9799d980ae1d.md))_
+- **skills-claim-handoff**: deliver/repair work-items always carry atomic requirement ids in plan-phase (description-as-list when no spec); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-7d56f650-967d-4bae-8088-7461b40697de](.artifacts/records/project__acceptance/rec-7d56f650-967d-4bae-8088-7461b40697de.md))_
+- **skills-claim-handoff-briefs**: execute-phase requires original-text briefs quoting work-item and requirement text by id; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-5b5017ed-6e05-4149-9a16-a76488688d65](.artifacts/records/project__acceptance/rec-5b5017ed-6e05-4149-9a16-a76488688d65.md))_
+- **skills-claim-handoff-one-id**: each deliver/repair acceptance names exactly one requirement id; compound ids banned in skill text; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f](.artifacts/records/project__acceptance/rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f.md))_
+- **skills-claim-handoff-thin**: plan-phase examples write thin acceptances (no criterion prose); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-177d102b-7173-412b-b4c0-2b7608eff04c](.artifacts/records/project__acceptance/rec-177d102b-7173-412b-b4c0-2b7608eff04c.md))_
+- **tests-brief-lock**: plan-trace asserts execute-phase original-text brief rules and R4 view requires_payload omit criterion; tdd; workflow-loop; python3 -m pytest tests/test_plan_trace.py tests/test_skill_contract_consistency.py -q _(id: [rec-b760d3e8-594b-491c-b282-aa07923e1a38](.artifacts/records/project__acceptance/rec-b760d3e8-594b-491c-b282-aa07923e1a38.md))_
+- **tests-brief-lock-r4**: criterion_optional_in_contract asserts brief/plan/verification roles omit criterion from requires_payload; check; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k criterion_optional_in_contract -q _(id: [rec-6525fff7-02a2-4ef2-8ae7-1b4fe8a3fe89](.artifacts/records/project__acceptance/rec-6525fff7-02a2-4ef2-8ae7-1b4fe8a3fe89.md))_
+- **tests-claim-chain**: plan-trace and skill-contract consistency enforce R1-R5 and optional criterion; CLI create/capture accepts thin deliver shape; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-14838183-7e65-45e7-8ac1-41a2ff0e912b](.artifacts/records/project__acceptance/rec-14838183-7e65-45e7-8ac1-41a2ff0e912b.md))_
+- **verify-atomic-claims**: a planned deliver work-item + thin acceptance shape validates through the real adaptive-artifacts create/capture path used by plan-phase; tdd; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k 'thin_deliver and (capture or create or cli)' -q _(id: [rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca](.artifacts/records/project__acceptance/rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca.md))_
+- **verify-atomic-claims-contract**: criterion is optional on acceptance; brief/plan/verification acceptance roles do not require it; check; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k criterion_optional_in_contract -q _(id: [rec-f6cf9299-6647-4ad0-b659-e4d890f6f3c3](.artifacts/records/project__acceptance/rec-f6cf9299-6647-4ad0-b659-e4d890f6f3c3.md))_
+- **verify-atomic-claims-pytest**: python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q is green; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-e1380e66-3c40-4868-b412-12685050d7fd](.artifacts/records/project__acceptance/rec-e1380e66-3c40-4868-b412-12685050d7fd.md))_
+- **verify-atomic-claims-skills**: plan-phase, discuss, and execute-phase require atomic deliver/repair ids, thin acceptances, and original-text briefs; examples match the contract; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-d0219464-ac52-415e-b926-d817876f0d8a](.artifacts/records/project__acceptance/rec-d0219464-ac52-415e-b926-d817876f0d8a.md))_
 
 ## estimate-view
 

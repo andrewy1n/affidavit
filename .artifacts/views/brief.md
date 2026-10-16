@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:0cd648e5ae334da9776f5086276bbf949b9eccabf275f50391b46265f5dba3ac
+> Store state: sha256:3c33eacc05e34339bd8a29ec3020835fc0e5780d24b4d9f170f9859acb9e7c4a
 
 ## aa-installable-package
 
@@ -164,6 +164,11 @@
 ### Acceptance
 - **assess-route**: verify-work keeps level and next off the check-run, raises implementation to design only when a repeat adds no evidence, and writes release ready only when every requirement is verified. test_assess_routing.py passes.; check; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_assess_routing.py -q _(id: [rec-fb7cdbf9-8de6-4066-a413-41f688ed3792](.artifacts/records/project__acceptance/rec-fb7cdbf9-8de6-4066-a413-41f688ed3792.md))_
 
+## atomic-claims
+
+### Position
+- **atomic-claims**: plan review: atomic-claims tasks materialized; phase _(id: [rec-a8e485a6-22c2-4e97-89aa-74c42ddd9244](.artifacts/records/project__current-position/rec-a8e485a6-22c2-4e97-89aa-74c42ddd9244.md))_
+
 ## backlog-lifecycle
 
 ### Acceptance
@@ -298,6 +303,11 @@
 
 ### Acceptance
 - **contract-loop**: The bundled contract resolves specification, design, integration-report, assessment, release, and feedback, and a check-run result of pass still validates.; check; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_contract_self_consistency.py -q _(id: [rec-6d715e64-501c-42c0-b057-42d81bbb01b8](.artifacts/records/project__acceptance/rec-6d715e64-501c-42c0-b057-42d81bbb01b8.md))_
+
+## contract-thin-criterion
+
+### Acceptance
+- **contract-thin-criterion**: acceptance.criterion is optional; brief/plan/verification acceptance roles do not list criterion in requires_payload; check; workflow-loop; python3 -c "import json; from pathlib import Path; d=json.loads(Path('contract/project-design.json').read_text()); acc=next(r for r in d['records'] if r['name']=='acceptance'); assert 'criterion' in acc['optional_payload']; assert 'criterion' not in (set(acc['payload'])-set(acc['optional_payload'])); views={v.get('name') or v.get('id'): v for v in (d['views'] if isinstance(d['views'], list) else list(d['views'].values()))}; bad=[n for n,v in views.items() for r in v.get('roles',[]) if (r.get('occupant')=='acceptance' or r.get('name')=='acceptance') and 'criterion' in r.get('requires_payload',[])]; assert not bad, bad" _(id: [rec-c79b18fc-3e2f-4a36-8417-9799d980ae1d](.artifacts/records/project__acceptance/rec-c79b18fc-3e2f-4a36-8417-9799d980ae1d.md))_
 
 ## copy-and-commit-actions
 
@@ -1288,6 +1298,29 @@ print("phase checks only")
 ### Acceptance
 - **skills-backlog-promote**: engage documents promote as supersede to promoted then discuss/new phase or incidental, and dismiss as supersede to dismissed, with no GitHub scrape; check; workflow-loop; uv run --with pytest python -m pytest tests/test_skill_contract_consistency.py tests/test_assess_routing.py -q _(id: [rec-9dcc1726-0246-424d-a8f7-edd8b8c98ea6](.artifacts/records/project__acceptance/rec-9dcc1726-0246-424d-a8f7-edd8b8c98ea6.md))_
 
+## skills-claim-handoff
+
+### Work
+- **skills-claim-handoff**: Skills for atomic ids, thin acceptances, original briefs; atomic-claims; deliver; workflow-loop _(id: [rec-8e0250ec-cac0-4730-a184-9f131356e7ae](.artifacts/records/project__work-item/rec-8e0250ec-cac0-4730-a184-9f131356e7ae.md))_
+
+### Acceptance
+- **skills-claim-handoff**: deliver/repair work-items always carry atomic requirement ids in plan-phase (description-as-list when no spec); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-7d56f650-967d-4bae-8088-7461b40697de](.artifacts/records/project__acceptance/rec-7d56f650-967d-4bae-8088-7461b40697de.md))_
+
+## skills-claim-handoff-briefs
+
+### Acceptance
+- **skills-claim-handoff-briefs**: execute-phase requires original-text briefs quoting work-item and requirement text by id; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-5b5017ed-6e05-4149-9a16-a76488688d65](.artifacts/records/project__acceptance/rec-5b5017ed-6e05-4149-9a16-a76488688d65.md))_
+
+## skills-claim-handoff-one-id
+
+### Acceptance
+- **skills-claim-handoff-one-id**: each deliver/repair acceptance names exactly one requirement id; compound ids banned in skill text; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f](.artifacts/records/project__acceptance/rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f.md))_
+
+## skills-claim-handoff-thin
+
+### Acceptance
+- **skills-claim-handoff-thin**: plan-phase examples write thin acceptances (no criterion prose); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-177d102b-7173-412b-b4c0-2b7608eff04c](.artifacts/records/project__acceptance/rec-177d102b-7173-412b-b4c0-2b7608eff04c.md))_
+
 ## skills-red-first
 
 ### Acceptance
@@ -1453,6 +1486,14 @@ print("phase checks only")
 ### Acceptance
 - **test-suite-speed**: All 262 tests pass, full suite wall time is at most 158s (half of the 317s clean-HEAD baseline), CPU time stays under 250s, and no timeout or deadline value is larger than before the change; check; test-suite-speed; time uv run --with textual --with pytest python -m pytest tests -q _(id: [rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99](.artifacts/records/project__acceptance/rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99.md))_
 
+## tests-claim-chain
+
+### Work
+- **tests-claim-chain**: Plan-trace and consistency tests for claim chain; atomic-claims; deliver; workflow-loop _(id: [rec-7700dcb2-7c0b-4a71-a711-c5e713586f5c](.artifacts/records/project__work-item/rec-7700dcb2-7c0b-4a71-a711-c5e713586f5c.md))_
+
+### Acceptance
+- **tests-claim-chain**: plan-trace and skill-contract consistency enforce R1-R5 and optional criterion; CLI create/capture accepts thin deliver shape; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-14838183-7e65-45e7-8ac1-41a2ff0e912b](.artifacts/records/project__acceptance/rec-14838183-7e65-45e7-8ac1-41a2ff0e912b.md))_
+
 ## tier2-dashboard
 
 ### Acceptance
@@ -1557,6 +1598,29 @@ print("phase checks only")
 
 ### Acceptance
 - **unsigned-check-label**: An unsigned check reads as its acceptance criterion and task slug, never a rec- id, with a fallback when the acceptance is missing; the test fails before the fix; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py -q -k unsigned _(id: [rec-403febb3-cbe5-474d-8413-5687934c29d2](.artifacts/records/project__acceptance/rec-403febb3-cbe5-474d-8413-5687934c29d2.md))_
+
+## verify-atomic-claims
+
+### Work
+- **verify-atomic-claims**: Verify atomic claims and thin acceptances; atomic-claims; deliver; workflow-loop _(id: [rec-6f1053ba-d841-4c2e-9837-6af07ede98ba](.artifacts/records/project__work-item/rec-6f1053ba-d841-4c2e-9837-6af07ede98ba.md))_
+
+### Acceptance
+- **verify-atomic-claims**: a planned deliver work-item + thin acceptance shape validates through the real adaptive-artifacts create/capture path used by plan-phase; tdd; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k 'thin_deliver and (capture or create or cli)' -q _(id: [rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca](.artifacts/records/project__acceptance/rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca.md))_
+
+## verify-atomic-claims-contract
+
+### Acceptance
+- **verify-atomic-claims-contract**: criterion is optional on acceptance; brief/plan/verification acceptance roles do not require it; check; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k criterion_optional_in_contract -q _(id: [rec-f6cf9299-6647-4ad0-b659-e4d890f6f3c3](.artifacts/records/project__acceptance/rec-f6cf9299-6647-4ad0-b659-e4d890f6f3c3.md))_
+
+## verify-atomic-claims-pytest
+
+### Acceptance
+- **verify-atomic-claims-pytest**: python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q is green; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-e1380e66-3c40-4868-b412-12685050d7fd](.artifacts/records/project__acceptance/rec-e1380e66-3c40-4868-b412-12685050d7fd.md))_
+
+## verify-atomic-claims-skills
+
+### Acceptance
+- **verify-atomic-claims-skills**: plan-phase, discuss, and execute-phase require atomic deliver/repair ids, thin acceptances, and original-text briefs; examples match the contract; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-d0219464-ac52-415e-b926-d817876f0d8a](.artifacts/records/project__acceptance/rec-d0219464-ac52-415e-b926-d817876f0d8a.md))_
 
 ## verify-authority
 
