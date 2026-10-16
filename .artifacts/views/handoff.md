@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:50f0b2714ab444c435199ea354dfd6a2b36049b9e30c147cfc6e2bd7e22c2853
+> Store state: sha256:cb3f014de4fa99a5cfda27ab70ab35cddb02f4930007814a471bab6627ed7b44
 
 ## dashboard
 
@@ -13,7 +13,7 @@
 
 ### Backlog
 - **journal-detail-xdist-flake**: dashboard; open _(id: [rec-3d8b654b-bf85-4203-9fe8-f0aeeead64f4](.artifacts/records/project__backlog-item/rec-3d8b654b-bf85-4203-9fe8-f0aeeead64f4.md))_
-- **ui-revamp**: dashboard; open _(id: [rec-c73e9f7f-f331-47c2-a4ff-e381131b2904](.artifacts/records/project__backlog-item/rec-c73e9f7f-f331-47c2-a4ff-e381131b2904.md))_
+- **ui-revamp**: dashboard; open _(id: [rec-b7216ac0-0c4a-4436-8388-fccc8922470c](.artifacts/records/project__backlog-item/rec-b7216ac0-0c4a-4436-8388-fccc8922470c.md))_
 
 ## packaging
 
@@ -48,7 +48,7 @@
 
 ### Position
 - **phase-reviewer**: phase-reviewer done; next up: tiered-verification; phase _(id: [rec-db17b780-4178-4359-b4ee-119fb52aba18](.artifacts/records/project__current-position/rec-db17b780-4178-4359-b4ee-119fb52aba18.md))_
-- **workflow-loop**: verification-policy done; no further phase is currently named — ask whether more phases follow; effort _(id: [rec-ee9d13fa-81d8-4786-8601-3854e5244104](.artifacts/records/project__current-position/rec-ee9d13fa-81d8-4786-8601-3854e5244104.md))_
+- **workflow-loop**: claim-witnesses done; next up: atomic-claims; effort _(id: [rec-ddcec3d4-70fb-4743-a05f-1098cb9c65da](.artifacts/records/project__current-position/rec-ddcec3d4-70fb-4743-a05f-1098cb9c65da.md))_
 
 ### Backlog
 - **gh-11-verification-loop**: workflow-loop; open _(id: [rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7](.artifacts/records/project__backlog-item/rec-0df3151d-956c-4c9a-b031-87ef9cceeeb7.md))_

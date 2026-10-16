@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:0abb3f517fa6e6e5f34f2597e1749d1c1b654cfa14ccfd6ddbfb0e600425e271
+> Store state: sha256:0cd648e5ae334da9776f5086276bbf949b9eccabf275f50391b46265f5dba3ac
 
 ## aa-installable-package
 
@@ -218,6 +218,26 @@
 
 ### Acceptance
 - **close-batch-cli**: bin/se-workflow close-batch builds NDJSON batches and preserves red-first refusal exit codes through the CLI entry; tdd; packaging; uv run --with pytest python -m pytest tests/test_close_batch.py -q _(id: [rec-45b51bb0-0c79-4f85-9120-374742d1d297](.artifacts/records/project__acceptance/rec-45b51bb0-0c79-4f85-9120-374742d1d297.md))_
+
+## close-batch-store-verify
+
+### Acceptance
+- **close-batch-store-verify**: close-batch refuses fabricated or field-mismatched check_run_id for tdd/check done; no apply batch written; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'store_authority or fabricated or mismatch' -q _(id: [rec-a4a45232-6634-47b1-bbaf-11633085234e](.artifacts/records/project__acceptance/rec-a4a45232-6634-47b1-bbaf-11633085234e.md))_
+
+## close-batch-store-verify-missing
+
+### Acceptance
+- **close-batch-store-verify-missing**: missing check_run_id or missing result on a tdd/check done entry raises CloseRequestError, not an implicit pass; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'missing_check_run_id or missing_result or result_optional' -q _(id: [rec-3c86fb99-228d-40b6-99f7-5d48aa05de37](.artifacts/records/project__acceptance/rec-3c86fb99-228d-40b6-99f7-5d48aa05de37.md))_
+
+## close-batch-store-verify-red
+
+### Acceptance
+- **close-batch-store-verify-red**: close-batch resolves red_check_run_id from the store and refuses unless it is a runner fail whose revision precedes green per ancestry rules (including dirty-red with diff_sha256); tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'red_store or dirty_green or missing_green_revision' -q _(id: [rec-3fd581e7-7b66-4e35-9f7d-174b45144862](.artifacts/records/project__acceptance/rec-3fd581e7-7b66-4e35-9f7d-174b45144862.md))_
+
+## close-batch-store-verify-revision
+
+### Acceptance
+- **close-batch-store-verify-revision**: tdd runner entry that carries revision without red-first fields is refused; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'tdd_revision_without_red or revision_allowed_tdd' -q _(id: [rec-b97cbd55-140b-4868-8652-f4dda7f99ae8](.artifacts/records/project__acceptance/rec-b97cbd55-140b-4868-8652-f4dda7f99ae8.md))_
 
 ## close-red-first
 
@@ -1345,6 +1365,11 @@ print("phase checks only")
 ### Acceptance
 - **stepper-wrap**: Pilot test at 60 columns: every stepper line starts with a phase glyph and no line ends with a bare glyph, and no line is wider than the pane; the test fails before the change; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k stepper _(id: [rec-c2df3f61-8b0b-44d8-89b3-f3033ebcf9d0](.artifacts/records/project__acceptance/rec-c2df3f61-8b0b-44d8-89b3-f3033ebcf9d0.md))_
 
+## suite-advisory-claim-witnesses
+
+### Finding
+- **suite-advisory-claim-witnesses**: advisory suite fail for claim-witnesses-suite; exit_code=1 failing_node_ids=[tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub]; suite check-run passes at phase head, or human clears; none _(id: [rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf](.artifacts/records/project__finding/rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf.md))_
+
 ## suite-dashboard
 
 ### Acceptance
@@ -1582,6 +1607,31 @@ print("phase checks only")
 
 ### Acceptance
 - **verify-check-runner-skills**: verify-work and close_batch use CLI-produced check-runs for tdd/check; skill-contract tests pass; check; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_authority.py tests/test_skill_contract_consistency.py -q _(id: [rec-a831be0f-059e-414e-90bb-36c485017676](.artifacts/records/project__acceptance/rec-a831be0f-059e-414e-90bb-36c485017676.md))_
+
+## verify-claim-witnesses
+
+### Acceptance
+- **verify-claim-witnesses**: Fabricated or mismatched check_run_id / red_check_run_id cannot close tdd/check done through the real close-batch CLI (store-backed match on criterion_id, runner, result, revision); no apply batch written; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'cli and (fabricated or store_authority or mismatch)' -q _(id: [rec-7252d501-3ecd-40b3-8c19-db0da8a5c8a0](.artifacts/records/project__acceptance/rec-7252d501-3ecd-40b3-8c19-db0da8a5c8a0.md))_
+
+## verify-claim-witnesses-contract
+
+### Acceptance
+- **verify-claim-witnesses-contract**: Skill↔contract consistency still passes (no orphan contract edits); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-b50e926c-44f1-4c9a-80bb-af8bef0fd0de](.artifacts/records/project__acceptance/rec-b50e926c-44f1-4c9a-80bb-af8bef0fd0de.md))_
+
+## verify-claim-witnesses-mutants
+
+### Acceptance
+- **verify-claim-witnesses-mutants**: real_gap survivors from spikes/llm-mutants/findings.md are covered; verify-path pytest subset green; check; workflow-loop; python3 -m pytest tests/test_close_batch.py tests/test_affidavit_check.py -q _(id: [rec-4d4ab5a3-2608-4a28-a070-8d07d2bcf3f4](.artifacts/records/project__acceptance/rec-4d4ab5a3-2608-4a28-a070-8d07d2bcf3f4.md))_
+
+## verify-claim-witnesses-tdd-revision
+
+### Acceptance
+- **verify-claim-witnesses-tdd-revision**: tdd entry with revision and no red fields is refused; check; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'tdd_revision_without_red or revision_allowed_tdd' -q _(id: [rec-b059420c-342e-47a1-b52b-9d0103494e1c](.artifacts/records/project__acceptance/rec-b059420c-342e-47a1-b52b-9d0103494e1c.md))_
+
+## verify-claim-witnesses-worktree
+
+### Acceptance
+- **verify-claim-witnesses-worktree**: Worktree/--cwd tests cover aff check and close-batch with store on primary checkout; check; workflow-loop; python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py -k 'worktree or cwd_primary or store_cwd' -q _(id: [rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3](.artifacts/records/project__acceptance/rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3.md))_
 
 ## verify-dashboard-actions-phase
 
@@ -1830,6 +1880,16 @@ print("phase checks only")
 
 ### Amendment
 - **verify-needs-you-phase**: verify-needs-you-phase; dashboard-features _(id: [rec-3192a53d-1a55-41cb-8f06-71bdbabdcbd2](.artifacts/records/project__assignment-amendment/rec-3192a53d-1a55-41cb-8f06-71bdbabdcbd2.md))_
+
+## verify-path-test-gaps
+
+### Acceptance
+- **verify-path-test-gaps**: aff check and close-batch work with code in a phase worktree and store on primary checkout (--cwd); store discovery does not follow worktree cwd; revision comes from worktree HEAD; tdd; workflow-loop; python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py -k 'worktree or cwd_primary or store_cwd' -q _(id: [rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2](.artifacts/records/project__acceptance/rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2.md))_
+
+## verify-path-test-gaps-mutants
+
+### Acceptance
+- **verify-path-test-gaps-mutants**: real_gap check-path survivors from spikes/llm-mutants/findings.md are killed: timeout as blocked, empty verify_command refused, CLI --cwd forwarded (plus any check store-cwd gap not already covered by R5); tdd; workflow-loop; python3 -m pytest tests/test_affidavit_check.py -k 'timeout or empty_verify or cwd_forwarded or blocked_timeout' -q _(id: [rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e](.artifacts/records/project__acceptance/rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e.md))_
 
 ## verify-phase-landing
 
@@ -2251,4 +2311,4 @@ print("phase checks only")
 ## workflow-loop
 
 ### Position
-- **workflow-loop**: verification-policy done; no further phase is currently named — ask whether more phases follow; effort _(id: [rec-ee9d13fa-81d8-4786-8601-3854e5244104](.artifacts/records/project__current-position/rec-ee9d13fa-81d8-4786-8601-3854e5244104.md))_
+- **workflow-loop**: claim-witnesses done; next up: atomic-claims; effort _(id: [rec-ddcec3d4-70fb-4743-a05f-1098cb9c65da](.artifacts/records/project__current-position/rec-ddcec3d4-70fb-4743-a05f-1098cb9c65da.md))_

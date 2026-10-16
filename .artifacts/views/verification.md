@@ -1,22 +1,31 @@
 # Project Verification
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:9929ad9dc0a9e690a4cc83f8cf2aee5232c384ea5c5904d7a31c1c71c6c6fc69
+> Store state: sha256:012acf90e1b13a05a96544c19ea399988bac54bf09387b9f9a8819ca2e10dd53
 
 ## aa-installable-package
 
 ### Acceptance
 - **aa-installable-package**: adaptive-artifacts has pyproject.toml defining an installable package and adaptive-artifacts console-script entry point; check; packaging; test -f ~/adaptive-artifacts/pyproject.toml && grep -q adaptive-artifacts ~/adaptive-artifacts/pyproject.toml && grep -qE "scripts|entry.points|project.scripts" ~/adaptive-artifacts/pyproject.toml _(id: [rec-5926eafe-efb8-47ac-a314-50c1ff066f90](.artifacts/records/project__acceptance/rec-5926eafe-efb8-47ac-a314-50c1ff066f90.md))_
 
+### Check
+- **aa-installable-package**: rec-5926eafe-efb8-47ac-a314-50c1ff066f90; a086e27ca3eaff82960f6d5f4685a8dab4525a6b; pass; check _(id: [rec-49590822-0819-49cd-b0ed-056be7c098b7](.artifacts/records/project__check-run/rec-49590822-0819-49cd-b0ed-056be7c098b7.md))_
+
 ## aa-installable-package-plugin-bin
 
 ### Acceptance
 - **aa-installable-package-plugin-bin**: plugin bin/adaptive-artifacts still runs the CLI (--help); check; packaging; ~/adaptive-artifacts/bin/adaptive-artifacts --help >/dev/null _(id: [rec-de0125fd-b020-48fc-bd52-f66a04de6cbf](.artifacts/records/project__acceptance/rec-de0125fd-b020-48fc-bd52-f66a04de6cbf.md))_
 
+### Check
+- **aa-installable-package-plugin-bin**: rec-de0125fd-b020-48fc-bd52-f66a04de6cbf; a086e27ca3eaff82960f6d5f4685a8dab4525a6b; pass; check _(id: [rec-2fddaf05-bb48-4242-a78d-55585b11431d](.artifacts/records/project__check-run/rec-2fddaf05-bb48-4242-a78d-55585b11431d.md))_
+
 ## aa-installable-package-tools-shim
 
 ### Acceptance
 - **aa-installable-package-tools-shim**: checkout tools/artifacts.py shim still runs the CLI (ADAPTIVE_ARTIFACTS_ROOT discovery path); check; packaging; python3 ~/adaptive-artifacts/tools/artifacts.py --help >/dev/null _(id: [rec-d7737207-7463-4fa3-828f-647c738784bf](.artifacts/records/project__acceptance/rec-d7737207-7463-4fa3-828f-647c738784bf.md))_
+
+### Check
+- **aa-installable-package-tools-shim**: rec-d7737207-7463-4fa3-828f-647c738784bf; a086e27ca3eaff82960f6d5f4685a8dab4525a6b; pass; check _(id: [rec-c3ecfc7f-1928-4e98-a7f7-55252996bb52](.artifacts/records/project__check-run/rec-c3ecfc7f-1928-4e98-a7f7-55252996bb52.md))_
 
 ## aa-packaging-amendment
 
@@ -31,10 +40,16 @@
 ### Acceptance
 - **aa-uv-tool-install-proof**: uv tool install from the AA git URL places adaptive-artifacts on PATH without a sibling checkout; check; packaging; test -x ~/adaptive-artifacts/scripts/prove_uv_tool_install.sh && ~/adaptive-artifacts/scripts/prove_uv_tool_install.sh _(id: [rec-33598676-02a1-45b7-9d6f-379587854c4e](.artifacts/records/project__acceptance/rec-33598676-02a1-45b7-9d6f-379587854c4e.md))_
 
+### Check
+- **aa-uv-tool-install-proof**: rec-33598676-02a1-45b7-9d6f-379587854c4e; db2b7e9f447a6d63b61be244296fa998f1395205; pass; check _(id: [rec-b4bf3529-6490-42cd-81f1-a3fc4dbd3511](.artifacts/records/project__check-run/rec-b4bf3529-6490-42cd-81f1-a3fc4dbd3511.md))_
+
 ## aa-uv-tool-install-proof-store
 
 ### Acceptance
 - **aa-uv-tool-install-proof-store**: Installed adaptive-artifacts --help succeeds and one store-touching command succeeds on a temp store; check; packaging; ~/adaptive-artifacts/scripts/prove_uv_tool_install.sh _(id: [rec-d9c4add2-b3a0-4106-8778-46d3711d3c7e](.artifacts/records/project__acceptance/rec-d9c4add2-b3a0-4106-8778-46d3711d3c7e.md))_
+
+### Check
+- **aa-uv-tool-install-proof-store**: rec-d9c4add2-b3a0-4106-8778-46d3711d3c7e; db2b7e9f447a6d63b61be244296fa998f1395205; pass; check _(id: [rec-ebcffda4-ba5f-4804-84eb-bd3398394ff2](.artifacts/records/project__check-run/rec-ebcffda4-ba5f-4804-84eb-bd3398394ff2.md))_
 
 ## activity-failures
 
@@ -301,6 +316,16 @@
 ### Check
 - **check-run-contract**: rec-88363d0c-d058-4a0d-8c04-4a697bbe457d; 16c24e78d806d5207ee2c37a9418e828521f8389; pass; tdd _(id: [rec-06babb10-72f2-4c7c-8ef8-285ebdef0f15](.artifacts/records/project__check-run/rec-06babb10-72f2-4c7c-8ef8-285ebdef0f15.md))_
 
+## claim-witnesses-review
+
+### Check
+- **claim-witnesses-review**: claim-witnesses-review; d680521c3270c954d22b915c641c7e733595599f; pass; review _(id: [rec-86b5d648-38c1-458c-a821-a727cb4028e0](.artifacts/records/project__check-run/rec-86b5d648-38c1-458c-a821-a727cb4028e0.md))_
+
+## claim-witnesses-suite
+
+### Check
+- **claim-witnesses-suite**: claim-witnesses-suite; d680521c3270c954d22b915c641c7e733595599f; fail; check _(id: [rec-988c5595-f0ea-4bef-b5c1-8bf881e4b72e](.artifacts/records/project__check-run/rec-988c5595-f0ea-4bef-b5c1-8bf881e4b72e.md))_
+
 ## claude-shared-marketplace
 
 ### Acceptance
@@ -325,6 +350,55 @@
 ### Check
 - **close-batch-cli**: rec-45b51bb0-0c79-4f85-9120-374742d1d297; dirty; fail; tdd _(id: [rec-644ce7a2-d954-465f-bb8c-f2899f253d92](.artifacts/records/project__check-run/rec-644ce7a2-d954-465f-bb8c-f2899f253d92.md))_
 - **close-batch-cli**: rec-45b51bb0-0c79-4f85-9120-374742d1d297; 23c6f922d2a051135dc323f67924f2364b3788db; pass; tdd _(id: [rec-7637c340-cead-4240-9940-0a3c34093d3f](.artifacts/records/project__check-run/rec-7637c340-cead-4240-9940-0a3c34093d3f.md))_
+
+## close-batch-store-verify
+
+### Acceptance
+- **close-batch-store-verify**: close-batch refuses fabricated or field-mismatched check_run_id for tdd/check done; no apply batch written; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'store_authority or fabricated or mismatch' -q _(id: [rec-a4a45232-6634-47b1-bbaf-11633085234e](.artifacts/records/project__acceptance/rec-a4a45232-6634-47b1-bbaf-11633085234e.md))_
+
+### Check
+- **close-batch-store-verify**: rec-a4a45232-6634-47b1-bbaf-11633085234e; 947727b37d2e06a54a999103564c6a17b479f1de; fail; tdd _(id: [rec-0fe85e44-3f3b-41b7-b9d5-9eb11a1598a0](.artifacts/records/project__check-run/rec-0fe85e44-3f3b-41b7-b9d5-9eb11a1598a0.md))_
+- **close-batch-store-verify**: rec-a4a45232-6634-47b1-bbaf-11633085234e; 947727b37d2e06a54a999103564c6a17b479f1de; fail; tdd _(id: [rec-2c0921e5-a03b-476c-bdad-808e6aa1869f](.artifacts/records/project__check-run/rec-2c0921e5-a03b-476c-bdad-808e6aa1869f.md))_
+- **close-batch-store-verify**: rec-a4a45232-6634-47b1-bbaf-11633085234e; dirty; fail; tdd _(id: [rec-67d02bcd-6f63-46b9-ae30-afeddad6f3b6](.artifacts/records/project__check-run/rec-67d02bcd-6f63-46b9-ae30-afeddad6f3b6.md))_
+- **close-batch-store-verify**: rec-a4a45232-6634-47b1-bbaf-11633085234e; dirty; fail; tdd _(id: [rec-bfe587a4-e52d-4223-8a38-5ef1c13060fa](.artifacts/records/project__check-run/rec-bfe587a4-e52d-4223-8a38-5ef1c13060fa.md))_
+- **close-batch-store-verify**: rec-a4a45232-6634-47b1-bbaf-11633085234e; 1ca2b0676e8ba8febf2daf9cd8f98a4d2442a61f; pass; tdd _(id: [rec-d10d3440-6de3-435a-a886-2abdb2448572](.artifacts/records/project__check-run/rec-d10d3440-6de3-435a-a886-2abdb2448572.md))_
+- **close-batch-store-verify**: rec-a4a45232-6634-47b1-bbaf-11633085234e; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-ff6c3257-ad8b-4494-8ca0-065d296b6043](.artifacts/records/project__check-run/rec-ff6c3257-ad8b-4494-8ca0-065d296b6043.md))_
+
+## close-batch-store-verify-missing
+
+### Acceptance
+- **close-batch-store-verify-missing**: missing check_run_id or missing result on a tdd/check done entry raises CloseRequestError, not an implicit pass; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'missing_check_run_id or missing_result or result_optional' -q _(id: [rec-3c86fb99-228d-40b6-99f7-5d48aa05de37](.artifacts/records/project__acceptance/rec-3c86fb99-228d-40b6-99f7-5d48aa05de37.md))_
+
+### Check
+- **close-batch-store-verify-missing**: rec-3c86fb99-228d-40b6-99f7-5d48aa05de37; 947727b37d2e06a54a999103564c6a17b479f1de; fail; tdd _(id: [rec-7d02684a-510a-41ac-b74f-42e55e0cfad7](.artifacts/records/project__check-run/rec-7d02684a-510a-41ac-b74f-42e55e0cfad7.md))_
+- **close-batch-store-verify-missing**: rec-3c86fb99-228d-40b6-99f7-5d48aa05de37; 1ca2b0676e8ba8febf2daf9cd8f98a4d2442a61f; pass; tdd _(id: [rec-7d60c2a8-e65e-4e13-b407-490841e3684e](.artifacts/records/project__check-run/rec-7d60c2a8-e65e-4e13-b407-490841e3684e.md))_
+- **close-batch-store-verify-missing**: rec-3c86fb99-228d-40b6-99f7-5d48aa05de37; dirty; fail; tdd _(id: [rec-cd58fdd4-9eef-424d-a4c8-b1c42a9093cb](.artifacts/records/project__check-run/rec-cd58fdd4-9eef-424d-a4c8-b1c42a9093cb.md))_
+- **close-batch-store-verify-missing**: rec-3c86fb99-228d-40b6-99f7-5d48aa05de37; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-d8450a84-74c8-4945-8e81-f3ecfb76f9e6](.artifacts/records/project__check-run/rec-d8450a84-74c8-4945-8e81-f3ecfb76f9e6.md))_
+- **close-batch-store-verify-missing**: rec-3c86fb99-228d-40b6-99f7-5d48aa05de37; dirty; fail; tdd _(id: [rec-eee23a4f-f816-4909-ac37-daf7b52446a2](.artifacts/records/project__check-run/rec-eee23a4f-f816-4909-ac37-daf7b52446a2.md))_
+
+## close-batch-store-verify-red
+
+### Acceptance
+- **close-batch-store-verify-red**: close-batch resolves red_check_run_id from the store and refuses unless it is a runner fail whose revision precedes green per ancestry rules (including dirty-red with diff_sha256); tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'red_store or dirty_green or missing_green_revision' -q _(id: [rec-3fd581e7-7b66-4e35-9f7d-174b45144862](.artifacts/records/project__acceptance/rec-3fd581e7-7b66-4e35-9f7d-174b45144862.md))_
+
+### Check
+- **close-batch-store-verify-red**: rec-3fd581e7-7b66-4e35-9f7d-174b45144862; 1ca2b0676e8ba8febf2daf9cd8f98a4d2442a61f; pass; tdd _(id: [rec-22edc17a-cab3-4029-83c1-74e2d635faf8](.artifacts/records/project__check-run/rec-22edc17a-cab3-4029-83c1-74e2d635faf8.md))_
+- **close-batch-store-verify-red**: rec-3fd581e7-7b66-4e35-9f7d-174b45144862; 947727b37d2e06a54a999103564c6a17b479f1de; fail; tdd _(id: [rec-8ed56e4f-0c1e-4e58-b238-a37e1c6d74bb](.artifacts/records/project__check-run/rec-8ed56e4f-0c1e-4e58-b238-a37e1c6d74bb.md))_
+- **close-batch-store-verify-red**: rec-3fd581e7-7b66-4e35-9f7d-174b45144862; dirty; fail; tdd _(id: [rec-96108f0c-a8d3-481a-90fe-16547ff56f95](.artifacts/records/project__check-run/rec-96108f0c-a8d3-481a-90fe-16547ff56f95.md))_
+- **close-batch-store-verify-red**: rec-3fd581e7-7b66-4e35-9f7d-174b45144862; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-bdae3e95-4d02-4c59-9851-9445d5cdabe0](.artifacts/records/project__check-run/rec-bdae3e95-4d02-4c59-9851-9445d5cdabe0.md))_
+- **close-batch-store-verify-red**: rec-3fd581e7-7b66-4e35-9f7d-174b45144862; dirty; fail; tdd _(id: [rec-ca809d75-2acd-4a1f-a96b-52a3dc63962a](.artifacts/records/project__check-run/rec-ca809d75-2acd-4a1f-a96b-52a3dc63962a.md))_
+
+## close-batch-store-verify-revision
+
+### Acceptance
+- **close-batch-store-verify-revision**: tdd runner entry that carries revision without red-first fields is refused; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'tdd_revision_without_red or revision_allowed_tdd' -q _(id: [rec-b97cbd55-140b-4868-8652-f4dda7f99ae8](.artifacts/records/project__acceptance/rec-b97cbd55-140b-4868-8652-f4dda7f99ae8.md))_
+
+### Check
+- **close-batch-store-verify-revision**: rec-b97cbd55-140b-4868-8652-f4dda7f99ae8; dirty; fail; tdd _(id: [rec-4d9f9cb3-23cb-41c9-8e01-3d6980298a12](.artifacts/records/project__check-run/rec-4d9f9cb3-23cb-41c9-8e01-3d6980298a12.md))_
+- **close-batch-store-verify-revision**: rec-b97cbd55-140b-4868-8652-f4dda7f99ae8; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-8e91a2d8-5d02-4b3a-bfd0-36c34aca6957](.artifacts/records/project__check-run/rec-8e91a2d8-5d02-4b3a-bfd0-36c34aca6957.md))_
+- **close-batch-store-verify-revision**: rec-b97cbd55-140b-4868-8652-f4dda7f99ae8; 947727b37d2e06a54a999103564c6a17b479f1de; fail; tdd _(id: [rec-b9153f80-684c-4145-bbda-6e104d1c8fe5](.artifacts/records/project__check-run/rec-b9153f80-684c-4145-bbda-6e104d1c8fe5.md))_
+- **close-batch-store-verify-revision**: rec-b97cbd55-140b-4868-8652-f4dda7f99ae8; dirty; fail; tdd _(id: [rec-c6fdbea3-524c-4c2c-a3e8-5ac7b6a729f5](.artifacts/records/project__check-run/rec-c6fdbea3-524c-4c2c-a3e8-5ac7b6a729f5.md))_
+- **close-batch-store-verify-revision**: rec-b97cbd55-140b-4868-8652-f4dda7f99ae8; 1ca2b0676e8ba8febf2daf9cd8f98a4d2442a61f; pass; tdd _(id: [rec-cc179d9e-1486-4c1e-92b2-7d80bf742243](.artifacts/records/project__check-run/rec-cc179d9e-1486-4c1e-92b2-7d80bf742243.md))_
 
 ## close-red-first
 
@@ -1544,6 +1618,11 @@ print("phase checks only")
 - **plugin-root-and-cli-tier2**: plugin-root-and-cli-tier2; 3379fcf8a1d882d91330bec6e66a2889c71d3ece; pass; manual; user _(id: [rec-af24fcc0-9a26-4be6-9737-fa78976f6316](.artifacts/records/project__check-run/rec-af24fcc0-9a26-4be6-9737-fa78976f6316.md))_
 - **plugin-root-and-cli-tier2**: plugin-root-and-cli-tier2; 3379fcf8a1d882d91330bec6e66a2889c71d3ece; fail; check _(id: [rec-cc94529d-5679-4111-8618-30f3392e2f08](.artifacts/records/project__check-run/rec-cc94529d-5679-4111-8618-30f3392e2f08.md))_
 
+## pyproject-pypi-review
+
+### Check
+- **pyproject-pypi-review**: pyproject-pypi-review; 5257818a25994a1b41742f10c48d12cb7e5d767c; pass; review _(id: [rec-78fcd18d-7b0e-4ade-acaa-1ced833efb54](.artifacts/records/project__check-run/rec-78fcd18d-7b0e-4ade-acaa-1ced833efb54.md))_
+
 ## readme-lifecycle
 
 ### Acceptance
@@ -2035,6 +2114,11 @@ print("phase checks only")
 ### Observation
 - **stepper-wrap**: test_stepper_wraps_by_pane_width_and_keeps_glyph_with_label failed 3/10: stepper lines were wider than pane.scrollable_content_region.width. Hypothesis: the status-tab grid wraps, the pane overflows 20 rows, a vertical scrollbar appears after the stepper rendered, narrowing the content region without a pane resize, so EffortPane.on_resize never re-shows.; dashboard-features _(id: [rec-b3951803-56a0-4f76-aefb-68962a329e8a](.artifacts/records/project__investigation-observation/rec-b3951803-56a0-4f76-aefb-68962a329e8a.md))_
 
+## suite-advisory-claim-witnesses
+
+### Finding
+- **suite-advisory-claim-witnesses**: advisory suite fail for claim-witnesses-suite; exit_code=1 failing_node_ids=[tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub]; suite check-run passes at phase head, or human clears; none _(id: [rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf](.artifacts/records/project__finding/rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf.md))_
+
 ## suite-dashboard
 
 ### Acceptance
@@ -2446,6 +2530,48 @@ print("phase checks only")
 ### Check
 - **verify-check-runner-skills**: rec-a831be0f-059e-414e-90bb-36c485017676; 4bd42b96e925562686c726d6da61a27b99481255; pass; check _(id: [rec-ce3653a8-b5bd-40e1-a2af-0f37ef5045a8](.artifacts/records/project__check-run/rec-ce3653a8-b5bd-40e1-a2af-0f37ef5045a8.md))_
 
+## verify-claim-witnesses
+
+### Acceptance
+- **verify-claim-witnesses**: Fabricated or mismatched check_run_id / red_check_run_id cannot close tdd/check done through the real close-batch CLI (store-backed match on criterion_id, runner, result, revision); no apply batch written; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'cli and (fabricated or store_authority or mismatch)' -q _(id: [rec-7252d501-3ecd-40b3-8c19-db0da8a5c8a0](.artifacts/records/project__acceptance/rec-7252d501-3ecd-40b3-8c19-db0da8a5c8a0.md))_
+
+### Check
+- **verify-claim-witnesses**: rec-7252d501-3ecd-40b3-8c19-db0da8a5c8a0; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-41136e8a-310b-4497-890c-0f68f5c7e159](.artifacts/records/project__check-run/rec-41136e8a-310b-4497-890c-0f68f5c7e159.md))_
+- **verify-claim-witnesses**: rec-7252d501-3ecd-40b3-8c19-db0da8a5c8a0; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-7b2bf65d-f1b6-4158-8c5a-e14012b93873](.artifacts/records/project__check-run/rec-7b2bf65d-f1b6-4158-8c5a-e14012b93873.md))_
+- **verify-claim-witnesses**: rec-7252d501-3ecd-40b3-8c19-db0da8a5c8a0; dirty; fail; tdd _(id: [rec-9d792a11-4dfb-4ea3-98c9-b2c93e8aef47](.artifacts/records/project__check-run/rec-9d792a11-4dfb-4ea3-98c9-b2c93e8aef47.md))_
+
+## verify-claim-witnesses-contract
+
+### Acceptance
+- **verify-claim-witnesses-contract**: Skill↔contract consistency still passes (no orphan contract edits); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-b50e926c-44f1-4c9a-80bb-af8bef0fd0de](.artifacts/records/project__acceptance/rec-b50e926c-44f1-4c9a-80bb-af8bef0fd0de.md))_
+
+### Check
+- **verify-claim-witnesses-contract**: rec-b50e926c-44f1-4c9a-80bb-af8bef0fd0de; d680521c3270c954d22b915c641c7e733595599f; pass; check _(id: [rec-164dd043-024a-4c3b-9a72-f7671d3219c6](.artifacts/records/project__check-run/rec-164dd043-024a-4c3b-9a72-f7671d3219c6.md))_
+
+## verify-claim-witnesses-mutants
+
+### Acceptance
+- **verify-claim-witnesses-mutants**: real_gap survivors from spikes/llm-mutants/findings.md are covered; verify-path pytest subset green; check; workflow-loop; python3 -m pytest tests/test_close_batch.py tests/test_affidavit_check.py -q _(id: [rec-4d4ab5a3-2608-4a28-a070-8d07d2bcf3f4](.artifacts/records/project__acceptance/rec-4d4ab5a3-2608-4a28-a070-8d07d2bcf3f4.md))_
+
+### Check
+- **verify-claim-witnesses-mutants**: rec-4d4ab5a3-2608-4a28-a070-8d07d2bcf3f4; d680521c3270c954d22b915c641c7e733595599f; pass; check _(id: [rec-85842156-7206-4b96-b4ea-d3bc1e348f22](.artifacts/records/project__check-run/rec-85842156-7206-4b96-b4ea-d3bc1e348f22.md))_
+
+## verify-claim-witnesses-tdd-revision
+
+### Acceptance
+- **verify-claim-witnesses-tdd-revision**: tdd entry with revision and no red fields is refused; check; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'tdd_revision_without_red or revision_allowed_tdd' -q _(id: [rec-b059420c-342e-47a1-b52b-9d0103494e1c](.artifacts/records/project__acceptance/rec-b059420c-342e-47a1-b52b-9d0103494e1c.md))_
+
+### Check
+- **verify-claim-witnesses-tdd-revision**: rec-b059420c-342e-47a1-b52b-9d0103494e1c; d680521c3270c954d22b915c641c7e733595599f; pass; check _(id: [rec-afc2606a-7619-429c-ae05-c451e9719d20](.artifacts/records/project__check-run/rec-afc2606a-7619-429c-ae05-c451e9719d20.md))_
+
+## verify-claim-witnesses-worktree
+
+### Acceptance
+- **verify-claim-witnesses-worktree**: Worktree/--cwd tests cover aff check and close-batch with store on primary checkout; check; workflow-loop; python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py -k 'worktree or cwd_primary or store_cwd' -q _(id: [rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3](.artifacts/records/project__acceptance/rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3.md))_
+
+### Check
+- **verify-claim-witnesses-worktree**: rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3; d680521c3270c954d22b915c641c7e733595599f; pass; check _(id: [rec-b9f1fc89-3edc-4b4f-a430-e809670e2c77](.artifacts/records/project__check-run/rec-b9f1fc89-3edc-4b4f-a430-e809670e2c77.md))_
+
 ## verify-dashboard-actions-phase
 
 ### Acceptance
@@ -2831,6 +2957,28 @@ print("phase checks only")
 ### Observation
 - **verify-needs-you-phase**: tab from a live effort with Needs you items to a pane whose task table is hidden bounces back: Screen._reset_focus moves focus from the hidden TaskTable to the sibling NeedsList, and TabbedContent re-activates the pane holding focus. Reproduces every run; absent without Needs you items.; dashboard-features _(id: [rec-63c67821-d6d9-4012-8437-37c5beda8310](.artifacts/records/project__investigation-observation/rec-63c67821-d6d9-4012-8437-37c5beda8310.md))_
 
+## verify-path-test-gaps
+
+### Acceptance
+- **verify-path-test-gaps**: aff check and close-batch work with code in a phase worktree and store on primary checkout (--cwd); store discovery does not follow worktree cwd; revision comes from worktree HEAD; tdd; workflow-loop; python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py -k 'worktree or cwd_primary or store_cwd' -q _(id: [rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2](.artifacts/records/project__acceptance/rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2.md))_
+
+### Check
+- **verify-path-test-gaps**: rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-8007795a-a9ed-425c-b890-fec1ac67d2b9](.artifacts/records/project__check-run/rec-8007795a-a9ed-425c-b890-fec1ac67d2b9.md))_
+- **verify-path-test-gaps**: rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2; dirty; fail; tdd _(id: [rec-826ae905-3d18-4a8b-8f35-90d9ab8c830a](.artifacts/records/project__check-run/rec-826ae905-3d18-4a8b-8f35-90d9ab8c830a.md))_
+- **verify-path-test-gaps**: rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2; dirty; fail; tdd _(id: [rec-cce5b8dd-4a86-47d6-b27f-863e910b2292](.artifacts/records/project__check-run/rec-cce5b8dd-4a86-47d6-b27f-863e910b2292.md))_
+- **verify-path-test-gaps**: rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-de0222e8-736e-41b9-a24d-be270109fad3](.artifacts/records/project__check-run/rec-de0222e8-736e-41b9-a24d-be270109fad3.md))_
+
+## verify-path-test-gaps-mutants
+
+### Acceptance
+- **verify-path-test-gaps-mutants**: real_gap check-path survivors from spikes/llm-mutants/findings.md are killed: timeout as blocked, empty verify_command refused, CLI --cwd forwarded (plus any check store-cwd gap not already covered by R5); tdd; workflow-loop; python3 -m pytest tests/test_affidavit_check.py -k 'timeout or empty_verify or cwd_forwarded or blocked_timeout' -q _(id: [rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e](.artifacts/records/project__acceptance/rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e.md))_
+
+### Check
+- **verify-path-test-gaps-mutants**: rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e; dirty; fail; tdd _(id: [rec-2e624aef-602a-4e59-88c4-73f40cf12ca1](.artifacts/records/project__check-run/rec-2e624aef-602a-4e59-88c4-73f40cf12ca1.md))_
+- **verify-path-test-gaps-mutants**: rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-3dc8a2b6-a3e5-434a-889b-64f72b476b86](.artifacts/records/project__check-run/rec-3dc8a2b6-a3e5-434a-889b-64f72b476b86.md))_
+- **verify-path-test-gaps-mutants**: rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e; d680521c3270c954d22b915c641c7e733595599f; pass; tdd _(id: [rec-6e6a6e19-9e94-460f-b911-72c1d781285b](.artifacts/records/project__check-run/rec-6e6a6e19-9e94-460f-b911-72c1d781285b.md))_
+- **verify-path-test-gaps-mutants**: rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e; dirty; fail; tdd _(id: [rec-cadfe683-4856-43be-b1d4-26afc188824c](.artifacts/records/project__check-run/rec-cadfe683-4856-43be-b1d4-26afc188824c.md))_
+
 ## verify-phase-landing
 
 ### Acceptance
@@ -2971,20 +3119,33 @@ print("phase checks only")
 ### Acceptance
 - **verify-pyproject-pypi**: Exit 1: uv tool install from AA git URL yields working adaptive-artifacts CLI (--help + store-touch) without sibling checkout; check; packaging; ~/adaptive-artifacts/scripts/prove_uv_tool_install.sh _(id: [rec-080abeb4-e1c8-4c6d-a325-fa84f67bf3a5](.artifacts/records/project__acceptance/rec-080abeb4-e1c8-4c6d-a325-fa84f67bf3a5.md))_
 
+### Check
+- **verify-pyproject-pypi**: rec-080abeb4-e1c8-4c6d-a325-fa84f67bf3a5; 5257818a25994a1b41742f10c48d12cb7e5d767c; pass; check _(id: [rec-50e47795-e749-40c1-be41-f18cdf41896e](.artifacts/records/project__check-run/rec-50e47795-e749-40c1-be41-f18cdf41896e.md))_
+- **verify-pyproject-pypi**: rec-cd94256a-2af1-4b2a-894c-58ebd9cb594f; 5257818a25994a1b41742f10c48d12cb7e5d767c; pass; manual; andrewyin _(id: [rec-c93fe80d-45e4-4e83-b404-0291a764e7bc](.artifacts/records/project__check-run/rec-c93fe80d-45e4-4e83-b404-0291a764e7bc.md))_
+
 ## verify-pyproject-pypi-aa-gate
 
 ### Acceptance
 - **verify-pyproject-pypi-aa-gate**: Exit 4: AA packaging amendment captured and approved before adaptive-artifacts merge; manual; packaging _(id: [rec-cd94256a-2af1-4b2a-894c-58ebd9cb594f](.artifacts/records/project__acceptance/rec-cd94256a-2af1-4b2a-894c-58ebd9cb594f.md))_
+
+### Check
+- **verify-pyproject-pypi-aa-gate**: rec-cd94256a-2af1-4b2a-894c-58ebd9cb594f; 5257818a25994a1b41742f10c48d12cb7e5d767c; pass; manual; andrewyin _(id: [rec-f4ef0011-3019-4081-aacb-23ead5a6870c](.artifacts/records/project__check-run/rec-f4ef0011-3019-4081-aacb-23ead5a6870c.md))_
 
 ## verify-pyproject-pypi-readme
 
 ### Acceptance
 - **verify-pyproject-pypi-readme**: Exit 3: affidavit README documents git+ install and deferred PyPI; no affidavit pyproject.toml; check; packaging; grep -qiE "uv tool install" README.md && grep -qiE "git\+https://github.com/andrewy1n/adaptive-artifacts" README.md && grep -qiE "PyPI.*(defer|later|not yet|wait)" README.md && ! test -f pyproject.toml _(id: [rec-df1c71df-699a-42b3-ae6d-8c7d0a764007](.artifacts/records/project__acceptance/rec-df1c71df-699a-42b3-ae6d-8c7d0a764007.md))_
 
+### Check
+- **verify-pyproject-pypi-readme**: rec-df1c71df-699a-42b3-ae6d-8c7d0a764007; 5257818a25994a1b41742f10c48d12cb7e5d767c; pass; check _(id: [rec-6294ebb8-e5a0-45f9-869b-c194ce90b164](.artifacts/records/project__check-run/rec-6294ebb8-e5a0-45f9-869b-c194ce90b164.md))_
+
 ## verify-pyproject-pypi-shims
 
 ### Acceptance
 - **verify-pyproject-pypi-shims**: Exit 2: plugin bin/adaptive-artifacts and tools/artifacts.py still run the CLI; check; packaging; ~/adaptive-artifacts/bin/adaptive-artifacts --help >/dev/null && python3 ~/adaptive-artifacts/tools/artifacts.py --help >/dev/null _(id: [rec-064ae8ac-d426-4a95-a9a5-71cd77ec4dfd](.artifacts/records/project__acceptance/rec-064ae8ac-d426-4a95-a9a5-71cd77ec4dfd.md))_
+
+### Check
+- **verify-pyproject-pypi-shims**: rec-064ae8ac-d426-4a95-a9a5-71cd77ec4dfd; 5257818a25994a1b41742f10c48d12cb7e5d767c; pass; check _(id: [rec-7edd7ced-8ab6-4b9f-b1b4-0344aaa94f50](.artifacts/records/project__check-run/rec-7edd7ced-8ab6-4b9f-b1b4-0344aaa94f50.md))_
 
 ## verify-quiet-header
 

@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:34b207fe0abce97be12c571d38045da803e7a7458285c87b81ff1a62e2a59a65
+> Store state: sha256:bcae15c651b5979e8f4b676af80c62c6c825bdcece5e376978310ac9528bf8ce
 
 ## dashboard-view
 
@@ -519,6 +519,21 @@ print("phase checks only")
 - **verify-verification-policy-contract**: Contract declares phase_gate; bundled mode=none; this repo live design full+advisory; check; workflow-loop; uv run --with pytest python -m pytest tests/test_contract_self_consistency.py -q -k phase_gate && python3 -c "import json; from pathlib import Path; b=json.loads(Path('contract/project-design.json').read_text())['phase_gate']['suite']; assert b['mode']=='none'; s=json.loads(Path('.artifacts/project-design.json').read_text())['phase_gate']['suite']; assert s['mode']=='full' and s['gate']=='advisory'" _(id: [rec-6992e9a1-3262-42cf-97d9-ae33c2935da4](.artifacts/records/project__acceptance/rec-6992e9a1-3262-42cf-97d9-ae33c2935da4.md))_
 - **verify-verification-policy-surfaces**: Dashboard suite chrome + verify-budget + skill-contract consistency green; red-first for tdd unchanged; check; workflow-loop; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py tests/test_dashboard_model.py -q -k suite && uv run --with pytest python -m pytest tests/test_verify_budget.py tests/test_skill_contract_consistency.py -q _(id: [rec-0e593cda-ace5-410a-b548-a5ab4c5c18fd](.artifacts/records/project__acceptance/rec-0e593cda-ace5-410a-b548-a5ab4c5c18fd.md))_
 
+## claim-witnesses
+
+### Acceptance
+- **close-batch-store-verify**: close-batch refuses fabricated or field-mismatched check_run_id for tdd/check done; no apply batch written; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'store_authority or fabricated or mismatch' -q _(id: [rec-a4a45232-6634-47b1-bbaf-11633085234e](.artifacts/records/project__acceptance/rec-a4a45232-6634-47b1-bbaf-11633085234e.md))_
+- **close-batch-store-verify-missing**: missing check_run_id or missing result on a tdd/check done entry raises CloseRequestError, not an implicit pass; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'missing_check_run_id or missing_result or result_optional' -q _(id: [rec-3c86fb99-228d-40b6-99f7-5d48aa05de37](.artifacts/records/project__acceptance/rec-3c86fb99-228d-40b6-99f7-5d48aa05de37.md))_
+- **close-batch-store-verify-red**: close-batch resolves red_check_run_id from the store and refuses unless it is a runner fail whose revision precedes green per ancestry rules (including dirty-red with diff_sha256); tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'red_store or dirty_green or missing_green_revision' -q _(id: [rec-3fd581e7-7b66-4e35-9f7d-174b45144862](.artifacts/records/project__acceptance/rec-3fd581e7-7b66-4e35-9f7d-174b45144862.md))_
+- **close-batch-store-verify-revision**: tdd runner entry that carries revision without red-first fields is refused; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'tdd_revision_without_red or revision_allowed_tdd' -q _(id: [rec-b97cbd55-140b-4868-8652-f4dda7f99ae8](.artifacts/records/project__acceptance/rec-b97cbd55-140b-4868-8652-f4dda7f99ae8.md))_
+- **verify-claim-witnesses**: Fabricated or mismatched check_run_id / red_check_run_id cannot close tdd/check done through the real close-batch CLI (store-backed match on criterion_id, runner, result, revision); no apply batch written; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'cli and (fabricated or store_authority or mismatch)' -q _(id: [rec-7252d501-3ecd-40b3-8c19-db0da8a5c8a0](.artifacts/records/project__acceptance/rec-7252d501-3ecd-40b3-8c19-db0da8a5c8a0.md))_
+- **verify-claim-witnesses-contract**: Skill↔contract consistency still passes (no orphan contract edits); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-b50e926c-44f1-4c9a-80bb-af8bef0fd0de](.artifacts/records/project__acceptance/rec-b50e926c-44f1-4c9a-80bb-af8bef0fd0de.md))_
+- **verify-claim-witnesses-mutants**: real_gap survivors from spikes/llm-mutants/findings.md are covered; verify-path pytest subset green; check; workflow-loop; python3 -m pytest tests/test_close_batch.py tests/test_affidavit_check.py -q _(id: [rec-4d4ab5a3-2608-4a28-a070-8d07d2bcf3f4](.artifacts/records/project__acceptance/rec-4d4ab5a3-2608-4a28-a070-8d07d2bcf3f4.md))_
+- **verify-claim-witnesses-tdd-revision**: tdd entry with revision and no red fields is refused; check; workflow-loop; python3 -m pytest tests/test_close_batch.py -k 'tdd_revision_without_red or revision_allowed_tdd' -q _(id: [rec-b059420c-342e-47a1-b52b-9d0103494e1c](.artifacts/records/project__acceptance/rec-b059420c-342e-47a1-b52b-9d0103494e1c.md))_
+- **verify-claim-witnesses-worktree**: Worktree/--cwd tests cover aff check and close-batch with store on primary checkout; check; workflow-loop; python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py -k 'worktree or cwd_primary or store_cwd' -q _(id: [rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3](.artifacts/records/project__acceptance/rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3.md))_
+- **verify-path-test-gaps**: aff check and close-batch work with code in a phase worktree and store on primary checkout (--cwd); store discovery does not follow worktree cwd; revision comes from worktree HEAD; tdd; workflow-loop; python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py -k 'worktree or cwd_primary or store_cwd' -q _(id: [rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2](.artifacts/records/project__acceptance/rec-42e9d09d-8bf3-4c5c-8abf-ba99dc9533c2.md))_
+- **verify-path-test-gaps-mutants**: real_gap check-path survivors from spikes/llm-mutants/findings.md are killed: timeout as blocked, empty verify_command refused, CLI --cwd forwarded (plus any check store-cwd gap not already covered by R5); tdd; workflow-loop; python3 -m pytest tests/test_affidavit_check.py -k 'timeout or empty_verify or cwd_forwarded or blocked_timeout' -q _(id: [rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e](.artifacts/records/project__acceptance/rec-7a05df17-bd22-4db2-a3e9-eaf3b764fe5e.md))_
+
 ## run-facts
 
 ### Acceptance
@@ -532,6 +547,11 @@ print("phase checks only")
 - **verify-run-facts-dashboard**: The phase diff does not change dashboard/.; check; dashboard; test -z "$(git diff --name-only main -- dashboard/)" _(id: [rec-3a8cb50a-c1bf-4698-8b25-1a91d9ad70a2](.artifacts/records/project__acceptance/rec-3a8cb50a-c1bf-4698-8b25-1a91d9ad70a2.md))_
 - **verify-run-facts-skill**: plan-phase requires size and estimate_minutes on each new work-item, and states the five size meanings, the inline sum, the subagent-wave maximum, the phase elapsed time, and the sitting line.; check; dashboard; uv run --with pytest python -m pytest tests/test_estimate_skill.py tests/test_skill_contract_consistency.py tests/test_plan_wave_rules.py tests/test_plan_trace.py -q _(id: [rec-a7ce611e-022e-44b3-a49b-512336cf04a6](.artifacts/records/project__acceptance/rec-a7ce611e-022e-44b3-a49b-512336cf04a6.md))_
 - **verify-run-facts-suite**: The full suite passes, including the tmux tests.; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m "not tmux" && uv run --with textual --with pytest python -m pytest tests -q -m tmux _(id: [rec-b43db00d-52de-4ffe-ba39-07011280cbbb](.artifacts/records/project__acceptance/rec-b43db00d-52de-4ffe-ba39-07011280cbbb.md))_
+
+## atomic-claims
+
+### Phase
+- **atomic-claims**: Atomic claims and thin acceptances; 21; workflow-loop _(id: [rec-c60371d4-2559-4450-a218-ca5c9f7621a7](.artifacts/records/project__phase/rec-c60371d4-2559-4450-a218-ca5c9f7621a7.md))_
 
 ## estimate-view
 
@@ -555,6 +575,11 @@ print("phase checks only")
 - **verify-estimate-view-unset**: A phase where some counted tasks have no estimate_minutes shows the partial total and the unset count. A phase where none have an estimate shows no minute suffix.; check; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_app.py -q -k 'estimate_view_unset_count or estimate_view_header_partial' _(id: [rec-8b8345bb-5686-47dc-869d-39897b52c173](.artifacts/records/project__acceptance/rec-8b8345bb-5686-47dc-869d-39897b52c173.md))_
 - **verify-estimate-view-wave**: The header minute figure matches the wave rule, including a parallel subagent wave that contributes its longest task.; check; dashboard; uv run --with pytest python -m pytest tests/test_dashboard_model.py -q -k estimate_view_wave_rule _(id: [rec-29ba3627-46df-4308-bae9-8939ff93b2f1](.artifacts/records/project__acceptance/rec-29ba3627-46df-4308-bae9-8939ff93b2f1.md))_
 
+## oracle-witnesses
+
+### Phase
+- **oracle-witnesses**: Oracle author, freeze, and amendments; 22; workflow-loop _(id: [rec-b78c4e43-e7d4-4de7-a6f4-f06bd88ffb15](.artifacts/records/project__phase/rec-b78c4e43-e7d4-4de7-a6f4-f06bd88ffb15.md))_
+
 ## phase-selector
 
 ### Acceptance
@@ -577,6 +602,11 @@ print("phase checks only")
 - **verify-phase-selector-model**: Model and task tests for default selection, follow/pin, merged activity, scoped counts, and All-phases grouping pass; check; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_tasks.py -q _(id: [rec-c559dd9b-03f5-4cb5-8d62-8dff85a9ad2e](.artifacts/records/project__acceptance/rec-c559dd9b-03f5-4cb5-8d62-8dff85a9ad2e.md))_
 - **verify-phase-selector-suite**: Full non-tmux and tmux test suites pass; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m not tmux && uv run --with textual --with pytest python -m pytest tests -q -m tmux _(id: [rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9](.artifacts/records/project__acceptance/rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9.md))_
 
+## evidence-kind
+
+### Phase
+- **evidence-kind**: Requirement evidence_kind enforcement; 23; workflow-loop _(id: [rec-8152251a-6238-4841-8183-6717775aeb30](.artifacts/records/project__phase/rec-8152251a-6238-4841-8183-6717775aeb30.md))_
+
 ## human-gates
 
 ### Acceptance
@@ -598,6 +628,11 @@ print("phase checks only")
 - **verify-human-gates-model**: Verbs, plan-review recognition, prompt text, next-step rules, landing state, Merge branch item, and quiet rule hold in model and gates tests; check; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_gates.py -q -k gates _(id: [rec-8ca825cb-80c2-47cc-9b12-ebfeb449dca9](.artifacts/records/project__acceptance/rec-8ca825cb-80c2-47cc-9b12-ebfeb449dca9.md))_
 - **verify-human-gates-suite**: The full non-tmux and tmux test suites pass; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m "not tmux" && uv run --with textual --with pytest python -m pytest tests -q -m tmux _(id: [rec-84b6b2c0-f0cc-49a6-93fd-ebd2e5390f9a](.artifacts/records/project__acceptance/rec-84b6b2c0-f0cc-49a6-93fd-ebd2e5390f9a.md))_
 - **verify-human-gates-tmux**: The status-right needs-you segment appears in a real tmux server when enabled; check; dashboard; uv run --with textual --with pytest python -m pytest tests -q -m tmux -k "status and (gates or needs or segment)" _(id: [rec-fa10fcaa-3669-4d69-a554-844faf4d41b6](.artifacts/records/project__acceptance/rec-fa10fcaa-3669-4d69-a554-844faf4d41b6.md))_
+
+## phase-end-evidence
+
+### Phase
+- **phase-end-evidence**: Phase-end evidence report; 24; workflow-loop _(id: [rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68](.artifacts/records/project__phase/rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68.md))_
 
 ## spec-view
 

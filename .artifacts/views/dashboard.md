@@ -1,7 +1,7 @@
 # Project Dashboard
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:8083c6f5e6519717df401f033e05715355557b2a551a61cb1c71e7f169b4e444
+> Store state: sha256:8e3ef945d2911f948eab90d7566e30129746dc62c754f715787d59b6a719a5a9
 
 ## dashboard
 
@@ -13,22 +13,15 @@
 ### Goal
 - **packaging**: goal: se-workflow and adaptive-artifacts install as versioned plugins with declared dependencies, stable plugin-root paths, a single CLI surface for skills, and compatible version checks; scope: effort; kind: deliver _(id: [rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc](.artifacts/records/project__active-goal/rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc.md))_
 
-### Phase
-- **pyproject-pypi**: title: Package layout + uv tool install (PyPI later); ordinal: 5 _(id: [rec-5ef43ef5-fbf7-4cc5-b685-bd488ad64119](.artifacts/records/project__phase/rec-5ef43ef5-fbf7-4cc5-b685-bd488ad64119.md))_
-
-### Running
-- **aa-installable-package**: title: AA pyproject + package move + shims; phase: pyproject-pypi; assignee: inline _(id: [rec-e8de6975-cde7-463a-b529-bc108fa372af](.artifacts/records/project__work-item/rec-e8de6975-cde7-463a-b529-bc108fa372af.md))_
-
-### Waiting
-- **aa-uv-tool-install-proof**: title: Prove uv tool install from git; phase: pyproject-pypi _(id: [rec-e61fee92-200d-4f16-a38a-0f0f50b1ab6a](.artifacts/records/project__work-item/rec-e61fee92-200d-4f16-a38a-0f0f50b1ab6a.md))_
-- **verify-pyproject-pypi**: title: Verify pyproject-pypi; phase: pyproject-pypi _(id: [rec-11f13452-a72a-4643-8996-ae4e26b8f91c](.artifacts/records/project__work-item/rec-11f13452-a72a-4643-8996-ae4e26b8f91c.md))_
-
 ### Done Recent
+- **aa-installable-package**: title: AA pyproject + package move + shims; phase: pyproject-pypi _(id: [rec-e8de6975-cde7-463a-b529-bc108fa372af](.artifacts/records/project__work-item/rec-e8de6975-cde7-463a-b529-bc108fa372af.md))_
 - **aa-packaging-amendment**: title: Capture AA packaging amendment + approval; phase: pyproject-pypi _(id: [rec-15698ece-c98e-48f5-ae51-097ae7d87b09](.artifacts/records/project__work-item/rec-15698ece-c98e-48f5-ae51-097ae7d87b09.md))_
+- **aa-uv-tool-install-proof**: title: Prove uv tool install from git; phase: pyproject-pypi _(id: [rec-e61fee92-200d-4f16-a38a-0f0f50b1ab6a](.artifacts/records/project__work-item/rec-e61fee92-200d-4f16-a38a-0f0f50b1ab6a.md))_
 - **affidavit-readme-git-tool**: title: Document AA git+ uv tool install; phase: pyproject-pypi _(id: [rec-34ac288b-d802-4b5c-b66a-8a086999faea](.artifacts/records/project__work-item/rec-34ac288b-d802-4b5c-b66a-8a086999faea.md))_
 - **rename-identity-surfaces**: title: Plugin, contract project id, and docs → affidavit; phase: rename-agent-affidavit _(id: [rec-a404db30-e8c2-491d-b7b0-17b18f794489](.artifacts/records/project__work-item/rec-a404db30-e8c2-491d-b7b0-17b18f794489.md))_
 - **rename-package-cli**: title: Rename se_workflow package and CLI to affidavit / aff; phase: rename-agent-affidavit _(id: [rec-b4e323ec-86bf-4114-8bfd-8e75636fbfcb](.artifacts/records/project__work-item/rec-b4e323ec-86bf-4114-8bfd-8e75636fbfcb.md))_
 - **rename-tests**: title: Rename tests and sync paths for affidavit; phase: rename-agent-affidavit _(id: [rec-1e8bb900-3ee6-4221-acb8-5bb7f61f800d](.artifacts/records/project__work-item/rec-1e8bb900-3ee6-4221-acb8-5bb7f61f800d.md))_
+- **verify-pyproject-pypi**: title: Verify pyproject-pypi; phase: pyproject-pypi _(id: [rec-11f13452-a72a-4643-8996-ae4e26b8f91c](.artifacts/records/project__work-item/rec-11f13452-a72a-4643-8996-ae4e26b8f91c.md))_
 - **verify-rename-agent-affidavit**: title: Verify rename to affidavit; phase: rename-agent-affidavit _(id: [rec-198a44f2-852e-4671-a3b7-fe89331ef728](.artifacts/records/project__work-item/rec-198a44f2-852e-4671-a3b7-fe89331ef728.md))_
 
 ## session-analysis

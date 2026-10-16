@@ -1,0 +1,33 @@
+---
+{
+  "base_kind": "phase",
+  "id": "rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68",
+  "identity": "unknown",
+  "lifecycle_state": "planned",
+  "payload": {
+    "effort": "workflow-loop",
+    "ordinal": 24,
+    "title": "Phase-end evidence report"
+  },
+  "record_type": "project:phase",
+  "recorded_at": "2026-10-16T09:24:23+00:00",
+  "relationships": {},
+  "revision": "sha256:bd4aa82145f86a4a3061b9477310b2eca8389cb7c7ceb047f4ccc9c75a63500e",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "phase-end-evidence"
+}
+---
+
+## Problem
+
+Code can change in ways no requirement asked for, and tests can be blind to hunks they execute. The phase-end reviewer agent is not the desired gate.
+
+## Approach
+
+not yet scoped — discuss when this phase is current. Direction: advisory phase-end report (hunk revert, capped LLM mutants, differential where pure), survivors to oracle author, unexplained changes as Needs-you.
+
+## Exit criteria
+
+Decide at plan-phase. At minimum: phase end produces an evidence report with unnoticed hunks and unexplained behavior deltas, advisory (does not block Landing).
