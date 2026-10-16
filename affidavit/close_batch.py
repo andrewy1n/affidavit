@@ -38,6 +38,7 @@ is refused outright rather than silently written without one. Pass-only
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -45,11 +46,15 @@ from pathlib import Path
 from typing import Any, Callable
 
 from affidavit import aa
+from affidavit.oracle_red import is_assertion_level_red
 
 RUNNER_METHODS = frozenset({"tdd", "check"})
 RUNNER_MARKER = "aff"
+_HASH_SEP = ":sha256:"
 
 CheckRunLoader = Callable[[str], dict[str, Any]]
+AcceptanceLoader = Callable[[str], dict[str, Any]]
+AmendmentLister = Callable[[str], list[dict[str, Any]]]
 
 
 class CloseRequestError(Exception):
@@ -86,9 +91,119 @@ def default_load_check_run(
     return aa.get_record(store, check_run_id, "project:check-run")
 
 
+def default_load_acceptance(
+    acceptance_id: str,
+    *,
+    store_root: Path | None = None,
+) -> dict[str, Any]:
+    """Load an acceptance via adaptive-artifacts get (store from primary cwd)."""
+    store = store_root if store_root is not None else aa.find_store_root(Path.cwd())
+    return aa.get_record(store, acceptance_id, "project:acceptance")
+
+
+def default_list_oracle_amendments(
+    acceptance_id: str,
+    *,
+    store_root: Path | None = None,
+) -> list[dict[str, Any]]:
+    """Active oracle-amendment records whose payload.acceptance matches id."""
+    store = store_root if store_root is not None else aa.find_store_root(Path.cwd())
+    result = aa.run_aa(
+        "list",
+        "--type",
+        "project:oracle-amendment",
+        "--state",
+        "active",
+        "--full",
+        root=store,
+    )
+    if result.returncode != 0:
+        return []
+    try:
+        listed = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return []
+    records = listed.get("records") if isinstance(listed, dict) else None
+    if not isinstance(records, list):
+        return []
+    matched: list[dict[str, Any]] = []
+    for record in records:
+        if not isinstance(record, dict):
+            continue
+        payload = _payload(record)
+        ref = payload.get("acceptance")
+        if ref == acceptance_id or str(ref) == str(acceptance_id):
+            matched.append(record)
+    return matched
+
+
 def _payload(record: dict[str, Any]) -> dict[str, Any]:
     payload = record.get("payload")
     return payload if isinstance(payload, dict) else {}
+
+
+def parse_oracle_hashes(raw: str | None) -> dict[str, str]:
+    """Parse ``relpath:sha256:<hex>[,…]`` into ``{relpath: sha256:<hex>}``."""
+    text = (raw or "").strip()
+    if not text:
+        return {}
+    out: dict[str, str] = {}
+    for part in text.split(","):
+        chunk = part.strip()
+        if not chunk:
+            continue
+        idx = chunk.find(_HASH_SEP)
+        if idx <= 0:
+            continue
+        relpath = chunk[:idx]
+        digest = chunk[idx + 1 :]  # keep leading "sha256:"
+        if relpath and digest.startswith("sha256:"):
+            out[relpath] = digest
+    return out
+
+
+def is_oracle_backed(acceptance_payload: dict[str, Any]) -> bool:
+    """True when acceptance has freeze fields: non-empty test_ids and parseable hashes.
+
+    ``oracle_hashes`` must parse to at least one ``relpath:sha256:<hex>`` entry.
+    Placeholder or unparseable strings are treated as legacy (gates skipped).
+    """
+    test_ids = str(acceptance_payload.get("test_ids") or "").strip()
+    if not test_ids:
+        return False
+    return bool(parse_oracle_hashes(str(acceptance_payload.get("oracle_hashes") or "")))
+
+
+def _sha256_digest(data: bytes) -> str:
+    return "sha256:" + hashlib.sha256(data).hexdigest()
+
+
+def hash_file_at_revision(cwd: Path, revision: str, relpath: str) -> str:
+    """Content hash of ``relpath`` at a store-backed check-run revision."""
+    if revision == "dirty":
+        path = cwd / relpath
+        if not path.is_file():
+            raise FileNotFoundError(relpath)
+        return _sha256_digest(path.read_bytes())
+    result = subprocess.run(
+        ["git", "-C", str(cwd), "show", f"{revision}:{relpath}"],
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        raise FileNotFoundError(relpath)
+    return _sha256_digest(result.stdout)
+
+
+def tree_oracle_hashes(
+    cwd: Path,
+    revision: str,
+    frozen: dict[str, str],
+) -> dict[str, str]:
+    """Hash each frozen oracle path at ``revision`` in ``cwd``."""
+    out: dict[str, str] = {}
+    for relpath in frozen:
+        out[relpath] = hash_file_at_revision(cwd, revision, relpath)
+    return out
 
 
 def _load_check_run(
@@ -184,8 +299,8 @@ def _resolve_red_check_run(
     entry: dict[str, Any],
     *,
     loader: CheckRunLoader,
-) -> dict[str, Any]:
-    """Load and match the red check-run; return its payload."""
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Load and match the red check-run; return (full record, payload)."""
     criterion_id = entry.get("criterion_id")
     red_id = entry.get("red_check_run_id")
     if not red_id:
@@ -244,8 +359,7 @@ def _resolve_red_check_run(
             stored=payload.get("diff_sha256"),
         )
 
-    return payload
-
+    return record, payload
 
 def _enforce_red_first_from_store(
     entry: dict[str, Any],
@@ -313,12 +427,95 @@ def _enforce_red_first_from_store(
         )
 
 
+def _approved_amendment_covers_tree(
+    amendments: list[dict[str, Any]],
+    tree_hashes: dict[str, str],
+) -> bool:
+    """True when an active approved amendment's new_hashes equal tree hashes."""
+    for record in amendments:
+        payload = _payload(record)
+        if str(payload.get("status") or "") != "approved":
+            continue
+        new_hashes = parse_oracle_hashes(str(payload.get("new_hashes") or ""))
+        if new_hashes and new_hashes == tree_hashes:
+            return True
+    return False
+
+
+def _enforce_oracle_gates(
+    entry: dict[str, Any],
+    *,
+    green_payload: dict[str, Any],
+    red_record: dict[str, Any],
+    cwd: Path,
+    load_acceptance: AcceptanceLoader,
+    list_oracle_amendments: AmendmentLister,
+) -> None:
+    """Refuse oracle-backed tdd done on hash drift or non-assertion red.
+
+    Legacy acceptances without freeze fields skip these gates.
+    """
+    criterion_id = entry.get("criterion_id")
+    try:
+        acceptance = load_acceptance(str(criterion_id))
+    except LookupError:
+        return
+
+    acceptance_payload = _payload(acceptance)
+    if not is_oracle_backed(acceptance_payload):
+        return
+
+    if not is_assertion_level_red(red_record):
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: oracle-backed tdd requires "
+            "assertion-level red (fail with assertion failure); "
+            "import/collection-only red is refused"
+        )
+
+    frozen = parse_oracle_hashes(str(acceptance_payload.get("oracle_hashes") or ""))
+    if not frozen:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: oracle_hashes freeze field is empty "
+            "or unparseable"
+        )
+
+    green_revision = green_payload.get("revision")
+    if not green_revision:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: green revision required for "
+            "oracle freeze hash check"
+        )
+
+    try:
+        tree = tree_oracle_hashes(cwd, str(green_revision), frozen)
+    except FileNotFoundError as exc:
+        raise CloseRefused(
+            f"criterion {criterion_id!r}: oracle file missing at green "
+            f"revision {green_revision!r}: {exc}"
+        ) from exc
+
+    if tree == frozen:
+        return
+
+    amendments = list_oracle_amendments(str(criterion_id))
+    if _approved_amendment_covers_tree(amendments, tree):
+        return
+
+    raise CloseRefused(
+        f"criterion {criterion_id!r}: oracle hash drift at green revision "
+        f"{green_revision!r} without an approved oracle-amendment whose "
+        "new_hashes match the tree (freeze hashes are the close authority)"
+    )
+
+
 def build_batch(
     request: dict[str, Any],
     *,
     cwd: str | Path | None = None,
     store_root: str | Path | None = None,
     load_check_run: CheckRunLoader | None = None,
+    load_acceptance: AcceptanceLoader | None = None,
+    list_oracle_amendments: AmendmentLister | None = None,
 ) -> list[dict[str, Any]]:
     try:
         subject = request["subject"]
@@ -340,6 +537,28 @@ def build_batch(
     else:
         def loader(check_run_id: str) -> dict[str, Any]:
             return default_load_check_run(check_run_id, store_root=resolved_store)
+
+    # Unit tests inject load_check_run without a store: skip oracle store
+    # lookups unless the caller also injects acceptance/amendment hooks.
+    if load_acceptance is not None:
+        acceptance_loader: AcceptanceLoader = load_acceptance
+    elif load_check_run is None:
+        def acceptance_loader(acceptance_id: str) -> dict[str, Any]:
+            return default_load_acceptance(acceptance_id, store_root=resolved_store)
+    else:
+        def acceptance_loader(_acceptance_id: str) -> dict[str, Any]:
+            raise LookupError("acceptance store not available in unit test hook")
+
+    if list_oracle_amendments is not None:
+        amendment_lister: AmendmentLister = list_oracle_amendments
+    elif load_check_run is None:
+        def amendment_lister(acceptance_id: str) -> list[dict[str, Any]]:
+            return default_list_oracle_amendments(
+                acceptance_id, store_root=resolved_store
+            )
+    else:
+        def amendment_lister(_acceptance_id: str) -> list[dict[str, Any]]:
+            return []
 
     for entry in criteria:
         criterion_id = entry.get("criterion_id")
@@ -419,12 +638,20 @@ def build_batch(
             if not _entry_passed(entry):
                 continue
             green_payload = green_by_criterion[entry.get("criterion_id")]
-            red_payload = _resolve_red_check_run(entry, loader=loader)
+            red_record, red_payload = _resolve_red_check_run(entry, loader=loader)
             _enforce_red_first_from_store(
                 entry,
                 green_payload=green_payload,
                 red_payload=red_payload,
                 cwd=work_cwd,
+            )
+            _enforce_oracle_gates(
+                entry,
+                green_payload=green_payload,
+                red_record=red_record,
+                cwd=work_cwd,
+                load_acceptance=acceptance_loader,
+                list_oracle_amendments=amendment_lister,
             )
 
     passed_ids = {

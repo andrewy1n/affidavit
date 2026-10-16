@@ -1038,3 +1038,258 @@ def test_close_batch_store_cwd_ignores_worktree_when_resolving(
     )
     assert result.returncode == 2
     assert not out_path.exists()
+
+
+# -- oracle freeze / assertion-level red (oracle-witnesses) -------------
+
+
+ORACLE_REL = "tests/test_oracle_probe.py"
+ORACLE_NODE = "tests/test_oracle_probe.py::test_expected_behavior"
+ORACLE_CONTENT_V1 = b"oracle v1\n"
+ORACLE_CONTENT_V2 = b"oracle v2\n"
+ORACLE_HASH_V1 = "sha256:ede7b166ddc88e3753eef482f245f300ad2b85ec3ebbe5a5f33270dd83d02896"
+ORACLE_HASH_V2 = "sha256:3e9c68d849014d8206d549226306afb687c39fd68dad9536ca6190862139949b"
+ORACLE_HASHES_V1 = f"{ORACLE_REL}:{ORACLE_HASH_V1}"
+ORACLE_HASHES_V2 = f"{ORACLE_REL}:{ORACLE_HASH_V2}"
+
+ASSERTION_RED_BODY = """\
+============================= test session starts ==============================
+collected 1 item
+
+tests/test_oracle_probe.py::test_expected_behavior FAILED                 [100%]
+
+_________________________ test_expected_behavior __________________________
+
+    def test_expected_behavior():
+>       assert compute() == 42
+E       AssertionError: assert 0 == 42
+
+tests/test_oracle_probe.py:12: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_oracle_probe.py::test_expected_behavior - AssertionError: assert 0 == 42
+============================== 1 failed in 0.02s ===============================
+"""
+
+IMPORT_RED_BODY = """\
+============================= test session starts ==============================
+collected 0 items / 1 error
+
+_________________ ERROR collecting tests/test_oracle_probe.py __________________
+ImportError while importing test module '/tmp/tests/test_oracle_probe.py'.
+E   ModuleNotFoundError: No module named 'missing_pkg'
+=========================== short test summary info ============================
+ERROR tests/test_oracle_probe.py - ModuleNotFoundError: No module named 'missing_pkg'
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+=============================== 1 error in 0.05s ===============================
+"""
+
+
+def _oracle_repo(tmp_path: Path, content: bytes = ORACLE_CONTENT_V1) -> tuple[Path, str]:
+    """Temp git repo with an oracle file at HEAD; return (repo, head_sha)."""
+    repo = tmp_path / "oracle-repo"
+    repo.mkdir()
+    _git(repo, "init")
+    _git(repo, "config", "user.email", "test@example.com")
+    _git(repo, "config", "user.name", "Test")
+    probe = repo / ORACLE_REL
+    probe.parent.mkdir(parents=True)
+    probe.write_bytes(content)
+    _git(repo, "add", ORACLE_REL)
+    _git(repo, "commit", "-m", "oracle")
+    return repo, _git(repo, "rev-parse", "HEAD")
+
+
+def _oracle_acceptance(
+    *,
+    test_ids: str = ORACLE_NODE,
+    oracle_hashes: str = ORACLE_HASHES_V1,
+):
+    return {
+        "id": "rec-ac1",
+        "payload": {
+            "method": "tdd",
+            "test_ids": test_ids,
+            "oracle_hashes": oracle_hashes,
+            "effort": "effort-1",
+        },
+    }
+
+
+def _assertion_red_fields(**extra):
+    fields = {
+        "red_body": ASSERTION_RED_BODY,
+        "red_failing_node_ids": json.dumps([ORACLE_NODE]),
+    }
+    fields.update(extra)
+    return fields
+
+
+def _oracle_loader(
+    request: dict,
+    *,
+    acceptance: dict | None = None,
+    amendments: list | None = None,
+):
+    """Store loader + acceptance/amendment hooks for oracle unit tests."""
+    base = _matching_loader(request)
+    by_id = {}
+    for entry in request.get("criteria", []):
+        cid = entry.get("check_run_id")
+        if cid:
+            rec = base(cid)
+            by_id[cid] = rec
+        red_id = entry.get("red_check_run_id")
+        if red_id:
+            rec = base(red_id)
+            payload = dict(rec["payload"])
+            if "red_failing_node_ids" in entry:
+                payload["failing_node_ids"] = entry["red_failing_node_ids"]
+            by_id[red_id] = {
+                "id": red_id,
+                "payload": payload,
+                "body": entry.get("red_body", ""),
+            }
+
+    def load(check_run_id: str) -> dict:
+        if check_run_id not in by_id:
+            raise LookupError(check_run_id)
+        return by_id[check_run_id]
+
+    acc = acceptance if acceptance is not None else _oracle_acceptance()
+
+    def load_acceptance(acceptance_id: str) -> dict:
+        if acceptance_id != acc["id"] and acceptance_id != "rec-ac1":
+            raise LookupError(acceptance_id)
+        return acc
+
+    def list_amendments(acceptance_id: str) -> list:
+        return list(amendments or [])
+
+    return load, load_acceptance, list_amendments
+
+
+def _build_oracle(request: dict, *, cwd: Path, acceptance=None, amendments=None):
+    load, load_acc, list_am = _oracle_loader(
+        request, acceptance=acceptance, amendments=amendments
+    )
+    return close_batch.build_batch(
+        request,
+        cwd=cwd,
+        load_check_run=load,
+        load_acceptance=load_acc,
+        list_oracle_amendments=list_am,
+    )
+
+
+def test_oracle_freeze_happy_path_with_assertion_level_red(tmp_path):
+    repo, green_sha = _oracle_repo(tmp_path)
+    entry = _tdd_with_dirty_red(
+        revision=green_sha,
+        **_assertion_red_fields(),
+    )
+    # Dirty red skips ancestry; green revision is still the hash authority.
+    ops = _build_oracle(_request(criteria=[entry]), cwd=repo)
+    assert ops[-1]["transition"] == "done"
+
+
+def test_oracle_hash_refuses_silent_freeze_edit(tmp_path):
+    repo, green_sha = _oracle_repo(tmp_path, content=ORACLE_CONTENT_V2)
+    entry = _tdd_with_dirty_red(
+        revision=green_sha,
+        **_assertion_red_fields(),
+    )
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1") as excinfo:
+        _build_oracle(
+            _request(criteria=[entry]),
+            cwd=repo,
+            acceptance=_oracle_acceptance(oracle_hashes=ORACLE_HASHES_V1),
+        )
+    msg = str(excinfo.value).lower()
+    assert "hash" in msg or "oracle" in msg or "freeze" in msg
+
+
+def test_assertion_level_refuses_import_only_oracle_red(tmp_path):
+    repo, green_sha = _oracle_repo(tmp_path)
+    entry = _tdd_with_dirty_red(
+        revision=green_sha,
+        red_body=IMPORT_RED_BODY,
+        red_failing_node_ids=json.dumps(["tests/test_oracle_probe.py"]),
+    )
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1") as excinfo:
+        _build_oracle(_request(criteria=[entry]), cwd=repo)
+    msg = str(excinfo.value).lower()
+    assert "assertion" in msg or "oracle" in msg
+
+
+def test_oracle_amendment_approved_allows_new_hashes(tmp_path):
+    repo, green_sha = _oracle_repo(tmp_path, content=ORACLE_CONTENT_V2)
+    entry = _tdd_with_dirty_red(
+        revision=green_sha,
+        **_assertion_red_fields(),
+    )
+    amendment = {
+        "id": "rec-am1",
+        "lifecycle_state": "active",
+        "payload": {
+            "acceptance": "rec-ac1",
+            "status": "approved",
+            "old_hashes": ORACLE_HASHES_V1,
+            "new_hashes": ORACLE_HASHES_V2,
+            "effort": "effort-1",
+        },
+    }
+    ops = _build_oracle(
+        _request(criteria=[entry]),
+        cwd=repo,
+        acceptance=_oracle_acceptance(oracle_hashes=ORACLE_HASHES_V1),
+        amendments=[amendment],
+    )
+    assert ops[-1]["transition"] == "done"
+
+
+def test_freeze_hash_refuses_requested_amendment_not_approved(tmp_path):
+    repo, green_sha = _oracle_repo(tmp_path, content=ORACLE_CONTENT_V2)
+    entry = _tdd_with_dirty_red(
+        revision=green_sha,
+        **_assertion_red_fields(),
+    )
+    amendment = {
+        "id": "rec-am1",
+        "lifecycle_state": "active",
+        "payload": {
+            "acceptance": "rec-ac1",
+            "status": "requested",
+            "old_hashes": ORACLE_HASHES_V1,
+            "new_hashes": ORACLE_HASHES_V2,
+            "effort": "effort-1",
+        },
+    }
+    with pytest.raises(close_batch.CloseRefused, match="rec-ac1"):
+        _build_oracle(
+            _request(criteria=[entry]),
+            cwd=repo,
+            acceptance=_oracle_acceptance(oracle_hashes=ORACLE_HASHES_V1),
+            amendments=[amendment],
+        )
+
+
+def test_oracle_legacy_without_freeze_fields_skips_gates(tmp_path):
+    """Legacy acceptances without test_ids/oracle_hashes keep claim-witnesses path."""
+    repo, green_sha = _oracle_repo(tmp_path)
+    entry = _tdd_with_dirty_red(revision=green_sha)
+    # Import-only red body would refuse if oracle gates ran; legacy skips them.
+    entry = _tdd_with_dirty_red(
+        revision=green_sha,
+        red_body=IMPORT_RED_BODY,
+        red_failing_node_ids=json.dumps(["tests/test_oracle_probe.py"]),
+    )
+    acceptance = {
+        "id": "rec-ac1",
+        "payload": {"method": "tdd", "effort": "effort-1"},
+    }
+    ops = _build_oracle(
+        _request(criteria=[entry]),
+        cwd=repo,
+        acceptance=acceptance,
+    )
+    assert ops[-1]["transition"] == "done"
