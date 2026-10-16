@@ -72,8 +72,12 @@ adaptive-artifacts list --type project:design --where payload.phase=<phase-slug>
 5. Structured work only, before the decision step: one
    `project:specification` whose subject is the phase slug. Payload
    `requirements` is the stable ids comma-separated (`R1,R2`). The
-   Requirements section uses those ids (`R1: …`). Use `weight` `light`
-   when the user already fixed the behavior and there is no
+   Requirements section uses those ids (`R1: …`). Each id is
+   **atomic**: one observable behavior per id. Split compound
+   surfaces (commas, "and"-bundled checks, multiple observables under
+   one Rn) into separate ids before recording. Refuse compound ids in
+   `## Requirements` and in payload `requirements`. Use `weight`
+   `light` when the user already fixed the behavior and there is no
    architectural choice; `full` otherwise. When an assessment for this
    phase has `next` `specify`, supersede the specification. Otherwise
    create it when the phase has none.
@@ -95,8 +99,10 @@ adaptive-artifacts supersede --type project:specification --id <specification-id
    `<specification-body.md>` has `## Requirements`, `## Acceptance
    criteria`, `## Constraints`, `## Non-goals`, `## Invariants`, and
    `## Assumptions`. Every section is present. A section with nothing
-   to say says `none`. Set payload `weight` to `light` or `full` as
-   the rule above says; the sample payload shows `full`.
+   to say says `none`. Under `## Requirements`, write one line per
+   atomic id (`R1: <observable behavior>`). Do not bundle two
+   observables under one id. Set payload `weight` to `light` or
+   `full` as the rule above says; the sample payload shows `full`.
 
 6. For each settled choice, create a decision. `Counter-argument` is
    the strongest case for the best rejected option, not a strawman:
