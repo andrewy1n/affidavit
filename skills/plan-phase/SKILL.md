@@ -40,13 +40,27 @@ kind/focus are unset).
   avoids the collision while `list --subject <task-slug>` (exact-or-
   prefix match) still finds the whole family. Do not pick a task slug
   that is itself a prefix of another task's slug in the same phase.
-- When a `project:specification` exists for the phase, set work-item
-  payload `requirements` to the comma-separated requirement ids that
-  task implements and `decisions` to the comma-separated decision
-  subjects it follows. Set each acceptance payload `requirement` to
-  one of those ids. Several acceptances keep the subject-suffix rule
-  above. When no specification exists, omit `requirements`,
-  `decisions`, and `requirement`.
+- Every `deliver` or `repair` work-item carries one or more **atomic**
+  requirement ids in payload `requirements` (comma-separated). Each
+  id names one observable behavior — never a compound id (no commas
+  inside an id, no "and"-bundled surfaces, no multiple observables
+  under one Rn). When a `project:specification` exists for the phase,
+  those ids come from the specification; set `decisions` to the
+  comma-separated decision subjects the task follows. When no
+  specification exists, the work-item `## Description` **is** the
+  id'd list (`R1: …`, `R2: …`), and `requirements` still lists those
+  same ids. `incidental` work stays exempt (may omit `requirements`
+  and acceptance `requirement`). `evaluate` follows campaign rules.
+- Each acceptance for `deliver` / `repair` names exactly one of those
+  ids in payload `requirement`. One acceptance per id. That id must
+  appear on its work-item. Compound ids in `requirement` are refused
+  by skill lint. Several acceptances keep the subject-suffix rule
+  above.
+- New acceptances are **thin**: omit `criterion` or set it to `""`.
+  Do not write criterion prose. Done meaning lives on the requirement
+  text (specification `## Requirements`, or the work-item Description
+  when there is no spec), not on a re-summary field. `decisions` may
+  still be omitted when the task follows none.
 - Do not write `project:assessment` or `project:integration-report`
   from this skill.
 - Task state is the work-item's **lifecycle** — `planned` (default) ->
@@ -230,15 +244,17 @@ adaptive-artifacts create --type project:current-position \
    short here and use plain `create --body-file` instead if it needs
    more than a few lines.
 
-   List this phase's specification first. The capture and `create`
-   payloads below include `requirements`, `decisions`, and
-   `requirement` when a `project:specification` exists for the phase.
-   `requirements` is the comma-separated requirement ids that task
-   implements, `decisions` is the comma-separated decision subjects it
-   follows, and each acceptance `requirement` is one of those ids.
-   Several acceptances keep the `<task-slug>-<short suffix>` subject.
-   When no specification exists, omit `requirements`, `decisions`, and
-   `requirement` from these same payloads and keep every other field.
+   List this phase's specification first. For every `deliver` /
+   `repair` task, the capture and `create` payloads below include
+   `requirements` (atomic ids this task implements) and each
+   acceptance's `requirement` (exactly one of those ids). When a
+   `project:specification` exists, take the id texts from it and set
+   `decisions` to the decision subjects the task follows. When none
+   exists, write the id'd list in `## Description` and still stamp
+   `requirements` / `requirement` the same way. Omit `criterion` (or
+   use `""`) — thin acceptances. Several acceptances keep the
+   `<task-slug>-<short suffix>` subject. `incidental` may omit
+   `requirements`, `decisions`, and `requirement`.
 
 ```bash
 adaptive-artifacts list --type project:specification --where payload.phase=<current-phase-slug> --state active
@@ -262,17 +278,16 @@ adaptive-artifacts capture --bundle project:specified-work --records "$(cat <<'E
       "requirements": "R1,R2",
       "decisions": "<decision-a>,<decision-b>"
     },
-    "body": "## Description\n\n<what this task builds/fixes>\n\n## Approach\n\n<implementation recipe>"
+    "body": "## Description\n\nR1: <observable behavior>\nR2: <observable behavior>\n\n## Approach\n\n<implementation recipe>"
   },
   {
     "type": "project:acceptance",
     "subject": "<task-slug>",
     "payload": {
-      "criterion": "<observable done-check>",
       "method": "tdd",
       "phase": "<current-phase-slug>",
       "effort": "<effort-slug>",
-      "verify_command": "<command that proves it>",
+      "verify_command": "<command that proves R1>",
       "requirement": "R1"
     }
   },
@@ -280,11 +295,10 @@ adaptive-artifacts capture --bundle project:specified-work --records "$(cat <<'E
     "type": "project:acceptance",
     "subject": "<task-slug>-perf",
     "payload": {
-      "criterion": "<second observable done-check, if there is one>",
       "method": "check",
       "phase": "<current-phase-slug>",
       "effort": "<effort-slug>",
-      "verify_command": "<command that proves it>",
+      "verify_command": "<command that proves R2>",
       "requirement": "R2"
     }
   }
@@ -294,7 +308,7 @@ EOF
 ```
 
    Drop the second acceptance object entirely when there's only one
-   criterion — the bundle just needs at least one `work-item` and at
+   requirement — the bundle just needs at least one `work-item` and at
    least one `acceptance`, not exactly one of each.
 
    Set `kind` and `phase` from the effort (`phase` is `""` when
@@ -304,13 +318,13 @@ EOF
    `manual`; `verify_command`
    is the literal command (empty string for `manual` with no script).
 
-   - `repair` — criterion is repro-gone plus a regression check, not
-     "we investigated." Diagnose happens at execute/verify.
-   - `evaluate` — criterion is the campaign (suite, comparison).
-     Binary gate -> `method=check`. Comparative / inconclusive lives
-     in a finding at verify, not in `method`.
+   - `repair` — `verify_command` proves repro-gone plus a regression
+     check, not "we investigated." Diagnose happens at execute/verify.
+   - `evaluate` — the campaign (suite, comparison) is the binary gate
+     when there is one (`method=check`). Comparative / inconclusive
+     lives in a finding at verify, not in `method`.
    - `incidental` — one observable done-check; usually `check` or
-     `manual`.
+     `manual`; exempt from atomic requirement ids.
 
 6. For each **dependent** task (needs another same-phase task done
    first), create it outside the bundle so the dependency edge can be
@@ -322,7 +336,8 @@ adaptive-artifacts create --type project:work-item \
   --payload '{"title":"<short title>","phase":"<current-phase-slug>","kind":"deliver","assignee":"","effort":"<effort-slug>","executor":"subagent","size":"M","estimate_minutes":10,"requirements":"R1,R2","decisions":"<decision-a>,<decision-b>"}' \
   --body "## Description
 
-<what this task builds/fixes, and why it waits>
+R1: <observable behavior>
+R2: <observable behavior>
 
 ## Approach
 
@@ -331,16 +346,17 @@ adaptive-artifacts create --type project:work-item \
 
 adaptive-artifacts create --type project:acceptance \
   --subject "<task-slug>" \
-  --payload '{"criterion":"<observable done-check>","method":"tdd","phase":"<current-phase-slug>","effort":"<effort-slug>","verify_command":"<command>","requirement":"R1"}'
+  --payload '{"method":"tdd","phase":"<current-phase-slug>","effort":"<effort-slug>","verify_command":"<command>","requirement":"R1"}'
 ```
 
 7. For a `deliver` or `repair` phase, create the verification task
    last, with one `--rel depends_on:` per other work-item in the
-   phase. Give it one acceptance per exit criterion (suffixed
-   subjects). The verification task's acceptances come from the phase
-   exit criteria, and one is an integration check through the real
-   entry point. A `verify_command` that runs the whole `tests` tree,
-   or `tests/test_dashboard_app.py` without a `-k` filter for this
+   phase. Give it one thin acceptance per exit criterion (suffixed
+   subjects), each naming exactly one requirement id. The
+   verification task's acceptances come from the phase exit criteria,
+   and one is an integration check through the real entry point. A
+   `verify_command` that runs the whole `tests` tree, or
+   `tests/test_dashboard_app.py` without a `-k` filter for this
    phase, is not a verification acceptance.
 
 ```bash
@@ -360,11 +376,11 @@ check through the real entry point, then every other phase check.
 
 adaptive-artifacts create --type project:acceptance \
   --subject "verify-<phase-slug>" \
-  --payload '{"criterion":"<exit criterion 1, observed through the real entry point>","method":"tdd","phase":"<current-phase-slug>","effort":"<effort-slug>","verify_command":"<integration test command>","requirement":"R1"}'
+  --payload '{"method":"tdd","phase":"<current-phase-slug>","effort":"<effort-slug>","verify_command":"<integration test command>","requirement":"R1"}'
 
 adaptive-artifacts create --type project:acceptance \
   --subject "verify-<phase-slug>-<criterion-suffix>" \
-  --payload '{"criterion":"<exit criterion 2>","method":"check","phase":"<current-phase-slug>","effort":"<effort-slug>","verify_command":"<command>","requirement":"R2"}'
+  --payload '{"method":"check","phase":"<current-phase-slug>","effort":"<effort-slug>","verify_command":"<command>","requirement":"R2"}'
 ```
 
    Add a task that later joins the phase as a `depends_on` edge on the

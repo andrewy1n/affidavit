@@ -35,12 +35,15 @@ Each dispatch is recorded, not hand-transcribed: a `project:assignment`
 for what an executor was handed, an optional `project:assignment-amendment`
 for any mid-flight correction, and a `project:execution-report` for
 what came back, verbatim. The `project:brief` view — not the
-assignment body — is what tells an executor its acceptance criteria,
-findings, constraints, and position. An assignment carries territory
-splits, concurrency warnings, and operational orientation, and it
-quotes the requirement texts for the work-item's `requirements`, the
-design Invariants and Assumptions, and the named decisions. Subagents
-return evidence and do not call `adaptive-artifacts`.
+assignment body — is what tells an executor its acceptance method,
+verify commands, findings, constraints, and position. An assignment
+carries territory splits, concurrency warnings, and operational
+orientation, and it quotes **original** work-item Description/Approach
+and the requirement text for each linked id (verbatim, by id — do not
+paraphrase the claim; do not treat empty or legacy `criterion` as the
+lead claim). It also quotes the design Invariants and Assumptions and
+the named decisions. Subagents return evidence and do not call
+`adaptive-artifacts`.
 
 ## Steps
 
@@ -146,21 +149,27 @@ adaptive-artifacts update --type project:work-item --id <id> \
    record the assignment. Its `## Orientation` body carries territory
    splits between concurrent executors, concurrency warnings, and
    operational orientation (paths, sandbox, tooling quirks). It also
-   quotes the requirement texts for the work-item's `requirements`,
-   the phase design's Invariants and Assumptions, and the named
-   decisions in the work-item's `decisions`. Read those records and
-   copy the text into the orientation. The executor receives that
-   body and does not call `adaptive-artifacts`.
+   quotes original record text: the work-item `## Description` and
+   `## Approach` (verbatim), the requirement text for each id in the
+   work-item's `requirements`, the phase design's Invariants and
+   Assumptions, and the named decisions in the work-item's
+   `decisions`. Read those records and copy the text into the
+   orientation — do not paraphrase. The executor receives that body
+   and does not call `adaptive-artifacts`.
 
-   When `requirements` is set, quote each listed requirement's text
-   from the phase `project:specification` `## Requirements` section.
-   When a `project:design` exists for the phase, quote its
-   `## Invariants` and `## Assumptions`. When `decisions` is set,
-   quote each named decision's subject and `choice`. When those
-   records or fields are absent, omit the quotes. Do not restate
-   `criterion`, `verify_command`, or finding text — that is what the
-   brief view is for, and copying it in creates a second,
-   staleness-prone copy of the same fact:
+   Quote the work-item Description and Approach from the work-item
+   body itself. When `requirements` is set, quote each listed id's
+   text from the phase `project:specification` `## Requirements`
+   section when one exists; when there is no specification, quote
+   that id's line from the work-item `## Description`. When a
+   `project:design` exists for the phase, quote its `## Invariants`
+   and `## Assumptions`. When `decisions` is set, quote each named
+   decision's subject and `choice`. When those records or fields are
+   absent, omit the quotes. Do not restate `criterion`,
+   `verify_command`, or finding text, and do not invent a claim from
+   criterion — that is what the brief view is for (method /
+   verify_command / findings), and copying or paraphrasing creates a
+   second, staleness-prone copy of the same fact:
 
 ```bash
 adaptive-artifacts list --type project:specification \
@@ -185,7 +194,15 @@ adaptive-artifacts create --type project:assignment \
 
 <territory split / concurrency warning / operational context>
 
-<quoted requirement texts for this work-item's requirements>
+### Work-item (quote)
+
+<verbatim ## Description and ## Approach from the work-item>
+
+### Requirements (quote by id)
+
+<R1: … verbatim from specification or work-item Description>
+
+### Design / decisions (quote)
 
 <quoted design Invariants and Assumptions>
 
@@ -212,7 +229,8 @@ adaptive-artifacts create --type project:assignment \
      - `repair` — reproduce, record observations, name a root cause
        if found, then fix; do not skip diagnose
      - `evaluate` — run the campaign; return metrics / comparison;
-       do not "fix" the system unless the criterion says so
+       do not "fix" the system unless the requirement /
+       verify_command says so
    - follow `## Approach` in the work-item body; do not ask the user
      for an implementation recipe when that section is present
    - when the task is the verification task (the work-item that
@@ -724,7 +742,7 @@ adaptive-artifacts create --type project:assignment \
 
 Re-dispatch attempt <attempts>. Same territory and executor mode as the prior wave.
 
-<quoted requirement / design / decision text as in step 4>"
+<quoted work-item Description/Approach, requirement texts by id, design, and decisions as in step 4>"
 ```
 
 Set `attempts` to the prior value plus one (absent means 0, so the
@@ -758,7 +776,7 @@ Fix the failure that blocked closing verification.
 
 adaptive-artifacts create --type project:acceptance \
   --subject "fix-<failing-area>" \
-  --payload '{"criterion":"<the failing check>","method":"tdd","phase":"<current-phase-slug>","effort":"<focus>","verify_command":"<command>","requirement":"<id>"}'
+  --payload '{"method":"tdd","phase":"<current-phase-slug>","effort":"<focus>","verify_command":"<command>","requirement":"<id>"}'
 
 adaptive-artifacts update --type project:work-item --id <verification-work-item-id> \
   --expected-revision <revision> \
@@ -774,10 +792,11 @@ Never transition a `done` work-item back to `in_progress` or
 - Let subagents create/supersede/transition records, in any current or
   future executor mode — the store is single-writer regardless of what
   an executor is allowed to read
-- Restate acceptance criteria, verify commands, or finding text inside
-  an assignment's `## Orientation` — that duplicates a fact
-  `project:brief` already carries, and goes stale the moment its
-  source does
+- Restate `criterion`, verify commands, or finding text inside an
+  assignment's `## Orientation`, or paraphrase the work-item /
+  requirement claim — quote Description/Approach and requirement
+  texts by id verbatim; brief already carries method /
+  verify_command / findings, and a paraphrase goes stale
 - Skip the `project:execution-report` and derive check-runs straight
   from chat memory of what a subagent or this session reported
 - Ask the user for an implementation recipe when `## Approach` is

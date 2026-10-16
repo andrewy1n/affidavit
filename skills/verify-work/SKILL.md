@@ -2,9 +2,9 @@
 name: verify-work
 description: >-
   Captures aff check-run evidence, assesses what it means for
-  each requirement, and closes a work-item when that criterion is met.
-  Use when a task needs to be shown done, a campaign was run, a bug was
-  diagnosed, or a subagent returned verification evidence.
+  each requirement, and closes a work-item when its requirement(s)
+  are met. Use when a task needs to be shown done, a campaign was run,
+  a bug was diagnosed, or a subagent returned verification evidence.
 ---
 
 # Verify work
@@ -13,7 +13,11 @@ Requires `artifact-runtime` and a live affidavit store. If missing,
 follow [ensure-store.md](../ensure-store.md). Follow
 [kinds-and-focus.md](../kinds-and-focus.md). Parent session writes
 records. Git/tests own the code; this skill owns the occurrence that
-a criterion was tested and any diagnose/eval conclusion.
+a requirement was checked (via its acceptance's `verify_command`)
+and any diagnose/eval conclusion. The claim text is the requirement
+id plus its original wording (specification `## Requirements`, or the
+work-item Description when there is no spec) — not acceptance
+`criterion` prose (which may be empty on thin acceptances).
 
 `method` on `project:acceptance`/`project:check-run`: `tdd` | `check`
 | `manual`. `kind` on the work-item: `deliver` | `repair` | `evaluate`
@@ -199,13 +203,13 @@ adaptive-artifacts correct --type project:check-run --id <check-run-id> \
    On every path, `result` is `pass`, `fail`, `blocked`, or
    `insufficient` (contract `payload_enum`).
 
-   - `pass` — the criterion was met. Evidence for that requirement
-     only. A pass on one requirement does not verify another, and a
-     pass of one `evidence_kind` does not cover a criterion that was
-     not run.
-   - `fail` — the criterion ran and was not met. It does not say the
-     design is wrong. A failing concurrency test does not itself claim
-     the design is wrong.
+   - `pass` — the linked requirement was met. Evidence for that
+     requirement only. A pass on one requirement does not verify
+     another, and a pass of one `evidence_kind` does not cover a
+     requirement that was not run.
+   - `fail` — the check ran and the requirement was not met. It does
+     not say the design is wrong. A failing concurrency test does not
+     itself claim the design is wrong.
    - `blocked` — the check could not run.
    - `insufficient` — the criterion was not exercised.
 
