@@ -144,6 +144,61 @@ def test_plan_phase_trace_invocations_are_contract_legal(resolved_contract):
     assert not violations, "\n".join(violations)
 
 
+def test_plan_phase_oracle_author_and_freeze():
+    flat = _flat(_text())
+    assert "oracle-author" in flat
+    assert "assertion-level" in flat
+    assert "test_ids" in flat
+    assert "oracle_hashes" in flat
+    assert "freeze" in flat
+    assert "requirement / specification text only" in flat or "requirement/spec text" in flat
+    # Freeze update example is contract-shaped.
+    freeze_payloads = [
+        p
+        for p in _payloads(_text(), "project:acceptance")
+        if p.get("test_ids") and p.get("oracle_hashes")
+    ]
+    assert freeze_payloads
+    for payload in freeze_payloads:
+        assert "sha256:" in payload["oracle_hashes"]
+        assert payload.get("method") == "tdd"
+        assert payload.get("requirement")
+        assert "pytest" in payload.get("verify_command", "")
+
+
+def test_execute_phase_oracle_amendment_and_frozen_oracle(resolved_contract):
+    text = EXECUTE_SKILL.read_text()
+    flat = _flat(text)
+    assert "oracle-amendment" in flat
+    assert "frozen oracle" in flat
+    assert "oracle_hashes" in flat
+    assert "status" in flat and "requested" in flat and "approved" in flat
+    defs = h.record_defs_by_id(resolved_contract)
+    bundles = {bundle["id"]: bundle for bundle in resolved_contract.get("bundles", [])}
+    violations = check_skill_text(text, defs, bundles)
+    assert not violations, "\n".join(violations)
+    creates = [
+        inv
+        for inv in extract_invocations(text)
+        if inv["subcommand"] == "create" and inv["type"] == "project:oracle-amendment"
+    ]
+    assert creates and creates[0]["payload"]
+    payload = creates[0]["payload"]
+    assert payload["status"] == "requested"
+    assert {"acceptance", "effort", "phase", "old_hashes", "new_hashes", "status"} <= set(
+        payload
+    )
+
+
+def test_verify_work_mechanical_oracle_backed():
+    verify = (REPO_ROOT / "skills" / "verify-work" / "SKILL.md").read_text()
+    flat = _flat(verify)
+    assert "mechanical" in flat
+    assert "assertion-level" in flat
+    assert "oracle-backed" in flat
+    assert "oracle_hashes" in flat or "oracle-amendment" in flat
+
+
 def test_thin_deliver_cli_capture(store, cli, resolved_contract):
     """Thin deliver acceptance (no criterion prose) via real create + capture."""
     defs = h.record_defs_by_id(resolved_contract)

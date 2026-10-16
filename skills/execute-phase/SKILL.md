@@ -169,7 +169,16 @@ adaptive-artifacts update --type project:work-item --id <id> \
    `verify_command`, or finding text, and do not invent a claim from
    criterion — that is what the brief view is for (method /
    verify_command / findings), and copying or paraphrasing creates a
-   second, staleness-prone copy of the same fact:
+   second, staleness-prone copy of the same fact.
+
+   When any of this work-item's active acceptances are **oracle-backed**
+   (non-empty `test_ids` and `oracle_hashes`), the Orientation must
+   list the frozen oracle file paths from `oracle_hashes` and forbid
+   the executor from editing those files. Frozen oracle hashes are
+   close authority; the executor may change production code, not the
+   frozen oracle files. If the executor needs a different oracle
+   (pushback), stop editing and use the **oracle-amendment** path
+   below — do not silently rewrite a frozen oracle file.
 
 ```bash
 adaptive-artifacts list --type project:specification \
@@ -206,7 +215,51 @@ adaptive-artifacts create --type project:assignment \
 
 <quoted design Invariants and Assumptions>
 
-<quoted named decisions>"
+<quoted named decisions>
+
+### Frozen oracle (do not edit)
+
+Files listed in acceptance oracle_hashes for this task are frozen.
+Do not edit them. Pushback → oracle-amendment (parent approves)."
+```
+
+   Omit the Frozen oracle section when no acceptance on this task is
+   oracle-backed.
+
+### Oracle amendment (parent only)
+
+When an executor (or this session on `inline`) cannot satisfy a
+requirement without changing a frozen oracle file: do not edit that
+file. Create a `project:oracle-amendment` with `status` `requested`,
+then the parent alone approves or rejects.
+
+```bash
+adaptive-artifacts create --type project:oracle-amendment \
+  --subject "<task-slug>" \
+  --payload '{"acceptance":"<acceptance-record-id>","effort":"<focus>","phase":"<current-phase-slug>","old_hashes":"<relpath:sha256:hex from acceptance oracle_hashes>","new_hashes":"<relpath:sha256:hex after proposed oracle edit>","status":"requested"}' \
+  --body "## Reason
+
+<why the frozen oracle must change>
+
+## Change
+
+<what changes in the oracle file(s) and why it still witnesses the requirement>"
+```
+
+   On parent approval, supersede to `status` `approved` and update the
+   acceptance freeze fields (`oracle_hashes`, and `test_ids` /
+   `verify_command` when those change). On reject, supersede to
+   `status` `rejected` and leave freeze fields unchanged. Only the
+   parent writes freeze fields and amendments.
+
+```bash
+adaptive-artifacts supersede --type project:oracle-amendment --id <amendment-id> \
+  --expected-revision <revision> \
+  --payload '{"status":"approved"}'
+
+adaptive-artifacts update --type project:acceptance --id <acceptance-id> \
+  --expected-revision <revision> \
+  --payload '{"oracle_hashes":"<new_hashes matching the approved amendment>","test_ids":"<updated node ids if any>","verify_command":"python3 -m pytest <updated-node-ids> -q"}'
 ```
 
 5. Dispatch the wave by that shared `payload.executor`.
@@ -846,3 +899,9 @@ Never transition a `done` work-item back to `in_progress` or
 - Put a whole-suite command on a per-task `verify_command` — per-task
   checks stay scoped; the suite is the phase-level
   `phase_gate.suite` run
+- Let an executor edit a frozen oracle file listed in
+  `oracle_hashes`. Pushback uses `project:oracle-amendment`
+  (`requested` → parent `approved` / `rejected`); parent alone
+  updates freeze fields
+- Let a subagent create or approve oracle-amendments, or write
+  `test_ids` / `oracle_hashes` — parent only

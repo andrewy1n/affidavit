@@ -125,7 +125,20 @@ kind/focus are unset).
   for plan review.
 - Current-claims (`decision`) change via `supersede` (new id), never
   `update` to `superseded`, never payload-only `update`.
-- Parent writes records. Do not spawn subagents here.
+- Parent writes records. Do not spawn subagents here, **except** the
+  one phase-scoped **oracle-author** subagent in step 8 (deliver /
+  repair only). That subagent writes test files only; it does not
+  call `adaptive-artifacts`. The parent alone runs `aff check`,
+  freezes `test_ids` / `oracle_hashes`, and derives `verify_command`.
+- Oracle author ≠ executor: never hand the oracle-author Approach,
+  implementation recipes, or code-under-test hints — original
+  requirement / specification text only.
+- Freeze only after an **assertion-level** red (`aff check` fail whose
+  check-run is assertion-level, not import/collection noise). An
+  acceptance with non-empty `test_ids` and `oracle_hashes` is
+  **oracle-backed**. `test_ids` is comma-separated pytest node ids;
+  `oracle_hashes` is comma-separated `relpath:sha256:<hex>` for the
+  files those ids live in.
 - Never supersede another subject's goal or position.
 
 ## Steps
@@ -386,7 +399,44 @@ adaptive-artifacts create --type project:acceptance \
    Add a task that later joins the phase as a `depends_on` edge on the
    verification task (`update --rel`), so the gate still waits for it.
 
-8. Regenerate views:
+8. **Oracle author** (deliver / repair only; skip for incidental /
+   evaluate without tdd oracles). After thin `method=tdd` acceptances
+   exist for this phase, dispatch **one** phase-scoped oracle-author
+   subagent covering every tdd acceptance that should be oracle-backed.
+   Give it only original requirement / specification text (and the
+   thin acceptance subjects / requirement ids). Do **not** give it
+   work-item Approach, executor briefs, or implementation hints.
+
+   The oracle-author writes failing tests against the current tree and
+   returns the node ids and file paths. It does not call
+   `adaptive-artifacts` and does not write freeze fields.
+
+   Parent then, for each such acceptance:
+
+   1. Set a provisional `verify_command` from the proposed `test_ids`
+      (e.g. `python3 -m pytest <node-id> … -q`) if needed so `aff
+      check` can run.
+   2. Run `aff check --acceptance <acceptance-id> --cwd <repo-or-worktree>`
+      (expect fail).
+   3. Freeze **only** when that fail is assertion-level (use
+      `affidavit.oracle_red.is_assertion_level_red` on the check-run,
+      or equivalent: `result=fail` with assertion failure for a
+      failing node — not ImportError / collection ERROR alone).
+   4. On assertion-level red, parent writes freeze fields and the
+      derived `verify_command`:
+
+```bash
+adaptive-artifacts update --type project:acceptance --id <acceptance-id> \
+  --expected-revision <revision> \
+  --payload '{"method":"tdd","phase":"<current-phase-slug>","effort":"<effort-slug>","verify_command":"python3 -m pytest tests/test_<area>.py::test_<case> -q","requirement":"R1","test_ids":"tests/test_<area>.py::test_<case>","oracle_hashes":"tests/test_<area>.py:sha256:<hex>"}'
+```
+
+   If the red is not assertion-level, do not freeze — send the
+   oracle-author back (still requirement text only) or drop that
+   acceptance from the oracle-backed set. Do not open plan review
+   while intended oracle-backed tdd acceptances lack freeze fields.
+
+9. Regenerate views:
 
 ```bash
 adaptive-artifacts handoff --out views/handoff.md
@@ -394,7 +444,7 @@ adaptive-artifacts view --id project:plan --out views/plan.md
 adaptive-artifacts validate
 ```
 
-9. Show the user the focus task list, with the verification task and
+10. Show the user the focus task list, with the verification task and
    the exit criterion each of its acceptances covers. `project:plan`'s rendered view
    doesn't carry `derived.ready`/`wave` (they aren't in the contract's
    `requires_payload` for that role) — query them directly if useful:
@@ -404,14 +454,16 @@ adaptive-artifacts list --type project:work-item \
   --where payload.effort=<effort-slug> --where payload.phase=<current-phase-slug>
 ```
 
-10. Open the plan review gate, so nothing dispatches before the user
+11. Open the plan review gate, so nothing dispatches before the user
     has seen the tasks (skip for incidental). Do not open the
     plan-review question until those are present: each work-item has
     `## Approach` (the implementation recipe), every task in a wave
     uses the same executor (`inline` or `subagent`), and the phase
     body records size as `one sitting` or `more than one`, the human
     stops, the areas parallel tasks share, and a `## Landing` section.
-    Skip the Landing check for incidental work.
+    Skip the Landing check for incidental work. For deliver / repair,
+    also require that each intended oracle-backed tdd acceptance has
+    non-empty `test_ids` and `oracle_hashes` from step 8.
 
 ```bash
 adaptive-artifacts create --type project:continuity-question \
