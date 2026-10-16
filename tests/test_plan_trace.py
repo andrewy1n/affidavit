@@ -9,10 +9,12 @@ from conftest import REPO_ROOT
 from skill_extraction import check_skill_text, extract_invocations
 
 SKILL = REPO_ROOT / "skills" / "plan-phase" / "SKILL.md"
+EXECUTE_SKILL = REPO_ROOT / "skills" / "execute-phase" / "SKILL.md"
 
 REQUIRED_WORK_ITEM = {"title", "phase", "kind", "assignee", "effort"}
 REQUIRED_ACCEPTANCE = {"method", "phase", "effort", "verify_command", "requirement"}
 WRITES = {"create", "update", "supersede", "capture"}
+BRIEF_VIEWS = ("brief", "plan", "verification")
 
 
 def _text() -> str:
@@ -34,9 +36,12 @@ def _payloads(text: str, record_type: str) -> list[dict]:
     return payloads
 
 
+def _design() -> dict:
+    return json.loads((REPO_ROOT / "contract" / "project-design.json").read_text())
+
+
 def _record(name: str) -> dict:
-    design = json.loads((REPO_ROOT / "contract" / "project-design.json").read_text())
-    return next(record for record in design["records"] if record["name"] == name)
+    return next(record for record in _design()["records"] if record["name"] == name)
 
 
 def test_trace_fields_are_optional_in_the_contract():
@@ -57,6 +62,24 @@ def test_criterion_optional_in_contract():
     assert "criterion" in acceptance["optional_payload"]
     required = set(acceptance["payload"]) - set(acceptance["optional_payload"])
     assert "criterion" not in required
+
+    design = _design()
+    for view_name in BRIEF_VIEWS:
+        view = next(v for v in design["views"] if v["name"] == view_name)
+        role = next(r for r in view["roles"] if r["name"] == "acceptance")
+        assert "criterion" not in role["requires_payload"], view_name
+
+
+def test_execute_phase_requires_original_text_briefs():
+    flat = _flat(EXECUTE_SKILL.read_text())
+    assert "Description/Approach" in flat
+    assert "quote Description/Approach and requirement texts by id" in flat
+    assert "do not paraphrase" in flat or "paraphrase the claim" in flat
+    assert (
+        "do not invent a claim from criterion" in flat
+        or "do not treat empty or legacy `criterion` as the lead claim" in flat
+    )
+    assert "Do not restate `criterion`" in flat
 
 
 def test_skill_requires_atomic_ids_and_thin_acceptances():
