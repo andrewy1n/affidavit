@@ -211,7 +211,7 @@ adaptive-artifacts correct --type project:check-run --id <check-run-id> \
      not say the design is wrong. A failing concurrency test does not
      itself claim the design is wrong.
    - `blocked` — the check could not run.
-   - `insufficient` — the requirement was not exercised.
+   - `insufficient` — the criterion was not exercised.
 
    When the acceptance has `requirement`, the runner (or a `manual`
    create) puts that `requirement` and an `evidence_kind` from the
@@ -263,7 +263,7 @@ to execute. Use the first row the evidence supports:
 | `failed` and the requirement is ambiguous or contradicted | `failed` | `specification` | `specify` |
 | integration-report `fail`, and a task must change | `failed` | `integration` | `execute` |
 | integration-report `fail`, otherwise | `failed` | `integration` | `integrate` |
-| `insufficient` (the requirement was not exercised) | `insufficient` | `verification` | `verify` |
+| `insufficient` (the criterion was not exercised) | `insufficient` | `verification` | `verify` |
 | `level` `environment` or `unknown` | `blocked` | `environment` or `unknown` | `verify` |
 | every check the requirement needs passed | `verified` | omit | `release` |
 
@@ -330,7 +330,7 @@ acceptance
 
 ## Reason
 
-<the requirement was not exercised>"
+<the criterion was not exercised>"
 ```
 
 ```bash
