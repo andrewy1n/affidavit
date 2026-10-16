@@ -154,7 +154,8 @@
         "requirement"
       ],
       "optional_payload": [
-        "requirement"
+        "requirement",
+        "criterion"
       ],
       "payload_references": {
         "phase": "project:phase"
@@ -819,7 +820,7 @@
           "name": "acceptance",
           "occupant": "acceptance",
           "requires_payload": [
-            "criterion",
+            "requirement",
             "method",
             "effort",
             "verify_command"
@@ -847,7 +848,7 @@
           "name": "acceptance",
           "occupant": "acceptance",
           "requires_payload": [
-            "criterion",
+            "requirement",
             "method",
             "effort",
             "verify_command"
@@ -967,7 +968,7 @@
           "name": "acceptance",
           "occupant": "acceptance",
           "requires_payload": [
-            "criterion",
+            "requirement",
             "method",
             "effort",
             "verify_command"
