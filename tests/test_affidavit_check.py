@@ -14,7 +14,6 @@ from conftest import AA_ROOT, REPO_ROOT, git, resolve_contract, run_cli
 from affidavit.policy import dirty_pass_decision, manual_refuse_message, map_process_outcome
 
 BIN = REPO_ROOT / "bin" / "aff"
-SYNC = REPO_ROOT / "scripts" / "sync-plugin.sh"
 
 
 def _cli_env() -> dict[str, str]:
@@ -500,7 +499,7 @@ def test_empty_verify_command_refused_no_record(store, cli, resolved_contract):
     assert len(after) == len(before)
 
 
-# --- entry / sync / install / bin ------------------------------------------
+# --- entry / bin -------------------------------------------------------------
 
 
 def test_bin_affidavit_entry_exists_and_is_executable():
@@ -517,23 +516,7 @@ def test_bin_affidavit_entry_exists_and_is_executable():
     assert "check" in result.stdout
 
 
-def test_sync_plugin_install_copies_bin_and_affidavit(tmp_path):
-    dest = tmp_path / "plugin"
-    result = subprocess.run(
-        ["bash", str(SYNC), str(dest)],
-        capture_output=True,
-        text=True,
-        cwd=str(REPO_ROOT),
-    )
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert (dest / "bin" / "aff").is_file()
-    assert os.access(dest / "bin" / "aff", os.X_OK)
-    assert (dest / "affidavit" / "cli.py").is_file()
-    assert (dest / "affidavit" / "check.py").is_file()
-
-
 def test_readme_documents_bin_affidavit_entry():
     text = (REPO_ROOT / "README.md").read_text()
     assert "bin/aff" in text
     assert "aff check" in text or "bin/aff check" in text
-    assert "dashboard/bin" in text

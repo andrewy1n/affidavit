@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import subprocess
 import time
 from dataclasses import dataclass
@@ -108,6 +109,32 @@ def _body_tail(output: str) -> str:
     return output[-OUTPUT_BODY_CHARS:]
 
 
+_NODE_ID_RE = re.compile(r"(?:FAILED|ERROR)\s+(\S+::\S+)")
+_SUMMARY_NODE_RE = re.compile(
+    r"^(?:FAILED|ERROR)\s+(\S+::\S+)",
+    re.MULTILINE,
+)
+
+
+def parse_failing_node_ids(output: str) -> list[str]:
+    """Extract pytest node ids from failure/error lines (stable order, unique)."""
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for match in _SUMMARY_NODE_RE.finditer(output or ""):
+        node = match.group(1).strip()
+        if node not in seen:
+            seen.add(node)
+            ordered.append(node)
+    if ordered:
+        return ordered
+    for match in _NODE_ID_RE.finditer(output or ""):
+        node = match.group(1).strip()
+        if node not in seen:
+            seen.add(node)
+            ordered.append(node)
+    return ordered
+
+
 def run_check(
     *,
     acceptance_id: str,
@@ -195,9 +222,6 @@ def run_check(
     if payload.get("evidence_kind"):
         check_payload["evidence_kind"] = payload["evidence_kind"]
     if result == "fail":
-        # Lazy import: suite imports check helpers at module load.
-        from affidavit.suite import parse_failing_node_ids
-
         failing_nodes = parse_failing_node_ids(output)
         if failing_nodes:
             check_payload["failing_node_ids"] = json.dumps(failing_nodes)
