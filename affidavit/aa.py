@@ -7,8 +7,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from dashboard.artifact_store import StoreBindingError, resolve
-from affidavit.aa_resolve import resolve_aa_command
+from affidavit.aa_resolve import StoreBindingError, resolve, resolve_aa_command
 
 __all__ = [
     "resolve_aa_command",
