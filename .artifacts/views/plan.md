@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:7ecd18a467fc53b01a40ddc10ddd9534ef88db6b531db52480635d454cbcfeed
+> Store state: sha256:f3662a8d32a51550823177ebcc28d3da1ade0c64458db41d5a23b438f60bb3af
 
 ## claims-manifest
 
@@ -47,17 +47,70 @@ assert goals(".artifacts")==["evidence-layer"]
 assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packaging","session-analysis","test-suite-speed","workflow-loop"]' _(id: [rec-e88d2262-2f38-4ef4-a3c1-59032762980f](.artifacts/records/project__acceptance/rec-e88d2262-2f38-4ef4-a3c1-59032762980f.md))_
 - **verify-orchestration-split-verdict**: execute-phase and verify-work run aff verdict for a claim in the manifest and treat a non-zero exit as not done; tdd; evidence-layer; cd ~/orchestra && python3 -m pytest tests/test_skill_evidence_boundary.py -q -k verdict _(id: [rec-167feb75-1bd7-4db4-ad7c-05b50da84dae](.artifacts/records/project__acceptance/rec-167feb75-1bd7-4db4-ad7c-05b50da84dae.md))_
 
+## standalone-aff
+
+### Acceptance
+- **fix-orchestra-help-tests**: a pytest runs bin/orchestra check --help and bin/orchestra close-batch --help and each exits 0; check; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_affidavit_check.py -q -k orchestra_subcommand_help _(id: [rec-be84a29b-7214-4ca2-a94d-2d51ec2dc6ab](.artifacts/records/project__acceptance/rec-be84a29b-7214-4ca2-a94d-2d51ec2dc6ab.md))_
+- **fix-readme-check-phrase**: the moved orchestra check, close-batch, and store-client tests pass, including the README entry assertion; check; evidence-layer; cd "$HOME/orchestra" && bin/orchestra check --help && bin/orchestra close-batch --help && python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py tests/test_affidavit_aa.py tests/test_aa_resolve.py -q _(id: [rec-25664c07-1863-4dac-a754-0836105f1fc3](.artifacts/records/project__acceptance/rec-25664c07-1863-4dac-a754-0836105f1fc3.md))_
+- **fix-verdict-help-test**: a pytest runs bin/aff verdict --help and asserts exit 0; check; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q -k verdict_help _(id: [rec-17932b62-b463-479e-8071-f17cc13eff09](.artifacts/records/project__acceptance/rec-17932b62-b463-479e-8071-f17cc13eff09.md))_
+- **move-store-client**: bin/orchestra check and close-batch --help exit 0, and the moved check, close-batch, and store-client tests pass in ~/orchestra; check; evidence-layer; cd "$HOME/orchestra" && bin/orchestra check --help && bin/orchestra close-batch --help && python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py tests/test_affidavit_aa.py tests/test_aa_resolve.py -q _(id: [rec-d0a726bc-62cc-4cb2-a95c-f4dd36e50532](.artifacts/records/project__acceptance/rec-d0a726bc-62cc-4cb2-a95c-f4dd36e50532.md))_
+- **move-store-client-imports**: orchestra imports affidavit.oracle_red from the close path and does not import affidavit.aa, affidavit.aa_resolve, affidavit.check, affidavit.policy, or affidavit.verdict; tdd; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_affidavit_import_boundary.py -q _(id: [rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94](.artifacts/records/project__acceptance/rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94.md))_
+- **skill-command-names**: orchestra skills run orchestra check and orchestra close-batch, and still run aff verdict for a manifest claim; tdd; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_orchestra_commands.py -q _(id: [rec-4d363eb6-fdda-45d0-a8ba-65a04506823c](.artifacts/records/project__acceptance/rec-4d363eb6-fdda-45d0-a8ba-65a04506823c.md))_
+- **strip-aff-verbs**: bin/aff verdict passes with adaptive-artifacts off PATH, and bin/aff check and close-batch are rejected; tdd; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q _(id: [rec-e054ab1c-dd4a-4324-b7ed-cf3433b2d70f](.artifacts/records/project__acceptance/rec-e054ab1c-dd4a-4324-b7ed-cf3433b2d70f.md))_
+- **strip-aff-verbs-boundary**: a test fails when any module under affidavit/ contains project:, SE_WORKFLOW_STORE, store-binding.json, or adaptive-artifacts; tdd; evidence-layer; python3 -m pytest tests/test_evidence_layout.py -q -k no_store_tokens _(id: [rec-243ce423-ece2-440a-b36b-826ea9b47660](.artifacts/records/project__acceptance/rec-243ce423-ece2-440a-b36b-826ea9b47660.md))_
+- **verify-standalone-aff**: A checkout of this repo, with no orchestra tree, no adaptive-artifacts on PATH, and no se-workflow store binding, still produces a verdict from the committed manifest; check; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q -k verdict_without_runtime _(id: [rec-ef30c56e-14a1-4897-9621-e3110af528c3](.artifacts/records/project__acceptance/rec-ef30c56e-14a1-4897-9621-e3110af528c3.md))_
+- **verify-standalone-aff-boundary**: A test fails while any module under affidavit/ contains project:, SE_WORKFLOW_STORE, store-binding.json, or adaptive-artifacts; check; evidence-layer; python3 -m pytest tests/test_evidence_layout.py -q -k no_store_tokens _(id: [rec-2b4379ce-c5cf-4276-8a31-359b82448f7e](.artifacts/records/project__acceptance/rec-2b4379ce-c5cf-4276-8a31-359b82448f7e.md))_
+- **verify-standalone-aff-cli**: orchestra check and orchestra close-batch run from ~/orchestra, and the moved check, close-batch, and store-client tests pass there; check; evidence-layer; cd "$HOME/orchestra" && bin/orchestra check --help && bin/orchestra close-batch --help && python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py tests/test_affidavit_aa.py tests/test_aa_resolve.py -q _(id: [rec-8f3850bd-9558-48f9-9bfe-a1245f4a1a1d](.artifacts/records/project__acceptance/rec-8f3850bd-9558-48f9-9bfe-a1245f4a1a1d.md))_
+- **verify-standalone-aff-imports**: The close path imports affidavit.oracle_red, and no orchestra module imports affidavit.aa, affidavit.aa_resolve, affidavit.check, affidavit.policy, or affidavit.verdict; check; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_affidavit_import_boundary.py -q _(id: [rec-f6e74f3f-9cb0-4a01-aca2-9bb1f06f7e8d](.artifacts/records/project__acceptance/rec-f6e74f3f-9cb0-4a01-aca2-9bb1f06f7e8d.md))_
+- **verify-standalone-aff-skills**: Orchestra skills run orchestra check and orchestra close-batch for those steps, and aff verdict for a manifest claim; check; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_orchestra_commands.py -q _(id: [rec-ef59bc8a-f074-4b54-bb1b-4df4124cd65f](.artifacts/records/project__acceptance/rec-ef59bc8a-f074-4b54-bb1b-4df4124cd65f.md))_
+- **verify-standalone-aff-verbs**: aff check and aff close-batch are not commands; check; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q -k rejects_store_commands _(id: [rec-2efc0852-17bc-4c58-b065-c929276d1962](.artifacts/records/project__acceptance/rec-2efc0852-17bc-4c58-b065-c929276d1962.md))_
+
+## runner-adapter
+
+### Phase
+- **runner-adapter**: aff verdict runs tests through a runner adapter; 4; evidence-layer _(id: [rec-9c33e3dc-cbc3-4f12-b4a4-69b59e44bfa7](.artifacts/records/project__phase/rec-9c33e3dc-cbc3-4f12-b4a4-69b59e44bfa7.md))_
+
+## frozen-environment
+
+### Phase
+- **frozen-environment**: Freeze the witness environment, not just the test files; 5; evidence-layer _(id: [rec-a741e0ca-9636-41d6-ab55-e0915071bd36](.artifacts/records/project__phase/rec-a741e0ca-9636-41d6-ab55-e0915071bd36.md))_
+
+## signed-verdict
+
+### Phase
+- **signed-verdict**: Signed verdict attestation from CI; 6; evidence-layer _(id: [rec-ac9f5da7-15ec-442c-b4f3-2bd923d37ed5](.artifacts/records/project__phase/rec-ac9f5da7-15ec-442c-b4f3-2bd923d37ed5.md))_
+
+## oracle-provenance
+
+### Phase
+- **oracle-provenance**: Verdict checks who wrote the oracle and when; 7; evidence-layer _(id: [rec-ec2a17c7-ada2-4c03-ba16-b0392baa8ea9](.artifacts/records/project__phase/rec-ec2a17c7-ada2-4c03-ba16-b0392baa8ea9.md))_
+
 ## evidence-kind
 
 ### Phase
-- **evidence-kind**: Requirement evidence_kind enforcement; 3; evidence-layer _(id: [rec-8152251a-6238-4841-8183-6717775aeb30](.artifacts/records/project__phase/rec-8152251a-6238-4841-8183-6717775aeb30.md))_
+- **evidence-kind**: Claims declare evidence_kind and verdict enforces it; 8; evidence-layer _(id: [rec-8152251a-6238-4841-8183-6717775aeb30](.artifacts/records/project__phase/rec-8152251a-6238-4841-8183-6717775aeb30.md))_
+
+## claim-authoring
+
+### Phase
+- **claim-authoring**: Standalone claim authoring, lint, and human-signed claims; 9; evidence-layer _(id: [rec-f89d0df2-3c6e-4d93-8b4f-f4e14e9a6ee0](.artifacts/records/project__phase/rec-f89d0df2-3c6e-4d93-8b4f-f4e14e9a6ee0.md))_
 
 ## phase-end-evidence
 
 ### Phase
-- **phase-end-evidence**: Phase-end evidence report; 4; evidence-layer _(id: [rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68](.artifacts/records/project__phase/rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68.md))_
+- **phase-end-evidence**: aff audit: changed code no witness checks; 10; evidence-layer _(id: [rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68](.artifacts/records/project__phase/rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68.md))_
+
+## audit-differential
+
+### Phase
+- **audit-differential**: aff audit: behavior changes no claim asked for; 11; evidence-layer _(id: [rec-721996b0-45cf-410b-8ead-0680d1135069](.artifacts/records/project__phase/rec-721996b0-45cf-410b-8ead-0680d1135069.md))_
+
+## second-runner
+
+### Phase
+- **second-runner**: A non-Python runner through the adapter; 12; evidence-layer _(id: [rec-f68bf6b6-df83-49f1-8ce1-4b97bbeb68af](.artifacts/records/project__phase/rec-f68bf6b6-df83-49f1-8ce1-4b97bbeb68af.md))_
 
 ## evidence-e2e
 
 ### Phase
-- **evidence-e2e**: End-to-end deliver loop through aff from a phase worktree; 5; evidence-layer _(id: [rec-47faad46-864c-40bd-baf1-d0d46755ca4b](.artifacts/records/project__phase/rec-47faad46-864c-40bd-baf1-d0d46755ca4b.md))_
+- **evidence-e2e**: End to end on an external repo and through orchestra; 13; evidence-layer _(id: [rec-47faad46-864c-40bd-baf1-d0d46755ca4b](.artifacts/records/project__phase/rec-47faad46-864c-40bd-baf1-d0d46755ca4b.md))_

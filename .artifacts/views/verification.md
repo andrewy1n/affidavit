@@ -1,7 +1,7 @@
 # Project Verification
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:1bf0354ca4076d1ee720be3a73d7fb63c4e244bcc70a7c5c51b0f8084d4c9950
+> Store state: sha256:475ae3e83a86bd72e26bb744cee9bc38eba4d1a5e6a646f6f5d6d804f1002844
 
 ## amendment-sign
 
@@ -52,6 +52,23 @@
 - **fix-agent-docs**: rec-f9615bc0-d2d4-4b1a-9bf5-b7226656ae8f; 43bb26ec008e43d3c149f7d9fee38249e7a5d8c8; pass; tdd _(id: [rec-1a0b4244-ac0b-4288-9634-bb672b5cee54](.artifacts/records/project__check-run/rec-1a0b4244-ac0b-4288-9634-bb672b5cee54.md))_
 - **fix-agent-docs**: rec-f9615bc0-d2d4-4b1a-9bf5-b7226656ae8f; ce104cd41dba89271999636ccc23f0011628bf0c; fail; tdd _(id: [rec-7a30b9de-199c-412e-a185-86e1cf05cdee](.artifacts/records/project__check-run/rec-7a30b9de-199c-412e-a185-86e1cf05cdee.md))_
 
+## fix-orchestra-help-tests
+
+### Acceptance
+- **fix-orchestra-help-tests**: a pytest runs bin/orchestra check --help and bin/orchestra close-batch --help and each exits 0; check; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_affidavit_check.py -q -k orchestra_subcommand_help _(id: [rec-be84a29b-7214-4ca2-a94d-2d51ec2dc6ab](.artifacts/records/project__acceptance/rec-be84a29b-7214-4ca2-a94d-2d51ec2dc6ab.md))_
+
+### Check
+- **fix-orchestra-help-tests**: rec-be84a29b-7214-4ca2-a94d-2d51ec2dc6ab; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; check _(id: [rec-c8aef260-6848-49ce-82d6-5c1c8c790e62](.artifacts/records/project__check-run/rec-c8aef260-6848-49ce-82d6-5c1c8c790e62.md))_
+
+## fix-readme-check-phrase
+
+### Acceptance
+- **fix-readme-check-phrase**: the moved orchestra check, close-batch, and store-client tests pass, including the README entry assertion; check; evidence-layer; cd "$HOME/orchestra" && bin/orchestra check --help && bin/orchestra close-batch --help && python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py tests/test_affidavit_aa.py tests/test_aa_resolve.py -q _(id: [rec-25664c07-1863-4dac-a754-0836105f1fc3](.artifacts/records/project__acceptance/rec-25664c07-1863-4dac-a754-0836105f1fc3.md))_
+
+### Check
+- **fix-readme-check-phrase**: rec-25664c07-1863-4dac-a754-0836105f1fc3; 50b2cd0b0360e6cbca7bdbfe3cda1dfaab46648c; pass; check _(id: [rec-4894e12a-a446-4400-8f5f-e880f9ec2368](.artifacts/records/project__check-run/rec-4894e12a-a446-4400-8f5f-e880f9ec2368.md))_
+- **fix-readme-check-phrase**: rec-25664c07-1863-4dac-a754-0836105f1fc3; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; check _(id: [rec-93fd20c9-4e48-4fe5-ba7c-c8ae87415ff5](.artifacts/records/project__check-run/rec-93fd20c9-4e48-4fe5-ba7c-c8ae87415ff5.md))_
+
 ## fix-verdict-exit
 
 ### Acceptance
@@ -60,6 +77,14 @@
 ### Check
 - **fix-verdict-exit**: rec-cd3fb645-b979-440d-ad25-158586f29fe1; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-8d5219fa-dc90-4a3e-bb1a-7d919fba521f](.artifacts/records/project__check-run/rec-8d5219fa-dc90-4a3e-bb1a-7d919fba521f.md))_
 - **fix-verdict-exit**: rec-cd3fb645-b979-440d-ad25-158586f29fe1; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; fail; tdd _(id: [rec-d29c2681-a1d9-49fe-a8b4-de9aea3f9413](.artifacts/records/project__check-run/rec-d29c2681-a1d9-49fe-a8b4-de9aea3f9413.md))_
+
+## fix-verdict-help-test
+
+### Acceptance
+- **fix-verdict-help-test**: a pytest runs bin/aff verdict --help and asserts exit 0; check; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q -k verdict_help _(id: [rec-17932b62-b463-479e-8071-f17cc13eff09](.artifacts/records/project__acceptance/rec-17932b62-b463-479e-8071-f17cc13eff09.md))_
+
+### Check
+- **fix-verdict-help-test**: rec-17932b62-b463-479e-8071-f17cc13eff09; 95816892f1208fd6b13723e6f89a959d6736da44; pass; check _(id: [rec-5b05faaa-9341-43a8-80d7-58984955161b](.artifacts/records/project__check-run/rec-5b05faaa-9341-43a8-80d7-58984955161b.md))_
 
 ## move-effort-records
 
@@ -74,6 +99,27 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Check
 - **move-effort-records**: rec-119ad93e-8886-4e96-912f-4ca9268d5971; dirty; pass; check _(id: [rec-e14e624e-3966-4a60-b00a-d4da7de10dc0](.artifacts/records/project__check-run/rec-e14e624e-3966-4a60-b00a-d4da7de10dc0.md))_
 
+## move-store-client
+
+### Acceptance
+- **move-store-client**: bin/orchestra check and close-batch --help exit 0, and the moved check, close-batch, and store-client tests pass in ~/orchestra; check; evidence-layer; cd "$HOME/orchestra" && bin/orchestra check --help && bin/orchestra close-batch --help && python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py tests/test_affidavit_aa.py tests/test_aa_resolve.py -q _(id: [rec-d0a726bc-62cc-4cb2-a95c-f4dd36e50532](.artifacts/records/project__acceptance/rec-d0a726bc-62cc-4cb2-a95c-f4dd36e50532.md))_
+
+### Check
+- **move-store-client**: rec-d0a726bc-62cc-4cb2-a95c-f4dd36e50532; 2483da2da2ad4929ad5853978d57335072ff577a; pass; check _(id: [rec-7f080418-07e4-4fac-9f36-4c6c9956e056](.artifacts/records/project__check-run/rec-7f080418-07e4-4fac-9f36-4c6c9956e056.md))_
+- **move-store-client**: rec-d0a726bc-62cc-4cb2-a95c-f4dd36e50532; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; check _(id: [rec-de9391cb-a21a-45de-b4d1-1c58bff90f11](.artifacts/records/project__check-run/rec-de9391cb-a21a-45de-b4d1-1c58bff90f11.md))_
+
+### Finding
+- **move-store-client**: move-store-client closed done with a tdd pass that has no prior red check-run; aff check rec-e02d9d80-9036-481f-acec-0cc6f8f8c321 passed at 2483da2da2ad4929ad5853978d57335072ff577a. The executor committed tests/test_affidavit_import_boundary.py and the implementation in that same commit, so no runner-produced fail precedes the green.; a runner-produced fail for acceptance rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94 has a revision that is an ancestor of the green, or a human accepts this pass without red-first evidence; human _(id: [rec-7f5b80b9-cd8d-4376-9994-3553c0434f71](.artifacts/records/project__finding/rec-7f5b80b9-cd8d-4376-9994-3553c0434f71.md))_
+
+## move-store-client-imports
+
+### Acceptance
+- **move-store-client-imports**: orchestra imports affidavit.oracle_red from the close path and does not import affidavit.aa, affidavit.aa_resolve, affidavit.check, affidavit.policy, or affidavit.verdict; tdd; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_affidavit_import_boundary.py -q _(id: [rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94](.artifacts/records/project__acceptance/rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94.md))_
+
+### Check
+- **move-store-client-imports**: rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; tdd _(id: [rec-62bca6f5-68b8-44e4-93ac-4b2863b8c243](.artifacts/records/project__check-run/rec-62bca6f5-68b8-44e4-93ac-4b2863b8c243.md))_
+- **move-store-client-imports**: rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94; 2483da2da2ad4929ad5853978d57335072ff577a; pass; tdd _(id: [rec-e02d9d80-9036-481f-acec-0cc6f8f8c321](.artifacts/records/project__check-run/rec-e02d9d80-9036-481f-acec-0cc6f8f8c321.md))_
+
 ## orchestration-split-review
 
 ### Check
@@ -84,6 +130,11 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Finding
 - **review-move-effort-records-spec-gap**: spec-gap on move-effort-records: the phase-head store still holds every effort; Reviewer read .artifacts at f677417, the pre-split snapshot on the phase branch; a passing review at the phase head accepts the live stores on main and in ~/orchestra, or the human clears this finding; none _(id: [rec-6a11bf68-24f1-46c3-86f3-a154d4fe8a8b](.artifacts/records/project__finding/rec-6a11bf68-24f1-46c3-86f3-a154d4fe8a8b.md))_
+
+## review-move-store-client-missing-test
+
+### Finding
+- **review-move-store-client-missing-test**: missing-test on move-store-client: bin/orchestra check and close-batch --help exit 0; test_bin_affidavit_entry only runs bin/orchestra --help; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-d65b54e0-2ae7-47b1-abaa-892727231b09](.artifacts/records/project__finding/rec-d65b54e0-2ae7-47b1-abaa-892727231b09.md))_
 
 ## review-phase-missing-test-amendment
 
@@ -99,6 +150,11 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Finding
 - **review-phase-missing-test-missing-step**: missing-test on phase: aff verdict must exit non-zero when test ids or hashes differ without a covering amendment chain; missing step is only covered in tests/test_amendment.py; tests/test_verdict.py has no CLI case for a manifest delta with no amendment; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-f5ae5085-839d-47e7-ac68-ea6ef1cb6107](.artifacts/records/project__finding/rec-f5ae5085-839d-47e7-ac68-ea6ef1cb6107.md))_
+
+## review-phase-missing-test-verdict-help
+
+### Finding
+- **review-phase-missing-test-verdict-help**: missing-test on phase: bin/aff verdict --help exits 0; tests/test_standalone_cli.py does not assert verdict --help exit 0; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-32467d43-dc9b-4815-a5a7-e97098dc5552](.artifacts/records/project__finding/rec-32467d43-dc9b-4815-a5a7-e97098dc5552.md))_
 
 ## review-strip-affidavit-spec-gap
 
@@ -136,6 +192,16 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Check
 - **scaffold-orchestra-layout**: rec-bb8fcfec-3f8c-49dd-a274-6f88e947c6c4; de92a579897aa1aa1f2e8788d47697a74bc58513; pass; check _(id: [rec-b905a6d5-a097-4b18-9666-9831281ea720](.artifacts/records/project__check-run/rec-b905a6d5-a097-4b18-9666-9831281ea720.md))_
 
+## skill-command-names
+
+### Acceptance
+- **skill-command-names**: orchestra skills run orchestra check and orchestra close-batch, and still run aff verdict for a manifest claim; tdd; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_orchestra_commands.py -q _(id: [rec-4d363eb6-fdda-45d0-a8ba-65a04506823c](.artifacts/records/project__acceptance/rec-4d363eb6-fdda-45d0-a8ba-65a04506823c.md))_
+
+### Check
+- **skill-command-names**: rec-4d363eb6-fdda-45d0-a8ba-65a04506823c; cac5247ddb6774f9a490bf7f3c5593a36a790b09; pass; tdd _(id: [rec-2cf353e2-93e1-416d-b3f8-fb1b472a6c63](.artifacts/records/project__check-run/rec-2cf353e2-93e1-416d-b3f8-fb1b472a6c63.md))_
+- **skill-command-names**: rec-4d363eb6-fdda-45d0-a8ba-65a04506823c; bb08d79c18804473fea229fb2eb1bfa8ec3ec6f7; fail; tdd _(id: [rec-579cbf13-4c6e-4d50-a835-6f1ebaf610ce](.artifacts/records/project__check-run/rec-579cbf13-4c6e-4d50-a835-6f1ebaf610ce.md))_
+- **skill-command-names**: rec-4d363eb6-fdda-45d0-a8ba-65a04506823c; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; tdd _(id: [rec-a1628187-6e4b-4413-a2e3-3c99499d3dd0](.artifacts/records/project__check-run/rec-a1628187-6e4b-4413-a2e3-3c99499d3dd0.md))_
+
 ## skill-evidence-boundary
 
 ### Acceptance
@@ -154,6 +220,37 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **skill-evidence-boundary-verdict**: rec-157b8a77-5bd4-4462-a516-cfed02b4ef1a; dae249d5636867d70f13c91d0e3710fcb4d39991; pass; tdd _(id: [rec-03198204-22cb-4928-b7ba-a3cecbb55c0a](.artifacts/records/project__check-run/rec-03198204-22cb-4928-b7ba-a3cecbb55c0a.md))_
 - **skill-evidence-boundary-verdict**: rec-157b8a77-5bd4-4462-a516-cfed02b4ef1a; 2df7598d15159946435617cd150ab4d4dd9329c8; fail; tdd _(id: [rec-cadc74d5-035f-4bda-a98e-cc74e02414e6](.artifacts/records/project__check-run/rec-cadc74d5-035f-4bda-a98e-cc74e02414e6.md))_
 
+## standalone-aff-review
+
+### Check
+- **standalone-aff-review**: standalone-aff-review; 2c7dd552e6012ffb8626c635806214073168ba60; fail; review _(id: [rec-766a0816-5356-4a67-9d1b-729a569dd1fc](.artifacts/records/project__check-run/rec-766a0816-5356-4a67-9d1b-729a569dd1fc.md))_
+- **standalone-aff-review**: standalone-aff-review; 95816892f1208fd6b13723e6f89a959d6736da44; pass; review _(id: [rec-e96ca8ec-342d-47cf-9fb9-50422b0e9814](.artifacts/records/project__check-run/rec-e96ca8ec-342d-47cf-9fb9-50422b0e9814.md))_
+
+## standalone-aff-suite
+
+### Check
+- **standalone-aff-suite**: standalone-aff-suite; 95816892f1208fd6b13723e6f89a959d6736da44; fail; check _(id: [rec-15ca319e-d0bf-4a3a-8c96-c3652b0ea33c](.artifacts/records/project__check-run/rec-15ca319e-d0bf-4a3a-8c96-c3652b0ea33c.md))_
+
+## strip-aff-verbs
+
+### Acceptance
+- **strip-aff-verbs**: bin/aff verdict passes with adaptive-artifacts off PATH, and bin/aff check and close-batch are rejected; tdd; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q _(id: [rec-e054ab1c-dd4a-4324-b7ed-cf3433b2d70f](.artifacts/records/project__acceptance/rec-e054ab1c-dd4a-4324-b7ed-cf3433b2d70f.md))_
+
+### Check
+- **strip-aff-verbs**: rec-e054ab1c-dd4a-4324-b7ed-cf3433b2d70f; 2c7dd552e6012ffb8626c635806214073168ba60; pass; tdd _(id: [rec-5fe28fea-fa80-4852-9393-d38a1005266a](.artifacts/records/project__check-run/rec-5fe28fea-fa80-4852-9393-d38a1005266a.md))_
+- **strip-aff-verbs**: rec-e054ab1c-dd4a-4324-b7ed-cf3433b2d70f; 95816892f1208fd6b13723e6f89a959d6736da44; pass; tdd _(id: [rec-8405ce98-c548-4e87-a68e-5b71e5e67140](.artifacts/records/project__check-run/rec-8405ce98-c548-4e87-a68e-5b71e5e67140.md))_
+- **strip-aff-verbs**: rec-e054ab1c-dd4a-4324-b7ed-cf3433b2d70f; b27be0ba1a99215aacda097f66d3c2b7454b1f13; fail; tdd _(id: [rec-af61f89f-7b84-4483-952d-bba736346c4f](.artifacts/records/project__check-run/rec-af61f89f-7b84-4483-952d-bba736346c4f.md))_
+
+## strip-aff-verbs-boundary
+
+### Acceptance
+- **strip-aff-verbs-boundary**: a test fails when any module under affidavit/ contains project:, SE_WORKFLOW_STORE, store-binding.json, or adaptive-artifacts; tdd; evidence-layer; python3 -m pytest tests/test_evidence_layout.py -q -k no_store_tokens _(id: [rec-243ce423-ece2-440a-b36b-826ea9b47660](.artifacts/records/project__acceptance/rec-243ce423-ece2-440a-b36b-826ea9b47660.md))_
+
+### Check
+- **strip-aff-verbs-boundary**: rec-243ce423-ece2-440a-b36b-826ea9b47660; 2c7dd552e6012ffb8626c635806214073168ba60; pass; tdd _(id: [rec-1688c984-ffeb-47a3-b8fa-01f423ca3af1](.artifacts/records/project__check-run/rec-1688c984-ffeb-47a3-b8fa-01f423ca3af1.md))_
+- **strip-aff-verbs-boundary**: rec-243ce423-ece2-440a-b36b-826ea9b47660; 95816892f1208fd6b13723e6f89a959d6736da44; pass; tdd _(id: [rec-16cca746-2a17-4a50-8b53-abe392058849](.artifacts/records/project__check-run/rec-16cca746-2a17-4a50-8b53-abe392058849.md))_
+- **strip-aff-verbs-boundary**: rec-243ce423-ece2-440a-b36b-826ea9b47660; b27be0ba1a99215aacda097f66d3c2b7454b1f13; fail; tdd _(id: [rec-af832c74-9d5a-457b-b316-e775684bdfb3](.artifacts/records/project__check-run/rec-af832c74-9d5a-457b-b316-e775684bdfb3.md))_
+
 ## strip-affidavit
 
 ### Acceptance
@@ -167,6 +264,11 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Finding
 - **suite-advisory-claims-manifest**: advisory suite fail for claims-manifest-suite; exit_code 1; failing node tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub; suite check-run passes at phase head, or human clears; none _(id: [rec-43ce266c-c2ac-4895-99e2-e039eac06a4f](.artifacts/records/project__finding/rec-43ce266c-c2ac-4895-99e2-e039eac06a4f.md))_
+
+## suite-advisory-standalone-aff
+
+### Finding
+- **suite-advisory-standalone-aff**: advisory suite fail for standalone-aff-suite; exit_code=5; failing node ids: none (pytest collected no tmux tests); suite check-run passes at phase head, or human clears; none _(id: [rec-741cb0e6-238f-43c3-a038-2dfc5efa7913](.artifacts/records/project__finding/rec-741cb0e6-238f-43c3-a038-2dfc5efa7913.md))_
 
 ## verdict-command
 
@@ -310,3 +412,63 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **verify-orchestration-split-verdict**: rec-167feb75-1bd7-4db4-ad7c-05b50da84dae; 2df7598d15159946435617cd150ab4d4dd9329c8; fail; tdd _(id: [rec-13197abe-10a5-44e1-9437-a436982f2cbc](.artifacts/records/project__check-run/rec-13197abe-10a5-44e1-9437-a436982f2cbc.md))_
 - **verify-orchestration-split-verdict**: rec-167feb75-1bd7-4db4-ad7c-05b50da84dae; 40386351dd0a5d62619ef4be64070aefb986ff30; pass; tdd _(id: [rec-72851342-8ebf-4547-93b6-557ff9464558](.artifacts/records/project__check-run/rec-72851342-8ebf-4547-93b6-557ff9464558.md))_
 - **verify-orchestration-split-verdict**: rec-167feb75-1bd7-4db4-ad7c-05b50da84dae; 2df7598d15159946435617cd150ab4d4dd9329c8; fail; tdd _(id: [rec-97a0c1d1-39d9-4829-8e8f-2823b8ca594d](.artifacts/records/project__check-run/rec-97a0c1d1-39d9-4829-8e8f-2823b8ca594d.md))_
+
+## verify-standalone-aff
+
+### Acceptance
+- **verify-standalone-aff**: A checkout of this repo, with no orchestra tree, no adaptive-artifacts on PATH, and no se-workflow store binding, still produces a verdict from the committed manifest; check; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q -k verdict_without_runtime _(id: [rec-ef30c56e-14a1-4897-9621-e3110af528c3](.artifacts/records/project__acceptance/rec-ef30c56e-14a1-4897-9621-e3110af528c3.md))_
+
+### Check
+- **verify-standalone-aff**: rec-ef30c56e-14a1-4897-9621-e3110af528c3; 95816892f1208fd6b13723e6f89a959d6736da44; pass; check _(id: [rec-2fd486e2-31d9-48fc-943a-340745664831](.artifacts/records/project__check-run/rec-2fd486e2-31d9-48fc-943a-340745664831.md))_
+- **verify-standalone-aff**: rec-ef30c56e-14a1-4897-9621-e3110af528c3; 2c7dd552e6012ffb8626c635806214073168ba60; pass; check _(id: [rec-954cb5fa-9acd-4f28-ad54-2fd3cc067989](.artifacts/records/project__check-run/rec-954cb5fa-9acd-4f28-ad54-2fd3cc067989.md))_
+- **verify-standalone-aff**: rec-ef30c56e-14a1-4897-9621-e3110af528c3; 2c7dd552e6012ffb8626c635806214073168ba60; pass; check _(id: [rec-c960a982-0a9b-472c-b9b3-b5ae8aff8b3a](.artifacts/records/project__check-run/rec-c960a982-0a9b-472c-b9b3-b5ae8aff8b3a.md))_
+
+## verify-standalone-aff-boundary
+
+### Acceptance
+- **verify-standalone-aff-boundary**: A test fails while any module under affidavit/ contains project:, SE_WORKFLOW_STORE, store-binding.json, or adaptive-artifacts; check; evidence-layer; python3 -m pytest tests/test_evidence_layout.py -q -k no_store_tokens _(id: [rec-2b4379ce-c5cf-4276-8a31-359b82448f7e](.artifacts/records/project__acceptance/rec-2b4379ce-c5cf-4276-8a31-359b82448f7e.md))_
+
+### Check
+- **verify-standalone-aff-boundary**: rec-2b4379ce-c5cf-4276-8a31-359b82448f7e; 95816892f1208fd6b13723e6f89a959d6736da44; pass; check _(id: [rec-9699e44a-7a03-43e8-98e3-f01cfa995809](.artifacts/records/project__check-run/rec-9699e44a-7a03-43e8-98e3-f01cfa995809.md))_
+- **verify-standalone-aff-boundary**: rec-2b4379ce-c5cf-4276-8a31-359b82448f7e; 2c7dd552e6012ffb8626c635806214073168ba60; pass; check _(id: [rec-d50f5df6-b725-407e-aa8f-efcaf33735e3](.artifacts/records/project__check-run/rec-d50f5df6-b725-407e-aa8f-efcaf33735e3.md))_
+- **verify-standalone-aff-boundary**: rec-2b4379ce-c5cf-4276-8a31-359b82448f7e; 2c7dd552e6012ffb8626c635806214073168ba60; pass; check _(id: [rec-fb95847f-a88c-40c2-a8ce-4fd7c531a464](.artifacts/records/project__check-run/rec-fb95847f-a88c-40c2-a8ce-4fd7c531a464.md))_
+
+## verify-standalone-aff-cli
+
+### Acceptance
+- **verify-standalone-aff-cli**: orchestra check and orchestra close-batch run from ~/orchestra, and the moved check, close-batch, and store-client tests pass there; check; evidence-layer; cd "$HOME/orchestra" && bin/orchestra check --help && bin/orchestra close-batch --help && python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py tests/test_affidavit_aa.py tests/test_aa_resolve.py -q _(id: [rec-8f3850bd-9558-48f9-9bfe-a1245f4a1a1d](.artifacts/records/project__acceptance/rec-8f3850bd-9558-48f9-9bfe-a1245f4a1a1d.md))_
+
+### Check
+- **verify-standalone-aff-cli**: rec-8f3850bd-9558-48f9-9bfe-a1245f4a1a1d; 50b2cd0b0360e6cbca7bdbfe3cda1dfaab46648c; pass; check _(id: [rec-6803d947-f2f6-4e67-aa24-0f96109683df](.artifacts/records/project__check-run/rec-6803d947-f2f6-4e67-aa24-0f96109683df.md))_
+- **verify-standalone-aff-cli**: rec-8f3850bd-9558-48f9-9bfe-a1245f4a1a1d; cac5247ddb6774f9a490bf7f3c5593a36a790b09; fail; check _(id: [rec-e20d9589-4948-450d-a8b0-f0cbfc457a98](.artifacts/records/project__check-run/rec-e20d9589-4948-450d-a8b0-f0cbfc457a98.md))_
+- **verify-standalone-aff-cli**: rec-8f3850bd-9558-48f9-9bfe-a1245f4a1a1d; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; check _(id: [rec-f2ace697-30ab-472c-9384-bd0114a080b0](.artifacts/records/project__check-run/rec-f2ace697-30ab-472c-9384-bd0114a080b0.md))_
+
+## verify-standalone-aff-imports
+
+### Acceptance
+- **verify-standalone-aff-imports**: The close path imports affidavit.oracle_red, and no orchestra module imports affidavit.aa, affidavit.aa_resolve, affidavit.check, affidavit.policy, or affidavit.verdict; check; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_affidavit_import_boundary.py -q _(id: [rec-f6e74f3f-9cb0-4a01-aca2-9bb1f06f7e8d](.artifacts/records/project__acceptance/rec-f6e74f3f-9cb0-4a01-aca2-9bb1f06f7e8d.md))_
+
+### Check
+- **verify-standalone-aff-imports**: rec-f6e74f3f-9cb0-4a01-aca2-9bb1f06f7e8d; cac5247ddb6774f9a490bf7f3c5593a36a790b09; pass; check _(id: [rec-6ef153a4-3e1f-41e3-8e30-96358eae261b](.artifacts/records/project__check-run/rec-6ef153a4-3e1f-41e3-8e30-96358eae261b.md))_
+- **verify-standalone-aff-imports**: rec-f6e74f3f-9cb0-4a01-aca2-9bb1f06f7e8d; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; check _(id: [rec-a320e182-ebea-4df4-b762-9f2f7faaf886](.artifacts/records/project__check-run/rec-a320e182-ebea-4df4-b762-9f2f7faaf886.md))_
+- **verify-standalone-aff-imports**: rec-f6e74f3f-9cb0-4a01-aca2-9bb1f06f7e8d; 50b2cd0b0360e6cbca7bdbfe3cda1dfaab46648c; pass; check _(id: [rec-ecafaffc-7064-43c8-bd52-ec8a4520defa](.artifacts/records/project__check-run/rec-ecafaffc-7064-43c8-bd52-ec8a4520defa.md))_
+
+## verify-standalone-aff-skills
+
+### Acceptance
+- **verify-standalone-aff-skills**: Orchestra skills run orchestra check and orchestra close-batch for those steps, and aff verdict for a manifest claim; check; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_orchestra_commands.py -q _(id: [rec-ef59bc8a-f074-4b54-bb1b-4df4124cd65f](.artifacts/records/project__acceptance/rec-ef59bc8a-f074-4b54-bb1b-4df4124cd65f.md))_
+
+### Check
+- **verify-standalone-aff-skills**: rec-ef59bc8a-f074-4b54-bb1b-4df4124cd65f; 50b2cd0b0360e6cbca7bdbfe3cda1dfaab46648c; pass; check _(id: [rec-075547ef-42bc-4e29-86ab-ad1bf89384a0](.artifacts/records/project__check-run/rec-075547ef-42bc-4e29-86ab-ad1bf89384a0.md))_
+- **verify-standalone-aff-skills**: rec-ef59bc8a-f074-4b54-bb1b-4df4124cd65f; cac5247ddb6774f9a490bf7f3c5593a36a790b09; pass; check _(id: [rec-19adaf2c-85a6-411c-a6b7-d0050747c489](.artifacts/records/project__check-run/rec-19adaf2c-85a6-411c-a6b7-d0050747c489.md))_
+- **verify-standalone-aff-skills**: rec-ef59bc8a-f074-4b54-bb1b-4df4124cd65f; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; check _(id: [rec-d18abc69-5244-432b-953a-5e95d1d2bc46](.artifacts/records/project__check-run/rec-d18abc69-5244-432b-953a-5e95d1d2bc46.md))_
+
+## verify-standalone-aff-verbs
+
+### Acceptance
+- **verify-standalone-aff-verbs**: aff check and aff close-batch are not commands; check; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q -k rejects_store_commands _(id: [rec-2efc0852-17bc-4c58-b065-c929276d1962](.artifacts/records/project__acceptance/rec-2efc0852-17bc-4c58-b065-c929276d1962.md))_
+
+### Check
+- **verify-standalone-aff-verbs**: rec-2efc0852-17bc-4c58-b065-c929276d1962; 95816892f1208fd6b13723e6f89a959d6736da44; pass; check _(id: [rec-748e17a9-2216-4edc-8f43-a8dc410c4263](.artifacts/records/project__check-run/rec-748e17a9-2216-4edc-8f43-a8dc410c4263.md))_
+- **verify-standalone-aff-verbs**: rec-2efc0852-17bc-4c58-b065-c929276d1962; 2c7dd552e6012ffb8626c635806214073168ba60; pass; check _(id: [rec-964ec978-2b03-421a-8938-ebb1630ebfeb](.artifacts/records/project__check-run/rec-964ec978-2b03-421a-8938-ebb1630ebfeb.md))_
+- **verify-standalone-aff-verbs**: rec-2efc0852-17bc-4c58-b065-c929276d1962; 2c7dd552e6012ffb8626c635806214073168ba60; pass; check _(id: [rec-afbcc32b-488d-4e70-b3b5-5970cadf7736](.artifacts/records/project__check-run/rec-afbcc32b-488d-4e70-b3b5-5970cadf7736.md))_

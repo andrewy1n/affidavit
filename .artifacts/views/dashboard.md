@@ -1,58 +1,35 @@
 # Project Dashboard
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:b5720b88704e71539fb8f8d86a24e50b62fd65657d654f3b7011f5ae8a887cc3
-
-## dashboard
-
-### Goal
-- **dashboard**: goal: A live terminal dashboard, openable from tmux, shows each effort's phases, tasks and what needs you, lets you move from any item to its related records, and works correctly in every state; scope: effort; kind: deliver _(id: [rec-39db526b-abbb-4753-b9ff-40b8c05662c2](.artifacts/records/project__active-goal/rec-39db526b-abbb-4753-b9ff-40b8c05662c2.md))_
+> Store state: sha256:3d2b500d25cd60088991a1f522fd20a3af9ea110c72ccc62ca9cd382a67f5a25
 
 ## evidence-layer
 
 ### Goal
 - **evidence-layer**: goal: affidavit is a standalone evidence tool: claims and oracles live in a committed manifest, verdicts come from re-executing frozen tests at a revision, and any orchestration layer gets gate answers only through aff verbs; scope: effort; kind: deliver _(id: [rec-f02f74d8-267c-451c-ab07-bf1c50f7edfa](.artifacts/records/project__active-goal/rec-f02f74d8-267c-451c-ab07-bf1c50f7edfa.md))_
 
+### Needs Human
+- **move-store-client**: claim: move-store-client closed done with a tdd pass that has no prior red check-run; needs: human _(id: [rec-7f5b80b9-cd8d-4376-9994-3553c0434f71](.artifacts/records/project__finding/rec-7f5b80b9-cd8d-4376-9994-3553c0434f71.md))_
+
 ### Done Recent
 - **amendment-sign**: title: Verify a signed amendment chain; phase: claims-manifest _(id: [rec-d8c4cd17-44c8-4efd-ad8b-24c52da89c6c](.artifacts/records/project__work-item/rec-d8c4cd17-44c8-4efd-ad8b-24c52da89c6c.md))_
+- **conventional-commits**: title: Use Conventional Commits subjects with a why body; phase: orchestration-split _(id: [rec-998c4bc6-95f0-4a38-9b21-dd1d947e1993](.artifacts/records/project__work-item/rec-998c4bc6-95f0-4a38-9b21-dd1d947e1993.md))_
+- **extract-store-binding**: title: Move store binding out of the dashboard import; phase: orchestration-split _(id: [rec-04625055-b283-47f1-97aa-7e5ad2004b43](.artifacts/records/project__work-item/rec-04625055-b283-47f1-97aa-7e5ad2004b43.md))_
+- **fix-agent-docs**: title: Describe affidavit as the evidence layer; phase: orchestration-split _(id: [rec-90043664-1077-4a97-8858-3f168d04ab3b](.artifacts/records/project__work-item/rec-90043664-1077-4a97-8858-3f168d04ab3b.md))_
+- **fix-orchestra-help-tests**: title: Test orchestra check and close-batch help; phase: standalone-aff _(id: [rec-221132c2-a9d2-4f5d-8db7-d44cfec35a21](.artifacts/records/project__work-item/rec-221132c2-a9d2-4f5d-8db7-d44cfec35a21.md))_
+- **fix-readme-check-phrase**: title: Fix README check-command assertion; phase: standalone-aff _(id: [rec-9ae85aee-f747-465c-a3c3-21d5728b9f3c](.artifacts/records/project__work-item/rec-9ae85aee-f747-465c-a3c3-21d5728b9f3c.md))_
 - **fix-verdict-exit**: title: Fix head-pass exit code and amendment CLI coverage; phase: claims-manifest _(id: [rec-b1880420-ed3e-4b36-b6b2-316c50620cd7](.artifacts/records/project__work-item/rec-b1880420-ed3e-4b36-b6b2-316c50620cd7.md))_
+- **fix-verdict-help-test**: title: Test aff verdict help; phase: standalone-aff _(id: [rec-da7d7f8e-9fff-478f-85e9-303570ee3d20](.artifacts/records/project__work-item/rec-da7d7f8e-9fff-478f-85e9-303570ee3d20.md))_
+- **move-effort-records**: title: Split effort records across the two stores; phase: orchestration-split _(id: [rec-03c499f7-8ec8-483c-82a9-18f966cc1de1](.artifacts/records/project__work-item/rec-03c499f7-8ec8-483c-82a9-18f966cc1de1.md))_
+- **move-store-client**: title: Move the store client into orchestra; phase: standalone-aff _(id: [rec-a22773f7-af99-4c50-90f7-449294324175](.artifacts/records/project__work-item/rec-a22773f7-af99-4c50-90f7-449294324175.md))_
+- **rewrite-project-field**: title: Rewrite the contract project field to orchestra; phase: orchestration-split _(id: [rec-a4718198-94c2-41c4-ad73-5b3fc39cb058](.artifacts/records/project__work-item/rec-a4718198-94c2-41c4-ad73-5b3fc39cb058.md))_
+- **scaffold-orchestra**: title: Create the orchestra repo from the moved tree; phase: orchestration-split _(id: [rec-d4b5838d-14e0-4eee-9f3d-d0273e6fb339](.artifacts/records/project__work-item/rec-d4b5838d-14e0-4eee-9f3d-d0273e6fb339.md))_
+- **skill-command-names**: title: Point skills at orchestra check and close-batch; phase: standalone-aff _(id: [rec-08048568-55b2-4cf4-99de-f01dd1639306](.artifacts/records/project__work-item/rec-08048568-55b2-4cf4-99de-f01dd1639306.md))_
+- **skill-evidence-boundary**: title: Send gate answers through aff verbs; phase: orchestration-split _(id: [rec-27242bed-2f6b-4e0c-865c-36092d8d6e83](.artifacts/records/project__work-item/rec-27242bed-2f6b-4e0c-865c-36092d8d6e83.md))_
+- **strip-aff-verbs**: title: Make aff verdict-only; phase: standalone-aff _(id: [rec-36843bfb-a7a0-4e0e-81f9-e18b8694a290](.artifacts/records/project__work-item/rec-36843bfb-a7a0-4e0e-81f9-e18b8694a290.md))_
+- **strip-affidavit**: title: Drop moved trees from the affidavit repo; phase: orchestration-split _(id: [rec-851008a4-f7b7-4f7e-8063-d089e8f80254](.artifacts/records/project__work-item/rec-851008a4-f7b7-4f7e-8063-d089e8f80254.md))_
 - **verdict-command**: title: Re-executing aff verdict command; phase: claims-manifest _(id: [rec-1447c5a7-9c2a-4e03-80c0-485278b03b72](.artifacts/records/project__work-item/rec-1447c5a7-9c2a-4e03-80c0-485278b03b72.md))_
 - **verdict-manifest**: title: Load manifest and allowlist from a git revision; phase: claims-manifest _(id: [rec-70c9c0b3-b5c3-4c33-9c43-b9eb68863318](.artifacts/records/project__work-item/rec-70c9c0b3-b5c3-4c33-9c43-b9eb68863318.md))_
 - **verify-claims-manifest**: title: Verify claims manifest and aff verdict; phase: claims-manifest _(id: [rec-736456cf-bc9b-4170-9934-01659056d015](.artifacts/records/project__work-item/rec-736456cf-bc9b-4170-9934-01659056d015.md))_
-
-## packaging
-
-### Goal
-- **packaging**: goal: se-workflow and adaptive-artifacts install as versioned plugins with declared dependencies, stable plugin-root paths, a single CLI surface for skills, and compatible version checks; scope: effort; kind: deliver _(id: [rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc](.artifacts/records/project__active-goal/rec-70873c29-d0a4-4d9a-94d9-aae8ca62cadc.md))_
-
-## session-analysis
-
-### Goal
-- **session-analysis**: goal: One command aggregates Claude Code transcripts and se-workflow artifact records across sessions, and a skill proposes evidence-backed edits to se-workflow and adaptive-artifacts.; scope: repo; kind: deliver _(id: [rec-ad4c0def-1d0c-4d40-b4d6-48d9d4b0c011](.artifacts/records/project__active-goal/rec-ad4c0def-1d0c-4d40-b4d6-48d9d4b0c011.md))_
-
-## test-suite-speed
-
-### Goal
-- **test-suite-speed**: goal: The full test suite runs much faster without adding CPU load; scope: effort; kind: incidental _(id: [rec-6d9a848c-b4a7-4bfd-ac0c-45187ea8180f](.artifacts/records/project__active-goal/rec-6d9a848c-b4a7-4bfd-ac0c-45187ea8180f.md))_
-
-## workflow-loop
-
-### Goal
-- **workflow-loop**: goal: The se-workflow loop maps efforts to product areas, closes finished efforts, runs phases in parallel, and settles the approach with the user before planning; scope: effort; kind: deliver _(id: [rec-65213e61-dda6-4955-95bc-8c9c4b289af1](.artifacts/records/project__active-goal/rec-65213e61-dda6-4955-95bc-8c9c4b289af1.md))_
-
-### Done Recent
-- **close-batch-store-verify**: title: Store-backed close-batch authority; phase: claim-witnesses _(id: [rec-01a6b691-a5e6-44b9-bebc-a803deaee379](.artifacts/records/project__work-item/rec-01a6b691-a5e6-44b9-bebc-a803deaee379.md))_
-- **contract-thin-criterion**: title: Optional criterion in contract and views; phase: atomic-claims _(id: [rec-4bc8526b-e998-45c6-9686-f60348c84083](.artifacts/records/project__work-item/rec-4bc8526b-e998-45c6-9686-f60348c84083.md))_
-- **fix-contract-record-types**: title: Remove duplicate record_types catalog; phase: oracle-witnesses _(id: [rec-b6bd1a23-8440-4711-b994-f1b5355a9dad](.artifacts/records/project__work-item/rec-b6bd1a23-8440-4711-b994-f1b5355a9dad.md))_
-- **fix-oracle-cli-tests**: title: Fix CLI oracle close-batch tests; phase: oracle-witnesses _(id: [rec-e6a5e761-21ba-4322-9550-f96299946314](.artifacts/records/project__work-item/rec-e6a5e761-21ba-4322-9550-f96299946314.md))_
-- **oracle-assertion-red**: title: Assertion-level red classifier and failing_node_ids; phase: oracle-witnesses _(id: [rec-d0f823f7-7d09-45c2-9a77-8175460e7b69](.artifacts/records/project__work-item/rec-d0f823f7-7d09-45c2-9a77-8175460e7b69.md))_
-- **oracle-contract**: title: Contract freeze fields and oracle-amendment; phase: oracle-witnesses _(id: [rec-f74676c4-be4e-4193-b42f-53e5f92f4ff4](.artifacts/records/project__work-item/rec-f74676c4-be4e-4193-b42f-53e5f92f4ff4.md))_
-- **oracle-freeze-close**: title: Close-batch freeze and assertion-red gates; phase: oracle-witnesses _(id: [rec-87a355af-bc30-4146-80d3-2bfffb9c83a5](.artifacts/records/project__work-item/rec-87a355af-bc30-4146-80d3-2bfffb9c83a5.md))_
-- **oracle-skills**: title: Skills for oracle author, freeze, amend, verify; phase: oracle-witnesses _(id: [rec-e1e19d8b-c4d0-4b1e-90e8-ef93bed2095a](.artifacts/records/project__work-item/rec-e1e19d8b-c4d0-4b1e-90e8-ef93bed2095a.md))_
-- **skills-claim-handoff**: title: Skills for atomic ids, thin acceptances, original briefs; phase: atomic-claims _(id: [rec-8e0250ec-cac0-4730-a184-9f131356e7ae](.artifacts/records/project__work-item/rec-8e0250ec-cac0-4730-a184-9f131356e7ae.md))_
-- **tests-brief-lock**: title: Lock original-text briefs and R4 view asserts in plan-trace; phase: atomic-claims _(id: [rec-e5240b75-f312-4008-b172-745914a1aff9](.artifacts/records/project__work-item/rec-e5240b75-f312-4008-b172-745914a1aff9.md))_
-- **tests-claim-chain**: title: Plan-trace and consistency tests for claim chain; phase: atomic-claims _(id: [rec-7700dcb2-7c0b-4a71-a711-c5e713586f5c](.artifacts/records/project__work-item/rec-7700dcb2-7c0b-4a71-a711-c5e713586f5c.md))_
-- **verify-atomic-claims**: title: Verify atomic claims and thin acceptances; phase: atomic-claims _(id: [rec-6f1053ba-d841-4c2e-9837-6af07ede98ba](.artifacts/records/project__work-item/rec-6f1053ba-d841-4c2e-9837-6af07ede98ba.md))_
-- **verify-claim-witnesses**: title: Verify Honest close foundation; phase: claim-witnesses _(id: [rec-9fc6c2f1-ba6b-43e3-abcb-17f081a77c40](.artifacts/records/project__work-item/rec-9fc6c2f1-ba6b-43e3-abcb-17f081a77c40.md))_
-- **verify-oracle-witnesses**: title: Verify oracle author freeze and amendments; phase: oracle-witnesses _(id: [rec-c6c72581-a9d4-4cdc-a885-fd434f090791](.artifacts/records/project__work-item/rec-c6c72581-a9d4-4cdc-a885-fd434f090791.md))_
-- **verify-path-test-gaps**: title: Worktree/--cwd and check edge tests; phase: claim-witnesses _(id: [rec-3e04eb4c-4227-42eb-945d-fb5861d5bfc1](.artifacts/records/project__work-item/rec-3e04eb4c-4227-42eb-945d-fb5861d5bfc1.md))_
+- **verify-orchestration-split**: title: Verify the orchestration split; phase: orchestration-split _(id: [rec-706dbada-e2e7-4863-835b-d1ce21384acd](.artifacts/records/project__work-item/rec-706dbada-e2e7-4863-835b-d1ce21384acd.md))_
+- **verify-standalone-aff**: title: Verify aff stands alone from the workflow store; phase: standalone-aff _(id: [rec-29cc7cc5-b85f-4280-8fcc-2e7346d38db1](.artifacts/records/project__work-item/rec-29cc7cc5-b85f-4280-8fcc-2e7346d38db1.md))_

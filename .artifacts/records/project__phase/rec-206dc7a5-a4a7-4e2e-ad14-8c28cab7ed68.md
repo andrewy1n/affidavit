@@ -6,13 +6,13 @@
   "lifecycle_state": "planned",
   "payload": {
     "effort": "evidence-layer",
-    "ordinal": 4,
-    "title": "Phase-end evidence report"
+    "ordinal": 10,
+    "title": "aff audit: changed code no witness checks"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-17T04:46:20+00:00",
+  "recorded_at": "2026-10-17T22:58:47+00:00",
   "relationships": {},
-  "revision": "sha256:7dc03d2cabe51770dbeb6bcb387c6f56ace857e05665ab8c185797936f9c1f5d",
+  "revision": "sha256:7f1fb17768aaecfd5ed1de1dcd51a2c4004c09c1271e6813fb14eaf9309975f2",
   "stewardship": {
     "steward": "agent"
   },
@@ -22,12 +22,12 @@
 
 ## Problem
 
-Code can change in ways no requirement asked for, and tests can be blind to hunks they execute. The phase-end reviewer agent is not the desired gate.
+Tests can be blind to code they execute. A claim's witness can pass at head while a changed block, or a small bug in it, goes unnoticed.
 
 ## Approach
 
-not yet scoped — discuss when this phase is current. Direction: advisory phase-end report (hunk revert, capped LLM mutants, differential where pure), survivors to oracle author, unexplained changes as Needs-you.
+not yet scoped — discuss when this phase is current. Direction: `aff audit --base --head` splits the diff into blocks (skipping tests and prose), reverts each one and reruns the frozen claim tests through `run_tests`, labels it noticed, not noticed, or inconclusive, then plants mutants only in noticed blocks. An LLM or a mutation tool may propose mutants; only a test run judges them. Output is JSON for CI, advisory. Orchestra sends survivors to its oracle author.
 
 ## Exit criteria
 
-Decide at plan-phase. At minimum: phase end produces an evidence report with unnoticed hunks and unexplained behavior deltas, advisory (does not block Landing).
+Decide at plan-phase. At minimum: on the `check-runner` range the audit reports the unnoticed `build_batch(request, cwd=args.cwd)` block and at least one surviving mutant from `spikes/llm-mutants/findings.md`, and never reports a test file block.
