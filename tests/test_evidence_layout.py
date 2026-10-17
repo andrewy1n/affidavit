@@ -44,3 +44,21 @@ def test_protocol_docs_describe_the_evidence_layer() -> None:
         assert "evidence layer" in lowered or "evidence-layer" in lowered, name
         for needle in _REMOVED_INSTALL_PATHS:
             assert needle not in text, f"{name} still cites {needle}"
+
+
+_STORE_TOKENS = (
+    "project:",
+    "SE_WORKFLOW_STORE",
+    "store-binding.json",
+    "adaptive-artifacts",
+)
+
+
+def test_no_store_tokens() -> None:
+    hits: list[str] = []
+    for path in sorted((REPO_ROOT / "affidavit").rglob("*.py")):
+        text = path.read_text(encoding="utf-8")
+        for token in _STORE_TOKENS:
+            if token in text:
+                hits.append(f"{path.relative_to(REPO_ROOT)} contains {token}")
+    assert hits == []
