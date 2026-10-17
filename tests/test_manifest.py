@@ -39,8 +39,16 @@ def _sha256(data: bytes) -> str:
     return "sha256:" + hashlib.sha256(data).hexdigest()
 
 
-def _manifest_doc(oracle: bytes, *, claim_id: str = "claim-widget") -> dict:
-    return {
+_OMIT = object()
+
+
+def _manifest_doc(
+    oracle: bytes,
+    *,
+    claim_id: str = "claim-widget",
+    runner: object = _OMIT,
+) -> dict:
+    doc = {
         "claims": [
             {
                 "id": claim_id,
@@ -57,6 +65,9 @@ def _manifest_doc(oracle: bytes, *, claim_id: str = "claim-widget") -> dict:
             }
         ],
     }
+    if runner is not _OMIT:
+        doc["runner"] = runner
+    return doc
 
 
 def _init(tmp_path: Path) -> Path:
@@ -69,11 +80,17 @@ def _init(tmp_path: Path) -> Path:
     return root
 
 
-def _write_tree(root: Path, oracle: bytes, allowlist: bytes, claim_id: str = "claim-widget") -> None:
+def _write_tree(
+    root: Path,
+    oracle: bytes,
+    allowlist: bytes,
+    claim_id: str = "claim-widget",
+    runner: object = _OMIT,
+) -> None:
     affidavit = root / ".affidavit"
     affidavit.mkdir(exist_ok=True)
     (affidavit / "manifest.json").write_text(
-        json.dumps(_manifest_doc(oracle, claim_id=claim_id), indent=2) + "\n"
+        json.dumps(_manifest_doc(oracle, claim_id=claim_id, runner=runner), indent=2) + "\n"
     )
     (affidavit / "allowed_signers").write_bytes(allowlist)
     oracle_path = root / ORACLE_REL
@@ -194,6 +211,55 @@ def test_missing_manifest_raises(tmp_path: Path) -> None:
     root = _init(tmp_path)
     (root / "README").write_text("x\n")
     revision = _commit(root, "no manifest")
+    with pytest.raises(ManifestError):
+        load_manifest(root, revision)
+
+
+def test_manifest_runner_absent_is_pytest_template(repo: dict[str, Path | str]) -> None:
+    from affidavit.manifest import DEFAULT_RUNNER
+
+    root = repo["root"]
+    assert isinstance(root, Path)
+    loaded = load_manifest(root, str(repo["first"]))
+    shipped = (
+        "python3",
+        "-m",
+        "pytest",
+        "-o",
+        "junit_family=xunit1",
+        "{tests}",
+        "--junitxml={report}",
+    )
+    assert DEFAULT_RUNNER == shipped
+    assert loaded.runner == DEFAULT_RUNNER
+
+    explicit = ["python3", "-m", "pytest", "{tests}", "--junitxml={report}"]
+    _write_tree(root, ORACLE_V1, ALLOWLIST_V1, runner=explicit)
+    revision = _commit(root, "explicit runner")
+    assert load_manifest(root, revision).runner == tuple(explicit)
+
+
+@pytest.mark.parametrize(
+    "runner",
+    [
+        pytest.param("python3", id="non-list"),
+        pytest.param([], id="empty"),
+        pytest.param(
+            ["python3", 1, "{tests}", "--junitxml={report}"],
+            id="non-string",
+        ),
+        pytest.param(
+            ["python3", "prefix{tests}", "--junitxml={report}"],
+            id="tests-glued",
+        ),
+        pytest.param(["python3", "--junitxml={report}"], id="omits-tests"),
+        pytest.param(["python3", "{tests}"], id="omits-report"),
+    ],
+)
+def test_manifest_runner_invalid_shape(tmp_path: Path, runner: object) -> None:
+    root = _init(tmp_path)
+    _write_tree(root, ORACLE_V1, ALLOWLIST_V1, runner=runner)
+    revision = _commit(root, "invalid runner")
     with pytest.raises(ManifestError):
         load_manifest(root, revision)
 
