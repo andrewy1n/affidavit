@@ -1,7 +1,7 @@
 # Project Dashboard
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:2875629a5c54f5d1db1c00bf828b84edd926d77286368e9b1d4a33e4cb930f8b
+> Store state: sha256:b5720b88704e71539fb8f8d86a24e50b62fd65657d654f3b7011f5ae8a887cc3
 
 ## dashboard
 
@@ -12,12 +12,6 @@
 
 ### Goal
 - **evidence-layer**: goal: affidavit is a standalone evidence tool: claims and oracles live in a committed manifest, verdicts come from re-executing frozen tests at a revision, and any orchestration layer gets gate answers only through aff verbs; scope: effort; kind: deliver _(id: [rec-f02f74d8-267c-451c-ab07-bf1c50f7edfa](.artifacts/records/project__active-goal/rec-f02f74d8-267c-451c-ab07-bf1c50f7edfa.md))_
-
-### Blocking Question
-- **evidence-layer**: blocking: True; scope: orchestration-split: name of the new orchestration repo and its plugin _(id: [rec-5cd01dec-9ebf-421e-b950-7093804415fa](.artifacts/records/project__continuity-question/rec-5cd01dec-9ebf-421e-b950-7093804415fa.md))_
-
-### Open Question
-- **evidence-layer**: blocking: False; scope: orchestration-split: existing orchestration records _(id: [rec-6e2d8ce1-c903-489b-87c8-4ae142041312](.artifacts/records/project__continuity-question/rec-6e2d8ce1-c903-489b-87c8-4ae142041312.md))_
 
 ### Done Recent
 - **amendment-sign**: title: Verify a signed amendment chain; phase: claims-manifest _(id: [rec-d8c4cd17-44c8-4efd-ad8b-24c52da89c6c](.artifacts/records/project__work-item/rec-d8c4cd17-44c8-4efd-ad8b-24c52da89c6c.md))_

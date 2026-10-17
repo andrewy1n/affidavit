@@ -1,0 +1,29 @@
+---
+{
+  "base_kind": "claim",
+  "epistemic_status": "asserted",
+  "id": "rec-167feb75-1bd7-4db4-ad7c-05b50da84dae",
+  "identity": "unknown",
+  "lifecycle_state": "active",
+  "payload": {
+    "criterion": "execute-phase and verify-work run aff verdict for a claim in the manifest and treat a non-zero exit as not done",
+    "effort": "evidence-layer",
+    "method": "tdd",
+    "phase": "orchestration-split",
+    "requirement": "R6",
+    "verify_command": "cd ~/orchestra && python3 -m pytest tests/test_skill_evidence_boundary.py -q -k verdict"
+  },
+  "record_type": "project:acceptance",
+  "recorded_at": "2026-10-17T07:38:12+00:00",
+  "relationships": {},
+  "revision": "sha256:01ff38e7fbe52749883f5712281c66de74f164c1f66e7110b3ca6747ac1543d8",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "verify-orchestration-split-verdict",
+  "time": {
+    "as_of": "2026-10-17T07:38:12+00:00"
+  }
+}
+---
+

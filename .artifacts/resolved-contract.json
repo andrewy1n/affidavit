@@ -1,13 +1,13 @@
 {
   "format": "adaptive-artifacts/resolved-contract@0.3.0",
-  "project": "affidavit",
+  "project": "orchestra",
   "resolution": {
     "catalog_version": "0.7.0",
     "project_design_format": "0.3.0",
     "resolved_contract_format": "0.3.0",
     "traits_version": "0.4.0",
     "backends_version": "0.4.0",
-    "design_digest": "sha256:7459a846eba5e64676b280df0bc3d07c3b329903a4718c3b585659db5653a081",
+    "design_digest": "sha256:844bb4d486169a9aa976621fb87718c05426bfae8240ee6cd83fc43e3f5ca163",
     "source_lock": {
       "catalog_version": "0.7.0",
       "catalog": "sha256:d7f0f1d05f8c67f638c0ff1b4ad738161f43c1ec970729709f8f2afc1d8c1eb1",
