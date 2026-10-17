@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:5a5be23d459147f8d81bb2f06e76afd52fac5c9a6edd39fdfcda74c4793e6697
+> Store state: sha256:2482d79eea9ba388d33a9cd30f502b09272ab315f9a2b3501cedd6b783b15a31
 
 ## aa-installable-package
 
@@ -87,6 +87,11 @@
 
 ### Acceptance
 - **ag-tool-skill-rollup**: A fixture yields exact per-tool calls, errors, error rate, retries and session counts, and per-skill invocation and session counts, in sorted order.; tdd; session-analysis; python3 -m pytest -q tests/test_tool_skill_rollup.py _(id: [rec-f283ff9c-78e6-439b-ae65-90ef88690304](.artifacts/records/project__acceptance/rec-f283ff9c-78e6-439b-ae65-90ef88690304.md))_
+
+## amendment-sign
+
+### Acceptance
+- **amendment-sign**: A hash or test-id change is authorized only by a signature chain that verifies under the base allowlist; a changed allowlist, a bad signature, and a missing step are refused; tdd; evidence-layer; python3 -m pytest tests/test_amendment.py -q _(id: [rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43](.artifacts/records/project__acceptance/rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43.md))_
 
 ## approval-confirm-ux
 
@@ -544,6 +549,11 @@
 ### Acceptance
 - **estimate-table-suffix**: test_estimate_view_title_suffix fails before the change and passes after: the task title shows size, minutes, and executor before a waits-on note; a missing size is omitted; 0 shows as 0m; a missing executor shows as subagent.; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_app.py -q -k estimate_view_title_suffix _(id: [rec-c823c876-890c-4582-b8ac-0b8e804b6de6](.artifacts/records/project__acceptance/rec-c823c876-890c-4582-b8ac-0b8e804b6de6.md))_
 
+## evidence-layer
+
+### Position
+- **evidence-layer**: claims-manifest done; next up: orchestration-split; effort _(id: [rec-7b0f3476-ba6d-4aa5-b6ea-e9a8b73b4732](.artifacts/records/project__current-position/rec-7b0f3476-ba6d-4aa5-b6ea-e9a8b73b4732.md))_
+
 ## evidence-model
 
 ### Acceptance
@@ -701,6 +711,11 @@
 
 ### Acceptance
 - **fix-test_verify_authority**: Cleared: test_skill_close_request_references_check_run_id_for_runner_methods; test_close_batch_does_not_emit_check_run_create_for_runner_methods; tdd; workflow-loop; uv run --with pytest python -m pytest tests/test_verify_authority.py -q -k 'skill_close_request_references_check_run_id or close_batch_does_not_emit_check_run_create' _(id: [rec-e09c9aac-f876-43da-9856-41ed79b75404](.artifacts/records/project__acceptance/rec-e09c9aac-f876-43da-9856-41ed79b75404.md))_
+
+## fix-verdict-exit
+
+### Acceptance
+- **fix-verdict-exit**: aff verdict fails a claim when pytest at --at exits non-zero, accepts a verified signed amendment, and rejects a hash or test-id change with no covering amendment; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "signed_amendment or head_failure or missing_amendment" _(id: [rec-cd3fb645-b979-440d-ad25-158586f29fe1](.artifacts/records/project__acceptance/rec-cd3fb645-b979-440d-ad25-158586f29fe1.md))_
 
 ## fix-verify-authority-close-batch-import
 
@@ -1209,10 +1224,30 @@ print("phase checks only")
 ### Finding
 - **review-phase-gate-contract-spec-gap**: spec-gap on phase-gate-contract: live .artifacts/project-design.json not synced with this-repo suite pin; worktree .artifacts/project-design.json lacks phase_gate; runtime falls through to contract/; live design carries this-repo full+advisory (or documented equivalent) and resolve/pin is current; reviewer re-run passes; none _(id: [rec-56c5d5cb-3545-4a20-83d8-8e9fb3aa5ca3](.artifacts/records/project__finding/rec-56c5d5cb-3545-4a20-83d8-8e9fb3aa5ca3.md))_
 
+## review-phase-missing-test-amendment
+
+### Finding
+- **review-phase-missing-test-amendment**: missing-test on phase: aff verdict must exit 0 when a test-id or hash delta is covered by a verified amendment and the allowlist is unchanged; tests/test_verdict.py has no subprocess test where a valid signed amendment makes an oracle or hash change pass; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-0fcac021-f6ba-4d23-802e-999a1f6e2d1d](.artifacts/records/project__finding/rec-0fcac021-f6ba-4d23-802e-999a1f6e2d1d.md))_
+
+## review-phase-missing-test-head-fail
+
+### Finding
+- **review-phase-missing-test-head-fail**: missing-test on phase: aff verdict must exit non-zero when oracle tests fail at --at; tests/test_verdict.py does not assert exit 1 and reason tests failed for a failing head run; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-a708259b-4d9b-466b-97b3-33c8b2b345c2](.artifacts/records/project__finding/rec-a708259b-4d9b-466b-97b3-33c8b2b345c2.md))_
+
+## review-phase-missing-test-missing-step
+
+### Finding
+- **review-phase-missing-test-missing-step**: missing-test on phase: aff verdict must exit non-zero when test ids or hashes differ without a covering amendment chain; missing step is only covered in tests/test_amendment.py; tests/test_verdict.py has no CLI case for a manifest delta with no amendment; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-f5ae5085-839d-47e7-ac68-ea6ef1cb6107](.artifacts/records/project__finding/rec-f5ae5085-839d-47e7-ac68-ea6ef1cb6107.md))_
+
 ## review-tests-brief-lock
 
 ### Finding
 - **review-tests-brief-lock**: missing-test on tests-claim-chain: R5 original-text brief rules not locked by plan-trace; execute-phase skill updated but no test asserts quote/no-paraphrase wording; fix lands asserting execute-phase original-text brief rules and reviewer re-run passes; none _(id: [rec-e480f9cb-a79e-4c72-9feb-ad15b790c214](.artifacts/records/project__finding/rec-e480f9cb-a79e-4c72-9feb-ad15b790c214.md))_
+
+## review-verdict-command-behavior-bug
+
+### Finding
+- **review-verdict-command-behavior-bug**: behavior-bug on verdict-command: R2 requires pytest exit code 0 at --at for each claim's oracle tests; _head_passed returns true when exit_code != 0 if no FAILED/ERROR line matches the claim's node ids; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-76d3d72d-c672-4634-8aea-560a2d2d4e7e](.artifacts/records/project__finding/rec-76d3d72d-c672-4634-8aea-560a2d2d4e7e.md))_
 
 ## reviewer-brief
 
@@ -1475,6 +1510,11 @@ print("phase checks only")
 ### Finding
 - **suite-advisory-claim-witnesses**: advisory suite fail for claim-witnesses-suite; exit_code=1 failing_node_ids=[tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub]; suite check-run passes at phase head, or human clears; none _(id: [rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf](.artifacts/records/project__finding/rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf.md))_
 
+## suite-advisory-claims-manifest
+
+### Finding
+- **suite-advisory-claims-manifest**: advisory suite fail for claims-manifest-suite; exit_code 1; failing node tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub; suite check-run passes at phase head, or human clears; none _(id: [rec-43ce266c-c2ac-4895-99e2-e039eac06a4f](.artifacts/records/project__finding/rec-43ce266c-c2ac-4895-99e2-e039eac06a4f.md))_
+
 ## suite-advisory-oracle-witnesses
 
 ### Finding
@@ -1686,6 +1726,26 @@ print("phase checks only")
 ### Acceptance
 - **unsigned-check-label**: An unsigned check reads as its acceptance criterion and task slug, never a rec- id, with a fallback when the acceptance is missing; the test fails before the fix; tdd; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py -q -k unsigned _(id: [rec-403febb3-cbe5-474d-8413-5687934c29d2](.artifacts/records/project__acceptance/rec-403febb3-cbe5-474d-8413-5687934c29d2.md))_
 
+## verdict-command
+
+### Acceptance
+- **verdict-command**: bin/aff verdict exits 0 only when oracle hashes match, the base pytest failure is assertion-level, and the tests pass at head; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or not_assertion" _(id: [rec-39a10c5a-3bf3-4872-8e98-cb5e1082d5fb](.artifacts/records/project__acceptance/rec-39a10c5a-3bf3-4872-8e98-cb5e1082d5fb.md))_
+
+## verdict-command-cli
+
+### Acceptance
+- **verdict-command-cli**: bin/aff verdict subprocess tests refuse a bad amendment signature and an allowlist change, and pass with --cwd pointed at a phase worktree; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "bad_signature or allowlist or cwd_phase" _(id: [rec-7839468b-6ae7-4fe1-a2f7-9c2fcef70187](.artifacts/records/project__acceptance/rec-7839468b-6ae7-4fe1-a2f7-9c2fcef70187.md))_
+
+## verdict-command-store
+
+### Acceptance
+- **verdict-command-store**: A forged project:check-run under .artifacts does not change a passing or a failing bin/aff verdict; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k forged_check_run _(id: [rec-ad7115bc-82ff-4215-a410-0883b5434294](.artifacts/records/project__acceptance/rec-ad7115bc-82ff-4215-a410-0883b5434294.md))_
+
+## verdict-manifest
+
+### Acceptance
+- **verdict-manifest**: git show of a revision yields the manifest claims, the allowlist bytes, and oracle file hashes; a dirty worktree and a non-commit revision do not; tdd; evidence-layer; python3 -m pytest tests/test_manifest.py -q _(id: [rec-a5646067-6c51-44b0-8302-bfae12644013](.artifacts/records/project__acceptance/rec-a5646067-6c51-44b0-8302-bfae12644013.md))_
+
 ## verify-atomic-claims
 
 ### Acceptance
@@ -1780,6 +1840,21 @@ print("phase checks only")
 
 ### Acceptance
 - **verify-claim-witnesses-worktree**: Worktree/--cwd tests cover aff check and close-batch with store on primary checkout; check; workflow-loop; python3 -m pytest tests/test_affidavit_check.py tests/test_close_batch.py -k 'worktree or cwd_primary or store_cwd' -q _(id: [rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3](.artifacts/records/project__acceptance/rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3.md))_
+
+## verify-claims-manifest
+
+### Acceptance
+- **verify-claims-manifest**: aff verdict exits 0 only when manifest hashes match the tree at --at, the oracle tests fail at --base on an assertion, and they pass at --at; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or not_assertion" _(id: [rec-f25d51ef-6c72-4a13-b9d6-4e9ec7a177b3](.artifacts/records/project__acceptance/rec-f25d51ef-6c72-4a13-b9d6-4e9ec7a177b3.md))_
+
+## verify-claims-manifest-forge
+
+### Acceptance
+- **verify-claims-manifest-forge**: A forged stored check-run does not change the verdict; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k forged_check_run _(id: [rec-1aaa8c5e-adec-4df2-bc30-d09600c12903](.artifacts/records/project__acceptance/rec-1aaa8c5e-adec-4df2-bc30-d09600c12903.md))_
+
+## verify-claims-manifest-suite
+
+### Acceptance
+- **verify-claims-manifest-suite**: CLI subprocess tests cover the pass, a hash mismatch, a missing or invalid amendment signature, an allowlist change, and a --cwd pointed at a phase worktree other than the store checkout; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or bad_signature or allowlist or cwd_phase" _(id: [rec-27b93db5-292e-4864-8bc9-ac743955d861](.artifacts/records/project__acceptance/rec-27b93db5-292e-4864-8bc9-ac743955d861.md))_
 
 ## verify-dashboard-actions-phase
 

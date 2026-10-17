@@ -1,0 +1,32 @@
+---
+{
+  "base_kind": "claim",
+  "epistemic_status": "asserted",
+  "id": "rec-3e145d08-fa21-4a0d-a4bc-3f1eac902ad2",
+  "identity": "unknown",
+  "lifecycle_state": "active",
+  "payload": {
+    "effort": "evidence-layer",
+    "phase": "claims-manifest",
+    "position": "closed",
+    "scope": "phase",
+    "status": "closed"
+  },
+  "record_type": "project:current-position",
+  "recorded_at": "2026-10-17T05:50:34+00:00",
+  "relationships": {
+    "supersedes": [
+      "rec-5c173c5d-e4bf-4d59-b1bc-33801832a218"
+    ]
+  },
+  "revision": "sha256:c1c3c4cb5e1c522346f43fcca1ea41bea31eb30027f6cd46419846c65fd8a57b",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "claims-manifest",
+  "time": {
+    "as_of": "2026-10-17T05:50:34+00:00"
+  }
+}
+---
+

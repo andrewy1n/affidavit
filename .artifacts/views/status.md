@@ -1,7 +1,16 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:194e8d4a8e6325bdd36663853836b0180c4e7f7f7f8654d59a8cace8563e2bf2
+> Store state: sha256:dd95f0aaec46f7bf334ebbe618676fcb7496d3b67020ea5fef6b38d4eadc885b
+
+## claims-manifest
+
+### Work
+- **amendment-sign**: Verify a signed amendment chain; claims-manifest; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 3 pass / 1 fail _(id: [rec-d8c4cd17-44c8-4efd-ad8b-24c52da89c6c](.artifacts/records/project__work-item/rec-d8c4cd17-44c8-4efd-ad8b-24c52da89c6c.md))_
+- **fix-verdict-exit**: Fix head-pass exit code and amendment CLI coverage; claims-manifest; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-b1880420-ed3e-4b36-b6b2-316c50620cd7](.artifacts/records/project__work-item/rec-b1880420-ed3e-4b36-b6b2-316c50620cd7.md))_
+- **verdict-command**: Re-executing aff verdict command; claims-manifest; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 6 pass / 4 fail _(id: [rec-1447c5a7-9c2a-4e03-80c0-485278b03b72](.artifacts/records/project__work-item/rec-1447c5a7-9c2a-4e03-80c0-485278b03b72.md))_
+- **verdict-manifest**: Load manifest and allowlist from a git revision; claims-manifest; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 3 pass / 1 fail _(id: [rec-70c9c0b3-b5c3-4c33-9c43-b9eb68863318](.artifacts/records/project__work-item/rec-70c9c0b3-b5c3-4c33-9c43-b9eb68863318.md))_
+- **verify-claims-manifest**: Verify claims manifest and aff verdict; claims-manifest; deliver; evidence-layer; state: done; ready: True; wave: 3; criteria: 6 pass / 3 fail _(id: [rec-736456cf-bc9b-4170-9934-01659056d015](.artifacts/records/project__work-item/rec-736456cf-bc9b-4170-9934-01659056d015.md))_
 
 ## dashboard-view
 
@@ -350,12 +359,28 @@
 - **suite-engine**: Suite runner + execute-phase policy; verification-policy; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 6 pass / 0 fail _(id: [rec-2a54cba9-557d-4084-a868-1445f625ad15](.artifacts/records/project__work-item/rec-2a54cba9-557d-4084-a868-1445f625ad15.md))_
 - **verify-verification-policy**: Verify verification-policy; verification-policy; deliver; workflow-loop; state: done; ready: True; wave: 4; criteria: 7 pass / 0 fail _(id: [rec-01a1fc51-76a5-4752-bee0-0474d8ee37dd](.artifacts/records/project__work-item/rec-01a1fc51-76a5-4752-bee0-0474d8ee37dd.md))_
 
+## claim-witnesses
+
+### Work
+- **close-batch-store-verify**: Store-backed close-batch authority; claim-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 8 pass / 13 fail _(id: [rec-01a6b691-a5e6-44b9-bebc-a803deaee379](.artifacts/records/project__work-item/rec-01a6b691-a5e6-44b9-bebc-a803deaee379.md))_
+- **verify-claim-witnesses**: Verify Honest close foundation; claim-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 3; criteria: 6 pass / 1 fail _(id: [rec-9fc6c2f1-ba6b-43e3-abcb-17f081a77c40](.artifacts/records/project__work-item/rec-9fc6c2f1-ba6b-43e3-abcb-17f081a77c40.md))_
+- **verify-path-test-gaps**: Worktree/--cwd and check edge tests; claim-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 4 pass / 4 fail _(id: [rec-3e04eb4c-4227-42eb-945d-fb5861d5bfc1](.artifacts/records/project__work-item/rec-3e04eb4c-4227-42eb-945d-fb5861d5bfc1.md))_
+
 ## run-facts
 
 ### Work
 - **estimate-contract**: Allow size and estimate_minutes on work-items; run-facts; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 2 pass / 2 fail _(id: [rec-06631dac-f66b-4c00-bc9f-f0fcd3d9b071](.artifacts/records/project__work-item/rec-06631dac-f66b-4c00-bc9f-f0fcd3d9b071.md))_
 - **estimate-skill**: Require plan-phase to record size and estimate_minutes; run-facts; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 3 pass / 3 fail _(id: [rec-035c4162-7907-4319-9655-154cdbbe7062](.artifacts/records/project__work-item/rec-035c4162-7907-4319-9655-154cdbbe7062.md))_
 - **verify-run-facts**: Verify run-facts; run-facts; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 5 pass / 1 fail _(id: [rec-1644993c-06a8-4178-9ca9-ea39b522dce4](.artifacts/records/project__work-item/rec-1644993c-06a8-4178-9ca9-ea39b522dce4.md))_
+
+## atomic-claims
+
+### Work
+- **contract-thin-criterion**: Optional criterion in contract and views; atomic-claims; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 3 pass / 0 fail _(id: [rec-4bc8526b-e998-45c6-9686-f60348c84083](.artifacts/records/project__work-item/rec-4bc8526b-e998-45c6-9686-f60348c84083.md))_
+- **skills-claim-handoff**: Skills for atomic ids, thin acceptances, original briefs; atomic-claims; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 12 pass / 4 fail _(id: [rec-8e0250ec-cac0-4730-a184-9f131356e7ae](.artifacts/records/project__work-item/rec-8e0250ec-cac0-4730-a184-9f131356e7ae.md))_
+- **tests-brief-lock**: Lock original-text briefs and R4 view asserts in plan-trace; atomic-claims; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 7 pass / 0 fail _(id: [rec-e5240b75-f312-4008-b172-745914a1aff9](.artifacts/records/project__work-item/rec-e5240b75-f312-4008-b172-745914a1aff9.md))_
+- **tests-claim-chain**: Plan-trace and consistency tests for claim chain; atomic-claims; deliver; workflow-loop; state: done; ready: True; wave: 3; criteria: 3 pass / 2 fail _(id: [rec-7700dcb2-7c0b-4a71-a711-c5e713586f5c](.artifacts/records/project__work-item/rec-7700dcb2-7c0b-4a71-a711-c5e713586f5c.md))_
+- **verify-atomic-claims**: Verify atomic claims and thin acceptances; atomic-claims; deliver; workflow-loop; state: done; ready: True; wave: 4; criteria: 12 pass / 1 fail _(id: [rec-6f1053ba-d841-4c2e-9837-6af07ede98ba](.artifacts/records/project__work-item/rec-6f1053ba-d841-4c2e-9837-6af07ede98ba.md))_
 
 ## estimate-view
 
@@ -364,6 +389,17 @@
 - **estimate-model**: Load size and estimate minutes into the dashboard model; estimate-view; deliver; dashboard; state: done; ready: True; wave: 1; criteria: 5 pass / 5 fail _(id: [rec-0459fa1d-222c-4107-8749-78e7268070bc](.artifacts/records/project__work-item/rec-0459fa1d-222c-4107-8749-78e7268070bc.md))_
 - **estimate-table**: Show estimates on the phase header and task title; estimate-view; deliver; dashboard; state: done; ready: True; wave: 2; criteria: 5 pass / 5 fail _(id: [rec-da0b731d-b175-40af-83ed-117bd79bfc74](.artifacts/records/project__work-item/rec-da0b731d-b175-40af-83ed-117bd79bfc74.md))_
 - **verify-estimate-view**: Verify size and time estimates on the task table; estimate-view; deliver; dashboard; state: done; ready: True; wave: 4; criteria: 7 pass / 1 fail _(id: [rec-5a9871bf-f6d1-4c04-8724-09143892ca29](.artifacts/records/project__work-item/rec-5a9871bf-f6d1-4c04-8724-09143892ca29.md))_
+
+## oracle-witnesses
+
+### Work
+- **fix-contract-record-types**: Remove duplicate record_types catalog; oracle-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 1 pass / 0 fail _(id: [rec-b6bd1a23-8440-4711-b994-f1b5355a9dad](.artifacts/records/project__work-item/rec-b6bd1a23-8440-4711-b994-f1b5355a9dad.md))_
+- **fix-oracle-cli-tests**: Fix CLI oracle close-batch tests; oracle-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 2 pass / 1 fail _(id: [rec-e6a5e761-21ba-4322-9550-f96299946314](.artifacts/records/project__work-item/rec-e6a5e761-21ba-4322-9550-f96299946314.md))_
+- **oracle-assertion-red**: Assertion-level red classifier and failing_node_ids; oracle-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 3 pass / 1 fail _(id: [rec-d0f823f7-7d09-45c2-9a77-8175460e7b69](.artifacts/records/project__work-item/rec-d0f823f7-7d09-45c2-9a77-8175460e7b69.md))_
+- **oracle-contract**: Contract freeze fields and oracle-amendment; oracle-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 1; criteria: 6 pass / 0 fail _(id: [rec-f74676c4-be4e-4193-b42f-53e5f92f4ff4](.artifacts/records/project__work-item/rec-f74676c4-be4e-4193-b42f-53e5f92f4ff4.md))_
+- **oracle-freeze-close**: Close-batch freeze and assertion-red gates; oracle-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 4 pass / 3 fail _(id: [rec-87a355af-bc30-4146-80d3-2bfffb9c83a5](.artifacts/records/project__work-item/rec-87a355af-bc30-4146-80d3-2bfffb9c83a5.md))_
+- **oracle-skills**: Skills for oracle author, freeze, amend, verify; oracle-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 2; criteria: 8 pass / 0 fail _(id: [rec-e1e19d8b-c4d0-4b1e-90e8-ef93bed2095a](.artifacts/records/project__work-item/rec-e1e19d8b-c4d0-4b1e-90e8-ef93bed2095a.md))_
+- **verify-oracle-witnesses**: Verify oracle author freeze and amendments; oracle-witnesses; deliver; workflow-loop; state: done; ready: True; wave: 3; criteria: 8 pass / 1 fail _(id: [rec-c6c72581-a9d4-4cdc-a885-fd434f090791](.artifacts/records/project__work-item/rec-c6c72581-a9d4-4cdc-a885-fd434f090791.md))_
 
 ## phase-selector
 

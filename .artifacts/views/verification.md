@@ -1,7 +1,7 @@
 # Project Verification
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:012acf90e1b13a05a96544c19ea399988bac54bf09387b9f9a8819ca2e10dd53
+> Store state: sha256:71779c953f2b518126a10a31aacd72a09d2a3a3e8b344f550dfa01617dd738f7
 
 ## aa-installable-package
 
@@ -126,6 +126,17 @@
 ### Check
 - **ag-tool-skill-rollup**: rec-f283ff9c-78e6-439b-ae65-90ef88690304; dirty; pass; tdd _(id: [rec-d83cb7ea-fdf5-43ff-963d-6a25570a2de5](.artifacts/records/project__check-run/rec-d83cb7ea-fdf5-43ff-963d-6a25570a2de5.md))_
 
+## amendment-sign
+
+### Acceptance
+- **amendment-sign**: A hash or test-id change is authorized only by a signature chain that verifies under the base allowlist; a changed allowlist, a bad signature, and a missing step are refused; tdd; evidence-layer; python3 -m pytest tests/test_amendment.py -q _(id: [rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43](.artifacts/records/project__acceptance/rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43.md))_
+
+### Check
+- **amendment-sign**: rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-2c20c34a-b30d-443d-ba55-2c46584f8e93](.artifacts/records/project__check-run/rec-2c20c34a-b30d-443d-ba55-2c46584f8e93.md))_
+- **amendment-sign**: rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43; 86c5ca7847a05fa40cadb02bfe61dd5736b1a33c; fail; tdd _(id: [rec-44d1f822-2988-4f96-8fa3-06c74a717db2](.artifacts/records/project__check-run/rec-44d1f822-2988-4f96-8fa3-06c74a717db2.md))_
+- **amendment-sign**: rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43; 512796fda9f16f54a5848fdca999755a8e48eb27; pass; tdd _(id: [rec-a80065af-b7ba-4ec6-a3e1-f47232321681](.artifacts/records/project__check-run/rec-a80065af-b7ba-4ec6-a3e1-f47232321681.md))_
+- **amendment-sign**: rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; pass; tdd _(id: [rec-d49e2b00-a060-46ec-a607-773810081b00](.artifacts/records/project__check-run/rec-d49e2b00-a060-46ec-a607-773810081b00.md))_
+
 ## approval-confirm-ux
 
 ### Acceptance
@@ -246,6 +257,18 @@
 ### Check
 - **assess-route**: rec-fb7cdbf9-8de6-4066-a413-41f688ed3792; dirty; pass; check _(id: [rec-41c4aff8-877d-449c-8d7d-a9f99470d5ac](.artifacts/records/project__check-run/rec-41c4aff8-877d-449c-8d7d-a9f99470d5ac.md))_
 
+## atomic-claims-review
+
+### Check
+- **atomic-claims-review**: atomic-claims-review; 3b2f808f60f93b4db108543986be05d184226566; fail; review _(id: [rec-160ce198-ea6b-4418-9329-aefcbd6138a2](.artifacts/records/project__check-run/rec-160ce198-ea6b-4418-9329-aefcbd6138a2.md))_
+- **atomic-claims-review**: atomic-claims-review; 50303893af61c747620551cd512239752b0528a1; pass; review _(id: [rec-281ddc89-16a9-41b9-83b4-3006a379573e](.artifacts/records/project__check-run/rec-281ddc89-16a9-41b9-83b4-3006a379573e.md))_
+- **atomic-claims-review**: atomic-claims-review; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; review _(id: [rec-f8d76458-5ced-4219-bf3e-eb6c22207c04](.artifacts/records/project__check-run/rec-f8d76458-5ced-4219-bf3e-eb6c22207c04.md))_
+
+## atomic-claims-suite
+
+### Check
+- **atomic-claims-suite**: atomic-claims-suite; 50303893af61c747620551cd512239752b0528a1; fail; check _(id: [rec-f6e34bd6-bdf4-4fa8-a9c6-bca44fcfa0ef](.artifacts/records/project__check-run/rec-f6e34bd6-bdf4-4fa8-a9c6-bca44fcfa0ef.md))_
+
 ## backlog-lifecycle
 
 ### Acceptance
@@ -325,6 +348,17 @@
 
 ### Check
 - **claim-witnesses-suite**: claim-witnesses-suite; d680521c3270c954d22b915c641c7e733595599f; fail; check _(id: [rec-988c5595-f0ea-4bef-b5c1-8bf881e4b72e](.artifacts/records/project__check-run/rec-988c5595-f0ea-4bef-b5c1-8bf881e4b72e.md))_
+
+## claims-manifest-review
+
+### Check
+- **claims-manifest-review**: claims-manifest-review; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; fail; review _(id: [rec-0ddf91ca-e2b7-4a47-8ffb-982b0370877c](.artifacts/records/project__check-run/rec-0ddf91ca-e2b7-4a47-8ffb-982b0370877c.md))_
+- **claims-manifest-review**: claims-manifest-review; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; review _(id: [rec-7524315e-b14a-415e-a8cb-ee76110c7dfe](.artifacts/records/project__check-run/rec-7524315e-b14a-415e-a8cb-ee76110c7dfe.md))_
+
+## claims-manifest-suite
+
+### Check
+- **claims-manifest-suite**: claims-manifest-suite; f84f89b913b54f21f1e426c7201c49b2e62347ef; fail; check _(id: [rec-20c9e846-1a92-4206-90ae-68814427a9a5](.artifacts/records/project__check-run/rec-20c9e846-1a92-4206-90ae-68814427a9a5.md))_
 
 ## claude-shared-marketplace
 
@@ -503,6 +537,16 @@
 
 ### Check
 - **contract-loop**: rec-6d715e64-501c-42c0-b057-42d81bbb01b8; dirty; pass; check _(id: [rec-bc6527c5-0217-413e-a69f-4a2272e61b1d](.artifacts/records/project__check-run/rec-bc6527c5-0217-413e-a69f-4a2272e61b1d.md))_
+
+## contract-thin-criterion
+
+### Acceptance
+- **contract-thin-criterion**: acceptance.criterion is optional; brief/plan/verification acceptance roles do not list criterion in requires_payload; check; workflow-loop; python3 -c "import json; from pathlib import Path; d=json.loads(Path('contract/project-design.json').read_text()); acc=next(r for r in d['records'] if r['name']=='acceptance'); assert 'criterion' in acc['optional_payload']; assert 'criterion' not in (set(acc['payload'])-set(acc['optional_payload'])); views={v.get('name') or v.get('id'): v for v in (d['views'] if isinstance(d['views'], list) else list(d['views'].values()))}; bad=[n for n,v in views.items() for r in v.get('roles',[]) if (r.get('occupant')=='acceptance' or r.get('name')=='acceptance') and 'criterion' in r.get('requires_payload',[])]; assert not bad, bad" _(id: [rec-c79b18fc-3e2f-4a36-8417-9799d980ae1d](.artifacts/records/project__acceptance/rec-c79b18fc-3e2f-4a36-8417-9799d980ae1d.md))_
+
+### Check
+- **contract-thin-criterion**: rec-c79b18fc-3e2f-4a36-8417-9799d980ae1d; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; check _(id: [rec-32e0d94f-2f17-4818-98f0-37ed1b1b7ff9](.artifacts/records/project__check-run/rec-32e0d94f-2f17-4818-98f0-37ed1b1b7ff9.md))_
+- **contract-thin-criterion**: rec-c79b18fc-3e2f-4a36-8417-9799d980ae1d; f9d7371db36180d569d1923814affd42a37d2e7c; pass; check _(id: [rec-954f2345-d0a9-4bb1-9209-fd755a230bca](.artifacts/records/project__check-run/rec-954f2345-d0a9-4bb1-9209-fd755a230bca.md))_
+- **contract-thin-criterion**: rec-c79b18fc-3e2f-4a36-8417-9799d980ae1d; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-97dd5d85-a57a-4459-9142-0f743939654c](.artifacts/records/project__check-run/rec-97dd5d85-a57a-4459-9142-0f743939654c.md))_
 
 ## copy-and-commit-actions
 
@@ -983,6 +1027,14 @@
 ### Check
 - **finished-effort-view**: rec-cc216932-78bb-4df8-b80d-8da0eb287a9c; 11fdbbe31fe4a60f1985ccc24fa41788fa83d1d5; pass; tdd _(id: [rec-9e17ccb9-1b70-4843-ade6-cabf22d52de2](.artifacts/records/project__check-run/rec-9e17ccb9-1b70-4843-ade6-cabf22d52de2.md))_
 
+## fix-contract-record-types
+
+### Acceptance
+- **fix-contract-record-types**: contract has freeze fields and oracle-amendment under records only; no duplicate record_types catalog; check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());assert 'record_types' not in d;types={t['name']:t for t in d['records']};a=types['acceptance'];assert 'test_ids' in a['payload'] and 'oracle_hashes' in a['payload'];assert 'oracle-amendment' in types" _(id: [rec-bb17c5ee-0385-4c8e-90d2-3fe5f9e2b519](.artifacts/records/project__acceptance/rec-bb17c5ee-0385-4c8e-90d2-3fe5f9e2b519.md))_
+
+### Check
+- **fix-contract-record-types**: rec-bb17c5ee-0385-4c8e-90d2-3fe5f9e2b519; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-aba4e75b-a9a6-4a25-b792-f30f48fee08b](.artifacts/records/project__check-run/rec-aba4e75b-a9a6-4a25-b792-f30f48fee08b.md))_
+
 ## fix-human-gate-constraint
 
 ### Acceptance
@@ -999,6 +1051,16 @@
 ### Check
 - **fix-journal-pager-timeout**: rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff; dirty; fail; tdd _(id: [rec-2483b603-ab08-40c0-b787-865baebd1002](.artifacts/records/project__check-run/rec-2483b603-ab08-40c0-b787-865baebd1002.md))_
 - **fix-journal-pager-timeout**: rec-83a0060b-ad9d-4ebf-9d9d-50a91677b1ff; 3379fcf8a1d882d91330bec6e66a2889c71d3ece; pass; tdd _(id: [rec-67c47e4a-2545-4d89-93a9-c83f34293e09](.artifacts/records/project__check-run/rec-67c47e4a-2545-4d89-93a9-c83f34293e09.md))_
+
+## fix-oracle-cli-tests
+
+### Acceptance
+- **fix-oracle-cli-tests**: CLI oracle close-batch tests match verify filter and pass; tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'cli and (oracle or freeze or assertion_level or amendment)' _(id: [rec-8aba909a-63ea-4152-a144-11f5d525f8d5](.artifacts/records/project__acceptance/rec-8aba909a-63ea-4152-a144-11f5d525f8d5.md))_
+
+### Check
+- **fix-oracle-cli-tests**: rec-8aba909a-63ea-4152-a144-11f5d525f8d5; b9adc0ee0836b843fd963ca38ad105d5e2176b68; pass; tdd _(id: [rec-5ee53854-9e43-481e-997b-bee6443d52e6](.artifacts/records/project__check-run/rec-5ee53854-9e43-481e-997b-bee6443d52e6.md))_
+- **fix-oracle-cli-tests**: rec-8aba909a-63ea-4152-a144-11f5d525f8d5; 977750c3c4f05015bcf03d4b82c77d25c8f039d3; fail; tdd _(id: [rec-6f50bc76-c2f3-44b2-bdfc-7279817d2ba4](.artifacts/records/project__check-run/rec-6f50bc76-c2f3-44b2-bdfc-7279817d2ba4.md))_
+- **fix-oracle-cli-tests**: rec-8aba909a-63ea-4152-a144-11f5d525f8d5; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; tdd _(id: [rec-a11cc5d6-ce65-4990-b34c-b712b614669f](.artifacts/records/project__check-run/rec-a11cc5d6-ce65-4990-b34c-b712b614669f.md))_
 
 ## fix-phase-gate-defaults
 
@@ -1072,6 +1134,15 @@
 ### Check
 - **fix-test_verify_authority**: rec-e09c9aac-f876-43da-9856-41ed79b75404; dirty; pass; tdd _(id: [rec-5e5e7943-0cfe-47be-bdc1-7c6c5ca5fe32](.artifacts/records/project__check-run/rec-5e5e7943-0cfe-47be-bdc1-7c6c5ca5fe32.md))_
 - **fix-test_verify_authority**: rec-e09c9aac-f876-43da-9856-41ed79b75404; 2f7404eab494720b703ffd0e2e01078236a876ab; pass; tdd _(id: [rec-9dbbcb14-8061-4f28-87e0-56bbddc01a16](.artifacts/records/project__check-run/rec-9dbbcb14-8061-4f28-87e0-56bbddc01a16.md))_
+
+## fix-verdict-exit
+
+### Acceptance
+- **fix-verdict-exit**: aff verdict fails a claim when pytest at --at exits non-zero, accepts a verified signed amendment, and rejects a hash or test-id change with no covering amendment; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "signed_amendment or head_failure or missing_amendment" _(id: [rec-cd3fb645-b979-440d-ad25-158586f29fe1](.artifacts/records/project__acceptance/rec-cd3fb645-b979-440d-ad25-158586f29fe1.md))_
+
+### Check
+- **fix-verdict-exit**: rec-cd3fb645-b979-440d-ad25-158586f29fe1; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-8d5219fa-dc90-4a3e-bb1a-7d919fba521f](.artifacts/records/project__check-run/rec-8d5219fa-dc90-4a3e-bb1a-7d919fba521f.md))_
+- **fix-verdict-exit**: rec-cd3fb645-b979-440d-ad25-158586f29fe1; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; fail; tdd _(id: [rec-d29c2681-a1d9-49fe-a8b4-de9aea3f9413](.artifacts/records/project__check-run/rec-d29c2681-a1d9-49fe-a8b4-de9aea3f9413.md))_
 
 ## fix-verify-authority-close-batch-import
 
@@ -1408,6 +1479,105 @@ print("phase checks only")
 
 ### Observation
 - **needs-you-tab-removal**: The Needs you tab matched needs-you subjects against task slugs, so effort-level questions and non-task subjects never counted and the tab disagreed with the panel.; dashboard-bugfix _(id: [rec-613913b9-0be9-46f8-a9b5-5f59739f368b](.artifacts/records/project__investigation-observation/rec-613913b9-0be9-46f8-a9b5-5f59739f368b.md))_
+
+## oracle-assertion-red
+
+### Acceptance
+- **oracle-assertion-red**: tdd; workflow-loop; python3 -m pytest tests/test_oracle_red.py tests/test_affidavit_check.py -q -k 'failing_node or assertion_level or oracle_red' _(id: [rec-e8dc7437-e410-4b96-81c3-62f7914a9a22](.artifacts/records/project__acceptance/rec-e8dc7437-e410-4b96-81c3-62f7914a9a22.md))_
+
+### Check
+- **oracle-assertion-red**: rec-e8dc7437-e410-4b96-81c3-62f7914a9a22; 17d18aadc4fc771e1b864b3610365c218ee71d03; pass; tdd _(id: [rec-4a69438c-71e7-4cca-b5ce-b8db4e2fd6fa](.artifacts/records/project__check-run/rec-4a69438c-71e7-4cca-b5ce-b8db4e2fd6fa.md))_
+- **oracle-assertion-red**: rec-e8dc7437-e410-4b96-81c3-62f7914a9a22; dirty; fail; tdd _(id: [rec-9caf8368-76c6-4276-875a-8808648c2af0](.artifacts/records/project__check-run/rec-9caf8368-76c6-4276-875a-8808648c2af0.md))_
+- **oracle-assertion-red**: rec-e8dc7437-e410-4b96-81c3-62f7914a9a22; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; tdd _(id: [rec-cdc4e647-b8af-43bc-ba63-9e63895e72e4](.artifacts/records/project__check-run/rec-cdc4e647-b8af-43bc-ba63-9e63895e72e4.md))_
+- **oracle-assertion-red**: rec-e8dc7437-e410-4b96-81c3-62f7914a9a22; 17d18aadc4fc771e1b864b3610365c218ee71d03; pass; tdd _(id: [rec-ee7c32b2-5d6e-4e5c-a751-26fb29dc9fc1](.artifacts/records/project__check-run/rec-ee7c32b2-5d6e-4e5c-a751-26fb29dc9fc1.md))_
+
+## oracle-contract
+
+### Acceptance
+- **oracle-contract**: check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());types={t['name']:t for t in d['records']};a=types['acceptance'];assert 'test_ids' in a['payload'] and 'oracle_hashes' in a['payload'];assert 'test_ids' in a.get('optional_payload',[]) and 'oracle_hashes' in a.get('optional_payload',[]);am=types['oracle-amendment'];assert set(am['required_sections'])>={'Reason','Change'};assert 'status' in am['payload'];assert set(am.get('payload_enum',{}).get('status',[]))>={'requested','approved','rejected'}" _(id: [rec-753fcb78-34c3-4d72-8da8-948d99fa75f2](.artifacts/records/project__acceptance/rec-753fcb78-34c3-4d72-8da8-948d99fa75f2.md))_
+
+### Check
+- **oracle-contract**: rec-753fcb78-34c3-4d72-8da8-948d99fa75f2; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-454f600e-d1e1-4aed-af39-72c848211a8b](.artifacts/records/project__check-run/rec-454f600e-d1e1-4aed-af39-72c848211a8b.md))_
+- **oracle-contract**: rec-753fcb78-34c3-4d72-8da8-948d99fa75f2; 17d18aadc4fc771e1b864b3610365c218ee71d03; pass; check _(id: [rec-9e149444-faa6-4c09-a766-f3fec6d211df](.artifacts/records/project__check-run/rec-9e149444-faa6-4c09-a766-f3fec6d211df.md))_
+- **oracle-contract**: rec-753fcb78-34c3-4d72-8da8-948d99fa75f2; 17d18aadc4fc771e1b864b3610365c218ee71d03; pass; check _(id: [rec-dd2ba630-92ec-4e03-a3dd-23831b7efb12](.artifacts/records/project__check-run/rec-dd2ba630-92ec-4e03-a3dd-23831b7efb12.md))_
+
+## oracle-contract-amendment-type
+
+### Acceptance
+- **oracle-contract-amendment-type**: check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());am=next(t for t in d['records'] if t['name']=='oracle-amendment');assert am['payload_references'].get('acceptance')=='project:acceptance';assert 'old_hashes' in am['payload'] and 'new_hashes' in am['payload']" _(id: [rec-5cc71e22-8776-4d3e-838c-a4a08812d3cd](.artifacts/records/project__acceptance/rec-5cc71e22-8776-4d3e-838c-a4a08812d3cd.md))_
+
+### Check
+- **oracle-contract-amendment-type**: rec-5cc71e22-8776-4d3e-838c-a4a08812d3cd; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-4411c43e-7bba-43c9-8ae9-227dc55bbe75](.artifacts/records/project__check-run/rec-4411c43e-7bba-43c9-8ae9-227dc55bbe75.md))_
+- **oracle-contract-amendment-type**: rec-5cc71e22-8776-4d3e-838c-a4a08812d3cd; 17d18aadc4fc771e1b864b3610365c218ee71d03; pass; check _(id: [rec-958d1b0a-bdef-4398-9786-1bdd5dcd6f8c](.artifacts/records/project__check-run/rec-958d1b0a-bdef-4398-9786-1bdd5dcd6f8c.md))_
+- **oracle-contract-amendment-type**: rec-5cc71e22-8776-4d3e-838c-a4a08812d3cd; 17d18aadc4fc771e1b864b3610365c218ee71d03; pass; check _(id: [rec-aafee77e-19be-46d2-8672-2081b22231f0](.artifacts/records/project__check-run/rec-aafee77e-19be-46d2-8672-2081b22231f0.md))_
+
+## oracle-freeze-close
+
+### Acceptance
+- **oracle-freeze-close**: tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'oracle or freeze or assertion_level' _(id: [rec-84698b95-b79b-442a-9166-f2e168797d33](.artifacts/records/project__acceptance/rec-84698b95-b79b-442a-9166-f2e168797d33.md))_
+
+### Check
+- **oracle-freeze-close**: rec-84698b95-b79b-442a-9166-f2e168797d33; dirty; fail; tdd _(id: [rec-1074b37c-28b2-4d11-b951-320ca1c4e43b](.artifacts/records/project__check-run/rec-1074b37c-28b2-4d11-b951-320ca1c4e43b.md))_
+- **oracle-freeze-close**: rec-84698b95-b79b-442a-9166-f2e168797d33; 977750c3c4f05015bcf03d4b82c77d25c8f039d3; pass; tdd _(id: [rec-83dc1ca1-0dda-4af0-a93b-db44f156fbb4](.artifacts/records/project__check-run/rec-83dc1ca1-0dda-4af0-a93b-db44f156fbb4.md))_
+- **oracle-freeze-close**: rec-84698b95-b79b-442a-9166-f2e168797d33; dirty; fail; tdd _(id: [rec-b994aff7-12fe-4f6e-a851-1f74a4d12192](.artifacts/records/project__check-run/rec-b994aff7-12fe-4f6e-a851-1f74a4d12192.md))_
+- **oracle-freeze-close**: rec-84698b95-b79b-442a-9166-f2e168797d33; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; tdd _(id: [rec-db251c9d-5d63-4cb8-a6c5-dbe799f126c5](.artifacts/records/project__check-run/rec-db251c9d-5d63-4cb8-a6c5-dbe799f126c5.md))_
+
+## oracle-freeze-close-hashes
+
+### Acceptance
+- **oracle-freeze-close-hashes**: tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'oracle_hash or freeze_hash or amendment' _(id: [rec-08e82b2b-f39f-4c7c-ac4e-b0c758b7f337](.artifacts/records/project__acceptance/rec-08e82b2b-f39f-4c7c-ac4e-b0c758b7f337.md))_
+
+### Check
+- **oracle-freeze-close-hashes**: rec-08e82b2b-f39f-4c7c-ac4e-b0c758b7f337; dirty; fail; tdd _(id: [rec-33588d05-618d-45c2-a209-ff09d2a78bcb](.artifacts/records/project__check-run/rec-33588d05-618d-45c2-a209-ff09d2a78bcb.md))_
+- **oracle-freeze-close-hashes**: rec-08e82b2b-f39f-4c7c-ac4e-b0c758b7f337; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; tdd _(id: [rec-75de1caa-137c-4f02-8b69-2dc6fd05e7a8](.artifacts/records/project__check-run/rec-75de1caa-137c-4f02-8b69-2dc6fd05e7a8.md))_
+- **oracle-freeze-close-hashes**: rec-08e82b2b-f39f-4c7c-ac4e-b0c758b7f337; 977750c3c4f05015bcf03d4b82c77d25c8f039d3; pass; tdd _(id: [rec-979f65bc-7e53-4d1e-b38c-8de0fb1ede36](.artifacts/records/project__check-run/rec-979f65bc-7e53-4d1e-b38c-8de0fb1ede36.md))_
+
+## oracle-skills
+
+### Acceptance
+- **oracle-skills**: check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-f9ef85f0-efd5-4a31-8262-9eb7d6858bee](.artifacts/records/project__acceptance/rec-f9ef85f0-efd5-4a31-8262-9eb7d6858bee.md))_
+
+### Check
+- **oracle-skills**: rec-f9ef85f0-efd5-4a31-8262-9eb7d6858bee; 977750c3c4f05015bcf03d4b82c77d25c8f039d3; pass; check _(id: [rec-036ef863-0d1b-4b8d-8472-b52458513058](.artifacts/records/project__check-run/rec-036ef863-0d1b-4b8d-8472-b52458513058.md))_
+- **oracle-skills**: rec-f9ef85f0-efd5-4a31-8262-9eb7d6858bee; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-67da4e57-1c4e-43ea-9c29-8bdfe3247056](.artifacts/records/project__check-run/rec-67da4e57-1c4e-43ea-9c29-8bdfe3247056.md))_
+
+## oracle-skills-execute-amend
+
+### Acceptance
+- **oracle-skills-execute-amend**: check; workflow-loop; rg -n "oracle-amendment|frozen oracle|oracle_hashes" skills/execute-phase/SKILL.md skills/verify-work/SKILL.md _(id: [rec-53cde3fc-6823-4f72-a863-861b55a3bf11](.artifacts/records/project__acceptance/rec-53cde3fc-6823-4f72-a863-861b55a3bf11.md))_
+
+### Check
+- **oracle-skills-execute-amend**: rec-53cde3fc-6823-4f72-a863-861b55a3bf11; 977750c3c4f05015bcf03d4b82c77d25c8f039d3; pass; check _(id: [rec-14797e08-b8fe-46c5-b107-089b24adfd3b](.artifacts/records/project__check-run/rec-14797e08-b8fe-46c5-b107-089b24adfd3b.md))_
+- **oracle-skills-execute-amend**: rec-53cde3fc-6823-4f72-a863-861b55a3bf11; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-251adde1-feb1-4894-b59a-1ecbd04d41cf](.artifacts/records/project__check-run/rec-251adde1-feb1-4894-b59a-1ecbd04d41cf.md))_
+
+## oracle-skills-mechanical-verify
+
+### Acceptance
+- **oracle-skills-mechanical-verify**: check; workflow-loop; rg -n "mechanical|assertion-level|oracle-backed" skills/verify-work/SKILL.md _(id: [rec-d3fde647-9d4d-468a-a9fc-7635ac187eeb](.artifacts/records/project__acceptance/rec-d3fde647-9d4d-468a-a9fc-7635ac187eeb.md))_
+
+### Check
+- **oracle-skills-mechanical-verify**: rec-d3fde647-9d4d-468a-a9fc-7635ac187eeb; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-0d4cfbfb-f968-49fe-86b2-633f95799a35](.artifacts/records/project__check-run/rec-0d4cfbfb-f968-49fe-86b2-633f95799a35.md))_
+- **oracle-skills-mechanical-verify**: rec-d3fde647-9d4d-468a-a9fc-7635ac187eeb; 977750c3c4f05015bcf03d4b82c77d25c8f039d3; pass; check _(id: [rec-a02e9b4e-b827-4d24-bd92-e34673bdf924](.artifacts/records/project__check-run/rec-a02e9b4e-b827-4d24-bd92-e34673bdf924.md))_
+
+## oracle-skills-plan-author
+
+### Acceptance
+- **oracle-skills-plan-author**: check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q -k 'oracle or freeze or plan_phase' _(id: [rec-0ecbff55-619a-4c5a-ad17-a582ef26dc85](.artifacts/records/project__acceptance/rec-0ecbff55-619a-4c5a-ad17-a582ef26dc85.md))_
+
+### Check
+- **oracle-skills-plan-author**: rec-0ecbff55-619a-4c5a-ad17-a582ef26dc85; 977750c3c4f05015bcf03d4b82c77d25c8f039d3; pass; check _(id: [rec-2a42fb6b-06c4-43b1-9591-0f374888c966](.artifacts/records/project__check-run/rec-2a42fb6b-06c4-43b1-9591-0f374888c966.md))_
+- **oracle-skills-plan-author**: rec-0ecbff55-619a-4c5a-ad17-a582ef26dc85; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-8def3f22-55e5-4a8b-a5ef-f5e6c299186b](.artifacts/records/project__check-run/rec-8def3f22-55e5-4a8b-a5ef-f5e6c299186b.md))_
+
+## oracle-witnesses-review
+
+### Check
+- **oracle-witnesses-review**: oracle-witnesses-review; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; review _(id: [rec-6b678de4-4001-4b62-a130-26c6281db2bd](.artifacts/records/project__check-run/rec-6b678de4-4001-4b62-a130-26c6281db2bd.md))_
+- **oracle-witnesses-review**: oracle-witnesses-review; b9adc0ee0836b843fd963ca38ad105d5e2176b68; fail; review _(id: [rec-ed5c94f3-58c2-475a-a4cd-1d00f8b91157](.artifacts/records/project__check-run/rec-ed5c94f3-58c2-475a-a4cd-1d00f8b91157.md))_
+
+## oracle-witnesses-suite
+
+### Check
+- **oracle-witnesses-suite**: oracle-witnesses-suite; e04bc30552d35b83b19337abee8df4c26cb55b61; fail; check _(id: [rec-3277801e-724c-40f9-a89d-61a1f47e16cb](.artifacts/records/project__check-run/rec-3277801e-724c-40f9-a89d-61a1f47e16cb.md))_
 
 ## package-install
 
@@ -1768,6 +1938,21 @@ print("phase checks only")
 ### Finding
 - **review-approval-constraints-spec-gap**: spec-gap on approval-constraints: exclusive human-gate constraint wording conflicts with preserved backlog promote/dismiss writes; dashboard-human-gate-writes says only Needs-you clears; backlog.py still supersedes with @current; constraint statement names backlog promote/dismiss as allowed or exclusivity is clarified without contradicting Non-goals, and reviewer re-run passes; none _(id: [rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f](.artifacts/records/project__finding/rec-d3047fa6-a5cf-4f79-8d70-3a32f5590f8f.md))_
 
+## review-criterion-views-minor
+
+### Finding
+- **review-criterion-views-minor**: missing-test minor: criterion_optional_in_contract omits view requires_payload; R4 view change landed; named test checks optional_payload only; test asserts brief/plan/verification roles omit criterion; none _(id: [rec-e0c7fb0b-8c5e-4768-a793-1eb732c512d1](.artifacts/records/project__finding/rec-e0c7fb0b-8c5e-4768-a793-1eb732c512d1.md))_
+
+## review-negative-lint-judgment
+
+### Finding
+- **review-negative-lint-judgment**: judgment: no negative tests for compound/fat/missing requirement ids; spec wording vs skills+contract-only decision; positive examples only; human clears or later phase adds close lint; none _(id: [rec-6b971a14-51fd-4e3d-8c00-c07eb58f32f2](.artifacts/records/project__finding/rec-6b971a14-51fd-4e3d-8c00-c07eb58f32f2.md))_
+
+## review-oracle-contract-record-types
+
+### Finding
+- **review-oracle-contract-record-types**: invariant-violation on oracle-contract: dual records/record_types catalogs; contract/project-design.json duplicates full record catalog under record_types; runtime uses records only; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-783374cb-2fc7-4b4a-a849-7ef8c983b528](.artifacts/records/project__finding/rec-783374cb-2fc7-4b4a-a849-7ef8c983b528.md))_
+
 ## review-phase-gate-contract-behavior-bug
 
 ### Finding
@@ -1782,6 +1967,31 @@ print("phase checks only")
 
 ### Finding
 - **review-phase-gate-contract-spec-gap**: spec-gap on phase-gate-contract: live .artifacts/project-design.json not synced with this-repo suite pin; worktree .artifacts/project-design.json lacks phase_gate; runtime falls through to contract/; live design carries this-repo full+advisory (or documented equivalent) and resolve/pin is current; reviewer re-run passes; none _(id: [rec-56c5d5cb-3545-4a20-83d8-8e9fb3aa5ca3](.artifacts/records/project__finding/rec-56c5d5cb-3545-4a20-83d8-8e9fb3aa5ca3.md))_
+
+## review-phase-missing-test-amendment
+
+### Finding
+- **review-phase-missing-test-amendment**: missing-test on phase: aff verdict must exit 0 when a test-id or hash delta is covered by a verified amendment and the allowlist is unchanged; tests/test_verdict.py has no subprocess test where a valid signed amendment makes an oracle or hash change pass; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-0fcac021-f6ba-4d23-802e-999a1f6e2d1d](.artifacts/records/project__finding/rec-0fcac021-f6ba-4d23-802e-999a1f6e2d1d.md))_
+
+## review-phase-missing-test-head-fail
+
+### Finding
+- **review-phase-missing-test-head-fail**: missing-test on phase: aff verdict must exit non-zero when oracle tests fail at --at; tests/test_verdict.py does not assert exit 1 and reason tests failed for a failing head run; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-a708259b-4d9b-466b-97b3-33c8b2b345c2](.artifacts/records/project__finding/rec-a708259b-4d9b-466b-97b3-33c8b2b345c2.md))_
+
+## review-phase-missing-test-missing-step
+
+### Finding
+- **review-phase-missing-test-missing-step**: missing-test on phase: aff verdict must exit non-zero when test ids or hashes differ without a covering amendment chain; missing step is only covered in tests/test_amendment.py; tests/test_verdict.py has no CLI case for a manifest delta with no amendment; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-f5ae5085-839d-47e7-ac68-ea6ef1cb6107](.artifacts/records/project__finding/rec-f5ae5085-839d-47e7-ac68-ea6ef1cb6107.md))_
+
+## review-tests-brief-lock
+
+### Finding
+- **review-tests-brief-lock**: missing-test on tests-claim-chain: R5 original-text brief rules not locked by plan-trace; execute-phase skill updated but no test asserts quote/no-paraphrase wording; fix lands asserting execute-phase original-text brief rules and reviewer re-run passes; none _(id: [rec-e480f9cb-a79e-4c72-9feb-ad15b790c214](.artifacts/records/project__finding/rec-e480f9cb-a79e-4c72-9feb-ad15b790c214.md))_
+
+## review-verdict-command-behavior-bug
+
+### Finding
+- **review-verdict-command-behavior-bug**: behavior-bug on verdict-command: R2 requires pytest exit code 0 at --at for each claim's oracle tests; _head_passed returns true when exit_code != 0 if no FAILED/ERROR line matches the claim's node ids; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-76d3d72d-c672-4634-8aea-560a2d2d4e7e](.artifacts/records/project__finding/rec-76d3d72d-c672-4634-8aea-560a2d2d4e7e.md))_
 
 ## reviewer-brief
 
@@ -1991,6 +2201,50 @@ print("phase checks only")
 ### Check
 - **skills-backlog-promote**: rec-9dcc1726-0246-424d-a8f7-edd8b8c98ea6; cdb10d65ed56a425a426d5c291c0f5c1a8e69b71; pass; check _(id: [rec-0821a163-8752-41df-a60a-9421a9b67f50](.artifacts/records/project__check-run/rec-0821a163-8752-41df-a60a-9421a9b67f50.md))_
 
+## skills-claim-handoff
+
+### Acceptance
+- **skills-claim-handoff**: deliver/repair work-items always carry atomic requirement ids in plan-phase (description-as-list when no spec); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-7d56f650-967d-4bae-8088-7461b40697de](.artifacts/records/project__acceptance/rec-7d56f650-967d-4bae-8088-7461b40697de.md))_
+
+### Check
+- **skills-claim-handoff**: rec-7d56f650-967d-4bae-8088-7461b40697de; 464d6813f21f624097f5bfbfb293c8ede2478e49; pass; check _(id: [rec-5c7bb871-de54-4b5e-a73e-09ddd31dd2d6](.artifacts/records/project__check-run/rec-5c7bb871-de54-4b5e-a73e-09ddd31dd2d6.md))_
+- **skills-claim-handoff**: rec-7d56f650-967d-4bae-8088-7461b40697de; 464d6813f21f624097f5bfbfb293c8ede2478e49; fail; check _(id: [rec-8b852ada-6abb-48a1-8d2f-aa3c0a885012](.artifacts/records/project__check-run/rec-8b852ada-6abb-48a1-8d2f-aa3c0a885012.md))_
+- **skills-claim-handoff**: rec-7d56f650-967d-4bae-8088-7461b40697de; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; check _(id: [rec-cc9d092f-e2bc-423a-8eb6-4aefaca7f2cb](.artifacts/records/project__check-run/rec-cc9d092f-e2bc-423a-8eb6-4aefaca7f2cb.md))_
+- **skills-claim-handoff**: rec-7d56f650-967d-4bae-8088-7461b40697de; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-debea87d-e7a9-46b6-8a08-3c48755bb2a0](.artifacts/records/project__check-run/rec-debea87d-e7a9-46b6-8a08-3c48755bb2a0.md))_
+
+## skills-claim-handoff-briefs
+
+### Acceptance
+- **skills-claim-handoff-briefs**: execute-phase requires original-text briefs quoting work-item and requirement text by id; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-5b5017ed-6e05-4149-9a16-a76488688d65](.artifacts/records/project__acceptance/rec-5b5017ed-6e05-4149-9a16-a76488688d65.md))_
+
+### Check
+- **skills-claim-handoff-briefs**: rec-5b5017ed-6e05-4149-9a16-a76488688d65; 464d6813f21f624097f5bfbfb293c8ede2478e49; fail; check _(id: [rec-09d0839a-84e7-4679-9c65-30d8577b4ffe](.artifacts/records/project__check-run/rec-09d0839a-84e7-4679-9c65-30d8577b4ffe.md))_
+- **skills-claim-handoff-briefs**: rec-5b5017ed-6e05-4149-9a16-a76488688d65; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-8c18c7e9-3578-42a3-8774-5c7c1f8a77bb](.artifacts/records/project__check-run/rec-8c18c7e9-3578-42a3-8774-5c7c1f8a77bb.md))_
+- **skills-claim-handoff-briefs**: rec-5b5017ed-6e05-4149-9a16-a76488688d65; 464d6813f21f624097f5bfbfb293c8ede2478e49; pass; check _(id: [rec-91dbaed4-4840-46fa-871c-19865088901d](.artifacts/records/project__check-run/rec-91dbaed4-4840-46fa-871c-19865088901d.md))_
+- **skills-claim-handoff-briefs**: rec-5b5017ed-6e05-4149-9a16-a76488688d65; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; check _(id: [rec-ef366603-eab6-4e32-b28a-7d5935338fde](.artifacts/records/project__check-run/rec-ef366603-eab6-4e32-b28a-7d5935338fde.md))_
+
+## skills-claim-handoff-one-id
+
+### Acceptance
+- **skills-claim-handoff-one-id**: each deliver/repair acceptance names exactly one requirement id; compound ids banned in skill text; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f](.artifacts/records/project__acceptance/rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f.md))_
+
+### Check
+- **skills-claim-handoff-one-id**: rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f; 464d6813f21f624097f5bfbfb293c8ede2478e49; pass; check _(id: [rec-134a33cb-9872-4aa0-be04-bbd8c37d859f](.artifacts/records/project__check-run/rec-134a33cb-9872-4aa0-be04-bbd8c37d859f.md))_
+- **skills-claim-handoff-one-id**: rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-2fd60042-8e90-41fb-be20-27c8a22975a2](.artifacts/records/project__check-run/rec-2fd60042-8e90-41fb-be20-27c8a22975a2.md))_
+- **skills-claim-handoff-one-id**: rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; check _(id: [rec-34ab2d88-35ed-4a2f-a93b-7f5572b5948e](.artifacts/records/project__check-run/rec-34ab2d88-35ed-4a2f-a93b-7f5572b5948e.md))_
+- **skills-claim-handoff-one-id**: rec-9d1ec1a9-0e4c-413e-abd7-3df6a51dd28f; 464d6813f21f624097f5bfbfb293c8ede2478e49; fail; check _(id: [rec-6fa7d816-db16-45aa-a7a4-25cb74145415](.artifacts/records/project__check-run/rec-6fa7d816-db16-45aa-a7a4-25cb74145415.md))_
+
+## skills-claim-handoff-thin
+
+### Acceptance
+- **skills-claim-handoff-thin**: plan-phase examples write thin acceptances (no criterion prose); check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-177d102b-7173-412b-b4c0-2b7608eff04c](.artifacts/records/project__acceptance/rec-177d102b-7173-412b-b4c0-2b7608eff04c.md))_
+
+### Check
+- **skills-claim-handoff-thin**: rec-177d102b-7173-412b-b4c0-2b7608eff04c; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-1014b813-85f3-447f-a0c9-115c73d9b077](.artifacts/records/project__check-run/rec-1014b813-85f3-447f-a0c9-115c73d9b077.md))_
+- **skills-claim-handoff-thin**: rec-177d102b-7173-412b-b4c0-2b7608eff04c; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; check _(id: [rec-3778b0f7-cda8-4bfa-bc8f-db866a70a821](.artifacts/records/project__check-run/rec-3778b0f7-cda8-4bfa-bc8f-db866a70a821.md))_
+- **skills-claim-handoff-thin**: rec-177d102b-7173-412b-b4c0-2b7608eff04c; 464d6813f21f624097f5bfbfb293c8ede2478e49; pass; check _(id: [rec-45128b98-72fc-442f-8919-353f0b8b493a](.artifacts/records/project__check-run/rec-45128b98-72fc-442f-8919-353f0b8b493a.md))_
+- **skills-claim-handoff-thin**: rec-177d102b-7173-412b-b4c0-2b7608eff04c; 464d6813f21f624097f5bfbfb293c8ede2478e49; fail; check _(id: [rec-a2467912-996e-4a69-9d83-96817281a7b9](.artifacts/records/project__check-run/rec-a2467912-996e-4a69-9d83-96817281a7b9.md))_
+
 ## skills-red-first
 
 ### Acceptance
@@ -2114,10 +2368,25 @@ print("phase checks only")
 ### Observation
 - **stepper-wrap**: test_stepper_wraps_by_pane_width_and_keeps_glyph_with_label failed 3/10: stepper lines were wider than pane.scrollable_content_region.width. Hypothesis: the status-tab grid wraps, the pane overflows 20 rows, a vertical scrollbar appears after the stepper rendered, narrowing the content region without a pane resize, so EffortPane.on_resize never re-shows.; dashboard-features _(id: [rec-b3951803-56a0-4f76-aefb-68962a329e8a](.artifacts/records/project__investigation-observation/rec-b3951803-56a0-4f76-aefb-68962a329e8a.md))_
 
+## suite-advisory-atomic-claims
+
+### Finding
+- **suite-advisory-atomic-claims**: advisory suite fail for atomic-claims-suite; exit 1; assess_routing fixed in 0cdee54; remaining dashboard flakes [size0] related panel and journal pager stub; suite check-run passes at phase head, or human clears; none _(id: [rec-e7d8f857-fbb2-4990-946e-49e9f4f9f83e](.artifacts/records/project__finding/rec-e7d8f857-fbb2-4990-946e-49e9f4f9f83e.md))_
+
 ## suite-advisory-claim-witnesses
 
 ### Finding
 - **suite-advisory-claim-witnesses**: advisory suite fail for claim-witnesses-suite; exit_code=1 failing_node_ids=[tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub]; suite check-run passes at phase head, or human clears; none _(id: [rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf](.artifacts/records/project__finding/rec-787eda19-6106-46d7-8b5f-ac6c0ca59ddf.md))_
+
+## suite-advisory-claims-manifest
+
+### Finding
+- **suite-advisory-claims-manifest**: advisory suite fail for claims-manifest-suite; exit_code 1; failing node tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub; suite check-run passes at phase head, or human clears; none _(id: [rec-43ce266c-c2ac-4895-99e2-e039eac06a4f](.artifacts/records/project__finding/rec-43ce266c-c2ac-4895-99e2-e039eac06a4f.md))_
+
+## suite-advisory-oracle-witnesses
+
+### Finding
+- **suite-advisory-oracle-witnesses**: advisory suite fail for oracle-witnesses-suite; exit_code=1 failing_node_ids=[tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub]; suite check-run passes at phase head, or human clears; none _(id: [rec-6d403791-1093-4918-8e27-3fd127ae4c4d](.artifacts/records/project__finding/rec-6d403791-1093-4918-8e27-3fd127ae4c4d.md))_
 
 ## suite-dashboard
 
@@ -2259,6 +2528,42 @@ print("phase checks only")
 
 ### Check
 - **test-suite-speed**: rec-6e6e5c69-9ab0-44f3-9016-49c3512fcd99; 6cb58b4; pass; check _(id: [rec-e81acb74-ed4a-4e0f-bb5c-9ea42abfa56e](.artifacts/records/project__check-run/rec-e81acb74-ed4a-4e0f-bb5c-9ea42abfa56e.md))_
+
+## tests-brief-lock
+
+### Acceptance
+- **tests-brief-lock**: plan-trace asserts execute-phase original-text brief rules and R4 view requires_payload omit criterion; tdd; workflow-loop; python3 -m pytest tests/test_plan_trace.py tests/test_skill_contract_consistency.py -q _(id: [rec-b760d3e8-594b-491c-b282-aa07923e1a38](.artifacts/records/project__acceptance/rec-b760d3e8-594b-491c-b282-aa07923e1a38.md))_
+
+### Check
+- **tests-brief-lock**: rec-b760d3e8-594b-491c-b282-aa07923e1a38; 3b2f808f60f93b4db108543986be05d184226566; pass; tdd _(id: [rec-0888e40d-41dc-48b0-b143-10e2941d5148](.artifacts/records/project__check-run/rec-0888e40d-41dc-48b0-b143-10e2941d5148.md))_
+- **tests-brief-lock**: rec-b760d3e8-594b-491c-b282-aa07923e1a38; 50303893af61c747620551cd512239752b0528a1; pass; tdd _(id: [rec-38740f76-0e4d-45de-a723-ee81f20663df](.artifacts/records/project__check-run/rec-38740f76-0e4d-45de-a723-ee81f20663df.md))_
+- **tests-brief-lock**: rec-b760d3e8-594b-491c-b282-aa07923e1a38; 50303893af61c747620551cd512239752b0528a1; pass; tdd _(id: [rec-9480d081-48fa-4537-afa5-46c3bb9a0818](.artifacts/records/project__check-run/rec-9480d081-48fa-4537-afa5-46c3bb9a0818.md))_
+- **tests-brief-lock**: rec-b760d3e8-594b-491c-b282-aa07923e1a38; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; tdd _(id: [rec-adcbbbfb-05f6-4301-a35b-d4bc66d63f0c](.artifacts/records/project__check-run/rec-adcbbbfb-05f6-4301-a35b-d4bc66d63f0c.md))_
+
+### Finding
+- **tests-brief-lock**: tests-brief-lock closed done without red-first: predecessor suite verify_command already passed; new assertions are additive; At 3b2f808 the acceptance verify_command (full plan-trace+consistency) exits 0; tip 5030389 adds assertions. No runner fail exists for this criterion_id with ancestry to green.; a later phase requires red-first for additive test-only tasks, or a fail check-run for this criterion precedes green; none _(id: [rec-7c5115ae-6da3-4327-a386-7b7da037b865](.artifacts/records/project__finding/rec-7c5115ae-6da3-4327-a386-7b7da037b865.md))_
+
+## tests-brief-lock-r4
+
+### Acceptance
+- **tests-brief-lock-r4**: criterion_optional_in_contract asserts brief/plan/verification roles omit criterion from requires_payload; check; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k criterion_optional_in_contract -q _(id: [rec-6525fff7-02a2-4ef2-8ae7-1b4fe8a3fe89](.artifacts/records/project__acceptance/rec-6525fff7-02a2-4ef2-8ae7-1b4fe8a3fe89.md))_
+
+### Check
+- **tests-brief-lock-r4**: rec-6525fff7-02a2-4ef2-8ae7-1b4fe8a3fe89; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; check _(id: [rec-3fead4a6-2d91-44ad-8ff2-9386f730a2a9](.artifacts/records/project__check-run/rec-3fead4a6-2d91-44ad-8ff2-9386f730a2a9.md))_
+- **tests-brief-lock-r4**: rec-6525fff7-02a2-4ef2-8ae7-1b4fe8a3fe89; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-bb5c1cf9-af63-460e-9ac0-cf721099118a](.artifacts/records/project__check-run/rec-bb5c1cf9-af63-460e-9ac0-cf721099118a.md))_
+- **tests-brief-lock-r4**: rec-6525fff7-02a2-4ef2-8ae7-1b4fe8a3fe89; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-ea4906dd-4b6d-4c73-9fa3-2997e5f49e07](.artifacts/records/project__check-run/rec-ea4906dd-4b6d-4c73-9fa3-2997e5f49e07.md))_
+
+## tests-claim-chain
+
+### Acceptance
+- **tests-claim-chain**: plan-trace and skill-contract consistency enforce R1-R5 and optional criterion; CLI create/capture accepts thin deliver shape; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-14838183-7e65-45e7-8ac1-41a2ff0e912b](.artifacts/records/project__acceptance/rec-14838183-7e65-45e7-8ac1-41a2ff0e912b.md))_
+
+### Check
+- **tests-claim-chain**: rec-14838183-7e65-45e7-8ac1-41a2ff0e912b; 464d6813f21f624097f5bfbfb293c8ede2478e49; fail; tdd _(id: [rec-126b0567-b486-49ba-8113-a4807fb93310](.artifacts/records/project__check-run/rec-126b0567-b486-49ba-8113-a4807fb93310.md))_
+- **tests-claim-chain**: rec-14838183-7e65-45e7-8ac1-41a2ff0e912b; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; tdd _(id: [rec-147f0251-a5ca-4a04-86e8-6f9e58e5683b](.artifacts/records/project__check-run/rec-147f0251-a5ca-4a04-86e8-6f9e58e5683b.md))_
+- **tests-claim-chain**: rec-14838183-7e65-45e7-8ac1-41a2ff0e912b; 50303893af61c747620551cd512239752b0528a1; pass; tdd _(id: [rec-5d6b2aba-f785-4ba1-a96c-ad8c0926b48d](.artifacts/records/project__check-run/rec-5d6b2aba-f785-4ba1-a96c-ad8c0926b48d.md))_
+- **tests-claim-chain**: rec-14838183-7e65-45e7-8ac1-41a2ff0e912b; 464d6813f21f624097f5bfbfb293c8ede2478e49; fail; tdd _(id: [rec-6f72268a-2d46-4c4d-b286-f1f7809c400a](.artifacts/records/project__check-run/rec-6f72268a-2d46-4c4d-b286-f1f7809c400a.md))_
+- **tests-claim-chain**: rec-14838183-7e65-45e7-8ac1-41a2ff0e912b; 3b2f808f60f93b4db108543986be05d184226566; pass; tdd _(id: [rec-e51d4bd8-9ce4-4583-a71f-03083f2506d0](.artifacts/records/project__check-run/rec-e51d4bd8-9ce4-4583-a71f-03083f2506d0.md))_
 
 ## tier2-dashboard
 
@@ -2438,6 +2743,48 @@ print("phase checks only")
 ### Observation
 - **unsigned-check-label**: _needs_you built unsigned-check text from the raw criterion_id and used the check-run subject, so the panel showed a rec- id instead of the criterion and task.; dashboard-bugfix _(id: [rec-45a1d50b-0dae-47ec-88c3-19cab12238ba](.artifacts/records/project__investigation-observation/rec-45a1d50b-0dae-47ec-88c3-19cab12238ba.md))_
 
+## verdict-command
+
+### Acceptance
+- **verdict-command**: bin/aff verdict exits 0 only when oracle hashes match, the base pytest failure is assertion-level, and the tests pass at head; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or not_assertion" _(id: [rec-39a10c5a-3bf3-4872-8e98-cb5e1082d5fb](.artifacts/records/project__acceptance/rec-39a10c5a-3bf3-4872-8e98-cb5e1082d5fb.md))_
+
+### Check
+- **verdict-command**: rec-39a10c5a-3bf3-4872-8e98-cb5e1082d5fb; 512796fda9f16f54a5848fdca999755a8e48eb27; fail; tdd _(id: [rec-472fee89-9dd0-4d3f-9428-60c162d31312](.artifacts/records/project__check-run/rec-472fee89-9dd0-4d3f-9428-60c162d31312.md))_
+- **verdict-command**: rec-39a10c5a-3bf3-4872-8e98-cb5e1082d5fb; 512796fda9f16f54a5848fdca999755a8e48eb27; fail; tdd _(id: [rec-9d2aa199-dba5-4711-9c83-1ae38b040ae2](.artifacts/records/project__check-run/rec-9d2aa199-dba5-4711-9c83-1ae38b040ae2.md))_
+- **verdict-command**: rec-39a10c5a-3bf3-4872-8e98-cb5e1082d5fb; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-de4e4041-4f98-4318-8c7a-29f76891473c](.artifacts/records/project__check-run/rec-de4e4041-4f98-4318-8c7a-29f76891473c.md))_
+- **verdict-command**: rec-39a10c5a-3bf3-4872-8e98-cb5e1082d5fb; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; pass; tdd _(id: [rec-f9e29020-10b3-4a6a-883e-33705cf0be98](.artifacts/records/project__check-run/rec-f9e29020-10b3-4a6a-883e-33705cf0be98.md))_
+
+## verdict-command-cli
+
+### Acceptance
+- **verdict-command-cli**: bin/aff verdict subprocess tests refuse a bad amendment signature and an allowlist change, and pass with --cwd pointed at a phase worktree; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "bad_signature or allowlist or cwd_phase" _(id: [rec-7839468b-6ae7-4fe1-a2f7-9c2fcef70187](.artifacts/records/project__acceptance/rec-7839468b-6ae7-4fe1-a2f7-9c2fcef70187.md))_
+
+### Check
+- **verdict-command-cli**: rec-7839468b-6ae7-4fe1-a2f7-9c2fcef70187; 512796fda9f16f54a5848fdca999755a8e48eb27; fail; tdd _(id: [rec-6399fbed-fdee-4ace-9686-57ad579d7fc8](.artifacts/records/project__check-run/rec-6399fbed-fdee-4ace-9686-57ad579d7fc8.md))_
+- **verdict-command-cli**: rec-7839468b-6ae7-4fe1-a2f7-9c2fcef70187; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-e3f5a0b2-504c-4732-961b-8395364e2c96](.artifacts/records/project__check-run/rec-e3f5a0b2-504c-4732-961b-8395364e2c96.md))_
+- **verdict-command-cli**: rec-7839468b-6ae7-4fe1-a2f7-9c2fcef70187; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; pass; tdd _(id: [rec-fe44434d-e52b-49f7-bc0a-5853504a522d](.artifacts/records/project__check-run/rec-fe44434d-e52b-49f7-bc0a-5853504a522d.md))_
+
+## verdict-command-store
+
+### Acceptance
+- **verdict-command-store**: A forged project:check-run under .artifacts does not change a passing or a failing bin/aff verdict; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k forged_check_run _(id: [rec-ad7115bc-82ff-4215-a410-0883b5434294](.artifacts/records/project__acceptance/rec-ad7115bc-82ff-4215-a410-0883b5434294.md))_
+
+### Check
+- **verdict-command-store**: rec-ad7115bc-82ff-4215-a410-0883b5434294; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-46f6a508-fe1d-421a-bed9-1878dc767be4](.artifacts/records/project__check-run/rec-46f6a508-fe1d-421a-bed9-1878dc767be4.md))_
+- **verdict-command-store**: rec-ad7115bc-82ff-4215-a410-0883b5434294; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; pass; tdd _(id: [rec-b7c634e7-4fa8-4795-9239-0130c5afd053](.artifacts/records/project__check-run/rec-b7c634e7-4fa8-4795-9239-0130c5afd053.md))_
+- **verdict-command-store**: rec-ad7115bc-82ff-4215-a410-0883b5434294; 512796fda9f16f54a5848fdca999755a8e48eb27; fail; tdd _(id: [rec-ea18b090-b3ce-49c3-b975-adfbe9401123](.artifacts/records/project__check-run/rec-ea18b090-b3ce-49c3-b975-adfbe9401123.md))_
+
+## verdict-manifest
+
+### Acceptance
+- **verdict-manifest**: git show of a revision yields the manifest claims, the allowlist bytes, and oracle file hashes; a dirty worktree and a non-commit revision do not; tdd; evidence-layer; python3 -m pytest tests/test_manifest.py -q _(id: [rec-a5646067-6c51-44b0-8302-bfae12644013](.artifacts/records/project__acceptance/rec-a5646067-6c51-44b0-8302-bfae12644013.md))_
+
+### Check
+- **verdict-manifest**: rec-a5646067-6c51-44b0-8302-bfae12644013; 86c5ca7847a05fa40cadb02bfe61dd5736b1a33c; fail; tdd _(id: [rec-52963144-3566-4337-8842-2267faaf7472](.artifacts/records/project__check-run/rec-52963144-3566-4337-8842-2267faaf7472.md))_
+- **verdict-manifest**: rec-a5646067-6c51-44b0-8302-bfae12644013; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; pass; tdd _(id: [rec-67039a81-7afb-4f63-8308-e077ad7a1a15](.artifacts/records/project__check-run/rec-67039a81-7afb-4f63-8308-e077ad7a1a15.md))_
+- **verdict-manifest**: rec-a5646067-6c51-44b0-8302-bfae12644013; 512796fda9f16f54a5848fdca999755a8e48eb27; pass; tdd _(id: [rec-d123be01-a6c5-4d46-a330-df7ae9819fe8](.artifacts/records/project__check-run/rec-d123be01-a6c5-4d46-a330-df7ae9819fe8.md))_
+- **verdict-manifest**: rec-a5646067-6c51-44b0-8302-bfae12644013; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-fa7d1356-8b6d-4c5a-bea8-ce0837dbc846](.artifacts/records/project__check-run/rec-fa7d1356-8b6d-4c5a-bea8-ce0837dbc846.md))_
+
 ## verification-policy-review
 
 ### Check
@@ -2449,6 +2796,47 @@ print("phase checks only")
 
 ### Check
 - **verification-policy-suite**: verification-policy-suite; 8119e8e0cc031286ad62da0fd4ba9750b7223749; fail; check _(id: [rec-f48be939-020c-4f90-a9a6-2ff91f978979](.artifacts/records/project__check-run/rec-f48be939-020c-4f90-a9a6-2ff91f978979.md))_
+
+## verify-atomic-claims
+
+### Acceptance
+- **verify-atomic-claims**: a planned deliver work-item + thin acceptance shape validates through the real adaptive-artifacts create/capture path used by plan-phase; tdd; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k 'thin_deliver and (capture or create or cli)' -q _(id: [rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca](.artifacts/records/project__acceptance/rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca.md))_
+
+### Check
+- **verify-atomic-claims**: rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca; 464d6813f21f624097f5bfbfb293c8ede2478e49; fail; tdd _(id: [rec-1210bd14-9aeb-4ef1-b4a4-9d5b2b76f02b](.artifacts/records/project__check-run/rec-1210bd14-9aeb-4ef1-b4a4-9d5b2b76f02b.md))_
+- **verify-atomic-claims**: rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca; 3b2f808f60f93b4db108543986be05d184226566; pass; tdd _(id: [rec-2c960c5e-7be0-451c-bb3e-584e220cae76](.artifacts/records/project__check-run/rec-2c960c5e-7be0-451c-bb3e-584e220cae76.md))_
+- **verify-atomic-claims**: rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca; 50303893af61c747620551cd512239752b0528a1; pass; tdd _(id: [rec-a2e34148-a8b4-46e6-af13-d889aeb9c40d](.artifacts/records/project__check-run/rec-a2e34148-a8b4-46e6-af13-d889aeb9c40d.md))_
+- **verify-atomic-claims**: rec-0cd6c518-1e3e-4149-8bbe-595d2465cdca; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; tdd _(id: [rec-d5549e61-cf67-43db-b15d-e13f4ec0b860](.artifacts/records/project__check-run/rec-d5549e61-cf67-43db-b15d-e13f4ec0b860.md))_
+
+## verify-atomic-claims-contract
+
+### Acceptance
+- **verify-atomic-claims-contract**: criterion is optional on acceptance; brief/plan/verification acceptance roles do not require it; check; workflow-loop; python3 -m pytest tests/test_plan_trace.py -k criterion_optional_in_contract -q _(id: [rec-f6cf9299-6647-4ad0-b659-e4d890f6f3c3](.artifacts/records/project__acceptance/rec-f6cf9299-6647-4ad0-b659-e4d890f6f3c3.md))_
+
+### Check
+- **verify-atomic-claims-contract**: rec-f6cf9299-6647-4ad0-b659-e4d890f6f3c3; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-477b9291-31fa-4db1-9e05-902c07da1a7a](.artifacts/records/project__check-run/rec-477b9291-31fa-4db1-9e05-902c07da1a7a.md))_
+- **verify-atomic-claims-contract**: rec-f6cf9299-6647-4ad0-b659-e4d890f6f3c3; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; check _(id: [rec-c315552f-a014-4323-bf84-2d406f4395a7](.artifacts/records/project__check-run/rec-c315552f-a014-4323-bf84-2d406f4395a7.md))_
+- **verify-atomic-claims-contract**: rec-f6cf9299-6647-4ad0-b659-e4d890f6f3c3; 3b2f808f60f93b4db108543986be05d184226566; pass; check _(id: [rec-c353b2cb-5f03-4a8c-aa05-fe4dc0c5b581](.artifacts/records/project__check-run/rec-c353b2cb-5f03-4a8c-aa05-fe4dc0c5b581.md))_
+
+## verify-atomic-claims-pytest
+
+### Acceptance
+- **verify-atomic-claims-pytest**: python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q is green; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-e1380e66-3c40-4868-b412-12685050d7fd](.artifacts/records/project__acceptance/rec-e1380e66-3c40-4868-b412-12685050d7fd.md))_
+
+### Check
+- **verify-atomic-claims-pytest**: rec-e1380e66-3c40-4868-b412-12685050d7fd; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-44265bf0-a53c-477b-ba0a-106793305a01](.artifacts/records/project__check-run/rec-44265bf0-a53c-477b-ba0a-106793305a01.md))_
+- **verify-atomic-claims-pytest**: rec-e1380e66-3c40-4868-b412-12685050d7fd; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; check _(id: [rec-5989ac83-4afa-4a3a-9b0b-23d6289ae218](.artifacts/records/project__check-run/rec-5989ac83-4afa-4a3a-9b0b-23d6289ae218.md))_
+- **verify-atomic-claims-pytest**: rec-e1380e66-3c40-4868-b412-12685050d7fd; 3b2f808f60f93b4db108543986be05d184226566; pass; check _(id: [rec-83f49d0c-6adc-49e3-9fd4-c84204d2fef4](.artifacts/records/project__check-run/rec-83f49d0c-6adc-49e3-9fd4-c84204d2fef4.md))_
+
+## verify-atomic-claims-skills
+
+### Acceptance
+- **verify-atomic-claims-skills**: plan-phase, discuss, and execute-phase require atomic deliver/repair ids, thin acceptances, and original-text briefs; examples match the contract; check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_plan_trace.py -q _(id: [rec-d0219464-ac52-415e-b926-d817876f0d8a](.artifacts/records/project__acceptance/rec-d0219464-ac52-415e-b926-d817876f0d8a.md))_
+
+### Check
+- **verify-atomic-claims-skills**: rec-d0219464-ac52-415e-b926-d817876f0d8a; 3b2f808f60f93b4db108543986be05d184226566; pass; check _(id: [rec-4697bb50-7c39-441a-a707-1e06ffcb070a](.artifacts/records/project__check-run/rec-4697bb50-7c39-441a-a707-1e06ffcb070a.md))_
+- **verify-atomic-claims-skills**: rec-d0219464-ac52-415e-b926-d817876f0d8a; 50303893af61c747620551cd512239752b0528a1; pass; check _(id: [rec-6bb8fb98-b7e3-4d84-9e09-f5b5b95e6ae3](.artifacts/records/project__check-run/rec-6bb8fb98-b7e3-4d84-9e09-f5b5b95e6ae3.md))_
+- **verify-atomic-claims-skills**: rec-d0219464-ac52-415e-b926-d817876f0d8a; 0cdee541c8b953f974e66ee9b99d79fa7eeccf26; pass; check _(id: [rec-dd491e60-fc28-49cf-a8c6-d8bd50fa1b07](.artifacts/records/project__check-run/rec-dd491e60-fc28-49cf-a8c6-d8bd50fa1b07.md))_
 
 ## verify-authority
 
@@ -2571,6 +2959,36 @@ print("phase checks only")
 
 ### Check
 - **verify-claim-witnesses-worktree**: rec-c63b67b2-6f9b-4a18-a1a7-901f75846af3; d680521c3270c954d22b915c641c7e733595599f; pass; check _(id: [rec-b9f1fc89-3edc-4b4f-a430-e809670e2c77](.artifacts/records/project__check-run/rec-b9f1fc89-3edc-4b4f-a430-e809670e2c77.md))_
+
+## verify-claims-manifest
+
+### Acceptance
+- **verify-claims-manifest**: aff verdict exits 0 only when manifest hashes match the tree at --at, the oracle tests fail at --base on an assertion, and they pass at --at; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or not_assertion" _(id: [rec-f25d51ef-6c72-4a13-b9d6-4e9ec7a177b3](.artifacts/records/project__acceptance/rec-f25d51ef-6c72-4a13-b9d6-4e9ec7a177b3.md))_
+
+### Check
+- **verify-claims-manifest**: rec-f25d51ef-6c72-4a13-b9d6-4e9ec7a177b3; 512796fda9f16f54a5848fdca999755a8e48eb27; fail; tdd _(id: [rec-6db90d14-4fe2-454b-9a65-286bfb6f2ff9](.artifacts/records/project__check-run/rec-6db90d14-4fe2-454b-9a65-286bfb6f2ff9.md))_
+- **verify-claims-manifest**: rec-f25d51ef-6c72-4a13-b9d6-4e9ec7a177b3; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; pass; tdd _(id: [rec-72796c03-48e7-490c-998b-cb56960549cc](.artifacts/records/project__check-run/rec-72796c03-48e7-490c-998b-cb56960549cc.md))_
+- **verify-claims-manifest**: rec-f25d51ef-6c72-4a13-b9d6-4e9ec7a177b3; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-ebe28027-b90a-41b5-a853-04c14198365c](.artifacts/records/project__check-run/rec-ebe28027-b90a-41b5-a853-04c14198365c.md))_
+
+## verify-claims-manifest-forge
+
+### Acceptance
+- **verify-claims-manifest-forge**: A forged stored check-run does not change the verdict; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k forged_check_run _(id: [rec-1aaa8c5e-adec-4df2-bc30-d09600c12903](.artifacts/records/project__acceptance/rec-1aaa8c5e-adec-4df2-bc30-d09600c12903.md))_
+
+### Check
+- **verify-claims-manifest-forge**: rec-1aaa8c5e-adec-4df2-bc30-d09600c12903; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-72e7af45-11c8-4228-993f-14b32c3bc0c4](.artifacts/records/project__check-run/rec-72e7af45-11c8-4228-993f-14b32c3bc0c4.md))_
+- **verify-claims-manifest-forge**: rec-1aaa8c5e-adec-4df2-bc30-d09600c12903; 512796fda9f16f54a5848fdca999755a8e48eb27; fail; tdd _(id: [rec-ade425ff-2696-4dc8-8808-c73db83a5329](.artifacts/records/project__check-run/rec-ade425ff-2696-4dc8-8808-c73db83a5329.md))_
+- **verify-claims-manifest-forge**: rec-1aaa8c5e-adec-4df2-bc30-d09600c12903; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; pass; tdd _(id: [rec-ceeb6cf1-2767-4045-a223-d54917424c6d](.artifacts/records/project__check-run/rec-ceeb6cf1-2767-4045-a223-d54917424c6d.md))_
+
+## verify-claims-manifest-suite
+
+### Acceptance
+- **verify-claims-manifest-suite**: CLI subprocess tests cover the pass, a hash mismatch, a missing or invalid amendment signature, an allowlist change, and a --cwd pointed at a phase worktree other than the store checkout; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or bad_signature or allowlist or cwd_phase" _(id: [rec-27b93db5-292e-4864-8bc9-ac743955d861](.artifacts/records/project__acceptance/rec-27b93db5-292e-4864-8bc9-ac743955d861.md))_
+
+### Check
+- **verify-claims-manifest-suite**: rec-27b93db5-292e-4864-8bc9-ac743955d861; 512796fda9f16f54a5848fdca999755a8e48eb27; fail; tdd _(id: [rec-a2082b3e-966f-4582-ad33-99064849cb1a](.artifacts/records/project__check-run/rec-a2082b3e-966f-4582-ad33-99064849cb1a.md))_
+- **verify-claims-manifest-suite**: rec-27b93db5-292e-4864-8bc9-ac743955d861; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-e0a361c5-0c08-41b2-8dc0-07c6e326b849](.artifacts/records/project__check-run/rec-e0a361c5-0c08-41b2-8dc0-07c6e326b849.md))_
+- **verify-claims-manifest-suite**: rec-27b93db5-292e-4864-8bc9-ac743955d861; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; pass; tdd _(id: [rec-eb6538b1-57ce-4eba-8971-d89d7e714ce2](.artifacts/records/project__check-run/rec-eb6538b1-57ce-4eba-8971-d89d7e714ce2.md))_
 
 ## verify-dashboard-actions-phase
 
@@ -2956,6 +3374,43 @@ print("phase checks only")
 
 ### Observation
 - **verify-needs-you-phase**: tab from a live effort with Needs you items to a pane whose task table is hidden bounces back: Screen._reset_focus moves focus from the hidden TaskTable to the sibling NeedsList, and TabbedContent re-activates the pane holding focus. Reproduces every run; absent without Needs you items.; dashboard-features _(id: [rec-63c67821-d6d9-4012-8437-37c5beda8310](.artifacts/records/project__investigation-observation/rec-63c67821-d6d9-4012-8437-37c5beda8310.md))_
+
+## verify-oracle-witnesses
+
+### Acceptance
+- **verify-oracle-witnesses**: tdd; workflow-loop; python3 -m pytest tests/test_close_batch.py -q -k 'cli and (oracle or freeze or assertion_level or amendment)' _(id: [rec-c295c01e-9f40-460e-b8f9-4b0b26299a6e](.artifacts/records/project__acceptance/rec-c295c01e-9f40-460e-b8f9-4b0b26299a6e.md))_
+
+### Check
+- **verify-oracle-witnesses**: rec-c295c01e-9f40-460e-b8f9-4b0b26299a6e; b9adc0ee0836b843fd963ca38ad105d5e2176b68; pass; tdd _(id: [rec-0c86f52f-28de-4d06-9f45-48a6da28364b](.artifacts/records/project__check-run/rec-0c86f52f-28de-4d06-9f45-48a6da28364b.md))_
+- **verify-oracle-witnesses**: rec-c295c01e-9f40-460e-b8f9-4b0b26299a6e; 977750c3c4f05015bcf03d4b82c77d25c8f039d3; fail; tdd _(id: [rec-39f7cca6-c11e-498c-b40c-48ba1cc8d731](.artifacts/records/project__check-run/rec-39f7cca6-c11e-498c-b40c-48ba1cc8d731.md))_
+- **verify-oracle-witnesses**: rec-c295c01e-9f40-460e-b8f9-4b0b26299a6e; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; tdd _(id: [rec-5826c84b-95ff-46ad-9072-9396857c9fd0](.artifacts/records/project__check-run/rec-5826c84b-95ff-46ad-9072-9396857c9fd0.md))_
+
+## verify-oracle-witnesses-freeze-fields
+
+### Acceptance
+- **verify-oracle-witnesses-freeze-fields**: check; workflow-loop; python3 -c "import json;from pathlib import Path;d=json.loads(Path('contract/project-design.json').read_text());a=next(t for t in d['records'] if t['name']=='acceptance');assert 'test_ids' in a['payload'] and 'oracle_hashes' in a['payload'];assert 'oracle-amendment' in {t['name'] for t in d['records']}" _(id: [rec-702fc0af-6e5d-4df2-ba30-0b17e614f28d](.artifacts/records/project__acceptance/rec-702fc0af-6e5d-4df2-ba30-0b17e614f28d.md))_
+
+### Check
+- **verify-oracle-witnesses-freeze-fields**: rec-702fc0af-6e5d-4df2-ba30-0b17e614f28d; b9adc0ee0836b843fd963ca38ad105d5e2176b68; pass; check _(id: [rec-5f177a58-4811-4b74-b4b3-579a30074e91](.artifacts/records/project__check-run/rec-5f177a58-4811-4b74-b4b3-579a30074e91.md))_
+- **verify-oracle-witnesses-freeze-fields**: rec-702fc0af-6e5d-4df2-ba30-0b17e614f28d; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-7bb1d973-b1b1-4435-bd9c-89df33e56ac5](.artifacts/records/project__check-run/rec-7bb1d973-b1b1-4435-bd9c-89df33e56ac5.md))_
+
+## verify-oracle-witnesses-mechanical-close
+
+### Acceptance
+- **verify-oracle-witnesses-mechanical-close**: check; workflow-loop; python3 -m pytest tests/test_close_batch.py tests/test_oracle_red.py -q -k 'oracle or freeze or assertion_level' _(id: [rec-e671315a-55d8-4a48-82a8-29555da56b42](.artifacts/records/project__acceptance/rec-e671315a-55d8-4a48-82a8-29555da56b42.md))_
+
+### Check
+- **verify-oracle-witnesses-mechanical-close**: rec-e671315a-55d8-4a48-82a8-29555da56b42; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-584ac600-c30f-4c7b-b6b8-edd2e50fe872](.artifacts/records/project__check-run/rec-584ac600-c30f-4c7b-b6b8-edd2e50fe872.md))_
+- **verify-oracle-witnesses-mechanical-close**: rec-e671315a-55d8-4a48-82a8-29555da56b42; b9adc0ee0836b843fd963ca38ad105d5e2176b68; pass; check _(id: [rec-86243b03-012a-484a-813d-7043c980edb8](.artifacts/records/project__check-run/rec-86243b03-012a-484a-813d-7043c980edb8.md))_
+
+## verify-oracle-witnesses-skills
+
+### Acceptance
+- **verify-oracle-witnesses-skills**: check; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_oracle_red.py -q _(id: [rec-f05bed1e-a34d-456b-9979-59572fc49c56](.artifacts/records/project__acceptance/rec-f05bed1e-a34d-456b-9979-59572fc49c56.md))_
+
+### Check
+- **verify-oracle-witnesses-skills**: rec-f05bed1e-a34d-456b-9979-59572fc49c56; e04bc30552d35b83b19337abee8df4c26cb55b61; pass; check _(id: [rec-826e8165-2d49-46d1-8352-1ea8e08a394f](.artifacts/records/project__check-run/rec-826e8165-2d49-46d1-8352-1ea8e08a394f.md))_
+- **verify-oracle-witnesses-skills**: rec-f05bed1e-a34d-456b-9979-59572fc49c56; b9adc0ee0836b843fd963ca38ad105d5e2176b68; pass; check _(id: [rec-d6ee89f3-7ea5-4c28-99f1-48eb510ca759](.artifacts/records/project__check-run/rec-d6ee89f3-7ea5-4c28-99f1-48eb510ca759.md))_
 
 ## verify-path-test-gaps
 
