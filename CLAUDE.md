@@ -2,7 +2,8 @@
 
 Follow [AGENTS.md](AGENTS.md). This repo is the evidence layer. Skills,
 the dashboard, and session scripts live in the orchestra plugin at
-`~/orchestra`.
+`~/orchestra`. This repo's `aff` is verdict-only.
+check, close-batch, and the store client live in orchestra.
 
 ## Testing
 

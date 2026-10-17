@@ -23,9 +23,19 @@ def test_moved_module_does_not_import(module: str) -> None:
         importlib.import_module(module)
 
 
-def test_aa_py_does_not_mention_dashboard() -> None:
-    source = (REPO_ROOT / "affidavit" / "aa.py").read_text(encoding="utf-8")
-    assert "dashboard" not in source
+_DELETED_MODULES = (
+    "aa.py",
+    "aa_resolve.py",
+    "check.py",
+    "close_batch.py",
+    "policy.py",
+)
+
+
+def test_store_modules_absent() -> None:
+    affidavit = REPO_ROOT / "affidavit"
+    missing = [name for name in _DELETED_MODULES if not (affidavit / name).exists()]
+    assert missing == list(_DELETED_MODULES)
 
 
 _PROTOCOL_DOCS = ("AGENTS.md", "README.md", "CLAUDE.md")
@@ -44,6 +54,8 @@ def test_protocol_docs_describe_the_evidence_layer() -> None:
         assert "evidence layer" in lowered or "evidence-layer" in lowered, name
         for needle in _REMOVED_INSTALL_PATHS:
             assert needle not in text, f"{name} still cites {needle}"
+        assert "verdict-only" in lowered, name
+        assert "check, close-batch, and the store client" in lowered, name
 
 
 _STORE_TOKENS = (

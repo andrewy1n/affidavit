@@ -1,45 +1,34 @@
 # affidavit
 
-Evidence layer for a software-engineering loop on adaptive-artifacts.
-This repo keeps `aff check`, `aff close-batch`, and `aff verdict`.
+Evidence layer for a software-engineering loop.
+This repo's `aff` is verdict-only.
 
 The orchestration plugin is orchestra at `~/orchestra`: skills, the
-dashboard, session scripts, and agents.
+dashboard, session scripts, and agents. check, close-batch, and the
+store client live in orchestra.
 Install that plugin for the skill loop. This repo is the checkout that
 provides the `aff` binary (`~/affidavit`).
 
-Requires the **adaptive-artifacts** plugin (`adaptive-artifacts` on PATH).
-
 ## CLI
 
-`bin/aff` dispatches the evidence commands. From this checkout, inside
-a project that has a store when the command writes one:
+`bin/aff` dispatches `verdict`. From this checkout:
 
 ```bash
-bin/aff check --help
-bin/aff close-batch --help
 bin/aff verdict --help
-
-bin/aff check --acceptance <acceptance-id>
-bin/aff check --acceptance <id> --cwd /path/to/phase-worktree
-bin/aff check --acceptance <id> --allow-dirty   # pass on a dirty tree
 
 bin/aff verdict --cwd <repo> --at <sha> <claim-id>
 ```
 
-`check` runs an acceptance whose method is `tdd` or `check` and writes
-a `project:check-run`. It refuses `method=manual`. `close-batch` closes
-a work-item from runner-produced check-runs. `verdict` re-executes the
-frozen oracle tests for a claim. It does not read the artifact store.
-
-Orchestra skills call these commands on `PATH`.
+`verdict` re-executes the frozen oracle tests for a claim. It does not
+read a record store. check, close-batch, and the store client live in
+orchestra.
 
 ## What lives where
 
 | Here | `~/orchestra` |
 |---|---|
 | `affidavit/` and `bin/aff` | skills (same slugs as before) |
-| tests for the evidence CLI | dashboard and session scripts |
+| tests for `aff verdict` | dashboard, session scripts, and the store client |
 | this repo's `.artifacts/` (`evidence-layer`) | `agents/` and the reviewer and suite modules |
 
 `affidavit` does not import the dashboard or orchestra. Orchestra may

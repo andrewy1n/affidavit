@@ -1,7 +1,7 @@
 """Re-execute frozen oracle tests at two revisions.
 
-Reads manifests, allowlists, and oracle blobs from git. Does not read the
-artifact store and does not call adaptive-artifacts.
+Reads manifests, allowlists, and oracle blobs from git. Does not read a
+record store.
 """
 
 from __future__ import annotations

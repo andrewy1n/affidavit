@@ -1,8 +1,8 @@
 # AGENTS.md
 
 This repo is the evidence layer. Plugin **0.2.0** keeps the `aff`
-commands `check`, `close-batch`, and `verdict`, and the modules that
-implement them. It is not a template you copy into other projects.
+command `verdict`. `aff` is verdict-only. It is not a template you copy
+into other projects.
 
 The orchestration plugin is **orchestra** at `~/orchestra`. That repo
 holds the skills, the dashboard, the session scripts, and `agents/`.
@@ -49,12 +49,11 @@ and phase positions live with the orchestra skills.
 
 ## What stays here
 
-`bin/aff check`, `bin/aff close-batch`, and `bin/aff verdict`.
-`affidavit.aa` does not import the dashboard. This package does not
-import orchestra. `aff verdict` does not read the artifact store.
+`bin/aff verdict`. This package does not import orchestra. `aff verdict`
+does not read a record store.
 
-A `tdd` or `check` result is written by `aff check`. Orchestra skills
-call those commands on `PATH`. `~/affidavit` is the checkout that
+check, close-batch, and the store client live in orchestra. Orchestra
+skills call `aff verdict` on `PATH`. `~/affidavit` is the checkout that
 provides the `aff` binary.
 
 ## Contract and the runtime
