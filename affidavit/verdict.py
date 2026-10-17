@@ -26,7 +26,6 @@ from affidavit.manifest import (
 from affidavit.oracle_red import is_assertion_level_failure
 
 _FAILED_RE = re.compile(r"^FAILED\s+(\S+)", re.MULTILINE)
-_PROBLEM_RE = re.compile(r"^(?:FAILED|ERROR)\s+(\S+)", re.MULTILINE)
 
 
 def run_verdict(
@@ -87,11 +86,11 @@ def run_verdict(
         base_nodes = _union(claim.tests for _, _, claim, _ in pending)
         head_nodes = _union(claim.tests for _, _, _, claim in pending)
         _, base_out = _pytest_at(root, base_commit, base_nodes)
-        head_code, head_out = _pytest_at(root, at_commit, head_nodes)
-        for index, claim_id, base_claim, head_claim in pending:
+        head_code, _ = _pytest_at(root, at_commit, head_nodes)
+        for index, claim_id, base_claim, _head_claim in pending:
             if not _base_is_assertion(base_out, base_claim.tests):
                 verdicts[index] = _fail(claim_id, "not assertion")
-            elif not _head_passed(head_code, head_out, head_claim.tests):
+            elif not _head_passed(head_code):
                 verdicts[index] = _fail(claim_id, "tests failed")
             else:
                 verdicts[index] = {"id": claim_id, "result": "pass"}
@@ -153,15 +152,8 @@ def _base_is_assertion(output: str, tests: Sequence[str]) -> bool:
     return is_assertion_level_failure(output, list(tests))
 
 
-def _head_passed(exit_code: int, output: str, tests: Sequence[str]) -> bool:
-    if exit_code == 0:
-        return True
-    if not tests:
-        return False
-    problems = _PROBLEM_RE.findall(output)
-    if not problems:
-        return False
-    return not any(_node_reported(problems, node) for node in tests)
+def _head_passed(exit_code: int) -> bool:
+    return exit_code == 0
 
 
 def _pytest_at(cwd: Path, commit: str, node_ids: Sequence[str]) -> tuple[int, str]:

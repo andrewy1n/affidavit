@@ -16,6 +16,7 @@ ORACLE_REL = "tests/test_widget.py"
 ORACLE = b"def test_widget():\n    from app import value\n    assert value == 1\n"
 ORACLE_AMENDED = b"def test_widget():\n    # amended\n    from app import value\n    assert value == 1\n"
 APP_RED = b"value = 0\n"
+APP_STILL_RED = b"value = 2\n"
 APP_GREEN = b"value = 1\n"
 APP_BROKEN = b"import missing_mod_xyz\nvalue = 0\n"
 ALLOW = (
@@ -294,6 +295,63 @@ def test_verdict_refuses_bad_signature(tmp_path: Path) -> None:
     payload = _payload(proc)
     assert payload["result"] == "fail"
     assert payload["claims"] == [{"id": CLAIM, "result": "fail", "reason": "bad signature"}]
+
+
+def test_verdict_accepts_signed_amendment(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    key, blob = _generate_key(tmp_path)
+    allow = _allowlist("owner", blob)
+    old = _sha256(ORACLE)
+    new = _sha256(ORACLE_AMENDED)
+    amendment = _sign(
+        key,
+        {
+            "claim": CLAIM,
+            "old_tests": [NODE],
+            "new_tests": [NODE],
+            "old_hashes": {ORACLE_REL: old},
+            "new_hashes": {ORACLE_REL: new},
+        },
+    )
+    base, head = _repo(
+        root,
+        base_app=APP_RED,
+        head_app=APP_GREEN,
+        base_oracle=ORACLE,
+        head_oracle=ORACLE_AMENDED,
+        base_allow=allow,
+        head_allow=allow,
+        head_amendments=[amendment],
+    )
+    proc = _run(root, head, base)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert _payload(proc) == {"result": "pass", "claims": [{"id": CLAIM, "result": "pass"}]}
+
+
+def test_verdict_refuses_head_failure(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    base, head = _repo(root, base_app=APP_RED, head_app=APP_STILL_RED)
+    proc = _run(root, head, base)
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    payload = _payload(proc)
+    assert payload["result"] == "fail"
+    assert payload["claims"] == [{"id": CLAIM, "result": "fail", "reason": "tests failed"}]
+
+
+def test_verdict_refuses_missing_amendment(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    base, head = _repo(
+        root,
+        base_app=APP_RED,
+        head_app=APP_GREEN,
+        base_oracle=ORACLE,
+        head_oracle=ORACLE_AMENDED,
+    )
+    proc = _run(root, head, base)
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    payload = _payload(proc)
+    assert payload["result"] == "fail"
+    assert payload["claims"] == [{"id": CLAIM, "result": "fail", "reason": "missing step"}]
 
 
 def test_verdict_refuses_allowlist_change(tmp_path: Path) -> None:
