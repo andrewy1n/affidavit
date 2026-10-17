@@ -9,6 +9,7 @@ from pathlib import Path
 
 from affidavit.check import DEFAULT_TIMEOUT_S, run_check
 from affidavit.close_batch import main as close_batch_main
+from affidavit.verdict import run_verdict
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -64,6 +65,23 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="git cwd for red-first ancestry checks (default: process cwd)",
     )
+
+    verdict = sub.add_parser(
+        "verdict",
+        help="Re-execute frozen oracle tests at two revisions",
+    )
+    verdict.add_argument(
+        "--cwd",
+        default=None,
+        help="Git repository (default: process cwd)",
+    )
+    verdict.add_argument("--at", required=True, help="Revision where oracle tests must pass")
+    verdict.add_argument(
+        "--base",
+        default=None,
+        help="Revision where oracle tests must fail on an assertion (default: merge-base with main)",
+    )
+    verdict.add_argument("claim_ids", nargs="+", metavar="CLAIM", help="Claim ids to judge")
     return parser
 
 
@@ -89,5 +107,10 @@ def main(argv: list[str] | None = None) -> int:
         if args.cwd is not None:
             argv.extend(["--cwd", args.cwd])
         return close_batch_main(argv)
+    if args.command == "verdict":
+        work = Path(args.cwd) if args.cwd else Path.cwd()
+        payload = run_verdict(work, args.at, args.base, args.claim_ids)
+        print(json.dumps(payload, separators=(",", ":")))
+        return 0 if payload["result"] == "pass" else 1
     parser.error(f"unknown command {args.command!r}")
     return 2
