@@ -16,6 +16,15 @@ from typing import Any, Mapping, Sequence
 
 MANIFEST_PATH = ".affidavit/manifest.json"
 ALLOWLIST_PATH = ".affidavit/allowed_signers"
+DEFAULT_RUNNER = (
+    "python3",
+    "-m",
+    "pytest",
+    "-o",
+    "junit_family=xunit1",
+    "{tests}",
+    "--junitxml={report}",
+)
 
 _HASH_RE = re.compile(r"^sha256:[0-9a-fA-F]{64}$")
 
@@ -36,6 +45,7 @@ class Claim:
 class Manifest:
     claims: tuple[Claim, ...]
     amendments: tuple[dict[str, Any], ...]
+    runner: tuple[str, ...]
 
 
 def resolve_commit(cwd: Path | str, rev: str) -> str:
@@ -59,7 +69,9 @@ def load_manifest(cwd: Path | str, revision: str) -> Manifest:
 
     ``claims`` become ``Claim`` values (id, text, node-id tests, and
     ``oracle_hashes``). ``amendments`` are returned as parsed objects with
-    no signature check. A missing blob or invalid JSON raises ``ManifestError``.
+    no signature check. An absent ``runner`` is ``DEFAULT_RUNNER``. A present
+    ``runner`` must be a non-empty argv list with ``{tests}`` and ``{report}``.
+    A missing blob, invalid JSON, or bad runner raises ``ManifestError``.
     """
     commit = resolve_commit(cwd, revision)
     try:
@@ -107,7 +119,28 @@ def _parse_manifest(parsed: Any) -> Manifest:
     if not isinstance(claims_raw, list):
         raise ManifestError("manifest claims must be a list")
     claims = tuple(_parse_claim(item, index) for index, item in enumerate(claims_raw))
-    return Manifest(claims=claims, amendments=_parse_amendments(parsed.get("amendments")))
+    return Manifest(
+        claims=claims,
+        amendments=_parse_amendments(parsed.get("amendments")),
+        runner=_parse_runner(parsed),
+    )
+
+
+def _parse_runner(parsed: Mapping[str, Any]) -> tuple[str, ...]:
+    if "runner" not in parsed:
+        return DEFAULT_RUNNER
+    raw = parsed["runner"]
+    if (
+        not isinstance(raw, list)
+        or not raw
+        or not all(isinstance(item, str) and item for item in raw)
+        or sum(item == "{tests}" for item in raw) != 1
+        or not any("{report}" in item for item in raw)
+    ):
+        raise ManifestError(
+            "runner must be a non-empty argv list with {tests} and {report}"
+        )
+    return tuple(raw)
 
 
 def _parse_claim(raw: Any, index: int) -> Claim:
