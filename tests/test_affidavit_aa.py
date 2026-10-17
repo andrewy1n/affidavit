@@ -10,8 +10,7 @@ from unittest.mock import patch
 import pytest
 
 from conftest import make_git_repo
-from dashboard import artifact_store as artifact_store_mod
-from affidavit import aa
+from affidavit import aa, aa_resolve
 
 
 def _meta(store: Path) -> Path:
@@ -75,5 +74,10 @@ def test_run_aa_raises_when_binding_points_at_missing_store(home):
     _meta(home / ".artifacts" / repo.name)
     (repo / ".artifacts").mkdir(parents=True, exist_ok=True)
     (repo / ".artifacts" / "store-binding.json").write_text(json.dumps({"store": "local"}))
-    with pytest.raises(artifact_store_mod.StoreBindingError):
+    with pytest.raises(aa_resolve.StoreBindingError):
         aa.run_aa("list", root=repo)
+
+
+def test_aa_py_does_not_mention_dashboard():
+    source = (Path(__file__).resolve().parents[1] / "affidavit" / "aa.py").read_text()
+    assert "dashboard" not in source
