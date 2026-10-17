@@ -1,7 +1,12 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:b30b39add5281909cdd86a72565d127959b8807b298a9d63b171a6a489207f01
+> Store state: sha256:c59bd64a530ce201a57efaf6ff4ae9d038f4a0f139964e3209f82f2a003e5800
+
+## claims-manifest
+
+### Phase
+- **claims-manifest**: Committed claims manifest and re-executing aff verdict; 1; evidence-layer _(id: [rec-e988459a-917e-4041-979f-2cfb18bb29c8](.artifacts/records/project__phase/rec-e988459a-917e-4041-979f-2cfb18bb29c8.md))_
 
 ## dashboard-view
 
@@ -36,6 +41,11 @@
 - **close-step-skill**: execute-phase documents the close step with a payload the contract accepts; skill/contract consistency tests pass; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py -q _(id: [rec-8bcac210-20bd-42a8-b0ea-953bd412937a](.artifacts/records/project__acceptance/rec-8bcac210-20bd-42a8-b0ea-953bd412937a.md))_
 - **dashboard-closed-goals**: build_model leaves out an effort whose goal has status closed; tdd; workflow-loop; python3 -m pytest tests/test_dashboard_model.py -q _(id: [rec-f02ec3b2-3bd6-496f-933a-1506d3b4a877](.artifacts/records/project__acceptance/rec-f02ec3b2-3bd6-496f-933a-1506d3b4a877.md))_
 - **goal-status-field**: A goal and position superseded with status closed are absent from handoff and dashboard views; records without status still render; tdd; workflow-loop; python3 -m pytest tests/test_goal_close.py -q _(id: [rec-1f0b047c-50e6-4c2d-8c91-10a6c7d220e0](.artifacts/records/project__acceptance/rec-1f0b047c-50e6-4c2d-8c91-10a6c7d220e0.md))_
+
+## orchestration-split
+
+### Phase
+- **orchestration-split**: Skills, dashboard, and scripts move to an orchestration repo; 2; evidence-layer _(id: [rec-338a97f1-c18a-49dc-a3c9-6c634c20650a](.artifacts/records/project__phase/rec-338a97f1-c18a-49dc-a3c9-6c634c20650a.md))_
 
 ## plugin-root-and-cli
 
@@ -74,6 +84,11 @@
 - **ag-outliers**: A fixture yields the top sessions per metric in the expected order, with references and values only, and fewer than top entries when there are fewer sessions.; tdd; session-analysis; python3 -m pytest -q tests/test_session_outliers.py _(id: [rec-4b4378e7-5443-435e-86ab-02ad515ebb4d](.artifacts/records/project__acceptance/rec-4b4378e7-5443-435e-86ab-02ad515ebb4d.md))_
 - **ag-tool-skill-rollup**: A fixture yields exact per-tool calls, errors, error rate, retries and session counts, and per-skill invocation and session counts, in sorted order.; tdd; session-analysis; python3 -m pytest -q tests/test_tool_skill_rollup.py _(id: [rec-f283ff9c-78e6-439b-ae65-90ef88690304](.artifacts/records/project__acceptance/rec-f283ff9c-78e6-439b-ae65-90ef88690304.md))_
 
+## evidence-kind
+
+### Phase
+- **evidence-kind**: Requirement evidence_kind enforcement; 3; evidence-layer _(id: [rec-8152251a-6238-4841-8183-6717775aeb30](.artifacts/records/project__phase/rec-8152251a-6238-4841-8183-6717775aeb30.md))_
+
 ## phase-position
 
 ### Acceptance
@@ -105,6 +120,11 @@
 - **verify-end-to-end-phase**: Scripted end-to-end test and both full suites pass; check; dashboard; cd ~/adaptive-artifacts && python3 -m pytest tools/runtime/tests -q && cd ~/se-workflow && python3 -m pytest tests -q _(id: [rec-a5e71d14-1f25-4868-a42e-3a2b17e16616](.artifacts/records/project__acceptance/rec-a5e71d14-1f25-4868-a42e-3a2b17e16616.md))_
 - **verify-end-to-end-phase-clear**: The watch-dashboard dashboard shows no Open Question, Needs Human, or Unsigned Manual Check; check; dashboard; ~/se-workflow/scripts/dashboard-status ~/se-workflow _(id: [rec-9dce7bb8-9cc7-4a4d-9ebd-48a749f7cc85](.artifacts/records/project__acceptance/rec-9dce7bb8-9cc7-4a4d-9ebd-48a749f7cc85.md))_
 
+## phase-end-evidence
+
+### Phase
+- **phase-end-evidence**: Phase-end evidence report; 4; evidence-layer _(id: [rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68](.artifacts/records/project__phase/rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68.md))_
+
 ## rename-agent-affidavit
 
 ### Acceptance
@@ -120,6 +140,11 @@
 ### Acceptance
 - **discuss-skill**: skills/discuss/SKILL.md exists and every adaptive-artifacts invocation in it passes the skill/contract consistency test; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_discuss_skill.py -q _(id: [rec-29f17960-fd84-4c12-9d0b-9589e7b71980](.artifacts/records/project__acceptance/rec-29f17960-fd84-4c12-9d0b-9589e7b71980.md))_
 - **route-through-discuss**: engage, plan-phase, execute-phase and README route through discuss and the review gate; consistency tests pass; tdd; workflow-loop; python3 -m pytest tests/test_skill_contract_consistency.py tests/test_discuss_skill.py -q _(id: [rec-aac400ee-30c6-4fd2-a3ba-9fbd756f740a](.artifacts/records/project__acceptance/rec-aac400ee-30c6-4fd2-a3ba-9fbd756f740a.md))_
+
+## evidence-e2e
+
+### Phase
+- **evidence-e2e**: End-to-end deliver loop through aff from a phase worktree; 5; evidence-layer _(id: [rec-47faad46-864c-40bd-baf1-d0d46755ca4b](.artifacts/records/project__phase/rec-47faad46-864c-40bd-baf1-d0d46755ca4b.md))_
 
 ## pyproject-pypi
 
@@ -627,11 +652,6 @@ print("phase checks only")
 - **verify-phase-selector-model**: Model and task tests for default selection, follow/pin, merged activity, scoped counts, and All-phases grouping pass; check; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_tasks.py -q _(id: [rec-c559dd9b-03f5-4cb5-8d62-8dff85a9ad2e](.artifacts/records/project__acceptance/rec-c559dd9b-03f5-4cb5-8d62-8dff85a9ad2e.md))_
 - **verify-phase-selector-suite**: Full non-tmux and tmux test suites pass; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m not tmux && uv run --with textual --with pytest python -m pytest tests -q -m tmux _(id: [rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9](.artifacts/records/project__acceptance/rec-a11805b7-bc3c-4f57-bcb4-db7d8ffa9ed9.md))_
 
-## evidence-kind
-
-### Phase
-- **evidence-kind**: Requirement evidence_kind enforcement; 23; workflow-loop _(id: [rec-8152251a-6238-4841-8183-6717775aeb30](.artifacts/records/project__phase/rec-8152251a-6238-4841-8183-6717775aeb30.md))_
-
 ## human-gates
 
 ### Acceptance
@@ -653,11 +673,6 @@ print("phase checks only")
 - **verify-human-gates-model**: Verbs, plan-review recognition, prompt text, next-step rules, landing state, Merge branch item, and quiet rule hold in model and gates tests; check; dashboard; uv run --with textual --with pytest python -m pytest tests/test_dashboard_model.py tests/test_dashboard_gates.py -q -k gates _(id: [rec-8ca825cb-80c2-47cc-9b12-ebfeb449dca9](.artifacts/records/project__acceptance/rec-8ca825cb-80c2-47cc-9b12-ebfeb449dca9.md))_
 - **verify-human-gates-suite**: The full non-tmux and tmux test suites pass; check; dashboard; uv run --with textual --with pytest --with pytest-xdist python -m pytest tests -q -n 4 -m "not tmux" && uv run --with textual --with pytest python -m pytest tests -q -m tmux _(id: [rec-84b6b2c0-f0cc-49a6-93fd-ebd2e5390f9a](.artifacts/records/project__acceptance/rec-84b6b2c0-f0cc-49a6-93fd-ebd2e5390f9a.md))_
 - **verify-human-gates-tmux**: The status-right needs-you segment appears in a real tmux server when enabled; check; dashboard; uv run --with textual --with pytest python -m pytest tests -q -m tmux -k "status and (gates or needs or segment)" _(id: [rec-fa10fcaa-3669-4d69-a554-844faf4d41b6](.artifacts/records/project__acceptance/rec-fa10fcaa-3669-4d69-a554-844faf4d41b6.md))_
-
-## phase-end-evidence
-
-### Phase
-- **phase-end-evidence**: Phase-end evidence report; 24; workflow-loop _(id: [rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68](.artifacts/records/project__phase/rec-206dc7a5-a4a7-4e2e-ad14-8c28cab7ed68.md))_
 
 ## spec-view
 

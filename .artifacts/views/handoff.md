@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:503fdb593749dfef520b9eccced354b6e745ccf5e75acc242504a04528216033
+> Store state: sha256:7590f14c0c8ad300bfe5f8216d77bb2f640e57d0532b2a0a5b3c5d2878feaacf
 
 ## dashboard
 
@@ -14,6 +14,18 @@
 ### Backlog
 - **journal-detail-xdist-flake**: dashboard; open _(id: [rec-3d8b654b-bf85-4203-9fe8-f0aeeead64f4](.artifacts/records/project__backlog-item/rec-3d8b654b-bf85-4203-9fe8-f0aeeead64f4.md))_
 - **ui-revamp**: dashboard; open _(id: [rec-b7216ac0-0c4a-4436-8388-fccc8922470c](.artifacts/records/project__backlog-item/rec-b7216ac0-0c4a-4436-8388-fccc8922470c.md))_
+
+## evidence-layer
+
+### Goal
+- **evidence-layer**: affidavit is a standalone evidence tool: claims and oracles live in a committed manifest, verdicts come from re-executing frozen tests at a revision, and any orchestration layer gets gate answers only through aff verbs; effort; deliver _(id: [rec-f02f74d8-267c-451c-ab07-bf1c50f7edfa](.artifacts/records/project__active-goal/rec-f02f74d8-267c-451c-ab07-bf1c50f7edfa.md))_
+
+### Position
+- **evidence-layer**: Effort opened; claims-manifest is next for discuss. evidence-kind and phase-end-evidence moved here from workflow-loop.; effort _(id: [rec-228859f4-efbc-47f6-802e-77d81a0e7b8a](.artifacts/records/project__current-position/rec-228859f4-efbc-47f6-802e-77d81a0e7b8a.md))_
+
+### Blocking Question
+- **evidence-layer**: True; orchestration-split: name of the new orchestration repo and its plugin _(id: [rec-5cd01dec-9ebf-421e-b950-7093804415fa](.artifacts/records/project__continuity-question/rec-5cd01dec-9ebf-421e-b950-7093804415fa.md))_
+- **evidence-layer**: True; claims-manifest: where amendment approvals come from _(id: [rec-e11cda42-52a4-46eb-be23-eb254de522e1](.artifacts/records/project__continuity-question/rec-e11cda42-52a4-46eb-be23-eb254de522e1.md))_
 
 ## packaging
 

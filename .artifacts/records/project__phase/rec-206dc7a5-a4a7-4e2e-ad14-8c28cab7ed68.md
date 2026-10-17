@@ -5,14 +5,14 @@
   "identity": "unknown",
   "lifecycle_state": "planned",
   "payload": {
-    "effort": "workflow-loop",
-    "ordinal": 24,
+    "effort": "evidence-layer",
+    "ordinal": 4,
     "title": "Phase-end evidence report"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-16T09:24:23+00:00",
+  "recorded_at": "2026-10-17T04:46:20+00:00",
   "relationships": {},
-  "revision": "sha256:bd4aa82145f86a4a3061b9477310b2eca8389cb7c7ceb047f4ccc9c75a63500e",
+  "revision": "sha256:7dc03d2cabe51770dbeb6bcb387c6f56ace857e05665ab8c185797936f9c1f5d",
   "stewardship": {
     "steward": "agent"
   },
