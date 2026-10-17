@@ -44,3 +44,12 @@ def test_rejects_store_commands() -> None:
             text=True,
         )
         assert proc.returncode != 0, command
+
+
+def test_verdict_help() -> None:
+    proc = subprocess.run(
+        [str(AFF), "verdict", "--help"],
+        capture_output=True,
+        text=True,
+    )
+    assert proc.returncode == 0, proc.stdout + proc.stderr
