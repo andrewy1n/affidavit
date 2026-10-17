@@ -1,10 +1,13 @@
 # AGENTS.md
 
-Plugin **0.2.0**. Agent skills for a software-engineering loop on
-adaptive-artifacts: classify the ask, plan only the focused effort,
-execute independent tasks with parallel subagents, verify with TDD,
-checks, or findings. Install this repo as a plugin. It is not a
-template you copy into other projects.
+This repo is the evidence layer. Plugin **0.2.0** keeps the `aff`
+commands `check`, `close-batch`, and `verdict`, and the modules that
+implement them. It is not a template you copy into other projects.
+
+The orchestration plugin is **orchestra** at `~/orchestra`. That repo
+holds the skills, the dashboard, the session scripts, and `agents/`.
+Skill slugs stay `engage`, `init`, `discuss`, `plan-phase`,
+`execute-phase`, `verify-work`, and `analyze-sessions`.
 
 Requires the **adaptive-artifacts** plugin (`adaptive-artifacts` on
 PATH). That runtime is unpublished experimental **0.1.0**. Its agent
@@ -14,15 +17,16 @@ protocol is `~/adaptive-artifacts/AGENTS.md`.
 
 | You are in… | Store | What you edit |
 |---|---|---|
-| This repo, building the plugin | this repo's `.artifacts/` | `skills/`, `contract/`, `dashboard/`, `scripts/`, `tests/` |
-| Some other repo, using the skills | that repo's `.artifacts/` | that repo's code, through the skills |
+| This repo, building the evidence layer | this repo's `.artifacts/` | `affidavit/`, `bin/aff`, `tests/`, `contract/` |
+| `~/orchestra`, building the plugin | that repo's `.artifacts/` | skills, dashboard, scripts, agents |
+| Some other repo, using the skills | that repo's `.artifacts/` | that repo's code, through the orchestra skills |
 
-Do not copy `skills/`, rules, or this tree into a work project. The
-bundled contract is `contract/project-design.json`. `init`,
-`plan-phase`, or `engage` copies it into the work repo on first use.
-If that repo's `.artifacts/project-design.json` has a `"project"` other
-than `affidavit`, stop. Do not overlay a foreign contract. See
-[skills/ensure-store.md](skills/ensure-store.md).
+Do not copy this tree into a work project. Do not look for the skills
+or the dashboard here. The bundled plugin contract is
+`~/orchestra/contract/project-design.json`. Orchestra's `init` copies
+it into a work repo on first use. When that file's `"project"` is
+`affidavit`, ensure-store rewrites it to `orchestra`. When the field
+is any other value, ensure-store stops and does not replace the design.
 
 ## Live protocol
 
@@ -41,43 +45,26 @@ A hand-edited record fails validation (`record revision tamper
 detected`). Redo the edit through the CLI.
 
 An incidental change that fits this chat gets no records. Kinds, focus,
-phase positions, and closing an effort: [skills/kinds-and-focus.md](skills/kinds-and-focus.md).
+and phase positions live with the orchestra skills.
 
-## Skills
+## What stays here
 
-| Skill | When |
-|---|---|
-| `engage` | Classify kind + focus, then hand off. Do not implement inside it. |
-| `init` | First time on a repo, or a new effort subject. Goal and phase titles only. |
-| `discuss` | Settle the approach with the user before planning. |
-| `plan-phase` | Approach settled. Write this phase's tasks, then wait for plan review. |
-| `execute-phase` | Dispatch ready work in waves. |
-| `verify-work` | Show a task is done (check-run and/or finding). |
-| `analyze-sessions` | User-invoked. Propose edits; write nothing until the user picks. |
+`bin/aff check`, `bin/aff close-batch`, and `bin/aff verdict`.
+`affidavit.aa` does not import the dashboard. This package does not
+import orchestra. `aff verdict` does not read the artifact store.
 
-Shared rules live in `skills/kinds-and-focus.md` and
-`skills/ensure-store.md`, not in a fifth kind of skill.
-
-`plan-phase` sets each work-item's `executor` to `inline` or
-`subagent`. Every task in a wave uses the same executor. Missing
-`executor` means `subagent`. A delivery phase body includes `## Landing`
-(`phase/<phase-slug>`, worktree
-`<repo-parent>/<repo-name>--<phase-slug>`, base `main`). Code commits
-land on the phase branch; the store commits on the primary checkout.
-Push only when Landing names it as a human stop. Incidental work has
-no Landing section.
+A `tdd` or `check` result is written by `aff check`. Orchestra skills
+call those commands on `PATH`. `~/affidavit` is the checkout that
+provides the `aff` binary.
 
 ## Contract and the runtime
 
-`contract/project-design.json` is the affidavit design. Record types
-are expected to grow. Tests and skills must not hardcode today's type
-list as if it were frozen.
+`contract/project-design.json` in this repo is the design this store
+resolves. Record types are expected to grow. Tests must not hardcode
+today's type list as if it were frozen.
 
-Every `adaptive-artifacts` invocation under `skills/` has to be one the
-contract allows. `tests/test_skill_contract_consistency.py` fails when a
-skill documents a type, transition, `--rel`, or bundle the contract
-does not permit. Change the skill or the contract together, and run
-that test.
+Later contract edits belong in the orchestra repo, then get copied
+here so this store still resolves.
 
 Tests drive the public CLI as a subprocess
 (`~/adaptive-artifacts/tools/artifacts.py`, or
@@ -91,11 +78,8 @@ A change to the runtime, catalog, hooks, or adaptive-artifacts skills
 is an extension change. Follow `~/adaptive-artifacts/AGENTS.md`, section
 "Changing the extension": capture it in **that** repo's store and apply
 it only with human approval. Do not patch `~/adaptive-artifacts` mid-task
-from a affidavit session. `reassess-artifacts` redesigns a project's
+from an affidavit session. `reassess-artifacts` redesigns a project's
 own contract. It does not edit the extension.
-
-If the affidavit contract can express the need, change
-`contract/project-design.json` here and leave the runtime alone.
 
 ## Testing
 
@@ -103,7 +87,6 @@ If the affidavit contract can express the need, change
 editing, run the affected files. Before closing the task, run that
 task's `verify_command`.
 
-Dashboard tests need `textual` (the `uv run --with textual` form).
 Commands and the `ADAPTIVE_ARTIFACTS_ROOT` override are in the README,
 section "Testing".
 
@@ -113,8 +96,7 @@ section "Testing".
 |---|---|
 | Live goal, position, next | `.artifacts/views/handoff.md` (derived) |
 | This protocol | this file |
-| Kinds, focus, single writer | `skills/kinds-and-focus.md` |
-| First-run store | `skills/ensure-store.md` |
-| Bundled design | `contract/project-design.json` |
-| Install, dashboard keys, test commands | `README.md` |
+| Skills, dashboard, session scripts | `~/orchestra` |
+| Bundled plugin contract | `~/orchestra/contract/project-design.json` |
+| Evidence CLI | `README.md` |
 | Runtime change gate | `~/adaptive-artifacts/AGENTS.md` |

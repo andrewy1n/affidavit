@@ -1,7 +1,8 @@
 # CLAUDE.md
 
-Follow [AGENTS.md](AGENTS.md). It is the protocol for this plugin and
-for when a change belongs in adaptive-artifacts instead.
+Follow [AGENTS.md](AGENTS.md). This repo is the evidence layer. Skills,
+the dashboard, and session scripts live in the orchestra plugin at
+`~/orchestra`.
 
 ## Testing
 
@@ -12,8 +13,7 @@ task, run that task's `verify_command`. `pytest.ini` already skips
 The suite needs a checkout of adaptive-artifacts at
 `~/adaptive-artifacts` (override with `ADAPTIVE_ARTIFACTS_ROOT`). It
 calls that repo's `tools/artifacts.py`. It does not import the runtime.
-Dashboard tests need `textual`, which the `uv run --with textual` form
-provides. More detail is in the README, section "Testing".
+More detail is in the README, section "Testing".
 
 ## Store
 
@@ -34,15 +34,15 @@ extension change. That approval is the gate in
 amendment in that repo's store first. `reassess-artifacts` is for a
 project's own contract, not for the runtime.
 
-If affidavit's `contract/project-design.json` can express the need,
-change that file here. After any skill edit, the documented CLI
-invocations must still be legal:
-`python3 -m pytest tests/test_skill_contract_consistency.py -q`.
+If this repo's `contract/project-design.json` can express the need,
+change that file here. Contract edits that the orchestra skills depend
+on belong in `~/orchestra` first.
 
 ## Skills
 
-Use the installed skills (`engage`, `init`, `discuss`, `plan-phase`,
-`execute-phase`, `verify-work`). Do not copy this repo into the project
-you are building. Shared rules are `skills/kinds-and-focus.md` and
-`skills/ensure-store.md`. If a work repo already has a
-`project-design.json` whose `"project"` is not `affidavit`, stop.
+Use the skills installed from `~/orchestra` (`engage`, `init`,
+`discuss`, `plan-phase`, `execute-phase`, `verify-work`). Do not copy
+this repo into the project you are building. When a work repo's
+`project-design.json` says `"project": "affidavit"`, orchestra's
+ensure-store rewrites that field to `orchestra`. Any other value stops
+the overlay.
