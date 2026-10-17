@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:030dfdb572e1b655df24f72fb3e4ccb51c07dd7d16ad602a7e7f294f93ef36a9
+> Store state: sha256:7ecd18a467fc53b01a40ddc10ddd9534ef88db6b531db52480635d454cbcfeed
 
 ## claims-manifest
 
@@ -18,16 +18,10 @@
 
 ## orchestration-split
 
-### Phase
-- **orchestration-split**: Skills, dashboard, and scripts move to an orchestration repo; 2; evidence-layer _(id: [rec-338a97f1-c18a-49dc-a3c9-6c634c20650a](.artifacts/records/project__phase/rec-338a97f1-c18a-49dc-a3c9-6c634c20650a.md))_
-
-### Work
-- **move-effort-records**: Split effort records across the two stores; orchestration-split; deliver; evidence-layer _(id: [rec-03c499f7-8ec8-483c-82a9-18f966cc1de1](.artifacts/records/project__work-item/rec-03c499f7-8ec8-483c-82a9-18f966cc1de1.md))_
-- **verify-orchestration-split**: Verify the orchestration split; orchestration-split; deliver; evidence-layer _(id: [rec-706dbada-e2e7-4863-835b-d1ce21384acd](.artifacts/records/project__work-item/rec-706dbada-e2e7-4863-835b-d1ce21384acd.md))_
-
 ### Acceptance
 - **conventional-commits**: execute-phase shows a per-task commit, a phase-branch commit, and a store commit whose subject matches type(scope): summary and whose body is one or two sentences; a task commit names the task slug; tdd; evidence-layer; cd ~/orchestra && python3 -m pytest tests/test_task_commit.py -q _(id: [rec-325e52d1-3740-4543-8f5c-47e640bf5b84](.artifacts/records/project__acceptance/rec-325e52d1-3740-4543-8f5c-47e640bf5b84.md))_
 - **extract-store-binding**: affidavit.aa imports StoreBindingError and resolve from affidavit.aa_resolve, affidavit/aa.py does not mention dashboard, and the aa tests pass; tdd; evidence-layer; python3 -m pytest tests/test_affidavit_aa.py tests/test_aa_resolve.py -q _(id: [rec-4f47fdf2-e4c8-436a-ad8b-c1d6be8c51b8](.artifacts/records/project__acceptance/rec-4f47fdf2-e4c8-436a-ad8b-c1d6be8c51b8.md))_
+- **fix-agent-docs**: AGENTS.md, README.md, and CLAUDE.md describe this repo as the evidence layer and send skills, the dashboard, scripts, and agents to ~/orchestra; tdd; evidence-layer; python3 -m pytest tests/test_evidence_layout.py::test_protocol_docs_describe_the_evidence_layer -q _(id: [rec-f9615bc0-d2d4-4b1a-9bf5-b7226656ae8f](.artifacts/records/project__acceptance/rec-f9615bc0-d2d4-4b1a-9bf5-b7226656ae8f.md))_
 - **move-effort-records**: Both stores validate; the active goal here is evidence-layer; the active goals in orchestra are dashboard, workflow-loop, packaging, session-analysis, and test-suite-speed; check; evidence-layer; adaptive-artifacts validate && adaptive-artifacts --store "$HOME/orchestra/.artifacts" validate && python3 -c 'import json,os,subprocess
 def goals(store):
  out=subprocess.check_output(["adaptive-artifacts","--store",store,"list","--type","project:active-goal","--state","active"],text=True)

@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:d558be7aa64d8a7076497c390ec9c05927b85955724fdcd6acbe904eb26fe57e
+> Store state: sha256:45a53276e1b278a12e2e4f2742ed37ae91767f66f06ac99b35e5a25434c9889d
 
 ## amendment-sign
 
@@ -16,12 +16,17 @@
 ## evidence-layer
 
 ### Position
-- **evidence-layer**: claims-manifest done; next up: orchestration-split; effort _(id: [rec-7b0f3476-ba6d-4aa5-b6ea-e9a8b73b4732](.artifacts/records/project__current-position/rec-7b0f3476-ba6d-4aa5-b6ea-e9a8b73b4732.md))_
+- **evidence-layer**: orchestration-split done; next up: evidence-kind; effort _(id: [rec-5c17046e-6510-4c0a-807d-5f01bb04e024](.artifacts/records/project__current-position/rec-5c17046e-6510-4c0a-807d-5f01bb04e024.md))_
 
 ## extract-store-binding
 
 ### Acceptance
 - **extract-store-binding**: affidavit.aa imports StoreBindingError and resolve from affidavit.aa_resolve, affidavit/aa.py does not mention dashboard, and the aa tests pass; tdd; evidence-layer; python3 -m pytest tests/test_affidavit_aa.py tests/test_aa_resolve.py -q _(id: [rec-4f47fdf2-e4c8-436a-ad8b-c1d6be8c51b8](.artifacts/records/project__acceptance/rec-4f47fdf2-e4c8-436a-ad8b-c1d6be8c51b8.md))_
+
+## fix-agent-docs
+
+### Acceptance
+- **fix-agent-docs**: AGENTS.md, README.md, and CLAUDE.md describe this repo as the evidence layer and send skills, the dashboard, scripts, and agents to ~/orchestra; tdd; evidence-layer; python3 -m pytest tests/test_evidence_layout.py::test_protocol_docs_describe_the_evidence_layer -q _(id: [rec-f9615bc0-d2d4-4b1a-9bf5-b7226656ae8f](.artifacts/records/project__acceptance/rec-f9615bc0-d2d4-4b1a-9bf5-b7226656ae8f.md))_
 
 ## fix-verdict-exit
 
@@ -29,9 +34,6 @@
 - **fix-verdict-exit**: aff verdict fails a claim when pytest at --at exits non-zero, accepts a verified signed amendment, and rejects a hash or test-id change with no covering amendment; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "signed_amendment or head_failure or missing_amendment" _(id: [rec-cd3fb645-b979-440d-ad25-158586f29fe1](.artifacts/records/project__acceptance/rec-cd3fb645-b979-440d-ad25-158586f29fe1.md))_
 
 ## move-effort-records
-
-### Work
-- **move-effort-records**: Split effort records across the two stores; orchestration-split; deliver; evidence-layer _(id: [rec-03c499f7-8ec8-483c-82a9-18f966cc1de1](.artifacts/records/project__work-item/rec-03c499f7-8ec8-483c-82a9-18f966cc1de1.md))_
 
 ### Acceptance
 - **move-effort-records**: Both stores validate; the active goal here is evidence-layer; the active goals in orchestra are dashboard, workflow-loop, packaging, session-analysis, and test-suite-speed; check; evidence-layer; adaptive-artifacts validate && adaptive-artifacts --store "$HOME/orchestra/.artifacts" validate && python3 -c 'import json,os,subprocess
@@ -41,10 +43,10 @@ def goals(store):
 assert goals(".artifacts")==["evidence-layer"]
 assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packaging","session-analysis","test-suite-speed","workflow-loop"]' _(id: [rec-119ad93e-8886-4e96-912f-4ca9268d5971](.artifacts/records/project__acceptance/rec-119ad93e-8886-4e96-912f-4ca9268d5971.md))_
 
-## orchestration-split
+## review-move-effort-records-spec-gap
 
-### Position
-- **orchestration-split**: planning orchestration-split; tasks written, waiting on plan review; phase _(id: [rec-a2e2795d-0dff-4751-914e-c6cdb3b470af](.artifacts/records/project__current-position/rec-a2e2795d-0dff-4751-914e-c6cdb3b470af.md))_
+### Finding
+- **review-move-effort-records-spec-gap**: spec-gap on move-effort-records: the phase-head store still holds every effort; Reviewer read .artifacts at f677417, the pre-split snapshot on the phase branch; a passing review at the phase head accepts the live stores on main and in ~/orchestra, or the human clears this finding; none _(id: [rec-6a11bf68-24f1-46c3-86f3-a154d4fe8a8b](.artifacts/records/project__finding/rec-6a11bf68-24f1-46c3-86f3-a154d4fe8a8b.md))_
 
 ## review-phase-missing-test-amendment
 
@@ -60,6 +62,11 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Finding
 - **review-phase-missing-test-missing-step**: missing-test on phase: aff verdict must exit non-zero when test ids or hashes differ without a covering amendment chain; missing step is only covered in tests/test_amendment.py; tests/test_verdict.py has no CLI case for a manifest delta with no amendment; fix lands and reviewer re-run passes, or human clears; none _(id: [rec-f5ae5085-839d-47e7-ac68-ea6ef1cb6107](.artifacts/records/project__finding/rec-f5ae5085-839d-47e7-ac68-ea6ef1cb6107.md))_
+
+## review-strip-affidavit-spec-gap
+
+### Finding
+- **review-strip-affidavit-spec-gap**: spec-gap on strip-affidavit: AGENTS.md and README.md still describe the full plugin; Reviewer compared the stripped tree with AGENTS.md and README.md at f677417; docs match the evidence-layer tree and a review re-run passes, or the human clears this finding; none _(id: [rec-0588c8c0-26e7-40d6-a78f-1264bf16a271](.artifacts/records/project__finding/rec-0588c8c0-26e7-40d6-a78f-1264bf16a271.md))_
 
 ## review-verdict-command-behavior-bug
 
@@ -137,9 +144,6 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **verify-claims-manifest-suite**: CLI subprocess tests cover the pass, a hash mismatch, a missing or invalid amendment signature, an allowlist change, and a --cwd pointed at a phase worktree other than the store checkout; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or bad_signature or allowlist or cwd_phase" _(id: [rec-27b93db5-292e-4864-8bc9-ac743955d861](.artifacts/records/project__acceptance/rec-27b93db5-292e-4864-8bc9-ac743955d861.md))_
 
 ## verify-orchestration-split
-
-### Work
-- **verify-orchestration-split**: Verify the orchestration split; orchestration-split; deliver; evidence-layer _(id: [rec-706dbada-e2e7-4863-835b-d1ce21384acd](.artifacts/records/project__work-item/rec-706dbada-e2e7-4863-835b-d1ce21384acd.md))_
 
 ### Acceptance
 - **verify-orchestration-split**: bin/aff check, close-batch, and verdict --help exit 0, and the remaining pytest files pass with skills/, dashboard/, scripts/, and agents/ absent; check; evidence-layer; test ! -d skills && test ! -d dashboard && test ! -d scripts && test ! -d agents && bin/aff check --help && bin/aff close-batch --help && bin/aff verdict --help && python3 -m pytest tests/test_evidence_layout.py tests/test_affidavit_check.py tests/test_close_batch.py tests/test_verdict.py tests/test_manifest.py tests/test_amendment.py tests/test_oracle_red.py tests/test_affidavit_aa.py -q _(id: [rec-c590714e-be3c-4c72-9fd2-cd7d966f4ef0](.artifacts/records/project__acceptance/rec-c590714e-be3c-4c72-9fd2-cd7d966f4ef0.md))_
