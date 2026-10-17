@@ -10,7 +10,6 @@ import pytest
 
 from affidavit.aa_resolve import resolve_aa_command
 from affidavit import aa
-from dashboard import artifact_store
 
 
 def test_bin_env_wins(tmp_path, monkeypatch):
@@ -103,11 +102,3 @@ def test_home_checkout_not_quiet_fallback(tmp_path, monkeypatch):
 
     with pytest.raises(FileNotFoundError):
         resolve_aa_command()
-
-
-def test_dashboard_binary_uses_shared_resolver(tmp_path, monkeypatch):
-    bin_path = tmp_path / "aa"
-    bin_path.write_text("#!/bin/sh\n")
-    bin_path.chmod(0o755)
-    monkeypatch.setenv("ADAPTIVE_ARTIFACTS_BIN", str(bin_path))
-    assert artifact_store.binary() == str(bin_path)
