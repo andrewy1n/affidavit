@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:cf95ba828821c8e74b957cb81eec0dd363d5751807375333b973ad20427385e6
+> Store state: sha256:6f12753e8529365cb0afc025d35cb5c1a2a50018784ebd643a66da2cfb8ea6d3
 
 ## amendment-sign
 
@@ -73,6 +73,42 @@
 ### Acceptance
 - **audit-unclaimed-range**: tdd; evidence-layer; python3 -m pytest tests/test_audit_probes_range.py::test_r4_audit_reports_unclaimed_tdd_revision_relaxation -q _(id: [rec-04aba49b-468d-4d98-a837-9df3b7b5e7e7](.artifacts/records/project__acceptance/rec-04aba49b-468d-4d98-a837-9df3b7b5e7e7.md))_
 
+## bind-cli
+
+### Work
+- **bind-cli**: Add aff bind unbind recheck; verdict stays unbound; evidence-bind; deliver; evidence-layer _(id: [rec-baf63b4e-b890-4bda-9d34-5e38ae46f2a7](.artifacts/records/project__work-item/rec-baf63b4e-b890-4bda-9d34-5e38ae46f2a7.md))_
+
+### Acceptance
+- **bind-cli**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r2_aff_bind_creates_evidence_binding -q _(id: [rec-c686360b-aaab-42a1-9a68-851b09104ed2](.artifacts/records/project__acceptance/rec-c686360b-aaab-42a1-9a68-851b09104ed2.md))_
+
+## bind-cli-recheck
+
+### Acceptance
+- **bind-cli-recheck**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r4_aff_recheck_nonzero_when_binding_does_not_hold -q _(id: [rec-5ff1f7e4-44c5-49c0-ab29-98a7262685b3](.artifacts/records/project__acceptance/rec-5ff1f7e4-44c5-49c0-ab29-98a7262685b3.md))_
+
+## bind-cli-trail
+
+### Acceptance
+- **bind-cli-trail**: check; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r6_aff_trail_lists_unbound_observations -q _(id: [rec-d072617d-b8c3-4242-9255-9d2ccd441ab2](.artifacts/records/project__acceptance/rec-d072617d-b8c3-4242-9255-9d2ccd441ab2.md))_
+
+## bind-cli-unbind
+
+### Acceptance
+- **bind-cli-unbind**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r3_aff_unbind_retires_evidence_binding -q _(id: [rec-0fc44d52-7d19-4dca-bed6-e01c45a3f5ea](.artifacts/records/project__acceptance/rec-0fc44d52-7d19-4dca-bed6-e01c45a3f5ea.md))_
+
+## bind-cli-verdict
+
+### Acceptance
+- **bind-cli-verdict**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r5_verdict_adds_observation_not_binding -q _(id: [rec-e193d864-3ef9-414f-9067-c03c3968c92d](.artifacts/records/project__acceptance/rec-e193d864-3ef9-414f-9067-c03c3968c92d.md))_
+
+## binding-contract
+
+### Work
+- **binding-contract**: Add evidence-binding record type; evidence-bind; deliver; evidence-layer _(id: [rec-6de8f976-8755-42dc-a030-064cf104766d](.artifacts/records/project__work-item/rec-6de8f976-8755-42dc-a030-064cf104766d.md))_
+
+### Acceptance
+- **binding-contract**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r1_contract_defines_evidence_binding -q _(id: [rec-6b51ca2b-88d1-4b9e-9264-c7b9727ffc8b](.artifacts/records/project__acceptance/rec-6b51ca2b-88d1-4b9e-9264-c7b9727ffc8b.md))_
+
 ## campaign-landing-automerge
 
 ### Constraint
@@ -128,10 +164,15 @@
 ### Acceptance
 - **env-freeze-runner**: tdd; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_runner_digest_drift_without_amendment -q _(id: [rec-6a082c2e-8500-4178-b517-9d57ef09d9c7](.artifacts/records/project__acceptance/rec-6a082c2e-8500-4178-b517-9d57ef09d9c7.md))_
 
+## evidence-bind
+
+### Position
+- **evidence-bind**: planning evidence-bind tasks; phase _(id: [rec-a58fc430-7f41-413a-a648-622fa1452485](.artifacts/records/project__current-position/rec-a58fc430-7f41-413a-a648-622fa1452485.md))_
+
 ## evidence-layer
 
 ### Position
-- **evidence-layer**: evidence-interface done; next up: evidence-bind; effort _(id: [rec-e0937dd2-b537-4592-bd33-43ecee8675db](.artifacts/records/project__current-position/rec-e0937dd2-b537-4592-bd33-43ecee8675db.md))_
+- **evidence-layer**: evidence-bind, evidence-technique-ingest, evidence-workflow discussed (AAA); next plan-phase for evidence-bind; effort _(id: [rec-5ad3b358-702e-46b4-b339-20b791b665ef](.artifacts/records/project__current-position/rec-5ad3b358-702e-46b4-b339-20b791b665ef.md))_
 
 ## extract-store-binding
 
@@ -493,6 +534,29 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Acceptance
 - **verify-claims-manifest-suite**: CLI subprocess tests cover the pass, a hash mismatch, a missing or invalid amendment signature, an allowlist change, and a --cwd pointed at a phase worktree other than the store checkout; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or bad_signature or allowlist or cwd_phase" _(id: [rec-27b93db5-292e-4864-8bc9-ac743955d861](.artifacts/records/project__acceptance/rec-27b93db5-292e-4864-8bc9-ac743955d861.md))_
+
+## verify-evidence-bind
+
+### Work
+- **verify-evidence-bind**: Verify evidence-bind; evidence-bind; deliver; evidence-layer _(id: [rec-e82510e7-4f79-4514-84b5-620a96332706](.artifacts/records/project__work-item/rec-e82510e7-4f79-4514-84b5-620a96332706.md))_
+
+### Acceptance
+- **verify-evidence-bind**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r7_fixture_bind_then_recheck_exits_zero -q _(id: [rec-e0e1b4c5-1a26-4b18-ae70-ca073a90ba91](.artifacts/records/project__acceptance/rec-e0e1b4c5-1a26-4b18-ae70-ca073a90ba91.md))_
+
+## verify-evidence-bind-contract
+
+### Acceptance
+- **verify-evidence-bind-contract**: check; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r1_contract_defines_evidence_binding -q _(id: [rec-6d9fb00f-8096-45df-a715-41b39c9f9b3e](.artifacts/records/project__acceptance/rec-6d9fb00f-8096-45df-a715-41b39c9f9b3e.md))_
+
+## verify-evidence-bind-trail
+
+### Acceptance
+- **verify-evidence-bind-trail**: check; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r6_aff_trail_lists_unbound_observations -q _(id: [rec-5cc6c275-d3cd-425d-a017-c7b4fd85f51f](.artifacts/records/project__acceptance/rec-5cc6c275-d3cd-425d-a017-c7b4fd85f51f.md))_
+
+## verify-evidence-bind-verdict
+
+### Acceptance
+- **verify-evidence-bind-verdict**: check; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r5_verdict_adds_observation_not_binding -q _(id: [rec-e4c0a2b6-4202-4af0-bf32-9b5099060f75](.artifacts/records/project__acceptance/rec-e4c0a2b6-4202-4af0-bf32-9b5099060f75.md))_
 
 ## verify-evidence-interface
 
