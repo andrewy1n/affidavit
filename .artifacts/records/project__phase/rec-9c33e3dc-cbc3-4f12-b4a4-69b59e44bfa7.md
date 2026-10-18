@@ -3,16 +3,16 @@
   "base_kind": "phase",
   "id": "rec-9c33e3dc-cbc3-4f12-b4a4-69b59e44bfa7",
   "identity": "unknown",
-  "lifecycle_state": "planned",
+  "lifecycle_state": "done",
   "payload": {
     "effort": "evidence-layer",
     "ordinal": 4,
     "title": "aff verdict runs tests through a runner adapter"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-17T22:58:46+00:00",
+  "recorded_at": "2026-10-18T00:17:42+00:00",
   "relationships": {},
-  "revision": "sha256:116a041d1ce8a4c0bb36eeac8adc6e4631b0d2d678a88a7eb5ff73aa801fcb09",
+  "revision": "sha256:b742603af1b60305eddf268ad05f5ac8b38accb5370abd035fbf5cb80d6450d9",
   "stewardship": {
     "steward": "agent"
   },
@@ -26,8 +26,23 @@
 
 ## Approach
 
-not yet scoped — discuss when this phase is current. Direction: one primitive, `run_tests(worktree, test_ids) -> {id: passed | assertion_failed | errored | not_run}`, read from JUnit XML (`<failure>` is an assertion, `<error>` is not). The manifest declares a runner command template with `{tests}` and `{report}`. Only the pytest template ships in this phase. Verdict reruns a disagreeing witness and reports the claim `unstable` instead of pass or fail.
+Verdict calls `run_tests(worktree, test_ids, runner)` and reads JUnit XML (`runner-template`, `assertion-signal`). The manifest `runner` is an argv list with `{tests}` and `{report}`. An absent `runner` is `python3 -m pytest -o junit_family=xunit1 {tests} --junitxml={report}`. `<failure>` is `assertion_failed`, `<error>` is `errored`, and a skipped or missing case is `not_run`. A claim whose first run would pass is confirmed once in the same worktree; a witness that disagrees is `unstable` (`unstable-rerun`). The template is not hashed in this phase (`runner-template-freeze`). `oracle_red.py` stays for orchestra's close path.
 
 ## Exit criteria
 
-Decide at plan-phase. At minimum: `aff verdict` produces the same results as today through `run_tests` with no pytest output regex, a fixture runner that emits JUnit XML is judged without code changes, and a flaky fixture test yields `unstable`.
+1. `aff verdict` judges a claim through `run_tests` with no pytest stdout regex. Existing pass, hash-mismatch, and collection-error cases keep their results.
+2. A fixture command that emits JUnit XML is judged with no change under `affidavit/`.
+3. A witness that is `assertion_failed` on the first base run and `passed` on the confirmation run yields claim result `unstable` and a non-zero exit.
+4. An absent `runner` uses the shipped pytest template. A `runner` that is not an argv list with `{tests}` and `{report}` fails manifest load.
+
+## Landing
+
+Branch `phase/runner-adapter`. Worktree `/home/andrewyin/affidavit--runner-adapter`. Base `main`. Close: commit the code on the phase branch, merge that branch into `main`, then commit the store on the primary checkout.
+
+## Run
+
+One sitting. No human stops. Every task is `subagent`.
+
+Wave 1 is `parse-manifest-runner` (8 minutes) and `junit-run-tests` (18), so 18 minutes. Wave 2 is `verdict-through-runner` (22). Wave 3 is `verify-runner-adapter` (8). Phase elapsed is 48 minutes.
+
+Wave 1 writes disjoint files: `parse-manifest-runner` edits `affidavit/manifest.py` and `tests/test_manifest.py`; `junit-run-tests` edits `affidavit/runner.py` and `tests/test_runner.py`. Wave 2 edits `affidavit/verdict.py` and `tests/test_verdict.py` and does not edit the wave 1 modules. Wave 3 runs the acceptance commands and does not add features.

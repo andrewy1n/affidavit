@@ -1,0 +1,27 @@
+---
+{
+  "base_kind": "claim",
+  "epistemic_status": "asserted",
+  "id": "rec-693efba9-c6b0-4a7f-8f61-1774bd5afdb1",
+  "identity": "unknown",
+  "lifecycle_state": "superseded",
+  "payload": {
+    "effort": "evidence-layer",
+    "phase": "runner-adapter",
+    "position": "in progress; waiting on plan review",
+    "scope": "phase"
+  },
+  "record_type": "project:current-position",
+  "recorded_at": "2026-10-18T00:17:42+00:00",
+  "relationships": {},
+  "revision": "sha256:4945e582c965d51deb018f4a29af6f3400e04ebf25a38343841143386ded7bd2",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "runner-adapter",
+  "time": {
+    "as_of": "2026-10-17T23:38:40+00:00"
+  }
+}
+---
+

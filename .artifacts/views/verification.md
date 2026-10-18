@@ -1,7 +1,7 @@
 # Project Verification
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:475ae3e83a86bd72e26bb744cee9bc38eba4d1a5e6a646f6f5d6d804f1002844
+> Store state: sha256:e207e519c504a81c08f877ff416d311ece5345e0305cbddb5aae6c15837f7d04
 
 ## amendment-sign
 
@@ -86,6 +86,36 @@
 ### Check
 - **fix-verdict-help-test**: rec-17932b62-b463-479e-8071-f17cc13eff09; 95816892f1208fd6b13723e6f89a959d6736da44; pass; check _(id: [rec-5b05faaa-9341-43a8-80d7-58984955161b](.artifacts/records/project__check-run/rec-5b05faaa-9341-43a8-80d7-58984955161b.md))_
 
+## junit-run-tests
+
+### Acceptance
+- **junit-run-tests**: run_tests returns one outcome per requested id from the JUnit file the command wrote; tdd; evidence-layer; python3 -m pytest tests/test_runner.py -q -k returns_id_outcomes _(id: [rec-63cf9023-9285-4f13-8e47-c12c9961223e](.artifacts/records/project__acceptance/rec-63cf9023-9285-4f13-8e47-c12c9961223e.md))_
+
+### Check
+- **junit-run-tests**: rec-63cf9023-9285-4f13-8e47-c12c9961223e; 4fb7199c6f71c99d2def7049ac7e57f67f36e641; fail; tdd _(id: [rec-5c8684a0-19d0-4b45-a3ce-73c70b79ef8d](.artifacts/records/project__check-run/rec-5c8684a0-19d0-4b45-a3ce-73c70b79ef8d.md))_
+- **junit-run-tests**: rec-63cf9023-9285-4f13-8e47-c12c9961223e; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; tdd _(id: [rec-5d6717bd-5e9e-4dd7-ae37-7746655e21cd](.artifacts/records/project__check-run/rec-5d6717bd-5e9e-4dd7-ae37-7746655e21cd.md))_
+- **junit-run-tests**: rec-63cf9023-9285-4f13-8e47-c12c9961223e; a94b0e1ff8123fa7b773abc5b868a7c1d69db96f; pass; tdd _(id: [rec-b61e5830-b95b-4ccb-b255-89aedc827f77](.artifacts/records/project__check-run/rec-b61e5830-b95b-4ccb-b255-89aedc827f77.md))_
+
+## junit-run-tests-join
+
+### Acceptance
+- **junit-run-tests-join**: A case matches a witness id by name, or by file plus the classname segments after the file stem; tdd; evidence-layer; python3 -m pytest tests/test_runner.py -q -k joins_name_or_file _(id: [rec-433330be-3e4d-4928-9af1-1a2aa7d1719c](.artifacts/records/project__acceptance/rec-433330be-3e4d-4928-9af1-1a2aa7d1719c.md))_
+
+### Check
+- **junit-run-tests-join**: rec-433330be-3e4d-4928-9af1-1a2aa7d1719c; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; tdd _(id: [rec-2a9fb485-a172-4563-9432-6631409262ea](.artifacts/records/project__check-run/rec-2a9fb485-a172-4563-9432-6631409262ea.md))_
+- **junit-run-tests-join**: rec-433330be-3e4d-4928-9af1-1a2aa7d1719c; a94b0e1ff8123fa7b773abc5b868a7c1d69db96f; pass; tdd _(id: [rec-5d6831a7-b363-4c24-adf7-29207215fe46](.artifacts/records/project__check-run/rec-5d6831a7-b363-4c24-adf7-29207215fe46.md))_
+- **junit-run-tests-join**: rec-433330be-3e4d-4928-9af1-1a2aa7d1719c; 4fb7199c6f71c99d2def7049ac7e57f67f36e641; fail; tdd _(id: [rec-9d3ecd27-e1a2-47e3-b3dd-7d9736785b38](.artifacts/records/project__check-run/rec-9d3ecd27-e1a2-47e3-b3dd-7d9736785b38.md))_
+
+## junit-run-tests-tags
+
+### Acceptance
+- **junit-run-tests-tags**: A JUnit failure is assertion_failed, an error is errored, a skip or a missing case is not_run, and a failure plus an error is errored; tdd; evidence-layer; python3 -m pytest tests/test_runner.py -q -k maps_failure_error_skipped _(id: [rec-cca4eb26-7518-47f2-9160-6f6480f68d02](.artifacts/records/project__acceptance/rec-cca4eb26-7518-47f2-9160-6f6480f68d02.md))_
+
+### Check
+- **junit-run-tests-tags**: rec-cca4eb26-7518-47f2-9160-6f6480f68d02; 4fb7199c6f71c99d2def7049ac7e57f67f36e641; fail; tdd _(id: [rec-11856921-9987-482f-aef3-ea054becd728](.artifacts/records/project__check-run/rec-11856921-9987-482f-aef3-ea054becd728.md))_
+- **junit-run-tests-tags**: rec-cca4eb26-7518-47f2-9160-6f6480f68d02; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; tdd _(id: [rec-8470ebb5-d5d2-4b3a-a2d6-c25a0daeef37](.artifacts/records/project__check-run/rec-8470ebb5-d5d2-4b3a-a2d6-c25a0daeef37.md))_
+- **junit-run-tests-tags**: rec-cca4eb26-7518-47f2-9160-6f6480f68d02; a94b0e1ff8123fa7b773abc5b868a7c1d69db96f; pass; tdd _(id: [rec-90e8cdf1-d4c0-4e10-b4dd-344b3f18261f](.artifacts/records/project__check-run/rec-90e8cdf1-d4c0-4e10-b4dd-344b3f18261f.md))_
+
 ## move-effort-records
 
 ### Acceptance
@@ -109,7 +139,7 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **move-store-client**: rec-d0a726bc-62cc-4cb2-a95c-f4dd36e50532; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; check _(id: [rec-de9391cb-a21a-45de-b4d1-1c58bff90f11](.artifacts/records/project__check-run/rec-de9391cb-a21a-45de-b4d1-1c58bff90f11.md))_
 
 ### Finding
-- **move-store-client**: move-store-client closed done with a tdd pass that has no prior red check-run; aff check rec-e02d9d80-9036-481f-acec-0cc6f8f8c321 passed at 2483da2da2ad4929ad5853978d57335072ff577a. The executor committed tests/test_affidavit_import_boundary.py and the implementation in that same commit, so no runner-produced fail precedes the green.; a runner-produced fail for acceptance rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94 has a revision that is an ancestor of the green, or a human accepts this pass without red-first evidence; human _(id: [rec-7f5b80b9-cd8d-4376-9994-3553c0434f71](.artifacts/records/project__finding/rec-7f5b80b9-cd8d-4376-9994-3553c0434f71.md))_
+- **move-store-client**: move-store-client closed done with a tdd pass that has no prior red check-run; aff check rec-e02d9d80-9036-481f-acec-0cc6f8f8c321 passed at 2483da2da2ad4929ad5853978d57335072ff577a. The executor committed tests/test_affidavit_import_boundary.py and the implementation in that same commit, so no runner-produced fail precedes the green.; a runner-produced fail for acceptance rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94 has a revision that is an ancestor of the green, or a human accepts this pass without red-first evidence; none _(id: [rec-7f5b80b9-cd8d-4376-9994-3553c0434f71](.artifacts/records/project__finding/rec-7f5b80b9-cd8d-4376-9994-3553c0434f71.md))_
 
 ## move-store-client-imports
 
@@ -125,6 +155,16 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Check
 - **orchestration-split-review**: orchestration-split-review; f67741737facb4a494ede2a0d4132b1a451f3c5c; fail; review _(id: [rec-b543e571-50db-40ce-893b-0732b05b3057](.artifacts/records/project__check-run/rec-b543e571-50db-40ce-893b-0732b05b3057.md))_
 - **orchestration-split-review**: orchestration-split-review; 43bb26ec008e43d3c149f7d9fee38249e7a5d8c8; pass; review _(id: [rec-e353005b-becd-409a-b2eb-0172cc40772a](.artifacts/records/project__check-run/rec-e353005b-becd-409a-b2eb-0172cc40772a.md))_
+
+## parse-manifest-runner
+
+### Acceptance
+- **parse-manifest-runner**: An absent runner loads as the shipped pytest template, and a runner that is not an argv list with {tests} and {report} fails manifest load; tdd; evidence-layer; python3 -m pytest tests/test_manifest.py -q -k "runner_absent or runner_invalid" _(id: [rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a](.artifacts/records/project__acceptance/rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a.md))_
+
+### Check
+- **parse-manifest-runner**: rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; tdd _(id: [rec-2ed9bd31-6008-400b-87e6-f8cfe7bebd78](.artifacts/records/project__check-run/rec-2ed9bd31-6008-400b-87e6-f8cfe7bebd78.md))_
+- **parse-manifest-runner**: rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a; a94b0e1ff8123fa7b773abc5b868a7c1d69db96f; pass; tdd _(id: [rec-3c7d4870-8a69-406a-b076-0ad19a8790e5](.artifacts/records/project__check-run/rec-3c7d4870-8a69-406a-b076-0ad19a8790e5.md))_
+- **parse-manifest-runner**: rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a; 4fb7199c6f71c99d2def7049ac7e57f67f36e641; fail; tdd _(id: [rec-4d9aa6ea-7e5a-4f14-98cd-138987a79db4](.artifacts/records/project__check-run/rec-4d9aa6ea-7e5a-4f14-98cd-138987a79db4.md))_
 
 ## review-move-effort-records-spec-gap
 
@@ -174,6 +214,11 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Check
 - **rewrite-project-field**: rec-80579791-d24b-4717-8664-25dbb29e89b9; b4f59462fd054c0f266e3e1b7872a46472587286; fail; tdd _(id: [rec-41b87bf9-c902-4143-bb92-8483e4982661](.artifacts/records/project__check-run/rec-41b87bf9-c902-4143-bb92-8483e4982661.md))_
 - **rewrite-project-field**: rec-80579791-d24b-4717-8664-25dbb29e89b9; 4cee07f421cc4a3de7996e5e02879cbc41b7a2ed; pass; tdd _(id: [rec-5d763c3d-7047-4530-a4e0-c869e984782e](.artifacts/records/project__check-run/rec-5d763c3d-7047-4530-a4e0-c869e984782e.md))_
+
+## runner-adapter-review
+
+### Check
+- **runner-adapter-review**: runner-adapter-review; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; review _(id: [rec-86ed0a51-274d-454b-986d-8eb915664d2b](.artifacts/records/project__check-run/rec-86ed0a51-274d-454b-986d-8eb915664d2b.md))_
 
 ## scaffold-orchestra
 
@@ -312,6 +357,33 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **verdict-manifest**: rec-a5646067-6c51-44b0-8302-bfae12644013; 512796fda9f16f54a5848fdca999755a8e48eb27; pass; tdd _(id: [rec-d123be01-a6c5-4d46-a330-df7ae9819fe8](.artifacts/records/project__check-run/rec-d123be01-a6c5-4d46-a330-df7ae9819fe8.md))_
 - **verdict-manifest**: rec-a5646067-6c51-44b0-8302-bfae12644013; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-fa7d1356-8b6d-4c5a-bea8-ce0837dbc846](.artifacts/records/project__check-run/rec-fa7d1356-8b6d-4c5a-bea8-ce0837dbc846.md))_
 
+## verdict-through-runner
+
+### Acceptance
+- **verdict-through-runner**: aff verdict keeps pass, hash-mismatch, and collection-error results, and verdict.py does not scrape pytest stdout; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or not_assertion or ignores_pytest_stdout" _(id: [rec-11e21744-5979-4d98-a4fe-bb5dc3b0c834](.artifacts/records/project__acceptance/rec-11e21744-5979-4d98-a4fe-bb5dc3b0c834.md))_
+
+### Check
+- **verdict-through-runner**: rec-11e21744-5979-4d98-a4fe-bb5dc3b0c834; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; tdd _(id: [rec-5e0f22c6-0ca7-4967-b34f-f9c4ad73356d](.artifacts/records/project__check-run/rec-5e0f22c6-0ca7-4967-b34f-f9c4ad73356d.md))_
+- **verdict-through-runner**: rec-11e21744-5979-4d98-a4fe-bb5dc3b0c834; 7a3dd0a507dd61c7137957b1e1a4bc3e7a26e42d; fail; tdd _(id: [rec-9916769a-4965-4252-9e31-ec533ee2239f](.artifacts/records/project__check-run/rec-9916769a-4965-4252-9e31-ec533ee2239f.md))_
+
+## verdict-through-runner-fixture
+
+### Acceptance
+- **verdict-through-runner-fixture**: A fixture command that emits JUnit XML is judged pass, not assertion, or tests failed with no new module under affidavit/; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k fixture_junit _(id: [rec-7c5ba8b7-65f1-43b8-ae07-bdefbe64c545](.artifacts/records/project__acceptance/rec-7c5ba8b7-65f1-43b8-ae07-bdefbe64c545.md))_
+
+### Check
+- **verdict-through-runner-fixture**: rec-7c5ba8b7-65f1-43b8-ae07-bdefbe64c545; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; tdd _(id: [rec-0866201b-ce0b-462a-b453-da03cae6ddf1](.artifacts/records/project__check-run/rec-0866201b-ce0b-462a-b453-da03cae6ddf1.md))_
+- **verdict-through-runner-fixture**: rec-7c5ba8b7-65f1-43b8-ae07-bdefbe64c545; 7a3dd0a507dd61c7137957b1e1a4bc3e7a26e42d; fail; tdd _(id: [rec-40057722-48e8-4adb-928e-ee6cedef12ff](.artifacts/records/project__check-run/rec-40057722-48e8-4adb-928e-ee6cedef12ff.md))_
+
+## verdict-through-runner-unstable
+
+### Acceptance
+- **verdict-through-runner-unstable**: A disagreeing confirmation yields unstable and a non-zero exit, and a failed first run is not confirmed; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "unstable_when_confirmation or skips_confirmation" _(id: [rec-ca86ff79-3d6b-4441-91b8-e3e0abd9cdfa](.artifacts/records/project__acceptance/rec-ca86ff79-3d6b-4441-91b8-e3e0abd9cdfa.md))_
+
+### Check
+- **verdict-through-runner-unstable**: rec-ca86ff79-3d6b-4441-91b8-e3e0abd9cdfa; 7a3dd0a507dd61c7137957b1e1a4bc3e7a26e42d; fail; tdd _(id: [rec-93bc5ec4-3fbd-4b7b-bec2-1c87662c54be](.artifacts/records/project__check-run/rec-93bc5ec4-3fbd-4b7b-bec2-1c87662c54be.md))_
+- **verdict-through-runner-unstable**: rec-ca86ff79-3d6b-4441-91b8-e3e0abd9cdfa; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; tdd _(id: [rec-bd98a4ac-4f41-4ff0-87b9-b2e47f6fce30](.artifacts/records/project__check-run/rec-bd98a4ac-4f41-4ff0-87b9-b2e47f6fce30.md))_
+
 ## verify-claims-manifest
 
 ### Acceptance
@@ -412,6 +484,38 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **verify-orchestration-split-verdict**: rec-167feb75-1bd7-4db4-ad7c-05b50da84dae; 2df7598d15159946435617cd150ab4d4dd9329c8; fail; tdd _(id: [rec-13197abe-10a5-44e1-9437-a436982f2cbc](.artifacts/records/project__check-run/rec-13197abe-10a5-44e1-9437-a436982f2cbc.md))_
 - **verify-orchestration-split-verdict**: rec-167feb75-1bd7-4db4-ad7c-05b50da84dae; 40386351dd0a5d62619ef4be64070aefb986ff30; pass; tdd _(id: [rec-72851342-8ebf-4547-93b6-557ff9464558](.artifacts/records/project__check-run/rec-72851342-8ebf-4547-93b6-557ff9464558.md))_
 - **verify-orchestration-split-verdict**: rec-167feb75-1bd7-4db4-ad7c-05b50da84dae; 2df7598d15159946435617cd150ab4d4dd9329c8; fail; tdd _(id: [rec-97a0c1d1-39d9-4829-8e8f-2823b8ca594d](.artifacts/records/project__check-run/rec-97a0c1d1-39d9-4829-8e8f-2823b8ca594d.md))_
+
+## verify-runner-adapter
+
+### Acceptance
+- **verify-runner-adapter**: aff verdict judges a claim through run_tests with no pytest stdout regex, and existing pass, hash-mismatch, and collection-error cases keep their results; check; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or not_assertion or ignores_pytest_stdout" _(id: [rec-1806d506-b116-4a6d-8c3f-005d61f39cc2](.artifacts/records/project__acceptance/rec-1806d506-b116-4a6d-8c3f-005d61f39cc2.md))_
+
+### Check
+- **verify-runner-adapter**: rec-1806d506-b116-4a6d-8c3f-005d61f39cc2; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; check _(id: [rec-779f7de7-4ea6-4e63-99d0-3064cc3ed3da](.artifacts/records/project__check-run/rec-779f7de7-4ea6-4e63-99d0-3064cc3ed3da.md))_
+
+## verify-runner-adapter-fixture
+
+### Acceptance
+- **verify-runner-adapter-fixture**: A fixture command that emits JUnit XML is judged through bin/aff verdict with no change under affidavit/; check; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k fixture_junit _(id: [rec-db6fa367-1432-40ad-8bc8-9f88d61f6eed](.artifacts/records/project__acceptance/rec-db6fa367-1432-40ad-8bc8-9f88d61f6eed.md))_
+
+### Check
+- **verify-runner-adapter-fixture**: rec-db6fa367-1432-40ad-8bc8-9f88d61f6eed; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; check _(id: [rec-4793736b-e0c3-41b0-94a0-8dbf323013e4](.artifacts/records/project__check-run/rec-4793736b-e0c3-41b0-94a0-8dbf323013e4.md))_
+
+## verify-runner-adapter-template
+
+### Acceptance
+- **verify-runner-adapter-template**: An absent runner uses the shipped pytest template, and a runner that is not an argv list with {tests} and {report} fails manifest load; check; evidence-layer; python3 -m pytest tests/test_manifest.py -q -k "runner_absent or runner_invalid" _(id: [rec-84963c29-53ed-4d7d-a04b-d2d0d5b0c25a](.artifacts/records/project__acceptance/rec-84963c29-53ed-4d7d-a04b-d2d0d5b0c25a.md))_
+
+### Check
+- **verify-runner-adapter-template**: rec-84963c29-53ed-4d7d-a04b-d2d0d5b0c25a; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; check _(id: [rec-019b15ab-932f-4af9-abec-e84554a2580d](.artifacts/records/project__check-run/rec-019b15ab-932f-4af9-abec-e84554a2580d.md))_
+
+## verify-runner-adapter-unstable
+
+### Acceptance
+- **verify-runner-adapter-unstable**: A witness that is assertion_failed on the first base run and passed on the confirmation run yields unstable and a non-zero exit; check; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k unstable_when_confirmation _(id: [rec-81acd29f-17af-42a1-b0be-374190e321dd](.artifacts/records/project__acceptance/rec-81acd29f-17af-42a1-b0be-374190e321dd.md))_
+
+### Check
+- **verify-runner-adapter-unstable**: rec-81acd29f-17af-42a1-b0be-374190e321dd; 37d326c5eb4085075b3b363aba49f17cc5e7d534; pass; check _(id: [rec-d612b645-12a5-4429-a014-9003f798e2b2](.artifacts/records/project__check-run/rec-d612b645-12a5-4429-a014-9003f798e2b2.md))_
 
 ## verify-standalone-aff
 

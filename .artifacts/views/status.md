@@ -1,7 +1,7 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:d04e3e0099e838e767013e06bfa4e63152f17b2ab833d57865769228ad8d71e0
+> Store state: sha256:24e8a72445fd11b14aefc8202cd49d81a2132dc39d26bdda9e84444ed2c6af3d
 
 ## claims-manifest
 
@@ -35,3 +35,11 @@
 - **skill-command-names**: Point skills at orchestra check and close-batch; standalone-aff; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 2 pass / 1 fail _(id: [rec-08048568-55b2-4cf4-99de-f01dd1639306](.artifacts/records/project__work-item/rec-08048568-55b2-4cf4-99de-f01dd1639306.md))_
 - **strip-aff-verbs**: Make aff verdict-only; standalone-aff; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 4 pass / 2 fail _(id: [rec-36843bfb-a7a0-4e0e-81f9-e18b8694a290](.artifacts/records/project__work-item/rec-36843bfb-a7a0-4e0e-81f9-e18b8694a290.md))_
 - **verify-standalone-aff**: Verify aff stands alone from the workflow store; standalone-aff; deliver; evidence-layer; state: done; ready: True; wave: 3; criteria: 17 pass / 1 fail _(id: [rec-29cc7cc5-b85f-4280-8fcc-2e7346d38db1](.artifacts/records/project__work-item/rec-29cc7cc5-b85f-4280-8fcc-2e7346d38db1.md))_
+
+## runner-adapter
+
+### Work
+- **junit-run-tests**: Run tests and read JUnit outcomes; runner-adapter; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 6 pass / 3 fail _(id: [rec-00c6d3e0-32de-4aa6-ba8b-be55b7804175](.artifacts/records/project__work-item/rec-00c6d3e0-32de-4aa6-ba8b-be55b7804175.md))_
+- **parse-manifest-runner**: Parse the manifest runner template; runner-adapter; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 2 pass / 1 fail _(id: [rec-b8afde31-c4a5-465d-99ac-3ee6a6d0170d](.artifacts/records/project__work-item/rec-b8afde31-c4a5-465d-99ac-3ee6a6d0170d.md))_
+- **verdict-through-runner**: Judge claims from run_tests; runner-adapter; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 3 pass / 3 fail _(id: [rec-aa589bd6-338c-46ba-96c1-21e174a74119](.artifacts/records/project__work-item/rec-aa589bd6-338c-46ba-96c1-21e174a74119.md))_
+- **verify-runner-adapter**: Verify verdict runs through the runner adapter; runner-adapter; deliver; evidence-layer; state: done; ready: True; wave: 3; criteria: 4 pass / 0 fail _(id: [rec-01f6b4e4-e6aa-4bb2-adb6-ff40032c063f](.artifacts/records/project__work-item/rec-01f6b4e4-e6aa-4bb2-adb6-ff40032c063f.md))_
