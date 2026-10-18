@@ -1,7 +1,7 @@
 # Project Verification
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:a0fa690b434b901ab95b18bf4da93b22b93e6795bdc3c9e27a731e1d2557d1d4
+> Store state: sha256:f3b0f47f262626218a91acc3ee8364797ae83b8f0223d04be3a6f73a6630b44e
 
 ## amendment-sign
 
@@ -245,6 +245,17 @@
 - **env-freeze-runner**: rec-6a082c2e-8500-4178-b517-9d57ef09d9c7; 766765f555e67d9f50500fccbf116c16b855f3c0; pass; tdd _(id: [rec-9171ecef-c36f-4248-a180-cd2652ca6d27](.artifacts/records/project__check-run/rec-9171ecef-c36f-4248-a180-cd2652ca6d27.md))_
 - **env-freeze-runner**: rec-6a082c2e-8500-4178-b517-9d57ef09d9c7; dirty; fail; tdd _(id: [rec-b4531302-dc52-4fba-8fb5-694e65842764](.artifacts/records/project__check-run/rec-b4531302-dc52-4fba-8fb5-694e65842764.md))_
 
+## evidence-interface-review
+
+### Check
+- **evidence-interface-review**: evidence-interface-review; a655bf41071f6783be3049a8107ac8e28c54ee55; pass; review _(id: [rec-4ced2e1e-89e8-44b3-a011-5ec97e463cc2](.artifacts/records/project__check-run/rec-4ced2e1e-89e8-44b3-a011-5ec97e463cc2.md))_
+- **evidence-interface-review**: evidence-interface-review; a655bf41071f6783be3049a8107ac8e28c54ee55; pass; review; parent _(id: [rec-6e9d124f-7c0d-447c-8309-b39d6d6df1c1](.artifacts/records/project__check-run/rec-6e9d124f-7c0d-447c-8309-b39d6d6df1c1.md))_
+
+## evidence-interface-suite
+
+### Check
+- **evidence-interface-suite**: evidence-interface-suite; a655bf41071f6783be3049a8107ac8e28c54ee55; fail; check _(id: [rec-3bfc1262-c7f7-4f31-ace6-a8936cfaaa2c](.artifacts/records/project__check-run/rec-3bfc1262-c7f7-4f31-ace6-a8936cfaaa2c.md))_
+
 ## extract-store-binding
 
 ### Acceptance
@@ -410,6 +421,33 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Check
 - **move-store-client-imports**: rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94; 2f2054aeccef9db20ac96d84d3c7f09d2647adfd; pass; tdd _(id: [rec-62bca6f5-68b8-44e4-93ac-4b2863b8c243](.artifacts/records/project__check-run/rec-62bca6f5-68b8-44e4-93ac-4b2863b8c243.md))_
 - **move-store-client-imports**: rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94; 2483da2da2ad4929ad5853978d57335072ff577a; pass; tdd _(id: [rec-e02d9d80-9036-481f-acec-0cc6f8f8c321](.artifacts/records/project__check-run/rec-e02d9d80-9036-481f-acec-0cc6f8f8c321.md))_
+
+## observation-cli
+
+### Acceptance
+- **observation-cli**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r2_verdict_records_one_evidence_observation tests/test_evidence_interface.py::test_r2_verdict_without_store_matches_prephase_semantics -q _(id: [rec-e112515b-ee14-470f-a980-8a4943bec4a1](.artifacts/records/project__acceptance/rec-e112515b-ee14-470f-a980-8a4943bec4a1.md))_
+
+### Check
+- **observation-cli**: rec-e112515b-ee14-470f-a980-8a4943bec4a1; a655bf41071f6783be3049a8107ac8e28c54ee55; pass; tdd _(id: [rec-73d3effe-33d4-4038-a508-3c64a8c26df9](.artifacts/records/project__check-run/rec-73d3effe-33d4-4038-a508-3c64a8c26df9.md))_
+- **observation-cli**: rec-e112515b-ee14-470f-a980-8a4943bec4a1; dirty; fail; tdd _(id: [rec-ceb6c592-0153-4691-ab00-f11cff6ec162](.artifacts/records/project__check-run/rec-ceb6c592-0153-4691-ab00-f11cff6ec162.md))_
+
+## observation-cli-trail
+
+### Acceptance
+- **observation-cli-trail**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r3_aff_trail_lists_observations_as_json -q _(id: [rec-16b9050f-19e0-4ed7-af49-b2294f2cc62f](.artifacts/records/project__acceptance/rec-16b9050f-19e0-4ed7-af49-b2294f2cc62f.md))_
+
+### Check
+- **observation-cli-trail**: rec-16b9050f-19e0-4ed7-af49-b2294f2cc62f; a655bf41071f6783be3049a8107ac8e28c54ee55; pass; tdd _(id: [rec-18a40637-35ff-4c76-b989-21c7df512646](.artifacts/records/project__check-run/rec-18a40637-35ff-4c76-b989-21c7df512646.md))_
+- **observation-cli-trail**: rec-16b9050f-19e0-4ed7-af49-b2294f2cc62f; dirty; fail; tdd _(id: [rec-411abc6c-cc0d-4610-af28-fe91f9503c79](.artifacts/records/project__check-run/rec-411abc6c-cc0d-4610-af28-fe91f9503c79.md))_
+
+## observation-contract
+
+### Acceptance
+- **observation-contract**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r1_contract_defines_evidence_observation -q _(id: [rec-8d9025b0-5c74-4542-b5dc-4b41890bc5a1](.artifacts/records/project__acceptance/rec-8d9025b0-5c74-4542-b5dc-4b41890bc5a1.md))_
+
+### Check
+- **observation-contract**: rec-8d9025b0-5c74-4542-b5dc-4b41890bc5a1; 15064f44e70cf6f7ec5729946fbc7df9ca23f3cb; pass; tdd _(id: [rec-6c8d22f5-9cd7-4c4d-8935-182e1fe484ae](.artifacts/records/project__check-run/rec-6c8d22f5-9cd7-4c4d-8935-182e1fe484ae.md))_
+- **observation-contract**: rec-8d9025b0-5c74-4542-b5dc-4b41890bc5a1; dirty; fail; tdd _(id: [rec-f67f556d-2f4f-4215-8312-cb047577b18d](.artifacts/records/project__check-run/rec-f67f556d-2f4f-4215-8312-cb047577b18d.md))_
 
 ## orchestration-split-review
 
@@ -611,6 +649,11 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Finding
 - **suite-advisory-claims-manifest**: advisory suite fail for claims-manifest-suite; exit_code 1; failing node tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub; suite check-run passes at phase head, or human clears; none _(id: [rec-43ce266c-c2ac-4895-99e2-e039eac06a4f](.artifacts/records/project__finding/rec-43ce266c-c2ac-4895-99e2-e039eac06a4f.md))_
+
+## suite-advisory-evidence-interface
+
+### Finding
+- **suite-advisory-evidence-interface**: advisory suite fail for evidence-interface-suite; exit_code 1; failing_node_ids include tests/test_claim_authoring.py::test_r2_standalone_add_freeze_verdict_passes (JUnit ParseError flake); suite check-run passes at phase head, or human clears; none _(id: [rec-719631ea-8759-4173-bdab-2abe0b0f1ff2](.artifacts/records/project__finding/rec-719631ea-8759-4173-bdab-2abe0b0f1ff2.md))_
 
 ## suite-advisory-standalone-aff
 
@@ -823,6 +866,39 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **verify-claims-manifest-suite**: rec-27b93db5-292e-4864-8bc9-ac743955d861; 512796fda9f16f54a5848fdca999755a8e48eb27; fail; tdd _(id: [rec-a2082b3e-966f-4582-ad33-99064849cb1a](.artifacts/records/project__check-run/rec-a2082b3e-966f-4582-ad33-99064849cb1a.md))_
 - **verify-claims-manifest-suite**: rec-27b93db5-292e-4864-8bc9-ac743955d861; f84f89b913b54f21f1e426c7201c49b2e62347ef; pass; tdd _(id: [rec-e0a361c5-0c08-41b2-8dc0-07c6e326b849](.artifacts/records/project__check-run/rec-e0a361c5-0c08-41b2-8dc0-07c6e326b849.md))_
 - **verify-claims-manifest-suite**: rec-27b93db5-292e-4864-8bc9-ac743955d861; 18e88e48fdb1fefea4bd0ab01e8bf1454364d16a; pass; tdd _(id: [rec-eb6538b1-57ce-4eba-8971-d89d7e714ce2](.artifacts/records/project__check-run/rec-eb6538b1-57ce-4eba-8971-d89d7e714ce2.md))_
+
+## verify-evidence-interface
+
+### Acceptance
+- **verify-evidence-interface**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r4_verdict_trail_and_subsequent_verdict_pass -q _(id: [rec-7a536e2e-56fe-418d-9f76-ee4819ffc972](.artifacts/records/project__acceptance/rec-7a536e2e-56fe-418d-9f76-ee4819ffc972.md))_
+
+### Check
+- **verify-evidence-interface**: rec-7a536e2e-56fe-418d-9f76-ee4819ffc972; dirty; fail; tdd _(id: [rec-910efe84-10bd-45fe-a0ef-fbac6ceed70c](.artifacts/records/project__check-run/rec-910efe84-10bd-45fe-a0ef-fbac6ceed70c.md))_
+- **verify-evidence-interface**: rec-7a536e2e-56fe-418d-9f76-ee4819ffc972; a655bf41071f6783be3049a8107ac8e28c54ee55; pass; tdd _(id: [rec-9c77593c-5482-4b44-9386-f49e215b3c67](.artifacts/records/project__check-run/rec-9c77593c-5482-4b44-9386-f49e215b3c67.md))_
+
+## verify-evidence-interface-contract
+
+### Acceptance
+- **verify-evidence-interface-contract**: check; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r1_contract_defines_evidence_observation -q _(id: [rec-f4bd77f2-9d08-4e1a-9856-8ed3f967d3b7](.artifacts/records/project__acceptance/rec-f4bd77f2-9d08-4e1a-9856-8ed3f967d3b7.md))_
+
+### Check
+- **verify-evidence-interface-contract**: rec-f4bd77f2-9d08-4e1a-9856-8ed3f967d3b7; a655bf41071f6783be3049a8107ac8e28c54ee55; pass; check _(id: [rec-f06afe0b-49a0-40ea-9794-93c5d1ef770a](.artifacts/records/project__check-run/rec-f06afe0b-49a0-40ea-9794-93c5d1ef770a.md))_
+
+## verify-evidence-interface-record
+
+### Acceptance
+- **verify-evidence-interface-record**: check; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r2_verdict_records_one_evidence_observation tests/test_evidence_interface.py::test_r2_verdict_without_store_matches_prephase_semantics -q _(id: [rec-36098ded-eb47-4b64-b5d5-f64dba0295cd](.artifacts/records/project__acceptance/rec-36098ded-eb47-4b64-b5d5-f64dba0295cd.md))_
+
+### Check
+- **verify-evidence-interface-record**: rec-36098ded-eb47-4b64-b5d5-f64dba0295cd; a655bf41071f6783be3049a8107ac8e28c54ee55; pass; check _(id: [rec-70a061d3-1241-4d57-b2d1-c317bcc755da](.artifacts/records/project__check-run/rec-70a061d3-1241-4d57-b2d1-c317bcc755da.md))_
+
+## verify-evidence-interface-trail
+
+### Acceptance
+- **verify-evidence-interface-trail**: check; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r3_aff_trail_lists_observations_as_json -q _(id: [rec-cb193838-6640-40f2-a632-be392af0cd68](.artifacts/records/project__acceptance/rec-cb193838-6640-40f2-a632-be392af0cd68.md))_
+
+### Check
+- **verify-evidence-interface-trail**: rec-cb193838-6640-40f2-a632-be392af0cd68; a655bf41071f6783be3049a8107ac8e28c54ee55; pass; check _(id: [rec-e0aa8f7a-87fc-49e8-a093-5f2e5a77b3a8](.artifacts/records/project__check-run/rec-e0aa8f7a-87fc-49e8-a093-5f2e5a77b3a8.md))_
 
 ## verify-evidence-kind
 

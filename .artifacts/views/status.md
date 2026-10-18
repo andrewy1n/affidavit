@@ -1,7 +1,7 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:9eb9c7fc33646d7fba1472624b78956b982cb7f6b3d8f6f2696a4b0ac0788987
+> Store state: sha256:54ab9a718d730e79c1863991d0d84f0c14a97a22fcc26fd607e39c905cf52c25
 
 ## claims-manifest
 
@@ -96,3 +96,10 @@
 ### Work
 - **ci-fixture-builder**: Builder, templates, workflow step, R4 pytest; ci-verdict-fixture; repair; evidence-layer; state: done; ready: True; wave: 1; criteria: 5 pass / 1 fail _(id: [rec-fa74a33a-cff0-4cf0-a566-c572c85dc622](.artifacts/records/project__work-item/rec-fa74a33a-cff0-4cf0-a566-c572c85dc622.md))_
 - **verify-ci-verdict-fixture**: Verify CI verdict fixture phase; ci-verdict-fixture; repair; evidence-layer; state: done; ready: True; wave: 2; criteria: 7 pass / 1 fail _(id: [rec-28d3e0a4-3cb9-4ed5-8114-0d00ad11a0a3](.artifacts/records/project__work-item/rec-28d3e0a4-3cb9-4ed5-8114-0d00ad11a0a3.md))_
+
+## evidence-interface
+
+### Work
+- **observation-cli**: Record and list evidence observations; evidence-interface; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 2 pass / 2 fail _(id: [rec-05b561bd-8746-498d-b108-49d8466799ac](.artifacts/records/project__work-item/rec-05b561bd-8746-498d-b108-49d8466799ac.md))_
+- **observation-contract**: Add evidence-observation record type; evidence-interface; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-1279e477-c1f3-4706-814e-6a903b2eea91](.artifacts/records/project__work-item/rec-1279e477-c1f3-4706-814e-6a903b2eea91.md))_
+- **verify-evidence-interface**: Verify evidence interface; evidence-interface; deliver; evidence-layer; state: done; ready: True; wave: 3; criteria: 4 pass / 1 fail _(id: [rec-91fdc463-e238-48a4-a160-dc074898b575](.artifacts/records/project__work-item/rec-91fdc463-e238-48a4-a160-dc074898b575.md))_

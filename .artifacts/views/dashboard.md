@@ -1,7 +1,7 @@
 # Project Dashboard
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:152c0b1f3a23e42faed737197680d75a229d93801853e6e3bbafba26c3ac0a67
+> Store state: sha256:22c9aa2549c80c22808f96c16cd76addc98e68c776a1d3d99dee72008ae0bbc2
 
 ## evidence-layer
 
@@ -25,6 +25,8 @@
 - **junit-run-tests**: title: Run tests and read JUnit outcomes; phase: runner-adapter _(id: [rec-00c6d3e0-32de-4aa6-ba8b-be55b7804175](.artifacts/records/project__work-item/rec-00c6d3e0-32de-4aa6-ba8b-be55b7804175.md))_
 - **kind-enforcement**: title: Claims declare evidence_kind and verdict enforces it; phase: evidence-kind _(id: [rec-ed2ce447-5658-4449-a5d1-1d9c4d2618f6](.artifacts/records/project__work-item/rec-ed2ce447-5658-4449-a5d1-1d9c4d2618f6.md))_
 - **move-store-client**: title: Move the store client into orchestra; phase: standalone-aff _(id: [rec-a22773f7-af99-4c50-90f7-449294324175](.artifacts/records/project__work-item/rec-a22773f7-af99-4c50-90f7-449294324175.md))_
+- **observation-cli**: title: Record and list evidence observations; phase: evidence-interface _(id: [rec-05b561bd-8746-498d-b108-49d8466799ac](.artifacts/records/project__work-item/rec-05b561bd-8746-498d-b108-49d8466799ac.md))_
+- **observation-contract**: title: Add evidence-observation record type; phase: evidence-interface _(id: [rec-1279e477-c1f3-4706-814e-6a903b2eea91](.artifacts/records/project__work-item/rec-1279e477-c1f3-4706-814e-6a903b2eea91.md))_
 - **parse-manifest-runner**: title: Parse the manifest runner template; phase: runner-adapter _(id: [rec-b8afde31-c4a5-465d-99ac-3ee6a6d0170d](.artifacts/records/project__work-item/rec-b8afde31-c4a5-465d-99ac-3ee6a6d0170d.md))_
 - **provenance-check**: title: Verdict checks oracle provenance from git; phase: oracle-provenance _(id: [rec-6532448f-ef80-47f6-95df-2e46fa206425](.artifacts/records/project__work-item/rec-6532448f-ef80-47f6-95df-2e46fa206425.md))_
 - **skill-command-names**: title: Point skills at orchestra check and close-batch; phase: standalone-aff _(id: [rec-08048568-55b2-4cf4-99de-f01dd1639306](.artifacts/records/project__work-item/rec-08048568-55b2-4cf4-99de-f01dd1639306.md))_
@@ -33,6 +35,7 @@
 - **verify-audit-differential**: title: Verify audit-differential exit criteria via aff audit; phase: audit-differential _(id: [rec-ea36902a-219f-4eba-81dd-043036fd9967](.artifacts/records/project__work-item/rec-ea36902a-219f-4eba-81dd-043036fd9967.md))_
 - **verify-ci-verdict-fixture**: title: Verify CI verdict fixture phase; phase: ci-verdict-fixture _(id: [rec-28d3e0a4-3cb9-4ed5-8114-0d00ad11a0a3](.artifacts/records/project__work-item/rec-28d3e0a4-3cb9-4ed5-8114-0d00ad11a0a3.md))_
 - **verify-claim-authoring**: title: Verify claim authoring; phase: claim-authoring _(id: [rec-63842060-9a26-40d1-bbb0-6bda45d87640](.artifacts/records/project__work-item/rec-63842060-9a26-40d1-bbb0-6bda45d87640.md))_
+- **verify-evidence-interface**: title: Verify evidence interface; phase: evidence-interface _(id: [rec-91fdc463-e238-48a4-a160-dc074898b575](.artifacts/records/project__work-item/rec-91fdc463-e238-48a4-a160-dc074898b575.md))_
 - **verify-evidence-kind**: title: Verify evidence kind; phase: evidence-kind _(id: [rec-992dd471-2b52-4170-b036-bbe6c151c7e6](.artifacts/records/project__work-item/rec-992dd471-2b52-4170-b036-bbe6c151c7e6.md))_
 - **verify-frozen-environment**: title: Verify frozen environment; phase: frozen-environment _(id: [rec-93330552-0006-4446-b6fa-d5c4d939a54c](.artifacts/records/project__work-item/rec-93330552-0006-4446-b6fa-d5c4d939a54c.md))_
 - **verify-oracle-provenance**: title: Verify oracle provenance; phase: oracle-provenance _(id: [rec-3308eb03-5884-4be7-a427-a76777c61cd5](.artifacts/records/project__work-item/rec-3308eb03-5884-4be7-a427-a76777c61cd5.md))_
