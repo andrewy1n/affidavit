@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:21e4311e053ef419d396aa28709b723a6e10d183042c978803f0d4af13499a38
+> Store state: sha256:cf95ba828821c8e74b957cb81eec0dd363d5751807375333b973ad20427385e6
 
 ## amendment-sign
 
@@ -30,9 +30,6 @@
 
 ## audit-blocks
 
-### Work
-- **audit-blocks**: aff audit labels hunk blocks noticed or not; phase-end-evidence; deliver; evidence-layer _(id: [rec-f2503a35-0a0a-407e-b8d7-a7ec9847d6cc](.artifacts/records/project__work-item/rec-f2503a35-0a0a-407e-b8d7-a7ec9847d6cc.md))_
-
 ### Acceptance
 - **audit-blocks**: tdd; evidence-layer; python3 -m pytest tests/test_audit.py::test_r1_audit_labels_each_source_block tests/test_audit.py::test_r1_audit_reads_claim_tests_from_manifest -q _(id: [rec-4d99e4a9-8eed-4abf-bbfd-63d23ba1bf0e](.artifacts/records/project__acceptance/rec-4d99e4a9-8eed-4abf-bbfd-63d23ba1bf0e.md))_
 
@@ -46,18 +43,60 @@
 ### Acceptance
 - **audit-blocks-tests**: tdd; evidence-layer; python3 -m pytest tests/test_audit.py::test_r2_audit_never_reports_test_file_blocks -q _(id: [rec-80251ecf-6081-4c0c-8ebb-aff653eb663a](.artifacts/records/project__acceptance/rec-80251ecf-6081-4c0c-8ebb-aff653eb663a.md))_
 
-## audit-mutants
+## audit-differential-review
 
-### Work
-- **audit-mutants**: aff audit plants mutants in noticed blocks; phase-end-evidence; deliver; evidence-layer _(id: [rec-e68243cc-39af-4b77-abf6-4d9a191f1750](.artifacts/records/project__work-item/rec-e68243cc-39af-4b77-abf6-4d9a191f1750.md))_
+### Acceptance
+- **audit-differential-review**: manual; evidence-layer _(id: [rec-554e4e13-762d-4e70-9082-9f345ef104c1](.artifacts/records/project__acceptance/rec-554e4e13-762d-4e70-9082-9f345ef104c1.md))_
+
+## audit-mutants
 
 ### Acceptance
 - **audit-mutants**: tdd; evidence-layer; python3 -m pytest tests/test_audit.py::test_r4_audit_plants_mutants_only_in_noticed_blocks -q _(id: [rec-1b284b3d-549e-44c3-9ebb-819ea7e633c0](.artifacts/records/project__acceptance/rec-1b284b3d-549e-44c3-9ebb-819ea7e633c0.md))_
+
+## audit-probes
+
+### Acceptance
+- **audit-probes**: tdd; evidence-layer; python3 -m pytest tests/test_audit_probes.py::test_r1_audit_runs_declared_probes_at_base_and_head -q _(id: [rec-282b9531-ae72-4d08-bb9e-3b90139f7561](.artifacts/records/project__acceptance/rec-282b9531-ae72-4d08-bb9e-3b90139f7561.md))_
+
+## audit-probes-claimed
+
+### Acceptance
+- **audit-probes-claimed**: tdd; evidence-layer; python3 -m pytest tests/test_audit_probes.py::test_r2_audit_reports_unclaimed_probe_difference -q _(id: [rec-841b4a3f-f2d6-40c0-b73f-b4af1186f1e8](.artifacts/records/project__acceptance/rec-841b4a3f-f2d6-40c0-b73f-b4af1186f1e8.md))_
+
+## audit-probes-covered
+
+### Acceptance
+- **audit-probes-covered**: tdd; evidence-layer; python3 -m pytest tests/test_audit_probes.py::test_r3_audit_suppresses_diff_covered_by_cited_claim -q _(id: [rec-72c29ed5-5ed2-4a78-8847-bc5f73acee3a](.artifacts/records/project__acceptance/rec-72c29ed5-5ed2-4a78-8847-bc5f73acee3a.md))_
+
+## audit-unclaimed-range
+
+### Acceptance
+- **audit-unclaimed-range**: tdd; evidence-layer; python3 -m pytest tests/test_audit_probes_range.py::test_r4_audit_reports_unclaimed_tdd_revision_relaxation -q _(id: [rec-04aba49b-468d-4d98-a837-9df3b7b5e7e7](.artifacts/records/project__acceptance/rec-04aba49b-468d-4d98-a837-9df3b7b5e7e7.md))_
 
 ## campaign-landing-automerge
 
 ### Constraint
 - **campaign-landing-automerge**: For evidence-layer phases 5-11, Landing merges the phase branch into main and commits the store without asking; push is not a human stop; Landing close for evidence-layer phases frozen-environment through audit-differential; evidence-layer _(id: [rec-1c169abc-70e2-4610-a03b-aeee49a1257b](.artifacts/records/project__constraint/rec-1c169abc-70e2-4610-a03b-aeee49a1257b.md))_
+
+## ci-fixture-builder
+
+### Acceptance
+- **ci-fixture-builder**: check; evidence-layer; test -f tests/fixtures/verdict-repo/app.py && test -f tests/fixtures/verdict-repo/app.red.py && test -f tests/fixtures/verdict-repo/tests/test_widget.py && test -f tests/fixtures/verdict-repo/.affidavit/manifest.json && rg -q claim-widget tests/fixtures/verdict-repo/.affidavit/manifest.json && rg -q "verdict-repo/\.git" .gitignore _(id: [rec-b507fca2-1156-494c-a9c2-8ecab88e5368](.artifacts/records/project__acceptance/rec-b507fca2-1156-494c-a9c2-8ecab88e5368.md))_
+
+## ci-fixture-builder-pytest
+
+### Acceptance
+- **ci-fixture-builder-pytest**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_ci_workflow_runs_verdict_and_attest -q _(id: [rec-4ac56f49-8e3e-4d6f-9504-aacf0f8950e1](.artifacts/records/project__acceptance/rec-4ac56f49-8e3e-4d6f-9504-aacf0f8950e1.md))_
+
+## ci-fixture-builder-verdict
+
+### Acceptance
+- **ci-fixture-builder-verdict**: check; evidence-layer; bash tests/fixtures/build_verdict_repo.sh && BASE=$(git -C tests/fixtures/verdict-repo rev-parse HEAD~1) && HEAD=$(git -C tests/fixtures/verdict-repo rev-parse HEAD) && bin/aff verdict --cwd tests/fixtures/verdict-repo --base "$BASE" --at "$HEAD" claim-widget | tee /tmp/verdict-fixture.json && python3 -c "import json; assert json.load(open(\"/tmp/verdict-fixture.json\"))[\"result\"]==\"pass\"" _(id: [rec-9557c1ab-c5e5-44ba-b992-20eac0a1098a](.artifacts/records/project__acceptance/rec-9557c1ab-c5e5-44ba-b992-20eac0a1098a.md))_
+
+## ci-fixture-builder-workflow
+
+### Acceptance
+- **ci-fixture-builder-workflow**: check; evidence-layer; rg -n build_verdict_repo .github/workflows/affidavit-verdict.yml _(id: [rec-3d5bfc07-0ef7-4ed8-9f5b-746ff634bf45](.artifacts/records/project__acceptance/rec-3d5bfc07-0ef7-4ed8-9f5b-746ff634bf45.md))_
 
 ## claim-cli
 
@@ -92,7 +131,7 @@
 ## evidence-layer
 
 ### Position
-- **evidence-layer**: claim-authoring done; next up: phase-end-evidence; effort _(id: [rec-0c1b0959-7c23-496f-9474-082254eccf46](.artifacts/records/project__current-position/rec-0c1b0959-7c23-496f-9474-082254eccf46.md))_
+- **evidence-layer**: evidence-interface done; next up: evidence-bind; effort _(id: [rec-e0937dd2-b537-4592-bd33-43ecee8675db](.artifacts/records/project__current-position/rec-e0937dd2-b537-4592-bd33-43ecee8675db.md))_
 
 ## extract-store-binding
 
@@ -187,15 +226,25 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Acceptance
 - **move-store-client-imports**: orchestra imports affidavit.oracle_red from the close path and does not import affidavit.aa, affidavit.aa_resolve, affidavit.check, affidavit.policy, or affidavit.verdict; tdd; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_affidavit_import_boundary.py -q _(id: [rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94](.artifacts/records/project__acceptance/rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94.md))_
 
+## observation-cli
+
+### Acceptance
+- **observation-cli**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r2_verdict_records_one_evidence_observation tests/test_evidence_interface.py::test_r2_verdict_without_store_matches_prephase_semantics -q _(id: [rec-e112515b-ee14-470f-a980-8a4943bec4a1](.artifacts/records/project__acceptance/rec-e112515b-ee14-470f-a980-8a4943bec4a1.md))_
+
+## observation-cli-trail
+
+### Acceptance
+- **observation-cli-trail**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r3_aff_trail_lists_observations_as_json -q _(id: [rec-16b9050f-19e0-4ed7-af49-b2294f2cc62f](.artifacts/records/project__acceptance/rec-16b9050f-19e0-4ed7-af49-b2294f2cc62f.md))_
+
+## observation-contract
+
+### Acceptance
+- **observation-contract**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r1_contract_defines_evidence_observation -q _(id: [rec-8d9025b0-5c74-4542-b5dc-4b41890bc5a1](.artifacts/records/project__acceptance/rec-8d9025b0-5c74-4542-b5dc-4b41890bc5a1.md))_
+
 ## parse-manifest-runner
 
 ### Acceptance
 - **parse-manifest-runner**: An absent runner loads as the shipped pytest template, and a runner that is not an argv list with {tests} and {report} fails manifest load; tdd; evidence-layer; python3 -m pytest tests/test_manifest.py -q -k "runner_absent or runner_invalid" _(id: [rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a](.artifacts/records/project__acceptance/rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a.md))_
-
-## phase-end-evidence
-
-### Position
-- **phase-end-evidence**: phase-end-evidence planned: audit-blocks, audit-mutants + verify; phase _(id: [rec-fd218096-69fc-44f6-b89b-bcf0ff786453](.artifacts/records/project__current-position/rec-fd218096-69fc-44f6-b89b-bcf0ff786453.md))_
 
 ## phase-end-reviewer-milestones
 
@@ -307,10 +356,20 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Acceptance
 - **strip-affidavit**: With skills/, dashboard/, scripts/, and agents/ absent, bin/aff check, close-batch, and verdict --help exit 0 and the remaining verb tests pass; tdd; evidence-layer; test ! -d skills && test ! -d dashboard && test ! -d scripts && test ! -d agents && bin/aff check --help && bin/aff close-batch --help && bin/aff verdict --help && python3 -m pytest tests/test_evidence_layout.py tests/test_affidavit_check.py tests/test_close_batch.py tests/test_verdict.py tests/test_manifest.py tests/test_amendment.py tests/test_oracle_red.py tests/test_affidavit_aa.py -q _(id: [rec-2badfd8f-ce40-4a92-bc85-6f8fa36c4e01](.artifacts/records/project__acceptance/rec-2badfd8f-ce40-4a92-bc85-6f8fa36c4e01.md))_
 
+## suite-advisory-ci-verdict-fixture
+
+### Finding
+- **suite-advisory-ci-verdict-fixture**: advisory suite fail for ci-verdict-fixture-suite; exit_code 1; fixture oracle collected by pytest; claim_authoring flaked under xdist; suite check-run passes at phase head, or human clears; none _(id: [rec-be525209-270c-4097-81c6-2883a2451309](.artifacts/records/project__finding/rec-be525209-270c-4097-81c6-2883a2451309.md))_
+
 ## suite-advisory-claims-manifest
 
 ### Finding
 - **suite-advisory-claims-manifest**: advisory suite fail for claims-manifest-suite; exit_code 1; failing node tests/test_dashboard_journal.py::test_journal_detail_pager_pages_record_with_stub; suite check-run passes at phase head, or human clears; none _(id: [rec-43ce266c-c2ac-4895-99e2-e039eac06a4f](.artifacts/records/project__finding/rec-43ce266c-c2ac-4895-99e2-e039eac06a4f.md))_
+
+## suite-advisory-evidence-interface
+
+### Finding
+- **suite-advisory-evidence-interface**: advisory suite fail for evidence-interface-suite; exit_code 1; failing_node_ids include tests/test_claim_authoring.py::test_r2_standalone_add_freeze_verdict_passes (JUnit ParseError flake); suite check-run passes at phase head, or human clears; none _(id: [rec-719631ea-8759-4173-bdab-2abe0b0f1ff2](.artifacts/records/project__finding/rec-719631ea-8759-4173-bdab-2abe0b0f1ff2.md))_
 
 ## suite-advisory-standalone-aff
 
@@ -355,6 +414,46 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Acceptance
 - **verdict-through-runner-unstable**: A disagreeing confirmation yields unstable and a non-zero exit, and a failed first run is not confirmed; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "unstable_when_confirmation or skips_confirmation" _(id: [rec-ca86ff79-3d6b-4441-91b8-e3e0abd9cdfa](.artifacts/records/project__acceptance/rec-ca86ff79-3d6b-4441-91b8-e3e0abd9cdfa.md))_
 
+## verify-audit-differential
+
+### Acceptance
+- **verify-audit-differential**: check; evidence-layer; python3 -m pytest tests/test_audit_probes.py::test_r1_audit_runs_declared_probes_at_base_and_head -q _(id: [rec-13f0f1fa-e76f-4aa3-8bb5-fe61cfcf603c](.artifacts/records/project__acceptance/rec-13f0f1fa-e76f-4aa3-8bb5-fe61cfcf603c.md))_
+
+## verify-audit-differential-claimed
+
+### Acceptance
+- **verify-audit-differential-claimed**: check; evidence-layer; python3 -m pytest tests/test_audit_probes.py::test_r2_audit_reports_unclaimed_probe_difference -q _(id: [rec-fddcc59a-aa67-4ce0-95be-bc32e2819a90](.artifacts/records/project__acceptance/rec-fddcc59a-aa67-4ce0-95be-bc32e2819a90.md))_
+
+## verify-audit-differential-covered
+
+### Acceptance
+- **verify-audit-differential-covered**: check; evidence-layer; python3 -m pytest tests/test_audit_probes.py::test_r3_audit_suppresses_diff_covered_by_cited_claim -q _(id: [rec-77c1f1df-68b6-4338-858d-abb1e844db65](.artifacts/records/project__acceptance/rec-77c1f1df-68b6-4338-858d-abb1e844db65.md))_
+
+## verify-audit-differential-range
+
+### Acceptance
+- **verify-audit-differential-range**: check; evidence-layer; python3 -m pytest tests/test_audit_probes_range.py::test_r4_audit_reports_unclaimed_tdd_revision_relaxation -q _(id: [rec-dfd72358-f289-4f8c-8835-19e7523701f8](.artifacts/records/project__acceptance/rec-dfd72358-f289-4f8c-8835-19e7523701f8.md))_
+
+## verify-ci-verdict-fixture
+
+### Acceptance
+- **verify-ci-verdict-fixture**: check; evidence-layer; bash tests/fixtures/dry_run_verdict_attest.sh _(id: [rec-01ad59dd-8f29-42c3-989f-ee2b9c915d3e](.artifacts/records/project__acceptance/rec-01ad59dd-8f29-42c3-989f-ee2b9c915d3e.md))_
+
+## verify-ci-verdict-fixture-pytest
+
+### Acceptance
+- **verify-ci-verdict-fixture-pytest**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_ci_workflow_runs_verdict_and_attest -q _(id: [rec-749c9954-a57a-4714-9ed0-d90250c028e3](.artifacts/records/project__acceptance/rec-749c9954-a57a-4714-9ed0-d90250c028e3.md))_
+
+## verify-ci-verdict-fixture-templates
+
+### Acceptance
+- **verify-ci-verdict-fixture-templates**: check; evidence-layer; test -f tests/fixtures/build_verdict_repo.sh && test -f tests/fixtures/verdict-repo/app.py && test -f tests/fixtures/verdict-repo/.affidavit/manifest.json && rg -q "verdict-repo/\.git" .gitignore _(id: [rec-bd904456-5b0e-428c-b743-afb539f03876](.artifacts/records/project__acceptance/rec-bd904456-5b0e-428c-b743-afb539f03876.md))_
+
+## verify-ci-verdict-fixture-workflow
+
+### Acceptance
+- **verify-ci-verdict-fixture-workflow**: check; evidence-layer; rg -n build_verdict_repo .github/workflows/affidavit-verdict.yml _(id: [rec-9b25f2d6-f94c-4037-b11d-f3c3e1b98572](.artifacts/records/project__acceptance/rec-9b25f2d6-f94c-4037-b11d-f3c3e1b98572.md))_
+
 ## verify-claim-authoring
 
 ### Acceptance
@@ -394,6 +493,26 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Acceptance
 - **verify-claims-manifest-suite**: CLI subprocess tests cover the pass, a hash mismatch, a missing or invalid amendment signature, an allowlist change, and a --cwd pointed at a phase worktree other than the store checkout; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or bad_signature or allowlist or cwd_phase" _(id: [rec-27b93db5-292e-4864-8bc9-ac743955d861](.artifacts/records/project__acceptance/rec-27b93db5-292e-4864-8bc9-ac743955d861.md))_
+
+## verify-evidence-interface
+
+### Acceptance
+- **verify-evidence-interface**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r4_verdict_trail_and_subsequent_verdict_pass -q _(id: [rec-7a536e2e-56fe-418d-9f76-ee4819ffc972](.artifacts/records/project__acceptance/rec-7a536e2e-56fe-418d-9f76-ee4819ffc972.md))_
+
+## verify-evidence-interface-contract
+
+### Acceptance
+- **verify-evidence-interface-contract**: check; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r1_contract_defines_evidence_observation -q _(id: [rec-f4bd77f2-9d08-4e1a-9856-8ed3f967d3b7](.artifacts/records/project__acceptance/rec-f4bd77f2-9d08-4e1a-9856-8ed3f967d3b7.md))_
+
+## verify-evidence-interface-record
+
+### Acceptance
+- **verify-evidence-interface-record**: check; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r2_verdict_records_one_evidence_observation tests/test_evidence_interface.py::test_r2_verdict_without_store_matches_prephase_semantics -q _(id: [rec-36098ded-eb47-4b64-b5d5-f64dba0295cd](.artifacts/records/project__acceptance/rec-36098ded-eb47-4b64-b5d5-f64dba0295cd.md))_
+
+## verify-evidence-interface-trail
+
+### Acceptance
+- **verify-evidence-interface-trail**: check; evidence-layer; python3 -m pytest tests/test_evidence_interface.py::test_r3_aff_trail_lists_observations_as_json -q _(id: [rec-cb193838-6640-40f2-a632-be392af0cd68](.artifacts/records/project__acceptance/rec-cb193838-6640-40f2-a632-be392af0cd68.md))_
 
 ## verify-evidence-kind
 
@@ -491,9 +610,6 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **verify-orchestration-split-verdict**: execute-phase and verify-work run aff verdict for a claim in the manifest and treat a non-zero exit as not done; tdd; evidence-layer; cd ~/orchestra && python3 -m pytest tests/test_skill_evidence_boundary.py -q -k verdict _(id: [rec-167feb75-1bd7-4db4-ad7c-05b50da84dae](.artifacts/records/project__acceptance/rec-167feb75-1bd7-4db4-ad7c-05b50da84dae.md))_
 
 ## verify-phase-end-evidence
-
-### Work
-- **verify-phase-end-evidence**: Verify phase-end evidence; phase-end-evidence; deliver; evidence-layer _(id: [rec-7f20d856-7d9c-4e47-8f58-3f3afebe34b0](.artifacts/records/project__work-item/rec-7f20d856-7d9c-4e47-8f58-3f3afebe34b0.md))_
 
 ### Acceptance
 - **verify-phase-end-evidence**: check; evidence-layer; python3 -m pytest tests/test_audit.py::test_r1_audit_labels_each_source_block tests/test_audit.py::test_r1_audit_reads_claim_tests_from_manifest -q _(id: [rec-6309e3d9-876f-42ce-877b-70b6e54e95d0](.artifacts/records/project__acceptance/rec-6309e3d9-876f-42ce-877b-70b6e54e95d0.md))_

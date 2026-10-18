@@ -1,7 +1,7 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:24e8a72445fd11b14aefc8202cd49d81a2132dc39d26bdda9e84444ed2c6af3d
+> Store state: sha256:9eb9c7fc33646d7fba1472624b78956b982cb7f6b3d8f6f2696a4b0ac0788987
 
 ## claims-manifest
 
@@ -43,3 +43,56 @@
 - **parse-manifest-runner**: Parse the manifest runner template; runner-adapter; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 2 pass / 1 fail _(id: [rec-b8afde31-c4a5-465d-99ac-3ee6a6d0170d](.artifacts/records/project__work-item/rec-b8afde31-c4a5-465d-99ac-3ee6a6d0170d.md))_
 - **verdict-through-runner**: Judge claims from run_tests; runner-adapter; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 3 pass / 3 fail _(id: [rec-aa589bd6-338c-46ba-96c1-21e174a74119](.artifacts/records/project__work-item/rec-aa589bd6-338c-46ba-96c1-21e174a74119.md))_
 - **verify-runner-adapter**: Verify verdict runs through the runner adapter; runner-adapter; deliver; evidence-layer; state: done; ready: True; wave: 3; criteria: 4 pass / 0 fail _(id: [rec-01f6b4e4-e6aa-4bb2-adb6-ff40032c063f](.artifacts/records/project__work-item/rec-01f6b4e4-e6aa-4bb2-adb6-ff40032c063f.md))_
+
+## frozen-environment
+
+### Work
+- **env-freeze**: Freeze support files and runner digest; frozen-environment; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 2 pass / 2 fail _(id: [rec-8e5183a8-2f5c-404c-a071-2e6e9283e0ea](.artifacts/records/project__work-item/rec-8e5183a8-2f5c-404c-a071-2e6e9283e0ea.md))_
+- **verify-frozen-environment**: Verify frozen environment; frozen-environment; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 4 pass / 0 fail _(id: [rec-93330552-0006-4446-b6fa-d5c4d939a54c](.artifacts/records/project__work-item/rec-93330552-0006-4446-b6fa-d5c4d939a54c.md))_
+- **witness-lint**: Lint no-assert witnesses and new skips; frozen-environment; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 2 pass / 2 fail _(id: [rec-d77386b2-4e29-4a5f-8eb5-711104b19eb0](.artifacts/records/project__work-item/rec-d77386b2-4e29-4a5f-8eb5-711104b19eb0.md))_
+
+## signed-verdict
+
+### Work
+- **attest-ci**: Ship CI workflow for signed verdict; signed-verdict; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-2d4ded98-08d5-40fb-be0b-10704ce7529f](.artifacts/records/project__work-item/rec-2d4ded98-08d5-40fb-be0b-10704ce7529f.md))_
+- **attest-core**: Emit and verify signed verdict attestations; signed-verdict; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 3 pass / 3 fail _(id: [rec-e456fd3e-e4ec-45f3-8654-0aaafe0219f8](.artifacts/records/project__work-item/rec-e456fd3e-e4ec-45f3-8654-0aaafe0219f8.md))_
+- **verify-signed-verdict**: Verify signed verdict; signed-verdict; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 4 pass / 0 fail _(id: [rec-f80a3239-1515-40f5-98b9-42ceee0fc94b](.artifacts/records/project__work-item/rec-f80a3239-1515-40f5-98b9-42ceee0fc94b.md))_
+
+## oracle-provenance
+
+### Work
+- **provenance-check**: Verdict checks oracle provenance from git; oracle-provenance; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 4 pass / 4 fail _(id: [rec-6532448f-ef80-47f6-95df-2e46fa206425](.artifacts/records/project__work-item/rec-6532448f-ef80-47f6-95df-2e46fa206425.md))_
+- **verify-oracle-provenance**: Verify oracle provenance; oracle-provenance; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 4 pass / 0 fail _(id: [rec-3308eb03-5884-4be7-a427-a76777c61cd5](.artifacts/records/project__work-item/rec-3308eb03-5884-4be7-a427-a76777c61cd5.md))_
+
+## evidence-kind
+
+### Work
+- **kind-enforcement**: Claims declare evidence_kind and verdict enforces it; evidence-kind; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 3 pass / 3 fail _(id: [rec-ed2ce447-5658-4449-a5d1-1d9c4d2618f6](.artifacts/records/project__work-item/rec-ed2ce447-5658-4449-a5d1-1d9c4d2618f6.md))_
+- **verify-evidence-kind**: Verify evidence kind; evidence-kind; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 3 pass / 0 fail _(id: [rec-992dd471-2b52-4170-b036-bbe6c151c7e6](.artifacts/records/project__work-item/rec-992dd471-2b52-4170-b036-bbe6c151c7e6.md))_
+
+## claim-authoring
+
+### Work
+- **claim-cli**: Standalone claim add, freeze, and lint; claim-authoring; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 3 pass / 3 fail _(id: [rec-1f4167c2-50b2-4973-944f-21bd24d65690](.artifacts/records/project__work-item/rec-1f4167c2-50b2-4973-944f-21bd24d65690.md))_
+- **human-claim**: Human-signed claim witness in verdict; claim-authoring; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 2 pass / 2 fail _(id: [rec-b3da16ca-bcc6-4746-a9b4-886900051a4c](.artifacts/records/project__work-item/rec-b3da16ca-bcc6-4746-a9b4-886900051a4c.md))_
+- **verify-claim-authoring**: Verify claim authoring; claim-authoring; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 5 pass / 0 fail _(id: [rec-63842060-9a26-40d1-bbb0-6bda45d87640](.artifacts/records/project__work-item/rec-63842060-9a26-40d1-bbb0-6bda45d87640.md))_
+
+## phase-end-evidence
+
+### Work
+- **audit-blocks**: aff audit labels hunk blocks noticed or not; phase-end-evidence; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 3 pass / 3 fail _(id: [rec-f2503a35-0a0a-407e-b8d7-a7ec9847d6cc](.artifacts/records/project__work-item/rec-f2503a35-0a0a-407e-b8d7-a7ec9847d6cc.md))_
+- **audit-mutants**: aff audit plants mutants in noticed blocks; phase-end-evidence; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 1 pass / 1 fail _(id: [rec-e68243cc-39af-4b77-abf6-4d9a191f1750](.artifacts/records/project__work-item/rec-e68243cc-39af-4b77-abf6-4d9a191f1750.md))_
+- **verify-phase-end-evidence**: Verify phase-end evidence; phase-end-evidence; deliver; evidence-layer; state: done; ready: True; wave: 3; criteria: 4 pass / 0 fail _(id: [rec-7f20d856-7d9c-4e47-8f58-3f3afebe34b0](.artifacts/records/project__work-item/rec-7f20d856-7d9c-4e47-8f58-3f3afebe34b0.md))_
+
+## audit-differential
+
+### Work
+- **audit-probes**: aff audit runs declared probes and filters by claim cite; audit-differential; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 6 pass / 6 fail _(id: [rec-f91285b8-56a2-4c0a-9fe5-6d091873e41e](.artifacts/records/project__work-item/rec-f91285b8-56a2-4c0a-9fe5-6d091873e41e.md))_
+- **audit-unclaimed-range**: aff audit reports red-first revision-on-tdd relaxation as unclaimed; audit-differential; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 1 pass / 1 fail _(id: [rec-7b9dc4bd-56d7-460c-bc57-f00a38ffc048](.artifacts/records/project__work-item/rec-7b9dc4bd-56d7-460c-bc57-f00a38ffc048.md))_
+- **verify-audit-differential**: Verify audit-differential exit criteria via aff audit; audit-differential; deliver; evidence-layer; state: done; ready: True; wave: 3; criteria: 4 pass / 0 fail _(id: [rec-ea36902a-219f-4eba-81dd-043036fd9967](.artifacts/records/project__work-item/rec-ea36902a-219f-4eba-81dd-043036fd9967.md))_
+
+## ci-verdict-fixture
+
+### Work
+- **ci-fixture-builder**: Builder, templates, workflow step, R4 pytest; ci-verdict-fixture; repair; evidence-layer; state: done; ready: True; wave: 1; criteria: 5 pass / 1 fail _(id: [rec-fa74a33a-cff0-4cf0-a566-c572c85dc622](.artifacts/records/project__work-item/rec-fa74a33a-cff0-4cf0-a566-c572c85dc622.md))_
+- **verify-ci-verdict-fixture**: Verify CI verdict fixture phase; ci-verdict-fixture; repair; evidence-layer; state: done; ready: True; wave: 2; criteria: 7 pass / 1 fail _(id: [rec-28d3e0a4-3cb9-4ed5-8114-0d00ad11a0a3](.artifacts/records/project__work-item/rec-28d3e0a4-3cb9-4ed5-8114-0d00ad11a0a3.md))_

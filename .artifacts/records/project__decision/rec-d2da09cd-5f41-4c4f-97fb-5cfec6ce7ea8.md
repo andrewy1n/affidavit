@@ -1,0 +1,34 @@
+---
+{
+  "base_kind": "claim",
+  "epistemic_status": "asserted",
+  "id": "rec-d2da09cd-5f41-4c4f-97fb-5cfec6ce7ea8",
+  "identity": "unknown",
+  "lifecycle_state": "active",
+  "payload": {
+    "alternatives": "always require a store for aff verdict",
+    "choice": "record evidence-observation only when a usable store is present (or explicitly targeted); verdict otherwise unchanged",
+    "effort": "evidence-layer",
+    "phase": "evidence-interface"
+  },
+  "record_type": "project:decision",
+  "recorded_at": "2026-10-18T08:52:42+00:00",
+  "relationships": {},
+  "revision": "sha256:49c2253ca6eb244bad6a326ee0f32f7a912469c7359df2553ec414abba13a5ee",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "observation-record-optional",
+  "time": {
+    "as_of": "2026-10-18T08:52:42+00:00"
+  }
+}
+---
+
+## Rationale
+
+Many subject repos (fixtures, quick clones) have no `.artifacts/` store. Verdict must keep working as today when no store is present: JSON on stdout, exit codes unchanged. When a store exists (or an explicit flag points at one), verdict also records an evidence-observation. Long-term orchestra `init` makes stores normal; v1 does not hard-require them.
+
+## Counter-argument
+
+Always requiring a store would force the interface on every run and simplify testing of the happy path, but it would break existing fixture and CI flows that only build a git repo for `aff verdict`. Optional record preserves those paths.
