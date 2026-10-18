@@ -1,32 +1,19 @@
 # AGENTS.md
 
-This repo is the evidence layer. Plugin **0.2.0** keeps the `aff`
-command `verdict`. `aff` is verdict-only. It is not a template you copy
-into other projects.
-
-The orchestration plugin is **orchestra** at `~/orchestra`. That repo
-holds the skills, the dashboard, the session scripts, and `agents/`.
-Skill slugs stay `engage`, `init`, `discuss`, `plan-phase`,
-`execute-phase`, `verify-work`, and `analyze-sessions`.
+This repo is the evidence layer. It ships the `aff` evidence CLI
+(`verdict`, `claim`, `freeze`, `audit`, `trail`, `bind`, `unbind`,
+`recheck`, and related verbs). It is not a template you copy into
+other projects.
 
 Requires the **adaptive-artifacts** plugin (`adaptive-artifacts` on
 PATH). That runtime is unpublished experimental **0.1.0**. Its agent
 protocol is `~/adaptive-artifacts/AGENTS.md`.
 
-## Two trees
+## What you edit here
 
-| You are in… | Store | What you edit |
-|---|---|---|
-| This repo, building the evidence layer | this repo's `.artifacts/` | `affidavit/`, `bin/aff`, `tests/`, `contract/` |
-| `~/orchestra`, building the plugin | that repo's `.artifacts/` | skills, dashboard, scripts, agents |
-| Some other repo, using the skills | that repo's `.artifacts/` | that repo's code, through the orchestra skills |
-
-Do not copy this tree into a work project. Do not look for the skills
-or the dashboard here. The bundled plugin contract is
-`~/orchestra/contract/project-design.json`. Orchestra's `init` copies
-it into a work repo on first use. When that file's `"project"` is
-`affidavit`, ensure-store rewrites it to `orchestra`. When the field
-is any other value, ensure-store stops and does not replace the design.
+`affidavit/`, `bin/aff`, `tests/`, `contract/`, and this repo's
+`.artifacts/` store for the `evidence-layer` effort. Command map:
+`README.md`.
 
 ## Live protocol
 
@@ -44,26 +31,19 @@ their response. They do not call `adaptive-artifacts`.
 A hand-edited record fails validation (`record revision tamper
 detected`). Redo the edit through the CLI.
 
-An incidental change that fits this chat gets no records. Kinds, focus,
-and phase positions live with the orchestra skills.
+An incidental change that fits this chat gets no records.
 
-## What stays here
+## Evidence CLI
 
-`bin/aff verdict`. This package does not import orchestra. `aff verdict`
-does not read a record store.
-
-check, close-batch, and the store client live in orchestra. Orchestra
-skills call `aff verdict` on `PATH`. `~/affidavit` is the checkout that
-provides the `aff` binary.
+`bin/aff` is the evidence CLI. `aff verdict` does not read a workflow
+store for its gate answer. `trail` / `bind` / `unbind` / `recheck`
+talk to evidence records in a work repo's `.artifacts/` when present.
 
 ## Contract and the runtime
 
 `contract/project-design.json` in this repo is the design this store
 resolves. Record types are expected to grow. Tests must not hardcode
 today's type list as if it were frozen.
-
-Later contract edits belong in the orchestra repo, then get copied
-here so this store still resolves.
 
 Tests drive the public CLI as a subprocess
 (`~/adaptive-artifacts/tools/artifacts.py`, or
@@ -80,6 +60,9 @@ it only with human approval. Do not patch `~/adaptive-artifacts` mid-task
 from an affidavit session. `reassess-artifacts` redesigns a project's
 own contract. It does not edit the extension.
 
+If this repo's `contract/project-design.json` can express the need,
+change that file here.
+
 ## Testing
 
 `pytest.ini` skips tests marked `tmux` unless `-m tmux` is set. While
@@ -95,7 +78,5 @@ section "Testing".
 |---|---|
 | Live goal, position, next | `.artifacts/views/handoff.md` (derived) |
 | This protocol | this file |
-| Skills, dashboard, session scripts | `~/orchestra` |
-| Bundled plugin contract | `~/orchestra/contract/project-design.json` |
 | Evidence CLI | `README.md` |
 | Runtime change gate | `~/adaptive-artifacts/AGENTS.md` |

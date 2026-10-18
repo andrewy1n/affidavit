@@ -1,38 +1,35 @@
 # affidavit
 
 Evidence layer for a software-engineering loop.
-This repo's `aff` is verdict-only.
-
-The orchestration plugin is orchestra at `~/orchestra`: skills, the
-dashboard, session scripts, and agents. check, close-batch, and the
-store client live in orchestra.
-Install that plugin for the skill loop. This repo is the checkout that
-provides the `aff` binary (`~/affidavit`).
+This repo ships the `aff` evidence CLI (`~/affidavit`).
 
 ## CLI
 
-`bin/aff` dispatches `verdict`. From this checkout:
+`bin/aff` is the evidence CLI. Flags and argv live in each subcommand's
+`--help`. From this checkout:
 
 ```bash
-bin/aff verdict --help
-
-bin/aff verdict --cwd <repo> --at <sha> <claim-id>
+bin/aff --help
+bin/aff <command> --help
 ```
 
-`verdict` re-executes the frozen oracle tests for a claim. It does not
-read a record store. check, close-batch, and the store client live in
-orchestra.
-
-## What lives where
-
-| Here | `~/orchestra` |
+| Command | Role |
 |---|---|
-| `affidavit/` and `bin/aff` | skills (same slugs as before) |
-| tests for `aff verdict` | dashboard, session scripts, and the store client |
-| this repo's `.artifacts/` (`evidence-layer`) | `agents/` and the reviewer and suite modules |
+| `verdict` | Re-execute frozen oracle tests at two revisions |
+| `runner-template` | Print a shipped runner template argv as JSON |
+| `attest` | Emit or verify a signed verdict attestation |
+| `lint` | Report no-assert witnesses, new skips, or claim wording |
+| `claim` | Author manifest claims |
+| `freeze` | Record oracle file hashes into the manifest |
+| `audit` | Advisory: label diff blocks; optional mutants and probes |
+| `trail` | List evidence-observations from the artifact store |
+| `bind` | Attach an observation to a claim under pinned revisions |
+| `unbind` | Retire a binding |
+| `recheck` | Re-judge a claim under its active binding pins |
 
-`affidavit` does not import the dashboard or orchestra. Orchestra may
-import affidavit.
+`verdict` does not read a workflow store for its gate answer.
+`trail` / `bind` / `unbind` / `recheck` use the work repo's
+`.artifacts/` evidence records when present.
 
 ## Testing
 
@@ -55,5 +52,3 @@ disposable, git-backed store built from this repo's
 `contract/project-design.json`. Nothing here touches a real store.
 The contract is expected to keep growing, so tests do not hardcode
 today's record types.
-
-Dashboard and skill tests run in `~/orchestra`.

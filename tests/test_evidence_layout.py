@@ -49,13 +49,13 @@ _REMOVED_INSTALL_PATHS = (
 def test_protocol_docs_describe_the_evidence_layer() -> None:
     for name in _PROTOCOL_DOCS:
         text = (REPO_ROOT / name).read_text(encoding="utf-8")
-        assert "orchestra" in text, name
         lowered = text.lower()
+        assert "orchestra" not in lowered, name
         assert "evidence layer" in lowered or "evidence-layer" in lowered, name
         for needle in _REMOVED_INSTALL_PATHS:
             assert needle not in text, f"{name} still cites {needle}"
-        assert "verdict-only" in lowered, name
-        assert "check, close-batch, and the store client" in lowered, name
+        assert "evidence cli" in lowered, name
+        assert "verdict-only" not in lowered, name
 
 
 _STORE_TOKENS = (

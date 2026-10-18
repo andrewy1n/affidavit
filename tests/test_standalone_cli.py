@@ -1,4 +1,4 @@
-"""bin/aff is verdict-only and does not need the runtime on PATH."""
+"""bin/aff verdict does not need the runtime on PATH; check/close-batch are not aff verbs."""
 
 from __future__ import annotations
 

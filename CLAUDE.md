@@ -1,9 +1,7 @@
 # CLAUDE.md
 
-Follow [AGENTS.md](AGENTS.md). This repo is the evidence layer. Skills,
-the dashboard, and session scripts live in the orchestra plugin at
-`~/orchestra`. This repo's `aff` is verdict-only.
-check, close-batch, and the store client live in orchestra.
+Follow [AGENTS.md](AGENTS.md). This repo is the evidence layer and
+ships the `aff` evidence CLI.
 
 ## Testing
 
@@ -18,7 +16,7 @@ More detail is in the README, section "Testing".
 
 ## Store
 
-Records are the authority. `.artifacts/views/` is derived — regenerate
+Records are the authority. `.artifacts/views/` are derived — regenerate
 with `adaptive-artifacts`, do not edit view files. Write records with
 the `adaptive-artifacts` CLI. A hand-edited record fails validation.
 
@@ -36,14 +34,4 @@ amendment in that repo's store first. `reassess-artifacts` is for a
 project's own contract, not for the runtime.
 
 If this repo's `contract/project-design.json` can express the need,
-change that file here. Contract edits that the orchestra skills depend
-on belong in `~/orchestra` first.
-
-## Skills
-
-Use the skills installed from `~/orchestra` (`engage`, `init`,
-`discuss`, `plan-phase`, `execute-phase`, `verify-work`). Do not copy
-this repo into the project you are building. When a work repo's
-`project-design.json` says `"project": "affidavit"`, orchestra's
-ensure-store rewrites that field to `orchestra`. Any other value stops
-the overlay.
+change that file here.
