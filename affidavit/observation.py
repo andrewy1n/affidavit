@@ -41,6 +41,84 @@ def _run_aa(root: Path, *args: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def record_observation(
+    cwd: Path | str,
+    *,
+    technique: str,
+    base_rev: str,
+    head_rev: str,
+    result: str,
+    claim_ids: Sequence[str] = (),
+    replay: str | None = None,
+    subject: str | None = None,
+) -> dict[str, Any] | None:
+    """Create one unbound evidence-observation for a finished technique run.
+
+    ``replay`` is optional re-invoke metadata (a JSON string is enough).
+    Returns the created record dict, or None when no usable store is present.
+    Raises on CLI / create failure. Does not create a binding.
+    """
+    root = Path(cwd)
+    if not store_usable(root):
+        return None
+    ids = [str(item) for item in claim_ids]
+    payload: dict[str, Any] = {
+        "technique": technique,
+        "base_rev": base_rev,
+        "head_rev": head_rev,
+        "result": result,
+        "claim_ids": ",".join(ids),
+    }
+    if replay:
+        payload["replay"] = replay
+    if not subject:
+        joined = payload["claim_ids"]
+        subject = technique + ":" + joined if joined else technique
+    proc = _run_aa(
+        root,
+        "create",
+        "--type",
+        _OBS_TYPE,
+        "--subject",
+        subject,
+        "--payload",
+        json.dumps(payload),
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            (proc.stderr or proc.stdout or "create failed").strip()
+        )
+    body = json.loads(proc.stdout)
+    return body.get("record")
+
+
+def maybe_record_observation(
+    cwd: Path | str,
+    *,
+    technique: str,
+    base_rev: str,
+    head_rev: str,
+    result: str,
+    claim_ids: Sequence[str] = (),
+    replay: str | None = None,
+    subject: str | None = None,
+) -> None:
+    """Best-effort record; failures go to stderr and never raise."""
+    try:
+        record_observation(
+            cwd,
+            technique=technique,
+            base_rev=base_rev,
+            head_rev=head_rev,
+            result=result,
+            claim_ids=claim_ids,
+            replay=replay,
+            subject=subject,
+        )
+    except Exception as exc:  # noqa: BLE001 — must not flip the technique exit
+        print(f"observation record skipped: {exc}", file=sys.stderr)
+
+
 def record_verdict_observation(
     cwd: Path | str,
     *,
@@ -60,30 +138,16 @@ def record_verdict_observation(
     head_rev = resolve_commit(root, at)
     base_rev = resolve_commit(root, base if base else merge_base(root, at))
     ids = list(claim_ids)
-    payload = {
-        "technique": "verdict",
-        "base_rev": base_rev,
-        "head_rev": head_rev,
-        "result": result,
-        "claim_ids": ",".join(ids),
-    }
     subject = "verdict:" + ",".join(ids) if ids else "verdict"
-    proc = _run_aa(
+    return record_observation(
         root,
-        "create",
-        "--type",
-        _OBS_TYPE,
-        "--subject",
-        subject,
-        "--payload",
-        json.dumps(payload),
+        technique="verdict",
+        base_rev=base_rev,
+        head_rev=head_rev,
+        result=result,
+        claim_ids=ids,
+        subject=subject,
     )
-    if proc.returncode != 0:
-        raise RuntimeError(
-            (proc.stderr or proc.stdout or "create failed").strip()
-        )
-    body = json.loads(proc.stdout)
-    return body.get("record")
 
 
 def maybe_record_verdict_observation(

@@ -17,6 +17,7 @@ from affidavit.manifest import (
     load_manifest,
     resolve_commit,
 )
+from affidavit.observation import maybe_record_observation
 from affidavit.runner import run_tests
 
 HUNK_HEADER = re.compile(r"^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@")
@@ -96,7 +97,7 @@ def run_audit(
         _remove(root, checked)
         _remove(root, base_checked)
 
-    return {
+    result = {
         "advisory": True,
         "base": base_commit,
         "head": head_commit,
@@ -105,6 +106,81 @@ def run_audit(
         "survivors": survivors,
         "diffs": diffs,
     }
+    _record_unbound(root, result, probes)
+    return result
+
+
+_TECHNIQUE_AUDIT = "audit"
+_TECHNIQUE_PROBES = "probes"
+
+
+def _record_unbound(
+    root: Path,
+    result: dict[str, Any],
+    probes: Sequence[dict[str, Any]],
+) -> None:
+    """Record unbound audit and probe observations when a store is usable."""
+    base = str(result["base"])
+    head = str(result["head"])
+    maybe_record_observation(
+        root,
+        technique=_TECHNIQUE_AUDIT,
+        base_rev=base,
+        head_rev=head,
+        result="advisory",
+        replay=_audit_replay(base, head),
+        subject=_TECHNIQUE_AUDIT + ":" + base + ":" + head,
+    )
+    by_id = {str(probe.get("id", "")): probe for probe in probes}
+    for diff in result["diffs"]:
+        if not isinstance(diff, dict):
+            continue
+        probe_id = str(diff.get("probe") or "")
+        if not probe_id:
+            continue
+        maybe_record_observation(
+            root,
+            technique=_TECHNIQUE_PROBES,
+            base_rev=base,
+            head_rev=head,
+            result="diff",
+            replay=_probe_replay(base, head, by_id.get(probe_id, {}), probe_id),
+            subject=_TECHNIQUE_PROBES + ":" + probe_id + ":" + base + ":" + head,
+        )
+
+
+def _audit_replay(base: str, head: str) -> str:
+    return json.dumps(
+        {
+            "technique": _TECHNIQUE_AUDIT,
+            "base": base,
+            "head": head,
+            "argv": ["aff", "audit", "--base", base, "--head", head],
+        },
+        sort_keys=True,
+    )
+
+
+def _probe_replay(
+    base: str, head: str, probe: dict[str, Any], probe_id: str
+) -> str:
+    hint: dict[str, Any] = {
+        "technique": _TECHNIQUE_PROBES,
+        "base": base,
+        "head": head,
+        "probe": probe_id,
+        "argv": ["aff", "audit", "--base", base, "--head", head],
+    }
+    argv = probe.get("argv")
+    if isinstance(argv, list):
+        hint["probe_argv"] = argv
+    target = probe.get("target")
+    if target:
+        hint["target"] = target
+    args = probe.get("args")
+    if isinstance(args, list):
+        hint["args"] = args
+    return json.dumps(hint, sort_keys=True)
 
 
 def _claim_ids(root: Path, head_commit: str) -> set[str]:
