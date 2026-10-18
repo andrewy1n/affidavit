@@ -1,0 +1,26 @@
+---
+{
+  "base_kind": "claim",
+  "epistemic_status": "asserted",
+  "id": "rec-11cf7e55-7ff8-4bcc-b204-42b4f40cbbd6",
+  "identity": "unknown",
+  "lifecycle_state": "active",
+  "payload": {
+    "effort": "evidence-layer",
+    "phase": "phase-end-evidence",
+    "state": "ready"
+  },
+  "record_type": "project:release",
+  "recorded_at": "2026-10-18T04:20:03+00:00",
+  "relationships": {},
+  "revision": "sha256:6cb6d261022b560deb8f4f91a7af91781844ca52abc4bb24b77220dd449fc75a",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "phase-end-evidence",
+  "time": {
+    "as_of": "2026-10-18T04:20:03+00:00"
+  }
+}
+---
+

@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:d1e72df95bfdf743aaaa730fbe3650c466327dc13b61b795890ff13b6e73d8b5
+> Store state: sha256:21e4311e053ef419d396aa28709b723a6e10d183042c978803f0d4af13499a38
 
 ## amendment-sign
 
@@ -28,20 +28,38 @@
 ### Acceptance
 - **attest-core-sig**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_verify_rejects_bad_signature tests/test_attestation.py::test_verify_rejects_tampered_payload -q _(id: [rec-27204235-9eb7-4d4e-a858-0c140858be15](.artifacts/records/project__acceptance/rec-27204235-9eb7-4d4e-a858-0c140858be15.md))_
 
+## audit-blocks
+
+### Work
+- **audit-blocks**: aff audit labels hunk blocks noticed or not; phase-end-evidence; deliver; evidence-layer _(id: [rec-f2503a35-0a0a-407e-b8d7-a7ec9847d6cc](.artifacts/records/project__work-item/rec-f2503a35-0a0a-407e-b8d7-a7ec9847d6cc.md))_
+
+### Acceptance
+- **audit-blocks**: tdd; evidence-layer; python3 -m pytest tests/test_audit.py::test_r1_audit_labels_each_source_block tests/test_audit.py::test_r1_audit_reads_claim_tests_from_manifest -q _(id: [rec-4d99e4a9-8eed-4abf-bbfd-63d23ba1bf0e](.artifacts/records/project__acceptance/rec-4d99e4a9-8eed-4abf-bbfd-63d23ba1bf0e.md))_
+
+## audit-blocks-range
+
+### Acceptance
+- **audit-blocks-range**: tdd; evidence-layer; python3 -m pytest tests/test_audit.py::test_r3_audit_reports_unnoticed_build_batch_cwd_block -q _(id: [rec-a402e4fe-db71-4c0b-9504-4bc345fe82fb](.artifacts/records/project__acceptance/rec-a402e4fe-db71-4c0b-9504-4bc345fe82fb.md))_
+
+## audit-blocks-tests
+
+### Acceptance
+- **audit-blocks-tests**: tdd; evidence-layer; python3 -m pytest tests/test_audit.py::test_r2_audit_never_reports_test_file_blocks -q _(id: [rec-80251ecf-6081-4c0c-8ebb-aff653eb663a](.artifacts/records/project__acceptance/rec-80251ecf-6081-4c0c-8ebb-aff653eb663a.md))_
+
+## audit-mutants
+
+### Work
+- **audit-mutants**: aff audit plants mutants in noticed blocks; phase-end-evidence; deliver; evidence-layer _(id: [rec-e68243cc-39af-4b77-abf6-4d9a191f1750](.artifacts/records/project__work-item/rec-e68243cc-39af-4b77-abf6-4d9a191f1750.md))_
+
+### Acceptance
+- **audit-mutants**: tdd; evidence-layer; python3 -m pytest tests/test_audit.py::test_r4_audit_plants_mutants_only_in_noticed_blocks -q _(id: [rec-1b284b3d-549e-44c3-9ebb-819ea7e633c0](.artifacts/records/project__acceptance/rec-1b284b3d-549e-44c3-9ebb-819ea7e633c0.md))_
+
 ## campaign-landing-automerge
 
 ### Constraint
 - **campaign-landing-automerge**: For evidence-layer phases 5-11, Landing merges the phase branch into main and commits the store without asking; push is not a human stop; Landing close for evidence-layer phases frozen-environment through audit-differential; evidence-layer _(id: [rec-1c169abc-70e2-4610-a03b-aeee49a1257b](.artifacts/records/project__constraint/rec-1c169abc-70e2-4610-a03b-aeee49a1257b.md))_
 
-## claim-authoring
-
-### Position
-- **claim-authoring**: claim-authoring planned: claim-cli, human-claim + verify; phase _(id: [rec-8f6b5619-c542-4495-b56c-1f258f0294e8](.artifacts/records/project__current-position/rec-8f6b5619-c542-4495-b56c-1f258f0294e8.md))_
-
 ## claim-cli
-
-### Work
-- **claim-cli**: Standalone claim add, freeze, and lint; claim-authoring; deliver; evidence-layer _(id: [rec-1f4167c2-50b2-4973-944f-21bd24d65690](.artifacts/records/project__work-item/rec-1f4167c2-50b2-4973-944f-21bd24d65690.md))_
 
 ### Acceptance
 - **claim-cli**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r1_claim_add_writes_manifest_entry_standalone -q _(id: [rec-75798857-63f7-4bf9-ba62-1702b7d62da3](.artifacts/records/project__acceptance/rec-75798857-63f7-4bf9-ba62-1702b7d62da3.md))_
@@ -74,7 +92,7 @@
 ## evidence-layer
 
 ### Position
-- **evidence-layer**: evidence-kind done; next up: claim-authoring; effort _(id: [rec-bca51bea-1e3e-4eca-9aa2-2db64642112d](.artifacts/records/project__current-position/rec-bca51bea-1e3e-4eca-9aa2-2db64642112d.md))_
+- **evidence-layer**: claim-authoring done; next up: phase-end-evidence; effort _(id: [rec-0c1b0959-7c23-496f-9474-082254eccf46](.artifacts/records/project__current-position/rec-0c1b0959-7c23-496f-9474-082254eccf46.md))_
 
 ## extract-store-binding
 
@@ -107,9 +125,6 @@
 - **fix-verdict-help-test**: a pytest runs bin/aff verdict --help and asserts exit 0; check; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q -k verdict_help _(id: [rec-17932b62-b463-479e-8071-f17cc13eff09](.artifacts/records/project__acceptance/rec-17932b62-b463-479e-8071-f17cc13eff09.md))_
 
 ## human-claim
-
-### Work
-- **human-claim**: Human-signed claim witness in verdict; claim-authoring; deliver; evidence-layer _(id: [rec-b3da16ca-bcc6-4746-a9b4-886900051a4c](.artifacts/records/project__work-item/rec-b3da16ca-bcc6-4746-a9b4-886900051a4c.md))_
 
 ### Acceptance
 - **human-claim**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r4_verdict_accepts_valid_human_signature -q _(id: [rec-bb995342-c16f-481e-9fff-8a39171dd49c](.artifacts/records/project__acceptance/rec-bb995342-c16f-481e-9fff-8a39171dd49c.md))_
@@ -176,6 +191,11 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Acceptance
 - **parse-manifest-runner**: An absent runner loads as the shipped pytest template, and a runner that is not an argv list with {tests} and {report} fails manifest load; tdd; evidence-layer; python3 -m pytest tests/test_manifest.py -q -k "runner_absent or runner_invalid" _(id: [rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a](.artifacts/records/project__acceptance/rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a.md))_
+
+## phase-end-evidence
+
+### Position
+- **phase-end-evidence**: phase-end-evidence planned: audit-blocks, audit-mutants + verify; phase _(id: [rec-fd218096-69fc-44f6-b89b-bcf0ff786453](.artifacts/records/project__current-position/rec-fd218096-69fc-44f6-b89b-bcf0ff786453.md))_
 
 ## phase-end-reviewer-milestones
 
@@ -337,9 +357,6 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ## verify-claim-authoring
 
-### Work
-- **verify-claim-authoring**: Verify claim authoring; claim-authoring; deliver; evidence-layer _(id: [rec-63842060-9a26-40d1-bbb0-6bda45d87640](.artifacts/records/project__work-item/rec-63842060-9a26-40d1-bbb0-6bda45d87640.md))_
-
 ### Acceptance
 - **verify-claim-authoring**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r1_claim_add_writes_manifest_entry_standalone -q _(id: [rec-3ba8b3a4-946b-45b9-ad43-80a95fab5a9a](.artifacts/records/project__acceptance/rec-3ba8b3a4-946b-45b9-ad43-80a95fab5a9a.md))_
 
@@ -472,6 +489,29 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Acceptance
 - **verify-orchestration-split-verdict**: execute-phase and verify-work run aff verdict for a claim in the manifest and treat a non-zero exit as not done; tdd; evidence-layer; cd ~/orchestra && python3 -m pytest tests/test_skill_evidence_boundary.py -q -k verdict _(id: [rec-167feb75-1bd7-4db4-ad7c-05b50da84dae](.artifacts/records/project__acceptance/rec-167feb75-1bd7-4db4-ad7c-05b50da84dae.md))_
+
+## verify-phase-end-evidence
+
+### Work
+- **verify-phase-end-evidence**: Verify phase-end evidence; phase-end-evidence; deliver; evidence-layer _(id: [rec-7f20d856-7d9c-4e47-8f58-3f3afebe34b0](.artifacts/records/project__work-item/rec-7f20d856-7d9c-4e47-8f58-3f3afebe34b0.md))_
+
+### Acceptance
+- **verify-phase-end-evidence**: check; evidence-layer; python3 -m pytest tests/test_audit.py::test_r1_audit_labels_each_source_block tests/test_audit.py::test_r1_audit_reads_claim_tests_from_manifest -q _(id: [rec-6309e3d9-876f-42ce-877b-70b6e54e95d0](.artifacts/records/project__acceptance/rec-6309e3d9-876f-42ce-877b-70b6e54e95d0.md))_
+
+## verify-phase-end-evidence-mutants
+
+### Acceptance
+- **verify-phase-end-evidence-mutants**: check; evidence-layer; python3 -m pytest tests/test_audit.py::test_r4_audit_plants_mutants_only_in_noticed_blocks -q _(id: [rec-e5c480a3-7f7b-4ab0-983d-4f1330b2d9c3](.artifacts/records/project__acceptance/rec-e5c480a3-7f7b-4ab0-983d-4f1330b2d9c3.md))_
+
+## verify-phase-end-evidence-range
+
+### Acceptance
+- **verify-phase-end-evidence-range**: check; evidence-layer; python3 -m pytest tests/test_audit.py::test_r3_audit_reports_unnoticed_build_batch_cwd_block -q _(id: [rec-80780e36-123f-4019-8dcc-1f4f096858a6](.artifacts/records/project__acceptance/rec-80780e36-123f-4019-8dcc-1f4f096858a6.md))_
+
+## verify-phase-end-evidence-tests
+
+### Acceptance
+- **verify-phase-end-evidence-tests**: check; evidence-layer; python3 -m pytest tests/test_audit.py::test_r2_audit_never_reports_test_file_blocks -q _(id: [rec-844c2281-213a-49a8-bb8e-f67e05319f6d](.artifacts/records/project__acceptance/rec-844c2281-213a-49a8-bb8e-f67e05319f6d.md))_
 
 ## verify-runner-adapter
 

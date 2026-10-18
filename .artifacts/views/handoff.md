@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:b5da72ee2e197e3e1448043d72b384f0ad89a0a1ab1d340e4d3d41ac6dd2269a
+> Store state: sha256:d4773233ad1cd96abe23668a7299cca8c79b36610a292b0016a8a185ac721199
 
 ## evidence-layer
 
@@ -10,3 +10,4 @@
 
 ### Position
 - **evidence-layer**: claim-authoring done; next up: phase-end-evidence; effort _(id: [rec-0c1b0959-7c23-496f-9474-082254eccf46](.artifacts/records/project__current-position/rec-0c1b0959-7c23-496f-9474-082254eccf46.md))_
+- **phase-end-evidence**: phase-end-evidence planned: audit-blocks, audit-mutants + verify; phase _(id: [rec-fd218096-69fc-44f6-b89b-bcf0ff786453](.artifacts/records/project__current-position/rec-fd218096-69fc-44f6-b89b-bcf0ff786453.md))_
