@@ -35,6 +35,9 @@ class AuditError(Exception):
     """Usage or git failure that should exit 2."""
 
 
+PROBES_PATH = ".affidavit/probes.json"
+
+
 def run_audit(
     cwd: Path | str,
     base: str,
@@ -45,17 +48,25 @@ def run_audit(
 ) -> dict[str, Any]:
     """Label source hunks between ``base`` and ``head``; optionally plant mutants.
 
-    Returns an advisory JSON-shaped dict. Does not affect verdict.
+    Also runs declared probes from ``.affidavit/probes.json`` at head and
+    reports unclaimed differences. Returns an advisory JSON-shaped dict.
+    Does not affect verdict.
     """
     root = Path(cwd)
     base_commit = resolve_commit(root, base)
     head_commit = resolve_commit(root, head)
     claim_tests, runner = _claim_tests_and_runner(root, head_commit, extra_tests)
+    claim_ids = _claim_ids(root, head_commit)
     hunks = _source_hunks(root, base_commit, head_commit)
+    probes = _load_probes(root, head_commit)
 
     checked = _checkout(root, head_commit)
     if checked is None:
         raise AuditError(f"could not check out worktree at {head}")
+    base_checked = _checkout(root, base_commit) if probes else None
+    if probes and base_checked is None:
+        _remove(root, checked)
+        raise AuditError(f"could not check out worktree at {base}")
     try:
         worktree = checked[1]
         head_pass = _passing_tests(worktree, claim_tests, runner)
@@ -70,8 +81,15 @@ def run_audit(
             mutants_path,
             max_mutants,
         )
+        if base_checked is not None:
+            _reset(worktree)
+            _reset(base_checked[1])
+            diffs = _probe_diffs(base_checked[1], worktree, probes, claim_ids)
+        else:
+            diffs = []
     finally:
         _remove(root, checked)
+        _remove(root, base_checked)
 
     return {
         "advisory": True,
@@ -80,7 +98,105 @@ def run_audit(
         "blocks": blocks,
         "mutants": mutants,
         "survivors": survivors,
+        "diffs": diffs,
     }
+
+
+def _claim_ids(root: Path, head_commit: str) -> set[str]:
+    try:
+        manifest = load_manifest(root, head_commit)
+    except ManifestError:
+        return set()
+    return {claim.id for claim in manifest.claims}
+
+
+def _load_probes(root: Path, head_commit: str) -> list[dict[str, Any]]:
+    proc = subprocess.run(
+        ["git", "-C", str(root), "show", f"{head_commit}:{PROBES_PATH}"],
+        capture_output=True,
+        text=True,
+    )
+    if proc.returncode != 0:
+        return []
+    try:
+        raw = json.loads(proc.stdout)
+    except json.JSONDecodeError as exc:
+        raise AuditError(f"invalid {PROBES_PATH}: {exc}") from exc
+    probes = raw.get("probes") if isinstance(raw, dict) else None
+    if not isinstance(probes, list):
+        raise AuditError(f"{PROBES_PATH} must contain a probes list")
+    return [p for p in probes if isinstance(p, dict)]
+
+
+def _probe_diffs(
+    base_wt: Path,
+    head_wt: Path,
+    probes: Sequence[dict[str, Any]],
+    claim_ids: set[str],
+) -> list[dict[str, Any]]:
+    diffs: list[dict[str, Any]] = []
+    for probe in probes:
+        probe_id = str(probe.get("id", ""))
+        cited = {str(c) for c in probe.get("claims", []) if c}
+        if cited & claim_ids:
+            continue
+        base_out = _run_probe(base_wt, probe)
+        head_out = _run_probe(head_wt, probe)
+        if base_out == head_out:
+            continue
+        diffs.append(
+            {
+                "probe": probe_id,
+                "base": base_out,
+                "head": head_out,
+            }
+        )
+    return diffs
+
+
+def _run_probe(worktree: Path, probe: dict[str, Any]) -> dict[str, Any]:
+    kind = str(probe.get("kind", "cli"))
+    if kind == "cli":
+        argv = probe.get("argv")
+        if not isinstance(argv, list) or not all(isinstance(x, str) and x for x in argv):
+            return {"exit_code": 2, "stdout": "", "stderr": "invalid argv"}
+        proc = subprocess.run(
+            argv,
+            cwd=str(worktree),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return {
+            "exit_code": proc.returncode,
+            "stdout": proc.stdout,
+            "stderr": proc.stderr,
+        }
+    if kind == "function":
+        target = str(probe.get("target", ""))
+        args = probe.get("args", [])
+        if not target or not isinstance(args, list):
+            return {"exit_code": 2, "stdout": "", "stderr": "invalid function probe"}
+        script = (
+            "import importlib, json, sys\n"
+            f"mod_name, _, attr = {target!r}.partition(':')\n"
+            "mod = importlib.import_module(mod_name)\n"
+            "fn = getattr(mod, attr)\n"
+            f"print(json.dumps(fn(*{args!r}), default=str))\n"
+        )
+        proc = subprocess.run(
+            ["python3", "-c", script],
+            cwd=str(worktree),
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return {
+            "exit_code": proc.returncode,
+            "stdout": proc.stdout,
+            "stderr": proc.stderr,
+        }
+    return {"exit_code": 2, "stdout": "", "stderr": f"unknown probe kind {kind!r}"}
 
 
 def _claim_tests_and_runner(
