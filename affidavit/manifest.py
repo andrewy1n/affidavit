@@ -40,6 +40,7 @@ class Claim:
     tests: tuple[str, ...]
     oracle_hashes: dict[str, str]
     support_files: tuple[str, ...] = ()
+    evidence_kind: str = "unit"
 
 
 @dataclass(frozen=True)
@@ -184,6 +185,13 @@ def _parse_claim(raw: Any, index: int) -> Claim:
         raise ManifestError(f"claims[{index}].tests must be a list of node ids")
     if not isinstance(hashes, dict):
         raise ManifestError(f"claims[{index}].oracle_hashes must be an object")
+    from affidavit.evidence_kind import DEFAULT_KIND, KINDS
+
+    kind = raw.get("evidence_kind", DEFAULT_KIND)
+    if kind not in KINDS:
+        raise ManifestError(
+            f"claims[{index}].evidence_kind must be one of {', '.join(KINDS)}"
+        )
     return Claim(
         id=claim_id,
         text=text,
@@ -193,6 +201,7 @@ def _parse_claim(raw: Any, index: int) -> Claim:
             raw.get("support_files"),
             f"claims[{index}].support_files",
         ),
+        evidence_kind=kind,
     )
 
 

@@ -8,7 +8,9 @@ import sys
 from pathlib import Path
 
 from affidavit.attestation import emit, verify
+from affidavit.evidence_kind import TEMPLATES
 from affidavit.lint import find_new_skips, find_no_assert
+from affidavit.manifest import ManifestError
 from affidavit.verdict import run_verdict
 
 
@@ -46,6 +48,12 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Also require git provenance: oracle lands first, oracle-only commit, distinct signers",
     )
     verdict.add_argument("claim_ids", nargs="+", metavar="CLAIM", help="Claim ids to judge")
+
+    template = sub.add_parser(
+        "runner-template",
+        help="Print a shipped runner template argv as a JSON list",
+    )
+    template.add_argument("kind", choices=sorted(TEMPLATES))
 
     attest = sub.add_parser("attest", help="Emit or verify a signed verdict attestation")
     attest_sub = attest.add_subparsers(dest="attest_command", required=True)
@@ -125,11 +133,18 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command == "verdict":
         work = Path(args.cwd) if args.cwd else Path.cwd()
-        payload = run_verdict(
-            work, args.at, args.base, args.claim_ids, provenance=args.provenance
-        )
+        try:
+            payload = run_verdict(
+                work, args.at, args.base, args.claim_ids, provenance=args.provenance
+            )
+        except ManifestError as exc:
+            print(exc, file=sys.stderr)
+            return 2
         print(json.dumps(payload, separators=(",", ":")))
         return 0 if payload["result"] == "pass" else 1
+    if args.command == "runner-template":
+        print(json.dumps(list(TEMPLATES[args.kind]), separators=(",", ":")))
+        return 0
     if args.command == "attest":
         if args.attest_command == "emit":
             body = _read_json(args.input)

@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Iterator, Sequence
 
 from affidavit.amendment import authorize
+from affidavit.evidence_kind import kind_allows_runner
 from affidavit.manifest import (
     Claim,
     Manifest,
@@ -88,6 +89,16 @@ def run_verdict(
         head_claim = at_by_id.get(claim_id)
         if base_claim is None or head_claim is None:
             verdicts[index] = _fail(claim_id, "missing claim")
+            continue
+        if not (
+            kind_allows_runner(head_claim.evidence_kind, base_manifest.runner)
+            and kind_allows_runner(head_claim.evidence_kind, at_manifest.runner)
+        ):
+            verdicts[index] = _fail(
+                claim_id,
+                f"evidence_kind: {head_claim.evidence_kind} requires an "
+                f"{head_claim.evidence_kind} runner template",
+            )
             continue
         try:
             base_support = _support_hashes(root, base_commit, base_manifest, base_claim)
