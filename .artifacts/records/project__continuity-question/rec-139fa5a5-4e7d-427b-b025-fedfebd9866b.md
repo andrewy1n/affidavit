@@ -1,0 +1,22 @@
+---
+{
+  "base_kind": "question",
+  "id": "rec-139fa5a5-4e7d-427b-b025-fedfebd9866b",
+  "identity": "unknown",
+  "lifecycle_state": "answered",
+  "payload": {
+    "blocking": true,
+    "owner": "user",
+    "scope": "plan-review:ci-verdict-fixture"
+  },
+  "record_type": "project:continuity-question",
+  "recorded_at": "2026-10-18T06:02:34+00:00",
+  "relationships": {},
+  "revision": "sha256:7d053e53b55cbed7790a9d85c459e998cf68988413c280c4d9cb0029322f66af",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "evidence-layer"
+}
+---
+
