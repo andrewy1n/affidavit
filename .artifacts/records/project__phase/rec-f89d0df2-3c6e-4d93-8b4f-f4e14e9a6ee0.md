@@ -3,16 +3,16 @@
   "base_kind": "phase",
   "id": "rec-f89d0df2-3c6e-4d93-8b4f-f4e14e9a6ee0",
   "identity": "unknown",
-  "lifecycle_state": "planned",
+  "lifecycle_state": "done",
   "payload": {
     "effort": "evidence-layer",
     "ordinal": 9,
     "title": "Standalone claim authoring, lint, and human-signed claims"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-18T03:08:49+00:00",
+  "recorded_at": "2026-10-18T04:09:19+00:00",
   "relationships": {},
-  "revision": "sha256:92e1a9a3ff08af49333b2f6cecd9a01a50184b820201484b5f85adc26ececdc1",
+  "revision": "sha256:5ab4201a216dfef92ee7df290439c95fbad6f5a03d6d44e53d3ca01699f42b6d",
   "stewardship": {
     "steward": "agent"
   },
@@ -41,3 +41,9 @@ Adopt `claim-cli`: `aff claim add` and `aff freeze`, lint for compound/trust-sco
 - **base:** `main`
 - **close:** commit code on the phase branch; merge that branch into `main`; commit the store on the primary checkout
 - **push:** not a stop (do not push)
+
+## Run
+
+One sitting. No human stops. Wave 1 runs two `subagent` tasks in parallel: `claim-cli` (R1-R3, 20 minutes) and `human-claim` (R4-R5, 15). Wave 2 is `verify-claim-authoring` (`inline`, 6). Phase elapsed is 26 minutes.
+
+Collision notes: `claim-cli` owns `affidavit/authoring.py`, `affidavit/lint.py`, and `affidavit/cli.py`. `human-claim` owns `affidavit/manifest.py`, `affidavit/verdict.py`, and `affidavit/human_claim.py`. Neither edits the other's files. `tests/test_claim_authoring.py` is frozen. The parent commits each task with path-scoped adds. Plan-review answered at once under the campaign pre-approval.

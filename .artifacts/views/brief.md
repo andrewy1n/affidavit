@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:99931a02ce25a4183b642182473b88fd35346bd6f07ec064721a463dd36db9a2
+> Store state: sha256:d1e72df95bfdf743aaaa730fbe3650c466327dc13b61b795890ff13b6e73d8b5
 
 ## amendment-sign
 
@@ -33,6 +33,29 @@
 ### Constraint
 - **campaign-landing-automerge**: For evidence-layer phases 5-11, Landing merges the phase branch into main and commits the store without asking; push is not a human stop; Landing close for evidence-layer phases frozen-environment through audit-differential; evidence-layer _(id: [rec-1c169abc-70e2-4610-a03b-aeee49a1257b](.artifacts/records/project__constraint/rec-1c169abc-70e2-4610-a03b-aeee49a1257b.md))_
 
+## claim-authoring
+
+### Position
+- **claim-authoring**: claim-authoring planned: claim-cli, human-claim + verify; phase _(id: [rec-8f6b5619-c542-4495-b56c-1f258f0294e8](.artifacts/records/project__current-position/rec-8f6b5619-c542-4495-b56c-1f258f0294e8.md))_
+
+## claim-cli
+
+### Work
+- **claim-cli**: Standalone claim add, freeze, and lint; claim-authoring; deliver; evidence-layer _(id: [rec-1f4167c2-50b2-4973-944f-21bd24d65690](.artifacts/records/project__work-item/rec-1f4167c2-50b2-4973-944f-21bd24d65690.md))_
+
+### Acceptance
+- **claim-cli**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r1_claim_add_writes_manifest_entry_standalone -q _(id: [rec-75798857-63f7-4bf9-ba62-1702b7d62da3](.artifacts/records/project__acceptance/rec-75798857-63f7-4bf9-ba62-1702b7d62da3.md))_
+
+## claim-cli-freeze
+
+### Acceptance
+- **claim-cli-freeze**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r2_freeze_records_exact_oracle_hashes tests/test_claim_authoring.py::test_r2_standalone_add_freeze_verdict_passes -q _(id: [rec-181f850e-452a-4386-a7c0-f2e5785394fa](.artifacts/records/project__acceptance/rec-181f850e-452a-4386-a7c0-f2e5785394fa.md))_
+
+## claim-cli-lint
+
+### Acceptance
+- **claim-cli-lint**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r3_lint_claims_reports_compound_claim -q _(id: [rec-253cbc9c-3aa1-417e-809e-11f3ae8f76c3](.artifacts/records/project__acceptance/rec-253cbc9c-3aa1-417e-809e-11f3ae8f76c3.md))_
+
 ## conventional-commits
 
 ### Acceptance
@@ -48,15 +71,10 @@
 ### Acceptance
 - **env-freeze-runner**: tdd; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_runner_digest_drift_without_amendment -q _(id: [rec-6a082c2e-8500-4178-b517-9d57ef09d9c7](.artifacts/records/project__acceptance/rec-6a082c2e-8500-4178-b517-9d57ef09d9c7.md))_
 
-## evidence-kind
-
-### Position
-- **evidence-kind**: evidence-kind planned: kind-enforcement + verify; phase _(id: [rec-e0860883-fb7a-417f-b42d-52f1dffc60b9](.artifacts/records/project__current-position/rec-e0860883-fb7a-417f-b42d-52f1dffc60b9.md))_
-
 ## evidence-layer
 
 ### Position
-- **evidence-layer**: oracle-provenance done; next up: evidence-kind; effort _(id: [rec-6b282372-16f7-4332-ac77-d363463ce015](.artifacts/records/project__current-position/rec-6b282372-16f7-4332-ac77-d363463ce015.md))_
+- **evidence-layer**: evidence-kind done; next up: claim-authoring; effort _(id: [rec-bca51bea-1e3e-4eca-9aa2-2db64642112d](.artifacts/records/project__current-position/rec-bca51bea-1e3e-4eca-9aa2-2db64642112d.md))_
 
 ## extract-store-binding
 
@@ -88,6 +106,19 @@
 ### Acceptance
 - **fix-verdict-help-test**: a pytest runs bin/aff verdict --help and asserts exit 0; check; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q -k verdict_help _(id: [rec-17932b62-b463-479e-8071-f17cc13eff09](.artifacts/records/project__acceptance/rec-17932b62-b463-479e-8071-f17cc13eff09.md))_
 
+## human-claim
+
+### Work
+- **human-claim**: Human-signed claim witness in verdict; claim-authoring; deliver; evidence-layer _(id: [rec-b3da16ca-bcc6-4746-a9b4-886900051a4c](.artifacts/records/project__work-item/rec-b3da16ca-bcc6-4746-a9b4-886900051a4c.md))_
+
+### Acceptance
+- **human-claim**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r4_verdict_accepts_valid_human_signature -q _(id: [rec-bb995342-c16f-481e-9fff-8a39171dd49c](.artifacts/records/project__acceptance/rec-bb995342-c16f-481e-9fff-8a39171dd49c.md))_
+
+## human-claim-reject
+
+### Acceptance
+- **human-claim-reject**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r5_verdict_rejects_missing_human_signature tests/test_claim_authoring.py::test_r5_verdict_rejects_invalid_human_signature -q _(id: [rec-02ad65e6-5b73-4781-ad50-2ceac314dd59](.artifacts/records/project__acceptance/rec-02ad65e6-5b73-4781-ad50-2ceac314dd59.md))_
+
 ## junit-run-tests
 
 ### Acceptance
@@ -104,9 +135,6 @@
 - **junit-run-tests-tags**: A JUnit failure is assertion_failed, an error is errored, a skip or a missing case is not_run, and a failure plus an error is errored; tdd; evidence-layer; python3 -m pytest tests/test_runner.py -q -k maps_failure_error_skipped _(id: [rec-cca4eb26-7518-47f2-9160-6f6480f68d02](.artifacts/records/project__acceptance/rec-cca4eb26-7518-47f2-9160-6f6480f68d02.md))_
 
 ## kind-enforcement
-
-### Work
-- **kind-enforcement**: Claims declare evidence_kind and verdict enforces it; evidence-kind; deliver; evidence-layer _(id: [rec-ed2ce447-5658-4449-a5d1-1d9c4d2618f6](.artifacts/records/project__work-item/rec-ed2ce447-5658-4449-a5d1-1d9c4d2618f6.md))_
 
 ### Acceptance
 - **kind-enforcement**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r1_manifest_claim_may_declare_evidence_kind -q _(id: [rec-1ef835e4-41dc-4aeb-8462-c21de870e1f1](.artifacts/records/project__acceptance/rec-1ef835e4-41dc-4aeb-8462-c21de870e1f1.md))_
@@ -307,6 +335,34 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Acceptance
 - **verdict-through-runner-unstable**: A disagreeing confirmation yields unstable and a non-zero exit, and a failed first run is not confirmed; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "unstable_when_confirmation or skips_confirmation" _(id: [rec-ca86ff79-3d6b-4441-91b8-e3e0abd9cdfa](.artifacts/records/project__acceptance/rec-ca86ff79-3d6b-4441-91b8-e3e0abd9cdfa.md))_
 
+## verify-claim-authoring
+
+### Work
+- **verify-claim-authoring**: Verify claim authoring; claim-authoring; deliver; evidence-layer _(id: [rec-63842060-9a26-40d1-bbb0-6bda45d87640](.artifacts/records/project__work-item/rec-63842060-9a26-40d1-bbb0-6bda45d87640.md))_
+
+### Acceptance
+- **verify-claim-authoring**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r1_claim_add_writes_manifest_entry_standalone -q _(id: [rec-3ba8b3a4-946b-45b9-ad43-80a95fab5a9a](.artifacts/records/project__acceptance/rec-3ba8b3a4-946b-45b9-ad43-80a95fab5a9a.md))_
+
+## verify-claim-authoring-freeze
+
+### Acceptance
+- **verify-claim-authoring-freeze**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r2_freeze_records_exact_oracle_hashes tests/test_claim_authoring.py::test_r2_standalone_add_freeze_verdict_passes -q _(id: [rec-c04a807b-31ff-475f-9acf-33a49952d72f](.artifacts/records/project__acceptance/rec-c04a807b-31ff-475f-9acf-33a49952d72f.md))_
+
+## verify-claim-authoring-lint
+
+### Acceptance
+- **verify-claim-authoring-lint**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r3_lint_claims_reports_compound_claim -q _(id: [rec-9d812846-4080-4211-876b-31734708a995](.artifacts/records/project__acceptance/rec-9d812846-4080-4211-876b-31734708a995.md))_
+
+## verify-claim-authoring-reject
+
+### Acceptance
+- **verify-claim-authoring-reject**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r5_verdict_rejects_missing_human_signature tests/test_claim_authoring.py::test_r5_verdict_rejects_invalid_human_signature -q _(id: [rec-55b8c272-23dc-43b4-97ac-0ac7bb74dda7](.artifacts/records/project__acceptance/rec-55b8c272-23dc-43b4-97ac-0ac7bb74dda7.md))_
+
+## verify-claim-authoring-signed
+
+### Acceptance
+- **verify-claim-authoring-signed**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r4_verdict_accepts_valid_human_signature -q _(id: [rec-95ddfb5c-0a5b-43f3-9b6d-34079130a087](.artifacts/records/project__acceptance/rec-95ddfb5c-0a5b-43f3-9b6d-34079130a087.md))_
+
 ## verify-claims-manifest
 
 ### Acceptance
@@ -323,9 +379,6 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **verify-claims-manifest-suite**: CLI subprocess tests cover the pass, a hash mismatch, a missing or invalid amendment signature, an allowlist change, and a --cwd pointed at a phase worktree other than the store checkout; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or bad_signature or allowlist or cwd_phase" _(id: [rec-27b93db5-292e-4864-8bc9-ac743955d861](.artifacts/records/project__acceptance/rec-27b93db5-292e-4864-8bc9-ac743955d861.md))_
 
 ## verify-evidence-kind
-
-### Work
-- **verify-evidence-kind**: Verify evidence kind; evidence-kind; deliver; evidence-layer _(id: [rec-992dd471-2b52-4170-b036-bbe6c151c7e6](.artifacts/records/project__work-item/rec-992dd471-2b52-4170-b036-bbe6c151c7e6.md))_
 
 ### Acceptance
 - **verify-evidence-kind**: check; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r1_manifest_claim_may_declare_evidence_kind -q _(id: [rec-31329697-17c1-4cef-927e-b2bba4675d35](.artifacts/records/project__acceptance/rec-31329697-17c1-4cef-927e-b2bba4675d35.md))_

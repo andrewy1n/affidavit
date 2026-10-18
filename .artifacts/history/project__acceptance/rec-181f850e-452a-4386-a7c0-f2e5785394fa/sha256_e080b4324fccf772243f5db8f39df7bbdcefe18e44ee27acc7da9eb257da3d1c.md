@@ -1,0 +1,29 @@
+---
+{
+  "base_kind": "claim",
+  "epistemic_status": "asserted",
+  "id": "rec-181f850e-452a-4386-a7c0-f2e5785394fa",
+  "identity": "unknown",
+  "lifecycle_state": "active",
+  "payload": {
+    "criterion": "",
+    "effort": "evidence-layer",
+    "method": "tdd",
+    "phase": "claim-authoring",
+    "requirement": "R2",
+    "verify_command": "python3 -m pytest tests/test_claim_authoring.py::test_r2_freeze_records_exact_oracle_hashes tests/test_claim_authoring.py::test_r2_standalone_add_freeze_verdict_passes -q"
+  },
+  "record_type": "project:acceptance",
+  "recorded_at": "2026-10-18T03:52:05+00:00",
+  "relationships": {},
+  "revision": "sha256:e080b4324fccf772243f5db8f39df7bbdcefe18e44ee27acc7da9eb257da3d1c",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "claim-cli-freeze",
+  "time": {
+    "as_of": "2026-10-18T03:50:33+00:00"
+  }
+}
+---
+

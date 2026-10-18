@@ -4,7 +4,7 @@
   "epistemic_status": "asserted",
   "id": "rec-bca51bea-1e3e-4eca-9aa2-2db64642112d",
   "identity": "unknown",
-  "lifecycle_state": "active",
+  "lifecycle_state": "superseded",
   "payload": {
     "effort": "evidence-layer",
     "phase": "claim-authoring",
@@ -12,13 +12,13 @@
     "scope": "effort"
   },
   "record_type": "project:current-position",
-  "recorded_at": "2026-10-18T03:49:28+00:00",
+  "recorded_at": "2026-10-18T04:09:19+00:00",
   "relationships": {
     "supersedes": [
       "rec-6b282372-16f7-4332-ac77-d363463ce015"
     ]
   },
-  "revision": "sha256:9f263f570f49393632cc1d973d51da9625594f8754328e9c5268069756d6c99a",
+  "revision": "sha256:f8e2c2fa7d1abb6b1ea720470acd7a3d127e74e548541b78a0b877ba3b67b972",
   "stewardship": {
     "steward": "agent"
   },

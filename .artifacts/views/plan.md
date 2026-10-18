@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:b625acd1f3300e8ed65c9754bb1cf17f0a5229e35fc6d07bd2c8c91da6f3bd55
+> Store state: sha256:c62c1bd3c168fa9f2ec73617f46758698d16ea9389c5ef2d34e8796b6f8e6446
 
 ## claims-manifest
 
@@ -128,8 +128,17 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ## claim-authoring
 
-### Phase
-- **claim-authoring**: Standalone claim authoring, lint, and human-signed claims; 9; evidence-layer _(id: [rec-f89d0df2-3c6e-4d93-8b4f-f4e14e9a6ee0](.artifacts/records/project__phase/rec-f89d0df2-3c6e-4d93-8b4f-f4e14e9a6ee0.md))_
+### Acceptance
+- **claim-cli**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r1_claim_add_writes_manifest_entry_standalone -q _(id: [rec-75798857-63f7-4bf9-ba62-1702b7d62da3](.artifacts/records/project__acceptance/rec-75798857-63f7-4bf9-ba62-1702b7d62da3.md))_
+- **claim-cli-freeze**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r2_freeze_records_exact_oracle_hashes tests/test_claim_authoring.py::test_r2_standalone_add_freeze_verdict_passes -q _(id: [rec-181f850e-452a-4386-a7c0-f2e5785394fa](.artifacts/records/project__acceptance/rec-181f850e-452a-4386-a7c0-f2e5785394fa.md))_
+- **claim-cli-lint**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r3_lint_claims_reports_compound_claim -q _(id: [rec-253cbc9c-3aa1-417e-809e-11f3ae8f76c3](.artifacts/records/project__acceptance/rec-253cbc9c-3aa1-417e-809e-11f3ae8f76c3.md))_
+- **human-claim**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r4_verdict_accepts_valid_human_signature -q _(id: [rec-bb995342-c16f-481e-9fff-8a39171dd49c](.artifacts/records/project__acceptance/rec-bb995342-c16f-481e-9fff-8a39171dd49c.md))_
+- **human-claim-reject**: tdd; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r5_verdict_rejects_missing_human_signature tests/test_claim_authoring.py::test_r5_verdict_rejects_invalid_human_signature -q _(id: [rec-02ad65e6-5b73-4781-ad50-2ceac314dd59](.artifacts/records/project__acceptance/rec-02ad65e6-5b73-4781-ad50-2ceac314dd59.md))_
+- **verify-claim-authoring**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r1_claim_add_writes_manifest_entry_standalone -q _(id: [rec-3ba8b3a4-946b-45b9-ad43-80a95fab5a9a](.artifacts/records/project__acceptance/rec-3ba8b3a4-946b-45b9-ad43-80a95fab5a9a.md))_
+- **verify-claim-authoring-freeze**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r2_freeze_records_exact_oracle_hashes tests/test_claim_authoring.py::test_r2_standalone_add_freeze_verdict_passes -q _(id: [rec-c04a807b-31ff-475f-9acf-33a49952d72f](.artifacts/records/project__acceptance/rec-c04a807b-31ff-475f-9acf-33a49952d72f.md))_
+- **verify-claim-authoring-lint**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r3_lint_claims_reports_compound_claim -q _(id: [rec-9d812846-4080-4211-876b-31734708a995](.artifacts/records/project__acceptance/rec-9d812846-4080-4211-876b-31734708a995.md))_
+- **verify-claim-authoring-reject**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r5_verdict_rejects_missing_human_signature tests/test_claim_authoring.py::test_r5_verdict_rejects_invalid_human_signature -q _(id: [rec-55b8c272-23dc-43b4-97ac-0ac7bb74dda7](.artifacts/records/project__acceptance/rec-55b8c272-23dc-43b4-97ac-0ac7bb74dda7.md))_
+- **verify-claim-authoring-signed**: check; evidence-layer; python3 -m pytest tests/test_claim_authoring.py::test_r4_verdict_accepts_valid_human_signature -q _(id: [rec-95ddfb5c-0a5b-43f3-9b6d-34079130a087](.artifacts/records/project__acceptance/rec-95ddfb5c-0a5b-43f3-9b6d-34079130a087.md))_
 
 ## phase-end-evidence
 
