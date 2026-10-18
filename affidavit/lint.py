@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import ast
+import json
+import re
 import shutil
 import subprocess
 import tempfile
 from pathlib import Path
 from typing import Sequence
 
-from affidavit.manifest import load_manifest, resolve_commit
+from affidavit.manifest import MANIFEST_PATH, load_manifest, resolve_commit
 from affidavit.runner import run_tests
 
 
@@ -65,6 +67,28 @@ def find_new_skips(
         if head_outcomes.get(test_id) == "not_run"
         and base_outcomes.get(test_id) != "not_run"
     ]
+
+
+_COMPOUND_MARKERS = (" and ", " as well as ", ";")
+_SENTENCE_END = re.compile(r"[.!?](?:\s+|$)")
+_TRUST_MARKERS = ("agent-supplied", "supplied by the agent", "agent supplied")
+
+
+def find_claim_findings(cwd: Path | str) -> list[str]:
+    """Lint working-tree manifest claim text for compound and trust-scoped wording."""
+    path = Path(cwd) / MANIFEST_PATH
+    document = json.loads(path.read_text(encoding="utf-8"))
+    findings: list[str] = []
+    for claim in document.get("claims", []):
+        claim_id = claim.get("id")
+        text = str(claim.get("text", ""))
+        lowered = text.lower()
+        sentences = [s for s in _SENTENCE_END.split(text.strip()) if s.strip()]
+        if any(m in lowered for m in _COMPOUND_MARKERS) or len(sentences) >= 2:
+            findings.append(f"{claim_id}: compound claim")
+        if any(m in lowered for m in _TRUST_MARKERS):
+            findings.append(f"{claim_id}: trust-scoped claim")
+    return findings
 
 
 def _no_assert_in_file(path: Path) -> list[str]:

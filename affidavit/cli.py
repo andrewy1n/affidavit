@@ -8,8 +8,9 @@ import sys
 from pathlib import Path
 
 from affidavit.attestation import emit, verify
+from affidavit.authoring import AuthoringError, add_claim, freeze
 from affidavit.evidence_kind import TEMPLATES
-from affidavit.lint import find_new_skips, find_no_assert
+from affidavit.lint import find_claim_findings, find_new_skips, find_no_assert
 from affidavit.manifest import ManifestError
 from affidavit.verdict import run_verdict
 
@@ -125,6 +126,38 @@ def _build_parser() -> argparse.ArgumentParser:
     new_skips.add_argument("--head", required=True, help="Head revision")
     new_skips.add_argument("claim_id", metavar="CLAIM", help="Claim id whose witnesses to compare")
 
+    lint_claims = lint_sub.add_parser(
+        "claims",
+        help="Report compound and trust-scoped claim text in the working-tree manifest",
+    )
+    lint_claims.add_argument(
+        "--cwd",
+        default=None,
+        help="Repository root (default: process cwd)",
+    )
+
+    claim = sub.add_parser("claim", help="Author manifest claims")
+    claim_sub = claim.add_subparsers(dest="claim_command", required=True)
+    claim_add = claim_sub.add_parser("add", help="Append a claim to the manifest")
+    claim_add.add_argument("--cwd", default=None, help="Repository root (default: process cwd)")
+    claim_add.add_argument("--id", required=True, dest="claim_id", help="Claim id")
+    claim_add.add_argument("--text", required=True, help="Claim text")
+    claim_add.add_argument(
+        "--test",
+        action="append",
+        default=[],
+        dest="tests",
+        metavar="NODE",
+        help="Oracle test node id (repeatable)",
+    )
+
+    freeze_cmd = sub.add_parser(
+        "freeze",
+        help="Record oracle file hashes from the working tree into the manifest",
+    )
+    freeze_cmd.add_argument("--cwd", default=None, help="Repository root (default: process cwd)")
+    freeze_cmd.add_argument("claim_ids", nargs="*", metavar="CLAIM", help="Claim ids (default: all)")
+
     return parser
 
 
@@ -142,6 +175,22 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         print(json.dumps(payload, separators=(",", ":")))
         return 0 if payload["result"] == "pass" else 1
+    if args.command == "claim":
+        work = Path(args.cwd) if args.cwd else Path.cwd()
+        try:
+            add_claim(work, args.claim_id, args.text, args.tests)
+        except AuthoringError as exc:
+            print(exc, file=sys.stderr)
+            return 2
+        return 0
+    if args.command == "freeze":
+        work = Path(args.cwd) if args.cwd else Path.cwd()
+        try:
+            freeze(work, args.claim_ids)
+        except AuthoringError as exc:
+            print(exc, file=sys.stderr)
+            return 2
+        return 0
     if args.command == "runner-template":
         print(json.dumps(list(TEMPLATES[args.kind]), separators=(",", ":")))
         return 0
@@ -176,6 +225,16 @@ def main(argv: list[str] | None = None) -> int:
             findings = find_new_skips(
                 work, args.base, args.head, claim_id=args.claim_id
             )
+            for item in findings:
+                print(item)
+            return 1 if findings else 0
+        if args.lint_command == "claims":
+            work = Path(args.cwd) if args.cwd else Path.cwd()
+            try:
+                findings = find_claim_findings(work)
+            except (OSError, ValueError) as exc:
+                print(exc, file=sys.stderr)
+                return 2
             for item in findings:
                 print(item)
             return 1 if findings else 0
