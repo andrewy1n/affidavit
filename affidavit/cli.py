@@ -10,6 +10,7 @@ from pathlib import Path
 from affidavit.attestation import emit, verify
 from affidavit.audit import AuditError, run_audit
 from affidavit.authoring import AuthoringError, add_claim, freeze
+from affidavit.binding import BindingError, bind_observation, recheck, unbind
 from affidavit.evidence_kind import TEMPLATES
 from affidavit.lint import find_claim_findings, find_new_skips, find_no_assert
 from affidavit.manifest import ManifestError
@@ -216,6 +217,42 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Only observations with this technique name",
     )
 
+    bind = sub.add_parser(
+        "bind",
+        help="Attach an observation to a claim under pinned revisions",
+    )
+    bind.add_argument(
+        "--cwd",
+        default=None,
+        help="Repository root (default: process cwd)",
+    )
+    bind.add_argument("--observation", required=True, help="Observation record id")
+    bind.add_argument("--claim", required=True, help="Claim id the observation earns")
+    bind.add_argument("--base", required=True, help="Pinned base revision")
+    bind.add_argument("--head", required=True, help="Pinned head revision")
+
+    unbind_cmd = sub.add_parser(
+        "unbind",
+        help="Retire a binding so the observation no longer earns the claim",
+    )
+    unbind_cmd.add_argument(
+        "--cwd",
+        default=None,
+        help="Repository root (default: process cwd)",
+    )
+    unbind_cmd.add_argument("--id", required=True, help="Binding record id")
+
+    recheck_cmd = sub.add_parser(
+        "recheck",
+        help="Re-judge a claim under its active binding pins",
+    )
+    recheck_cmd.add_argument(
+        "--cwd",
+        default=None,
+        help="Repository root (default: process cwd)",
+    )
+    recheck_cmd.add_argument("--claim", required=True, help="Claim id to re-judge")
+
     return parser
 
 
@@ -251,6 +288,42 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         print(json.dumps(items, separators=(",", ":")))
         return 0
+    if args.command == "bind":
+        work = Path(args.cwd) if args.cwd else Path.cwd()
+        try:
+            record = bind_observation(
+                work,
+                observation_id=args.observation,
+                claim_id=args.claim,
+                base_rev=args.base,
+                head_rev=args.head,
+            )
+        except BindingError as exc:
+            print(exc, file=sys.stderr)
+            return 1
+        print(json.dumps(record, separators=(",", ":")))
+        return 0
+    if args.command == "unbind":
+        work = Path(args.cwd) if args.cwd else Path.cwd()
+        try:
+            body = unbind(work, args.id)
+        except BindingError as exc:
+            print(exc, file=sys.stderr)
+            return 1
+        print(json.dumps(body, separators=(",", ":")))
+        return 0
+    if args.command == "recheck":
+        work = Path(args.cwd) if args.cwd else Path.cwd()
+        try:
+            payload = recheck(work, args.claim)
+        except BindingError as exc:
+            print(exc, file=sys.stderr)
+            return 1
+        except ManifestError as exc:
+            print(exc, file=sys.stderr)
+            return 2
+        print(json.dumps(payload, separators=(",", ":")))
+        return 0 if payload.get("result") == "pass" else 1
     if args.command == "claim":
         work = Path(args.cwd) if args.cwd else Path.cwd()
         try:
