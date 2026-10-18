@@ -55,20 +55,25 @@ def _manifest(
     amendments: list | None = None,
     digest: str | None = None,
     runner: list[str] | None = None,
+    support_files: list[str] | None = None,
+    claim_support_files: list[str] | None = None,
 ) -> dict:
-    document = {
-        "claims": [
-            {
-                "id": CLAIM,
-                "text": "value is one",
-                "tests": [NODE],
-                "oracle_hashes": {ORACLE_REL: digest or _sha256(oracle)},
-            }
-        ],
+    claim: dict = {
+        "id": CLAIM,
+        "text": "value is one",
+        "tests": [NODE],
+        "oracle_hashes": {ORACLE_REL: digest or _sha256(oracle)},
+    }
+    if claim_support_files is not None:
+        claim["support_files"] = list(claim_support_files)
+    document: dict = {
+        "claims": [claim],
         "amendments": list(amendments or []),
     }
     if runner is not None:
         document["runner"] = list(runner)
+    if support_files is not None:
+        document["support_files"] = list(support_files)
     return document
 
 
@@ -120,6 +125,10 @@ def _repo(
     head_runner: list[str] | None = None,
     base_extra: dict[str, bytes] | None = None,
     head_extra: dict[str, bytes] | None = None,
+    base_support_files: list[str] | None = None,
+    head_support_files: list[str] | None = None,
+    base_claim_support_files: list[str] | None = None,
+    head_claim_support_files: list[str] | None = None,
 ) -> tuple[str, str]:
     _init(root)
     _write_tree(
@@ -127,7 +136,14 @@ def _repo(
         oracle=base_oracle,
         app=base_app,
         allowlist=base_allow,
-        manifest=_manifest(base_oracle, base_amendments, base_digest, base_runner),
+        manifest=_manifest(
+            base_oracle,
+            base_amendments,
+            base_digest,
+            base_runner,
+            support_files=base_support_files,
+            claim_support_files=base_claim_support_files,
+        ),
         extra=base_extra,
     )
     base = _commit(root, "red")
@@ -138,7 +154,14 @@ def _repo(
         oracle=head_oracle,
         app=head_app,
         allowlist=head_allow,
-        manifest=_manifest(head_oracle, head_amendments, head_digest, head_runner),
+        manifest=_manifest(
+            head_oracle,
+            head_amendments,
+            head_digest,
+            head_runner,
+            support_files=head_support_files,
+            claim_support_files=head_claim_support_files,
+        ),
         extra=head_extra,
     )
     head = _commit(root, "green")
@@ -368,6 +391,87 @@ def test_verdict_refuses_missing_amendment(tmp_path: Path) -> None:
         head_app=APP_GREEN,
         base_oracle=ORACLE,
         head_oracle=ORACLE_AMENDED,
+    )
+    proc = _run(root, head, base)
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    payload = _payload(proc)
+    assert payload["result"] == "fail"
+    assert payload["claims"] == [{"id": CLAIM, "result": "fail", "reason": "missing step"}]
+
+
+SUPPORT_REL = "tests/conftest.py"
+SUPPORT_V1 = b"# frozen support v1\nSUPPORT_MARKER = 1\n"
+SUPPORT_V2 = b"# frozen support v2\nSUPPORT_MARKER = 2\n"
+_RUNNER_BASE = [
+    "python3",
+    "-m",
+    "pytest",
+    "-o",
+    "junit_family=xunit1",
+    "{tests}",
+    "--junitxml={report}",
+]
+_RUNNER_HEAD = [
+    "python3",
+    "-m",
+    "pytest",
+    "-q",
+    "-o",
+    "junit_family=xunit1",
+    "{tests}",
+    "--junitxml={report}",
+]
+
+
+def test_verdict_refuses_support_file_drift_without_amendment(tmp_path: Path) -> None:
+    """R1: declared support path hash drift without a signed amendment fails."""
+    root = tmp_path / "repo"
+    base, head = _repo(
+        root,
+        base_app=APP_RED,
+        head_app=APP_GREEN,
+        base_support_files=[SUPPORT_REL],
+        head_support_files=[SUPPORT_REL],
+        base_extra={SUPPORT_REL: SUPPORT_V1},
+        head_extra={SUPPORT_REL: SUPPORT_V2},
+    )
+    proc = _run(root, head, base)
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    payload = _payload(proc)
+    assert payload["result"] == "fail"
+    assert payload["claims"] == [{"id": CLAIM, "result": "fail", "reason": "missing step"}]
+
+
+def test_verdict_refuses_claim_support_file_drift_without_amendment(
+    tmp_path: Path,
+) -> None:
+    """R1: claim-listed support path hash drift without amendment also fails."""
+    root = tmp_path / "repo"
+    base, head = _repo(
+        root,
+        base_app=APP_RED,
+        head_app=APP_GREEN,
+        base_claim_support_files=[SUPPORT_REL],
+        head_claim_support_files=[SUPPORT_REL],
+        base_extra={SUPPORT_REL: SUPPORT_V1},
+        head_extra={SUPPORT_REL: SUPPORT_V2},
+    )
+    proc = _run(root, head, base)
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    payload = _payload(proc)
+    assert payload["result"] == "fail"
+    assert payload["claims"] == [{"id": CLAIM, "result": "fail", "reason": "missing step"}]
+
+
+def test_verdict_refuses_runner_digest_drift_without_amendment(tmp_path: Path) -> None:
+    """R2: manifest runner argv digest drift without a signed amendment fails."""
+    root = tmp_path / "repo"
+    base, head = _repo(
+        root,
+        base_app=APP_RED,
+        head_app=APP_GREEN,
+        base_runner=_RUNNER_BASE,
+        head_runner=_RUNNER_HEAD,
     )
     proc = _run(root, head, base)
     assert proc.returncode == 1, proc.stdout + proc.stderr
