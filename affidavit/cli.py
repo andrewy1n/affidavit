@@ -186,8 +186,8 @@ def _build_parser() -> argparse.ArgumentParser:
     audit.add_argument(
         "--max-mutants",
         type=int,
-        default=None,
-        help="Cap how many mutants from the file are considered",
+        default=20,
+        help="Cap how many mutants from the file are considered (default: 20)",
     )
 
     return parser

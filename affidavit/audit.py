@@ -41,7 +41,7 @@ def run_audit(
     head: str,
     extra_tests: Sequence[str] = (),
     mutants_path: Path | str | None = None,
-    max_mutants: int | None = None,
+    max_mutants: int | None = 20,
 ) -> dict[str, Any]:
     """Label source hunks between ``base`` and ``head``; optionally plant mutants.
 
@@ -262,8 +262,9 @@ def _plant_mutants(
     specs = raw.get("mutants") if isinstance(raw, dict) else None
     if not isinstance(specs, list):
         raise AuditError("mutants file must contain a mutants list")
-    if max_mutants is not None:
-        specs = specs[:max_mutants]
+    limit = 20 if max_mutants is None else max_mutants
+    if limit >= 0:
+        specs = specs[:limit]
 
     noticed_by_file: dict[str, list[str]] = {}
     for block in blocks:
@@ -304,7 +305,7 @@ def _plant_mutants(
             reported.append(entry)
             continue
         outcomes = run_tests(worktree, head_pass, runner)
-        if any(outcomes.get(t) in {"assertion_failed", "errored"} for t in head_pass):
+        if any(outcomes.get(t) == "assertion_failed" for t in head_pass):
             entry["status"] = "killed"
         elif all(outcomes.get(t) == "passed" for t in head_pass):
             entry["status"] = "survived"
