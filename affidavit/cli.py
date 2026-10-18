@@ -4,16 +4,24 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
+from affidavit.attestation import emit, verify
 from affidavit.lint import find_new_skips, find_no_assert
 from affidavit.verdict import run_verdict
+
+
+def _read_json(path: str | None) -> dict:
+    if path is None or path == "-":
+        return json.load(sys.stdin)
+    return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="aff",
-        description="aff CLI: verdict and witness lint.",
+        description="aff CLI: verdict, attestation, and witness lint.",
     )
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -33,6 +41,49 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Revision where oracle tests must fail on an assertion (default: merge-base with main)",
     )
     verdict.add_argument("claim_ids", nargs="+", metavar="CLAIM", help="Claim ids to judge")
+
+    attest = sub.add_parser("attest", help="Emit or verify a signed verdict attestation")
+    attest_sub = attest.add_subparsers(dest="attest_command", required=True)
+
+    attest_emit = attest_sub.add_parser(
+        "emit",
+        help="Sign a verdict JSON body (stdin or --input)",
+    )
+    attest_emit.add_argument(
+        "--key",
+        required=True,
+        help="SSH private key path for signing",
+    )
+    attest_emit.add_argument(
+        "--input",
+        default=None,
+        help="Verdict JSON path (default: stdin)",
+    )
+
+    attest_verify = attest_sub.add_parser(
+        "verify",
+        help="Verify a signed attestation under an allowlist",
+    )
+    attest_verify.add_argument(
+        "--allowlist",
+        required=True,
+        help="allowed_signers file path",
+    )
+    attest_verify.add_argument(
+        "--commit",
+        required=True,
+        help="Expected commit SHA the attestation must bind",
+    )
+    attest_verify.add_argument(
+        "--manifest-hash",
+        required=True,
+        help="Expected manifest hash the attestation must bind",
+    )
+    attest_verify.add_argument(
+        "--input",
+        default=None,
+        help="Attestation JSON path (default: stdin)",
+    )
 
     lint = sub.add_parser("lint", help="Report no-assert witnesses or new skips")
     lint_sub = lint.add_subparsers(dest="lint_command", required=True)
@@ -72,6 +123,26 @@ def main(argv: list[str] | None = None) -> int:
         payload = run_verdict(work, args.at, args.base, args.claim_ids)
         print(json.dumps(payload, separators=(",", ":")))
         return 0 if payload["result"] == "pass" else 1
+    if args.command == "attest":
+        if args.attest_command == "emit":
+            body = _read_json(args.input)
+            signed = emit(body, key_path=args.key)
+            print(json.dumps(signed, separators=(",", ":")))
+            return 0
+        if args.attest_command == "verify":
+            attestation = _read_json(args.input)
+            allow = Path(args.allowlist).read_bytes()
+            ok, reason = verify(
+                attestation,
+                allow,
+                expected_commit=args.commit,
+                expected_manifest_hash=args.manifest_hash,
+            )
+            if not ok:
+                print(reason, file=sys.stderr)
+                return 1
+            return 0
+        parser.error(f"unknown attest command {args.attest_command!r}")
     if args.command == "lint":
         if args.lint_command == "no-assert":
             findings = find_no_assert([Path(p) for p in args.paths])

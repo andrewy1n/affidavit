@@ -1,0 +1,97 @@
+# Fixture CI: run aff verdict, emit a signed attestation, then verify it.
+#
+# Required secrets / allowlist (fixture key):
+#   AFFIDAVIT_ATTEST_KEY       — PEM/OpenSSH private key for namespace
+#                                affidavit-verdict (fixture deploy key).
+#   AFFIDAVIT_ATTEST_ALLOWLIST — allowed_signers file contents that list
+#                                that key under namespaces="affidavit-verdict".
+# Update the allowlist when rotating the fixture key; verify fails otherwise.
+name: affidavit-verdict
+
+on:
+  push:
+    branches: [main, "phase/**"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      claim_id:
+        description: Claim id to judge
+        required: true
+        default: claim-widget
+      fixture_cwd:
+        description: Path to fixture repository (relative to checkout)
+        required: true
+        default: tests/fixtures/verdict-repo
+
+jobs:
+  verdict-and-attest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pytest
+        run: python3 -m pip install --user pytest
+
+      - name: Resolve fixture and claim
+        id: ctx
+        run: |
+          FIXTURE="${{ github.event.inputs.fixture_cwd || 'tests/fixtures/verdict-repo' }}"
+          CLAIM="${{ github.event.inputs.claim_id || 'claim-widget' }}"
+          echo "fixture=$FIXTURE" >> "$GITHUB_OUTPUT"
+          echo "claim=$CLAIM" >> "$GITHUB_OUTPUT"
+          test -d "$FIXTURE" || echo "::warning::fixture path $FIXTURE missing; attest-core/fixture setup must provide it"
+
+      - name: Write signing key and allowlist
+        env:
+          AFFIDAVIT_ATTEST_KEY: ${{ secrets.AFFIDAVIT_ATTEST_KEY }}
+          AFFIDAVIT_ATTEST_ALLOWLIST: ${{ secrets.AFFIDAVIT_ATTEST_ALLOWLIST }}
+        run: |
+          mkdir -p "$HOME/.config/affidavit"
+          umask 077
+          printf '%s\n' "$AFFIDAVIT_ATTEST_KEY" > "$HOME/.config/affidavit/attest_key"
+          printf '%s\n' "$AFFIDAVIT_ATTEST_ALLOWLIST" > "$HOME/.config/affidavit/allowed_signers"
+          echo "ATTEST_KEY=$HOME/.config/affidavit/attest_key" >> "$GITHUB_ENV"
+          echo "ATTEST_ALLOWLIST=$HOME/.config/affidavit/allowed_signers" >> "$GITHUB_ENV"
+
+      - name: Run aff verdict
+        id: verdict
+        run: |
+          SHA=$(git -C "${{ steps.ctx.outputs.fixture }}" rev-parse HEAD)
+          bin/aff verdict \
+            --cwd "${{ steps.ctx.outputs.fixture }}" \
+            --at "$SHA" \
+            "${{ steps.ctx.outputs.claim }}" \
+            | tee verdict.json
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Emit signed attestation
+        run: |
+          bin/aff attest \
+            --key "$ATTEST_KEY" \
+            --from-verdict verdict.json \
+            --out attestation.json
+
+      - name: Verify attestation
+        run: |
+          bin/aff attest verify \
+            --allowlist "$ATTEST_ALLOWLIST" \
+            --commit "${{ steps.verdict.outputs.sha }}" \
+            --attestation attestation.json
+
+      - name: Upload attestation
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: affidavit-attestation
+          path: |
+            verdict.json
+            attestation.json
+          if-no-files-found: ignore
