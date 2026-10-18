@@ -1,7 +1,7 @@
 # Project Status
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:54ab9a718d730e79c1863991d0d84f0c14a97a22fcc26fd607e39c905cf52c25
+> Store state: sha256:2c63ccaaef1814f47622922bdf8baf334544277d354a90750afc8d2cef19c50d
 
 ## claims-manifest
 
@@ -103,3 +103,23 @@
 - **observation-cli**: Record and list evidence observations; evidence-interface; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 2 pass / 2 fail _(id: [rec-05b561bd-8746-498d-b108-49d8466799ac](.artifacts/records/project__work-item/rec-05b561bd-8746-498d-b108-49d8466799ac.md))_
 - **observation-contract**: Add evidence-observation record type; evidence-interface; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-1279e477-c1f3-4706-814e-6a903b2eea91](.artifacts/records/project__work-item/rec-1279e477-c1f3-4706-814e-6a903b2eea91.md))_
 - **verify-evidence-interface**: Verify evidence interface; evidence-interface; deliver; evidence-layer; state: done; ready: True; wave: 3; criteria: 4 pass / 1 fail _(id: [rec-91fdc463-e238-48a4-a160-dc074898b575](.artifacts/records/project__work-item/rec-91fdc463-e238-48a4-a160-dc074898b575.md))_
+
+## evidence-bind
+
+### Work
+- **bind-cli**: Add aff bind unbind recheck; verdict stays unbound; evidence-bind; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 5 pass / 4 fail _(id: [rec-baf63b4e-b890-4bda-9d34-5e38ae46f2a7](.artifacts/records/project__work-item/rec-baf63b4e-b890-4bda-9d34-5e38ae46f2a7.md))_
+- **binding-contract**: Add evidence-binding record type; evidence-bind; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 1 pass / 1 fail _(id: [rec-6de8f976-8755-42dc-a030-064cf104766d](.artifacts/records/project__work-item/rec-6de8f976-8755-42dc-a030-064cf104766d.md))_
+- **verify-evidence-bind**: Verify evidence-bind; evidence-bind; deliver; evidence-layer; state: done; ready: True; wave: 3; criteria: 4 pass / 1 fail _(id: [rec-e82510e7-4f79-4514-84b5-620a96332706](.artifacts/records/project__work-item/rec-e82510e7-4f79-4514-84b5-620a96332706.md))_
+
+## evidence-technique-ingest
+
+### Work
+- **audit-ingest**: Record unbound audit and probe observations; evidence-technique-ingest; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 6 pass / 4 fail _(id: [rec-38bb2a75-27fe-4a0d-ac96-b10d1eb7c508](.artifacts/records/project__work-item/rec-38bb2a75-27fe-4a0d-ac96-b10d1eb7c508.md))_
+- **verify-evidence-technique-ingest**: Verify evidence-technique-ingest; evidence-technique-ingest; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 3 pass / 1 fail _(id: [rec-ce17a5a9-9d9d-4755-a229-219e604a3a71](.artifacts/records/project__work-item/rec-ce17a5a9-9d9d-4755-a229-219e604a3a71.md))_
+
+## evidence-workflow
+
+### Work
+- **verify-evidence-workflow**: Verify evidence-workflow; evidence-workflow; deliver; evidence-layer; state: done; ready: True; wave: 2; criteria: 5 pass / 1 fail _(id: [rec-6f21e55f-89dd-42bf-a6e3-f55e6e26925d](.artifacts/records/project__work-item/rec-6f21e55f-89dd-42bf-a6e3-f55e6e26925d.md))_
+- **workflow-no-mode-guard**: Orchestra test: no aff mode for record-versus-bind; evidence-workflow; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 2 pass / 2 fail _(id: [rec-b90149cc-47b1-47a1-ac5c-9ae56bb83f39](.artifacts/records/project__work-item/rec-b90149cc-47b1-47a1-ac5c-9ae56bb83f39.md))_
+- **workflow-skills-policy**: Document record vs bind in verify-work and execute-phase; evidence-workflow; deliver; evidence-layer; state: done; ready: True; wave: 1; criteria: 3 pass / 4 fail _(id: [rec-75d14609-b569-4513-9bf4-648b7c0bdba6](.artifacts/records/project__work-item/rec-75d14609-b569-4513-9bf4-648b7c0bdba6.md))_

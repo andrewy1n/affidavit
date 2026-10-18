@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:579e4dbbb2d501846da5d850fc1d577aa63e8847ebf74dbba85c2a428286ec6b
+> Store state: sha256:120da335a0d00a071b1ce5d07aebe9dd9c3add4c4394e9780f37e010925f35e6
 
 ## claims-manifest
 
@@ -200,15 +200,41 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ## evidence-bind
 
-### Phase
-- **evidence-bind**: Explicit bind: observations earn claims; 16; evidence-layer _(id: [rec-92d7fc62-939d-4f53-827c-acb6d7c75d5c](.artifacts/records/project__phase/rec-92d7fc62-939d-4f53-827c-acb6d7c75d5c.md))_
+### Acceptance
+- **bind-cli**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r2_aff_bind_creates_evidence_binding -q _(id: [rec-c686360b-aaab-42a1-9a68-851b09104ed2](.artifacts/records/project__acceptance/rec-c686360b-aaab-42a1-9a68-851b09104ed2.md))_
+- **bind-cli-recheck**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r4_aff_recheck_nonzero_when_binding_does_not_hold -q _(id: [rec-5ff1f7e4-44c5-49c0-ab29-98a7262685b3](.artifacts/records/project__acceptance/rec-5ff1f7e4-44c5-49c0-ab29-98a7262685b3.md))_
+- **bind-cli-trail**: check; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r6_aff_trail_lists_unbound_observations -q _(id: [rec-d072617d-b8c3-4242-9255-9d2ccd441ab2](.artifacts/records/project__acceptance/rec-d072617d-b8c3-4242-9255-9d2ccd441ab2.md))_
+- **bind-cli-unbind**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r3_aff_unbind_retires_evidence_binding -q _(id: [rec-0fc44d52-7d19-4dca-bed6-e01c45a3f5ea](.artifacts/records/project__acceptance/rec-0fc44d52-7d19-4dca-bed6-e01c45a3f5ea.md))_
+- **bind-cli-verdict**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r5_verdict_adds_observation_not_binding -q _(id: [rec-e193d864-3ef9-414f-9067-c03c3968c92d](.artifacts/records/project__acceptance/rec-e193d864-3ef9-414f-9067-c03c3968c92d.md))_
+- **binding-contract**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r1_contract_defines_evidence_binding -q _(id: [rec-6b51ca2b-88d1-4b9e-9264-c7b9727ffc8b](.artifacts/records/project__acceptance/rec-6b51ca2b-88d1-4b9e-9264-c7b9727ffc8b.md))_
+- **verify-evidence-bind**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r7_fixture_bind_then_recheck_exits_zero -q _(id: [rec-e0e1b4c5-1a26-4b18-ae70-ca073a90ba91](.artifacts/records/project__acceptance/rec-e0e1b4c5-1a26-4b18-ae70-ca073a90ba91.md))_
+- **verify-evidence-bind-contract**: check; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r1_contract_defines_evidence_binding -q _(id: [rec-6d9fb00f-8096-45df-a715-41b39c9f9b3e](.artifacts/records/project__acceptance/rec-6d9fb00f-8096-45df-a715-41b39c9f9b3e.md))_
+- **verify-evidence-bind-trail**: check; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r6_aff_trail_lists_unbound_observations -q _(id: [rec-5cc6c275-d3cd-425d-a017-c7b4fd85f51f](.artifacts/records/project__acceptance/rec-5cc6c275-d3cd-425d-a017-c7b4fd85f51f.md))_
+- **verify-evidence-bind-verdict**: check; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r5_verdict_adds_observation_not_binding -q _(id: [rec-e4c0a2b6-4202-4af0-bf32-9b5099060f75](.artifacts/records/project__acceptance/rec-e4c0a2b6-4202-4af0-bf32-9b5099060f75.md))_
 
 ## evidence-technique-ingest
 
-### Phase
-- **evidence-technique-ingest**: Techniques record unbound observations; 17; evidence-layer _(id: [rec-fba7e2d1-59f9-4e05-80b8-a588f11c6858](.artifacts/records/project__phase/rec-fba7e2d1-59f9-4e05-80b8-a588f11c6858.md))_
+### Acceptance
+- **audit-ingest**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r1_audit_records_evidence_observation -q _(id: [rec-431a98ec-e552-41ea-89e0-4e025422a214](.artifacts/records/project__acceptance/rec-431a98ec-e552-41ea-89e0-4e025422a214.md))_
+- **audit-ingest-nostore**: check; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r6_audit_without_store_matches_prephase -q _(id: [rec-7f23e39f-a4d2-4307-8a0f-b5eb8a22ad4c](.artifacts/records/project__acceptance/rec-7f23e39f-a4d2-4307-8a0f-b5eb8a22ad4c.md))_
+- **audit-ingest-probes**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r2_probe_outcomes_covered_by_probe_observations -q _(id: [rec-643a4d6b-d6f7-47e8-9dc8-e07ce0bc1e74](.artifacts/records/project__acceptance/rec-643a4d6b-d6f7-47e8-9dc8-e07ce0bc1e74.md))_
+- **audit-ingest-replay**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r3_observations_include_replay_metadata -q _(id: [rec-336274b1-a3e5-4069-8578-95f1e8e531a6](.artifacts/records/project__acceptance/rec-336274b1-a3e5-4069-8578-95f1e8e531a6.md))_
+- **audit-ingest-trail**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r5_trail_technique_filters_audit_and_probes -q _(id: [rec-f4da3193-1c68-48d1-8a94-13f974bdfe37](.artifacts/records/project__acceptance/rec-f4da3193-1c68-48d1-8a94-13f974bdfe37.md))_
+- **audit-ingest-unbound**: check; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r4_audit_creates_no_evidence_binding -q _(id: [rec-4fac2476-0d7b-4729-a06f-fbe0f30d7a5e](.artifacts/records/project__acceptance/rec-4fac2476-0d7b-4729-a06f-fbe0f30d7a5e.md))_
+- **verify-evidence-technique-ingest**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r7_fixture_trail_visible_unbound_observations -q _(id: [rec-7f9b1e95-0a49-4fd4-8bc6-371024afccaa](.artifacts/records/project__acceptance/rec-7f9b1e95-0a49-4fd4-8bc6-371024afccaa.md))_
+- **verify-evidence-technique-ingest-nostore**: check; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r6_audit_without_store_matches_prephase -q _(id: [rec-904c50d9-394c-4baa-9ab3-e33872bbbf8f](.artifacts/records/project__acceptance/rec-904c50d9-394c-4baa-9ab3-e33872bbbf8f.md))_
+- **verify-evidence-technique-ingest-unbound**: check; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r4_audit_creates_no_evidence_binding -q _(id: [rec-444dfbab-301b-4bc7-954b-f481c714f585](.artifacts/records/project__acceptance/rec-444dfbab-301b-4bc7-954b-f481c714f585.md))_
 
 ## evidence-workflow
 
-### Phase
-- **evidence-workflow**: Orchestra workflow uses trail and bind; 18; evidence-layer _(id: [rec-705b0a57-02eb-4494-9731-c90632cd8c6d](.artifacts/records/project__phase/rec-705b0a57-02eb-4494-9731-c90632cd8c6d.md))_
+### Acceptance
+- **verify-evidence-workflow**: check; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_verify_work_names_when_to_record_an_observation_versus_aff_bind -q _(id: [rec-8d3a3299-bd7a-4024-a469-85fcae1d3f58](.artifacts/records/project__acceptance/rec-8d3a3299-bd7a-4024-a469-85fcae1d3f58.md))_
+- **verify-evidence-workflow-execute**: check; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_execute_phase_names_when_bind_or_recheck_before_a_claim_is_earned -q _(id: [rec-1e3ef285-6e39-4d31-9669-451d11c679cf](.artifacts/records/project__acceptance/rec-1e3ef285-6e39-4d31-9669-451d11c679cf.md))_
+- **verify-evidence-workflow-fixture**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_fixture_skill_inventing_an_aff_mode_fails_the_scanner tests/test_record_bind_policy.py::test_live_skills_pass_the_scanner_when_policy_is_present -q _(id: [rec-8de46db8-f5fe-420f-b92c-78b7f3854f10](.artifacts/records/project__acceptance/rec-8de46db8-f5fe-420f-b92c-78b7f3854f10.md))_
+- **verify-evidence-workflow-linkage**: check; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_verify_or_execute_skill_shows_claim_binding_observation_linkage -q _(id: [rec-985ae074-c495-444f-a6b0-ec52bc400099](.artifacts/records/project__acceptance/rec-985ae074-c495-444f-a6b0-ec52bc400099.md))_
+- **verify-evidence-workflow-nomode**: check; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_aff_has_no_record_versus_bind_mode_and_policy_lives_in_skills -q _(id: [rec-1a73795a-abab-4072-95b7-440fb9a153c9](.artifacts/records/project__acceptance/rec-1a73795a-abab-4072-95b7-440fb9a153c9.md))_
+- **workflow-no-mode-guard**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_aff_has_no_record_versus_bind_mode_and_policy_lives_in_skills -q _(id: [rec-cd05149b-8ef2-4a0a-bb37-bce4403f8924](.artifacts/records/project__acceptance/rec-cd05149b-8ef2-4a0a-bb37-bce4403f8924.md))_
+- **workflow-no-mode-guard-fixture**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_fixture_skill_inventing_an_aff_mode_fails_the_scanner tests/test_record_bind_policy.py::test_live_skills_pass_the_scanner_when_policy_is_present -q _(id: [rec-167eed11-29a9-4278-829d-e8c708a9b111](.artifacts/records/project__acceptance/rec-167eed11-29a9-4278-829d-e8c708a9b111.md))_
+- **workflow-skills-policy**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_verify_work_names_when_to_record_an_observation_versus_aff_bind -q _(id: [rec-12e7ece8-1876-430f-a967-af818e35a6b1](.artifacts/records/project__acceptance/rec-12e7ece8-1876-430f-a967-af818e35a6b1.md))_
+- **workflow-skills-policy-execute**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_execute_phase_names_when_bind_or_recheck_before_a_claim_is_earned -q _(id: [rec-413aa378-1fa1-48ca-af01-e66c0d06a7b8](.artifacts/records/project__acceptance/rec-413aa378-1fa1-48ca-af01-e66c0d06a7b8.md))_
+- **workflow-skills-policy-linkage**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_verify_or_execute_skill_shows_claim_binding_observation_linkage -q _(id: [rec-c47fe0ba-79d5-45f7-924d-7cb51b7b80ae](.artifacts/records/project__acceptance/rec-c47fe0ba-79d5-45f7-924d-7cb51b7b80ae.md))_

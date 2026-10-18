@@ -1,7 +1,7 @@
 # Project Dashboard
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:22c9aa2549c80c22808f96c16cd76addc98e68c776a1d3d99dee72008ae0bbc2
+> Store state: sha256:c867ed054ae171148a6fe88a699a1cc81e22be52e09bf6b8d3f4f4b2eca8cc71
 
 ## evidence-layer
 
@@ -12,9 +12,12 @@
 - **attest-ci**: title: Ship CI workflow for signed verdict; phase: signed-verdict _(id: [rec-2d4ded98-08d5-40fb-be0b-10704ce7529f](.artifacts/records/project__work-item/rec-2d4ded98-08d5-40fb-be0b-10704ce7529f.md))_
 - **attest-core**: title: Emit and verify signed verdict attestations; phase: signed-verdict _(id: [rec-e456fd3e-e4ec-45f3-8654-0aaafe0219f8](.artifacts/records/project__work-item/rec-e456fd3e-e4ec-45f3-8654-0aaafe0219f8.md))_
 - **audit-blocks**: title: aff audit labels hunk blocks noticed or not; phase: phase-end-evidence _(id: [rec-f2503a35-0a0a-407e-b8d7-a7ec9847d6cc](.artifacts/records/project__work-item/rec-f2503a35-0a0a-407e-b8d7-a7ec9847d6cc.md))_
+- **audit-ingest**: title: Record unbound audit and probe observations; phase: evidence-technique-ingest _(id: [rec-38bb2a75-27fe-4a0d-ac96-b10d1eb7c508](.artifacts/records/project__work-item/rec-38bb2a75-27fe-4a0d-ac96-b10d1eb7c508.md))_
 - **audit-mutants**: title: aff audit plants mutants in noticed blocks; phase: phase-end-evidence _(id: [rec-e68243cc-39af-4b77-abf6-4d9a191f1750](.artifacts/records/project__work-item/rec-e68243cc-39af-4b77-abf6-4d9a191f1750.md))_
 - **audit-probes**: title: aff audit runs declared probes and filters by claim cite; phase: audit-differential _(id: [rec-f91285b8-56a2-4c0a-9fe5-6d091873e41e](.artifacts/records/project__work-item/rec-f91285b8-56a2-4c0a-9fe5-6d091873e41e.md))_
 - **audit-unclaimed-range**: title: aff audit reports red-first revision-on-tdd relaxation as unclaimed; phase: audit-differential _(id: [rec-7b9dc4bd-56d7-460c-bc57-f00a38ffc048](.artifacts/records/project__work-item/rec-7b9dc4bd-56d7-460c-bc57-f00a38ffc048.md))_
+- **bind-cli**: title: Add aff bind unbind recheck; verdict stays unbound; phase: evidence-bind _(id: [rec-baf63b4e-b890-4bda-9d34-5e38ae46f2a7](.artifacts/records/project__work-item/rec-baf63b4e-b890-4bda-9d34-5e38ae46f2a7.md))_
+- **binding-contract**: title: Add evidence-binding record type; phase: evidence-bind _(id: [rec-6de8f976-8755-42dc-a030-064cf104766d](.artifacts/records/project__work-item/rec-6de8f976-8755-42dc-a030-064cf104766d.md))_
 - **ci-fixture-builder**: title: Builder, templates, workflow step, R4 pytest; phase: ci-verdict-fixture _(id: [rec-fa74a33a-cff0-4cf0-a566-c572c85dc622](.artifacts/records/project__work-item/rec-fa74a33a-cff0-4cf0-a566-c572c85dc622.md))_
 - **claim-cli**: title: Standalone claim add, freeze, and lint; phase: claim-authoring _(id: [rec-1f4167c2-50b2-4973-944f-21bd24d65690](.artifacts/records/project__work-item/rec-1f4167c2-50b2-4973-944f-21bd24d65690.md))_
 - **env-freeze**: title: Freeze support files and runner digest; phase: frozen-environment _(id: [rec-8e5183a8-2f5c-404c-a071-2e6e9283e0ea](.artifacts/records/project__work-item/rec-8e5183a8-2f5c-404c-a071-2e6e9283e0ea.md))_
@@ -35,8 +38,11 @@
 - **verify-audit-differential**: title: Verify audit-differential exit criteria via aff audit; phase: audit-differential _(id: [rec-ea36902a-219f-4eba-81dd-043036fd9967](.artifacts/records/project__work-item/rec-ea36902a-219f-4eba-81dd-043036fd9967.md))_
 - **verify-ci-verdict-fixture**: title: Verify CI verdict fixture phase; phase: ci-verdict-fixture _(id: [rec-28d3e0a4-3cb9-4ed5-8114-0d00ad11a0a3](.artifacts/records/project__work-item/rec-28d3e0a4-3cb9-4ed5-8114-0d00ad11a0a3.md))_
 - **verify-claim-authoring**: title: Verify claim authoring; phase: claim-authoring _(id: [rec-63842060-9a26-40d1-bbb0-6bda45d87640](.artifacts/records/project__work-item/rec-63842060-9a26-40d1-bbb0-6bda45d87640.md))_
+- **verify-evidence-bind**: title: Verify evidence-bind; phase: evidence-bind _(id: [rec-e82510e7-4f79-4514-84b5-620a96332706](.artifacts/records/project__work-item/rec-e82510e7-4f79-4514-84b5-620a96332706.md))_
 - **verify-evidence-interface**: title: Verify evidence interface; phase: evidence-interface _(id: [rec-91fdc463-e238-48a4-a160-dc074898b575](.artifacts/records/project__work-item/rec-91fdc463-e238-48a4-a160-dc074898b575.md))_
 - **verify-evidence-kind**: title: Verify evidence kind; phase: evidence-kind _(id: [rec-992dd471-2b52-4170-b036-bbe6c151c7e6](.artifacts/records/project__work-item/rec-992dd471-2b52-4170-b036-bbe6c151c7e6.md))_
+- **verify-evidence-technique-ingest**: title: Verify evidence-technique-ingest; phase: evidence-technique-ingest _(id: [rec-ce17a5a9-9d9d-4755-a229-219e604a3a71](.artifacts/records/project__work-item/rec-ce17a5a9-9d9d-4755-a229-219e604a3a71.md))_
+- **verify-evidence-workflow**: title: Verify evidence-workflow; phase: evidence-workflow _(id: [rec-6f21e55f-89dd-42bf-a6e3-f55e6e26925d](.artifacts/records/project__work-item/rec-6f21e55f-89dd-42bf-a6e3-f55e6e26925d.md))_
 - **verify-frozen-environment**: title: Verify frozen environment; phase: frozen-environment _(id: [rec-93330552-0006-4446-b6fa-d5c4d939a54c](.artifacts/records/project__work-item/rec-93330552-0006-4446-b6fa-d5c4d939a54c.md))_
 - **verify-oracle-provenance**: title: Verify oracle provenance; phase: oracle-provenance _(id: [rec-3308eb03-5884-4be7-a427-a76777c61cd5](.artifacts/records/project__work-item/rec-3308eb03-5884-4be7-a427-a76777c61cd5.md))_
 - **verify-phase-end-evidence**: title: Verify phase-end evidence; phase: phase-end-evidence _(id: [rec-7f20d856-7d9c-4e47-8f58-3f3afebe34b0](.artifacts/records/project__work-item/rec-7f20d856-7d9c-4e47-8f58-3f3afebe34b0.md))_
@@ -44,3 +50,5 @@
 - **verify-signed-verdict**: title: Verify signed verdict; phase: signed-verdict _(id: [rec-f80a3239-1515-40f5-98b9-42ceee0fc94b](.artifacts/records/project__work-item/rec-f80a3239-1515-40f5-98b9-42ceee0fc94b.md))_
 - **verify-standalone-aff**: title: Verify aff stands alone from the workflow store; phase: standalone-aff _(id: [rec-29cc7cc5-b85f-4280-8fcc-2e7346d38db1](.artifacts/records/project__work-item/rec-29cc7cc5-b85f-4280-8fcc-2e7346d38db1.md))_
 - **witness-lint**: title: Lint no-assert witnesses and new skips; phase: frozen-environment _(id: [rec-d77386b2-4e29-4a5f-8eb5-711104b19eb0](.artifacts/records/project__work-item/rec-d77386b2-4e29-4a5f-8eb5-711104b19eb0.md))_
+- **workflow-no-mode-guard**: title: Orchestra test: no aff mode for record-versus-bind; phase: evidence-workflow _(id: [rec-b90149cc-47b1-47a1-ac5c-9ae56bb83f39](.artifacts/records/project__work-item/rec-b90149cc-47b1-47a1-ac5c-9ae56bb83f39.md))_
+- **workflow-skills-policy**: title: Document record vs bind in verify-work and execute-phase; phase: evidence-workflow _(id: [rec-75d14609-b569-4513-9bf4-648b7c0bdba6](.artifacts/records/project__work-item/rec-75d14609-b569-4513-9bf4-648b7c0bdba6.md))_

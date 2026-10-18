@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:6f12753e8529365cb0afc025d35cb5c1a2a50018784ebd643a66da2cfb8ea6d3
+> Store state: sha256:790dc09cb7bdf866d3e74e8962a1574b4aa2086deb9d841323a33486299ccced
 
 ## amendment-sign
 
@@ -48,6 +48,36 @@
 ### Acceptance
 - **audit-differential-review**: manual; evidence-layer _(id: [rec-554e4e13-762d-4e70-9082-9f345ef104c1](.artifacts/records/project__acceptance/rec-554e4e13-762d-4e70-9082-9f345ef104c1.md))_
 
+## audit-ingest
+
+### Acceptance
+- **audit-ingest**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r1_audit_records_evidence_observation -q _(id: [rec-431a98ec-e552-41ea-89e0-4e025422a214](.artifacts/records/project__acceptance/rec-431a98ec-e552-41ea-89e0-4e025422a214.md))_
+
+## audit-ingest-nostore
+
+### Acceptance
+- **audit-ingest-nostore**: check; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r6_audit_without_store_matches_prephase -q _(id: [rec-7f23e39f-a4d2-4307-8a0f-b5eb8a22ad4c](.artifacts/records/project__acceptance/rec-7f23e39f-a4d2-4307-8a0f-b5eb8a22ad4c.md))_
+
+## audit-ingest-probes
+
+### Acceptance
+- **audit-ingest-probes**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r2_probe_outcomes_covered_by_probe_observations -q _(id: [rec-643a4d6b-d6f7-47e8-9dc8-e07ce0bc1e74](.artifacts/records/project__acceptance/rec-643a4d6b-d6f7-47e8-9dc8-e07ce0bc1e74.md))_
+
+## audit-ingest-replay
+
+### Acceptance
+- **audit-ingest-replay**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r3_observations_include_replay_metadata -q _(id: [rec-336274b1-a3e5-4069-8578-95f1e8e531a6](.artifacts/records/project__acceptance/rec-336274b1-a3e5-4069-8578-95f1e8e531a6.md))_
+
+## audit-ingest-trail
+
+### Acceptance
+- **audit-ingest-trail**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r5_trail_technique_filters_audit_and_probes -q _(id: [rec-f4da3193-1c68-48d1-8a94-13f974bdfe37](.artifacts/records/project__acceptance/rec-f4da3193-1c68-48d1-8a94-13f974bdfe37.md))_
+
+## audit-ingest-unbound
+
+### Acceptance
+- **audit-ingest-unbound**: check; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r4_audit_creates_no_evidence_binding -q _(id: [rec-4fac2476-0d7b-4729-a06f-fbe0f30d7a5e](.artifacts/records/project__acceptance/rec-4fac2476-0d7b-4729-a06f-fbe0f30d7a5e.md))_
+
 ## audit-mutants
 
 ### Acceptance
@@ -75,9 +105,6 @@
 
 ## bind-cli
 
-### Work
-- **bind-cli**: Add aff bind unbind recheck; verdict stays unbound; evidence-bind; deliver; evidence-layer _(id: [rec-baf63b4e-b890-4bda-9d34-5e38ae46f2a7](.artifacts/records/project__work-item/rec-baf63b4e-b890-4bda-9d34-5e38ae46f2a7.md))_
-
 ### Acceptance
 - **bind-cli**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r2_aff_bind_creates_evidence_binding -q _(id: [rec-c686360b-aaab-42a1-9a68-851b09104ed2](.artifacts/records/project__acceptance/rec-c686360b-aaab-42a1-9a68-851b09104ed2.md))_
 
@@ -102,9 +129,6 @@
 - **bind-cli-verdict**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r5_verdict_adds_observation_not_binding -q _(id: [rec-e193d864-3ef9-414f-9067-c03c3968c92d](.artifacts/records/project__acceptance/rec-e193d864-3ef9-414f-9067-c03c3968c92d.md))_
 
 ## binding-contract
-
-### Work
-- **binding-contract**: Add evidence-binding record type; evidence-bind; deliver; evidence-layer _(id: [rec-6de8f976-8755-42dc-a030-064cf104766d](.artifacts/records/project__work-item/rec-6de8f976-8755-42dc-a030-064cf104766d.md))_
 
 ### Acceptance
 - **binding-contract**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r1_contract_defines_evidence_binding -q _(id: [rec-6b51ca2b-88d1-4b9e-9264-c7b9727ffc8b](.artifacts/records/project__acceptance/rec-6b51ca2b-88d1-4b9e-9264-c7b9727ffc8b.md))_
@@ -164,15 +188,10 @@
 ### Acceptance
 - **env-freeze-runner**: tdd; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_runner_digest_drift_without_amendment -q _(id: [rec-6a082c2e-8500-4178-b517-9d57ef09d9c7](.artifacts/records/project__acceptance/rec-6a082c2e-8500-4178-b517-9d57ef09d9c7.md))_
 
-## evidence-bind
-
-### Position
-- **evidence-bind**: planning evidence-bind tasks; phase _(id: [rec-a58fc430-7f41-413a-a648-622fa1452485](.artifacts/records/project__current-position/rec-a58fc430-7f41-413a-a648-622fa1452485.md))_
-
 ## evidence-layer
 
 ### Position
-- **evidence-layer**: evidence-bind, evidence-technique-ingest, evidence-workflow discussed (AAA); next plan-phase for evidence-bind; effort _(id: [rec-5ad3b358-702e-46b4-b339-20b791b665ef](.artifacts/records/project__current-position/rec-5ad3b358-702e-46b4-b339-20b791b665ef.md))_
+- **evidence-layer**: evidence-workflow done; next up: second-runner; effort _(id: [rec-5960990c-4bda-4fa9-b2cc-b3a22a8b55ee](.artifacts/records/project__current-position/rec-5960990c-4bda-4fa9-b2cc-b3a22a8b55ee.md))_
 
 ## extract-store-binding
 
@@ -537,9 +556,6 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ## verify-evidence-bind
 
-### Work
-- **verify-evidence-bind**: Verify evidence-bind; evidence-bind; deliver; evidence-layer _(id: [rec-e82510e7-4f79-4514-84b5-620a96332706](.artifacts/records/project__work-item/rec-e82510e7-4f79-4514-84b5-620a96332706.md))_
-
 ### Acceptance
 - **verify-evidence-bind**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_bind.py::test_r7_fixture_bind_then_recheck_exits_zero -q _(id: [rec-e0e1b4c5-1a26-4b18-ae70-ca073a90ba91](.artifacts/records/project__acceptance/rec-e0e1b4c5-1a26-4b18-ae70-ca073a90ba91.md))_
 
@@ -592,6 +608,46 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Acceptance
 - **verify-evidence-kind-r3**: check; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r3_interaction_claim_passes_under_interaction_runner -q _(id: [rec-35c32ec7-df9d-44ae-9d4b-1da771b510ef](.artifacts/records/project__acceptance/rec-35c32ec7-df9d-44ae-9d4b-1da771b510ef.md))_
+
+## verify-evidence-technique-ingest
+
+### Acceptance
+- **verify-evidence-technique-ingest**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r7_fixture_trail_visible_unbound_observations -q _(id: [rec-7f9b1e95-0a49-4fd4-8bc6-371024afccaa](.artifacts/records/project__acceptance/rec-7f9b1e95-0a49-4fd4-8bc6-371024afccaa.md))_
+
+## verify-evidence-technique-ingest-nostore
+
+### Acceptance
+- **verify-evidence-technique-ingest-nostore**: check; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r6_audit_without_store_matches_prephase -q _(id: [rec-904c50d9-394c-4baa-9ab3-e33872bbbf8f](.artifacts/records/project__acceptance/rec-904c50d9-394c-4baa-9ab3-e33872bbbf8f.md))_
+
+## verify-evidence-technique-ingest-unbound
+
+### Acceptance
+- **verify-evidence-technique-ingest-unbound**: check; evidence-layer; python3 -m pytest tests/test_evidence_technique_ingest.py::test_r4_audit_creates_no_evidence_binding -q _(id: [rec-444dfbab-301b-4bc7-954b-f481c714f585](.artifacts/records/project__acceptance/rec-444dfbab-301b-4bc7-954b-f481c714f585.md))_
+
+## verify-evidence-workflow
+
+### Acceptance
+- **verify-evidence-workflow**: check; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_verify_work_names_when_to_record_an_observation_versus_aff_bind -q _(id: [rec-8d3a3299-bd7a-4024-a469-85fcae1d3f58](.artifacts/records/project__acceptance/rec-8d3a3299-bd7a-4024-a469-85fcae1d3f58.md))_
+
+## verify-evidence-workflow-execute
+
+### Acceptance
+- **verify-evidence-workflow-execute**: check; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_execute_phase_names_when_bind_or_recheck_before_a_claim_is_earned -q _(id: [rec-1e3ef285-6e39-4d31-9669-451d11c679cf](.artifacts/records/project__acceptance/rec-1e3ef285-6e39-4d31-9669-451d11c679cf.md))_
+
+## verify-evidence-workflow-fixture
+
+### Acceptance
+- **verify-evidence-workflow-fixture**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_fixture_skill_inventing_an_aff_mode_fails_the_scanner tests/test_record_bind_policy.py::test_live_skills_pass_the_scanner_when_policy_is_present -q _(id: [rec-8de46db8-f5fe-420f-b92c-78b7f3854f10](.artifacts/records/project__acceptance/rec-8de46db8-f5fe-420f-b92c-78b7f3854f10.md))_
+
+## verify-evidence-workflow-linkage
+
+### Acceptance
+- **verify-evidence-workflow-linkage**: check; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_verify_or_execute_skill_shows_claim_binding_observation_linkage -q _(id: [rec-985ae074-c495-444f-a6b0-ec52bc400099](.artifacts/records/project__acceptance/rec-985ae074-c495-444f-a6b0-ec52bc400099.md))_
+
+## verify-evidence-workflow-nomode
+
+### Acceptance
+- **verify-evidence-workflow-nomode**: check; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_aff_has_no_record_versus_bind_mode_and_policy_lives_in_skills -q _(id: [rec-1a73795a-abab-4072-95b7-440fb9a153c9](.artifacts/records/project__acceptance/rec-1a73795a-abab-4072-95b7-440fb9a153c9.md))_
 
 ## verify-frozen-environment
 
@@ -775,3 +831,28 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Acceptance
 - **witness-lint-skips**: tdd; evidence-layer; python3 -m pytest tests/test_lint.py::test_lint_reports_new_skip_between_base_and_head -q _(id: [rec-6447ebae-ba32-4520-a868-be2e7c72dd2f](.artifacts/records/project__acceptance/rec-6447ebae-ba32-4520-a868-be2e7c72dd2f.md))_
+
+## workflow-no-mode-guard
+
+### Acceptance
+- **workflow-no-mode-guard**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_aff_has_no_record_versus_bind_mode_and_policy_lives_in_skills -q _(id: [rec-cd05149b-8ef2-4a0a-bb37-bce4403f8924](.artifacts/records/project__acceptance/rec-cd05149b-8ef2-4a0a-bb37-bce4403f8924.md))_
+
+## workflow-no-mode-guard-fixture
+
+### Acceptance
+- **workflow-no-mode-guard-fixture**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_fixture_skill_inventing_an_aff_mode_fails_the_scanner tests/test_record_bind_policy.py::test_live_skills_pass_the_scanner_when_policy_is_present -q _(id: [rec-167eed11-29a9-4278-829d-e8c708a9b111](.artifacts/records/project__acceptance/rec-167eed11-29a9-4278-829d-e8c708a9b111.md))_
+
+## workflow-skills-policy
+
+### Acceptance
+- **workflow-skills-policy**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_verify_work_names_when_to_record_an_observation_versus_aff_bind -q _(id: [rec-12e7ece8-1876-430f-a967-af818e35a6b1](.artifacts/records/project__acceptance/rec-12e7ece8-1876-430f-a967-af818e35a6b1.md))_
+
+## workflow-skills-policy-execute
+
+### Acceptance
+- **workflow-skills-policy-execute**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_execute_phase_names_when_bind_or_recheck_before_a_claim_is_earned -q _(id: [rec-413aa378-1fa1-48ca-af01-e66c0d06a7b8](.artifacts/records/project__acceptance/rec-413aa378-1fa1-48ca-af01-e66c0d06a7b8.md))_
+
+## workflow-skills-policy-linkage
+
+### Acceptance
+- **workflow-skills-policy-linkage**: tdd; evidence-layer; python3 -m pytest tests/test_record_bind_policy.py::test_verify_or_execute_skill_shows_claim_binding_observation_linkage -q _(id: [rec-c47fe0ba-79d5-45f7-924d-7cb51b7b80ae](.artifacts/records/project__acceptance/rec-c47fe0ba-79d5-45f7-924d-7cb51b7b80ae.md))_
