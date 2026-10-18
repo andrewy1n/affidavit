@@ -129,6 +129,7 @@ def test_r2_audit_reports_unclaimed_probe_difference(tmp_path: Path):
     _write(root, {"app.py": HEAD_APP})
     head = _commit(root, "head")
     payload = _payload(_audit(root, base, head))
+    assert "diffs" in payload
     diffs = [d for d in payload["diffs"] if d.get("probe") == "value-print"]
     assert len(diffs) == 1
     assert diffs[0]["base"]["stdout"].strip() == "1"
@@ -173,4 +174,5 @@ def test_r3_audit_suppresses_diff_covered_by_cited_claim(tmp_path: Path):
     _write(root, {"app.py": HEAD_APP})
     head = _commit(root, "head")
     payload = _payload(_audit(root, base, head))
+    assert "diffs" in payload
     assert all(d.get("probe") != "value-print" for d in payload["diffs"])
