@@ -318,6 +318,27 @@
       ]
     },
     {
+      "name": "evidence-observation",
+      "pattern": "observation",
+      "purpose": "Trail of a technique run: revisions, structured outcome, and optional replay metadata",
+      "canonical_for": "the technique run observation for this subject",
+      "capture": "at_event",
+      "read": "query",
+      "payload": [
+        "technique",
+        "base_rev",
+        "head_rev",
+        "result",
+        "claim_ids",
+        "effort",
+        "replay"
+      ],
+      "optional_payload": [
+        "effort",
+        "replay"
+      ]
+    },
+    {
       "name": "finding",
       "pattern": "finding",
       "purpose": "Root cause or comparative evaluation conclusion",
