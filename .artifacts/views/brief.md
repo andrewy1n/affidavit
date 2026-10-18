@@ -1,12 +1,32 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:65d2b21ad893d3cb2965bb692e45a637bb525bd34da229d10463eee5874b7285
+> Store state: sha256:fa5c24e302705692cd7017a9efa704b1f80a332a3bbf5004cc50d750e40761a0
 
 ## amendment-sign
 
 ### Acceptance
 - **amendment-sign**: A hash or test-id change is authorized only by a signature chain that verifies under the base allowlist; a changed allowlist, a bad signature, and a missing step are refused; tdd; evidence-layer; python3 -m pytest tests/test_amendment.py -q _(id: [rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43](.artifacts/records/project__acceptance/rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43.md))_
+
+## attest-ci
+
+### Acceptance
+- **attest-ci**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_ci_workflow_runs_verdict_and_attest -q _(id: [rec-9d1b0910-9edf-4f6f-834f-bdc4a4eb650f](.artifacts/records/project__acceptance/rec-9d1b0910-9edf-4f6f-834f-bdc4a4eb650f.md))_
+
+## attest-core
+
+### Acceptance
+- **attest-core**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_emit_signed_attestation_includes_commit_manifest_runner_and_claims -q _(id: [rec-2620c049-5db4-4593-b467-1f13191c8832](.artifacts/records/project__acceptance/rec-2620c049-5db4-4593-b467-1f13191c8832.md))_
+
+## attest-core-bind
+
+### Acceptance
+- **attest-core-bind**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_verify_rejects_wrong_commit tests/test_attestation.py::test_verify_rejects_bind_mismatch_on_manifest_hash -q _(id: [rec-af4de5c3-440e-4e5f-9175-039d591a6fea](.artifacts/records/project__acceptance/rec-af4de5c3-440e-4e5f-9175-039d591a6fea.md))_
+
+## attest-core-sig
+
+### Acceptance
+- **attest-core-sig**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_verify_rejects_bad_signature tests/test_attestation.py::test_verify_rejects_tampered_payload -q _(id: [rec-27204235-9eb7-4d4e-a858-0c140858be15](.artifacts/records/project__acceptance/rec-27204235-9eb7-4d4e-a858-0c140858be15.md))_
 
 ## campaign-landing-automerge
 
@@ -31,7 +51,7 @@
 ## evidence-layer
 
 ### Position
-- **evidence-layer**: frozen-environment done; next up: signed-verdict; effort _(id: [rec-e0d722c0-3c71-4d61-9395-ea202b4c9a8b](.artifacts/records/project__current-position/rec-e0d722c0-3c71-4d61-9395-ea202b4c9a8b.md))_
+- **evidence-layer**: signed-verdict done; next up: oracle-provenance; effort _(id: [rec-48bbb43a-d8a2-4590-b5c9-4433d8a6aafc](.artifacts/records/project__current-position/rec-48bbb43a-d8a2-4590-b5c9-4433d8a6aafc.md))_
 
 ## extract-store-binding
 
@@ -101,6 +121,11 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Acceptance
 - **move-store-client-imports**: orchestra imports affidavit.oracle_red from the close path and does not import affidavit.aa, affidavit.aa_resolve, affidavit.check, affidavit.policy, or affidavit.verdict; tdd; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_affidavit_import_boundary.py -q _(id: [rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94](.artifacts/records/project__acceptance/rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94.md))_
 
+## oracle-provenance
+
+### Position
+- **oracle-provenance**: oracle-provenance planned: provenance-check + verify; phase _(id: [rec-5366c0ce-b345-481f-96a7-736ed6875c3d](.artifacts/records/project__current-position/rec-5366c0ce-b345-481f-96a7-736ed6875c3d.md))_
+
 ## parse-manifest-runner
 
 ### Acceptance
@@ -110,6 +135,29 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Constraint
 - **phase-end-reviewer-milestones**: For evidence-layer phases 5-11, run the phase-end se-reviewer only on frozen-environment and audit-differential; skip reviewer, review check-run requirement, and integration-report on signed-verdict, oracle-provenance, evidence-kind, claim-authoring, and phase-end-evidence; execute-phase phase-end for evidence-layer phases frozen-environment through audit-differential; evidence-layer _(id: [rec-db3a1390-0ef9-4ba5-8d10-6ee334c90433](.artifacts/records/project__constraint/rec-db3a1390-0ef9-4ba5-8d10-6ee334c90433.md))_
+
+## provenance-check
+
+### Work
+- **provenance-check**: Verdict checks oracle provenance from git; oracle-provenance; deliver; evidence-layer _(id: [rec-6532448f-ef80-47f6-95df-2e46fa206425](.artifacts/records/project__work-item/rec-6532448f-ef80-47f6-95df-2e46fa206425.md))_
+
+### Acceptance
+- **provenance-check**: tdd; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r1_oracle_after_implementation_fails -q _(id: [rec-0f86bd5c-0f8d-4e98-b84d-cc6ac1721055](.artifacts/records/project__acceptance/rec-0f86bd5c-0f8d-4e98-b84d-cc6ac1721055.md))_
+
+## provenance-check-pass
+
+### Acceptance
+- **provenance-check-pass**: tdd; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r4_ordered_oracle_only_distinct_signers_passes -q _(id: [rec-4cd9610f-2e6d-4690-97d8-507039b477dd](.artifacts/records/project__acceptance/rec-4cd9610f-2e6d-4690-97d8-507039b477dd.md))_
+
+## provenance-check-paths
+
+### Acceptance
+- **provenance-check-paths**: tdd; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r2_oracle_commit_touches_non_oracle_paths_fails -q _(id: [rec-b7c8c328-c343-43d3-aa47-68e0f1a43c2a](.artifacts/records/project__acceptance/rec-b7c8c328-c343-43d3-aa47-68e0f1a43c2a.md))_
+
+## provenance-check-signer
+
+### Acceptance
+- **provenance-check-signer**: tdd; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r3_shared_signer_fails -q _(id: [rec-d58ef0da-0be5-47e0-8ed8-140bd9cc586e](.artifacts/records/project__acceptance/rec-d58ef0da-0be5-47e0-8ed8-140bd9cc586e.md))_
 
 ## review-move-effort-records-spec-gap
 
@@ -279,6 +327,29 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Acceptance
 - **verify-frozen-environment-skips**: check; evidence-layer; python3 -m pytest tests/test_lint.py::test_lint_reports_new_skip_between_base_and_head -q _(id: [rec-64566959-1ab1-4de4-bca9-feb47da70a23](.artifacts/records/project__acceptance/rec-64566959-1ab1-4de4-bca9-feb47da70a23.md))_
 
+## verify-oracle-provenance
+
+### Work
+- **verify-oracle-provenance**: Verify oracle provenance; oracle-provenance; deliver; evidence-layer _(id: [rec-3308eb03-5884-4be7-a427-a76777c61cd5](.artifacts/records/project__work-item/rec-3308eb03-5884-4be7-a427-a76777c61cd5.md))_
+
+### Acceptance
+- **verify-oracle-provenance**: check; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r1_oracle_after_implementation_fails -q _(id: [rec-951a64c2-99ad-44da-95d4-4dc221012064](.artifacts/records/project__acceptance/rec-951a64c2-99ad-44da-95d4-4dc221012064.md))_
+
+## verify-oracle-provenance-pass
+
+### Acceptance
+- **verify-oracle-provenance-pass**: check; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r4_ordered_oracle_only_distinct_signers_passes -q _(id: [rec-64af228c-7e2c-443d-a84b-b391e3351926](.artifacts/records/project__acceptance/rec-64af228c-7e2c-443d-a84b-b391e3351926.md))_
+
+## verify-oracle-provenance-paths
+
+### Acceptance
+- **verify-oracle-provenance-paths**: check; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r2_oracle_commit_touches_non_oracle_paths_fails -q _(id: [rec-068c0dd0-35ca-4d48-92d7-9df3837832ff](.artifacts/records/project__acceptance/rec-068c0dd0-35ca-4d48-92d7-9df3837832ff.md))_
+
+## verify-oracle-provenance-signer
+
+### Acceptance
+- **verify-oracle-provenance-signer**: check; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r3_shared_signer_fails -q _(id: [rec-fbe22f64-aab1-4d71-a9e9-424741e6234b](.artifacts/records/project__acceptance/rec-fbe22f64-aab1-4d71-a9e9-424741e6234b.md))_
+
 ## verify-orchestration-split
 
 ### Acceptance
@@ -338,6 +409,26 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Acceptance
 - **verify-runner-adapter-unstable**: A witness that is assertion_failed on the first base run and passed on the confirmation run yields unstable and a non-zero exit; check; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k unstable_when_confirmation _(id: [rec-81acd29f-17af-42a1-b0be-374190e321dd](.artifacts/records/project__acceptance/rec-81acd29f-17af-42a1-b0be-374190e321dd.md))_
+
+## verify-signed-verdict
+
+### Acceptance
+- **verify-signed-verdict**: check; evidence-layer; python3 -m pytest tests/test_attestation.py::test_emit_signed_attestation_includes_commit_manifest_runner_and_claims -q _(id: [rec-02f5f1e1-da0e-4c60-b62f-9cea163b3ef3](.artifacts/records/project__acceptance/rec-02f5f1e1-da0e-4c60-b62f-9cea163b3ef3.md))_
+
+## verify-signed-verdict-bind
+
+### Acceptance
+- **verify-signed-verdict-bind**: check; evidence-layer; python3 -m pytest tests/test_attestation.py::test_verify_rejects_wrong_commit tests/test_attestation.py::test_verify_rejects_bind_mismatch_on_manifest_hash -q _(id: [rec-3fa6eb8b-9b79-4ba8-a95f-c731281ab225](.artifacts/records/project__acceptance/rec-3fa6eb8b-9b79-4ba8-a95f-c731281ab225.md))_
+
+## verify-signed-verdict-ci
+
+### Acceptance
+- **verify-signed-verdict-ci**: check; evidence-layer; python3 -m pytest tests/test_attestation.py::test_ci_workflow_runs_verdict_and_attest -q _(id: [rec-8d754ac2-188a-4162-8aac-2850522ce765](.artifacts/records/project__acceptance/rec-8d754ac2-188a-4162-8aac-2850522ce765.md))_
+
+## verify-signed-verdict-sig
+
+### Acceptance
+- **verify-signed-verdict-sig**: check; evidence-layer; python3 -m pytest tests/test_attestation.py::test_verify_rejects_bad_signature tests/test_attestation.py::test_verify_rejects_tampered_payload -q _(id: [rec-02cd8744-be8c-402c-9387-69c2c7e632d2](.artifacts/records/project__acceptance/rec-02cd8744-be8c-402c-9387-69c2c7e632d2.md))_
 
 ## verify-standalone-aff
 

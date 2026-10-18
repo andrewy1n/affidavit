@@ -3,16 +3,16 @@
   "base_kind": "phase",
   "id": "rec-ec2a17c7-ada2-4c03-ba16-b0392baa8ea9",
   "identity": "unknown",
-  "lifecycle_state": "planned",
+  "lifecycle_state": "done",
   "payload": {
     "effort": "evidence-layer",
     "ordinal": 7,
     "title": "Verdict checks who wrote the oracle and when"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-18T03:08:48+00:00",
+  "recorded_at": "2026-10-18T03:45:35+00:00",
   "relationships": {},
-  "revision": "sha256:54120ac89571ca01c945c010a19bcbb07811ee2c2b5eeaaec2b30438e12440c1",
+  "revision": "sha256:eb3a0bf697f89b8e25429522595a7a23117e4c8eea52f4089249e8b4218fc682",
   "stewardship": {
     "steward": "agent"
   },
@@ -40,3 +40,11 @@ Adopt `oracle-provenance-check`: verdict uses git for oracle-before-impl orderin
 - **base:** `main`
 - **close:** commit code on the phase branch; merge that branch into `main`; commit the store on the primary checkout
 - **push:** not a stop (do not push)
+
+## Run
+
+One sitting. No human stops. Every task is `subagent`.
+
+Single wave: `provenance-check` (25 minutes) owns `affidavit/provenance.py`, the `aff verdict` wiring in `affidavit/verdict.py` and `affidavit/cli.py`, and `tests/test_provenance.py` is frozen. Wave 2 is `verify-oracle-provenance` (8). Phase elapsed is 33 minutes.
+
+Collision notes: only one implementation task, so no shared areas. Provenance is evaluated only with `aff verdict --provenance` so existing verdict fixtures stay unchanged. Plan-review answered at once under the campaign pre-approval.

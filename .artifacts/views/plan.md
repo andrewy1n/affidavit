@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:30b5393e4a3ee99843e14d1755dbc03c2b0bcf97f457b670107ef784e9f4e018
+> Store state: sha256:2f149a2d826557d6fc830867a40eb18c7c9a38b14085ad4c642009e92ddca00c
 
 ## claims-manifest
 
@@ -106,8 +106,15 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ## oracle-provenance
 
-### Phase
-- **oracle-provenance**: Verdict checks who wrote the oracle and when; 7; evidence-layer _(id: [rec-ec2a17c7-ada2-4c03-ba16-b0392baa8ea9](.artifacts/records/project__phase/rec-ec2a17c7-ada2-4c03-ba16-b0392baa8ea9.md))_
+### Acceptance
+- **provenance-check**: tdd; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r1_oracle_after_implementation_fails -q _(id: [rec-0f86bd5c-0f8d-4e98-b84d-cc6ac1721055](.artifacts/records/project__acceptance/rec-0f86bd5c-0f8d-4e98-b84d-cc6ac1721055.md))_
+- **provenance-check-pass**: tdd; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r4_ordered_oracle_only_distinct_signers_passes -q _(id: [rec-4cd9610f-2e6d-4690-97d8-507039b477dd](.artifacts/records/project__acceptance/rec-4cd9610f-2e6d-4690-97d8-507039b477dd.md))_
+- **provenance-check-paths**: tdd; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r2_oracle_commit_touches_non_oracle_paths_fails -q _(id: [rec-b7c8c328-c343-43d3-aa47-68e0f1a43c2a](.artifacts/records/project__acceptance/rec-b7c8c328-c343-43d3-aa47-68e0f1a43c2a.md))_
+- **provenance-check-signer**: tdd; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r3_shared_signer_fails -q _(id: [rec-d58ef0da-0be5-47e0-8ed8-140bd9cc586e](.artifacts/records/project__acceptance/rec-d58ef0da-0be5-47e0-8ed8-140bd9cc586e.md))_
+- **verify-oracle-provenance**: check; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r1_oracle_after_implementation_fails -q _(id: [rec-951a64c2-99ad-44da-95d4-4dc221012064](.artifacts/records/project__acceptance/rec-951a64c2-99ad-44da-95d4-4dc221012064.md))_
+- **verify-oracle-provenance-pass**: check; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r4_ordered_oracle_only_distinct_signers_passes -q _(id: [rec-64af228c-7e2c-443d-a84b-b391e3351926](.artifacts/records/project__acceptance/rec-64af228c-7e2c-443d-a84b-b391e3351926.md))_
+- **verify-oracle-provenance-paths**: check; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r2_oracle_commit_touches_non_oracle_paths_fails -q _(id: [rec-068c0dd0-35ca-4d48-92d7-9df3837832ff](.artifacts/records/project__acceptance/rec-068c0dd0-35ca-4d48-92d7-9df3837832ff.md))_
+- **verify-oracle-provenance-signer**: check; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r3_shared_signer_fails -q _(id: [rec-fbe22f64-aab1-4d71-a9e9-424741e6234b](.artifacts/records/project__acceptance/rec-fbe22f64-aab1-4d71-a9e9-424741e6234b.md))_
 
 ## evidence-kind
 
