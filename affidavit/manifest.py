@@ -41,6 +41,8 @@ class Claim:
     oracle_hashes: dict[str, str]
     support_files: tuple[str, ...] = ()
     evidence_kind: str = "unit"
+    witness: str = "tests"
+    signature: str = ""
 
 
 @dataclass(frozen=True)
@@ -192,6 +194,14 @@ def _parse_claim(raw: Any, index: int) -> Claim:
         raise ManifestError(
             f"claims[{index}].evidence_kind must be one of {', '.join(KINDS)}"
         )
+    witness = raw.get("witness", "tests")
+    if witness not in ("tests", "human"):
+        raise ManifestError(f"claims[{index}].witness must be 'tests' or 'human'")
+    signature = raw.get("signature", "")
+    if signature is None:
+        signature = ""
+    if not isinstance(signature, str):
+        raise ManifestError(f"claims[{index}].signature must be a string")
     return Claim(
         id=claim_id,
         text=text,
@@ -202,6 +212,8 @@ def _parse_claim(raw: Any, index: int) -> Claim:
             f"claims[{index}].support_files",
         ),
         evidence_kind=kind,
+        witness=witness,
+        signature=signature,
     )
 
 

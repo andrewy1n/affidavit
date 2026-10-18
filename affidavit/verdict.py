@@ -16,6 +16,7 @@ from typing import Any, Iterator, Sequence
 
 from affidavit.amendment import authorize
 from affidavit.evidence_kind import kind_allows_runner
+from affidavit.human_claim import verify_claim_signature
 from affidavit.manifest import (
     Claim,
     Manifest,
@@ -87,6 +88,9 @@ def run_verdict(
             continue
         base_claim = base_by_id.get(claim_id)
         head_claim = at_by_id.get(claim_id)
+        if head_claim is not None and head_claim.witness == "human":
+            verdicts[index] = _human_verdict(head_claim, at_allow)
+            continue
         if base_claim is None or head_claim is None:
             verdicts[index] = _fail(claim_id, "missing claim")
             continue
@@ -150,6 +154,14 @@ def _payload(claims: list[dict[str, str]]) -> dict[str, Any]:
 
 def _fail(claim_id: str, reason: str) -> dict[str, str]:
     return {"id": claim_id, "result": "fail", "reason": reason}
+
+
+def _human_verdict(claim: Claim, allowlist: bytes) -> dict[str, str]:
+    if not claim.signature:
+        return _fail(claim.id, "human signature missing")
+    if not verify_claim_signature(claim.id, claim.text, claim.signature, allowlist):
+        return _fail(claim.id, "human signature invalid")
+    return {"id": claim.id, "result": "pass"}
 
 
 def _mapping(
