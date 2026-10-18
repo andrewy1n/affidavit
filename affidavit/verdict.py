@@ -7,12 +7,13 @@ record store.
 from __future__ import annotations
 
 import os
-import re
 import shutil
 import subprocess
 import tempfile
+import xml.etree.ElementTree as ET
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Iterator, Sequence
 
 from affidavit.amendment import authorize
 from affidavit.manifest import (
@@ -23,9 +24,11 @@ from affidavit.manifest import (
     merge_base,
     resolve_commit,
 )
-from affidavit.oracle_red import is_assertion_level_failure
+from affidavit.runner import _keys, run_tests
 
-_FAILED_RE = re.compile(r"^FAILED\s+(\S+)", re.MULTILINE)
+# Pytest records these test-body exceptions as ``<failure>``. They are not
+# assertion reds; a collection failure is already an ``<error>``.
+_NON_ASSERTION = ("ModuleNotFoundError", "ImportError", "SyntaxError")
 
 
 def run_verdict(
@@ -39,8 +42,8 @@ def run_verdict(
     When ``base`` is omitted, the base revision is ``merge_base(cwd, at)``.
     A claim passes only when the allowlists match, amendments authorize any
     test-id or hash change, oracle blobs hash to that revision's
-    ``oracle_hashes``, the base run fails on an assertion, and the head run
-    exits 0.
+    ``oracle_hashes``, every base witness is ``assertion_failed``, every head
+    witness is ``passed``, and a confirmation run in the same worktree agrees.
     """
     root = Path(cwd)
     base_rev = base if base else merge_base(root, at)
@@ -83,24 +86,27 @@ def run_verdict(
         pending.append((index, claim_id, base_claim, head_claim))
 
     if pending:
-        base_nodes = _union(claim.tests for _, _, claim, _ in pending)
-        head_nodes = _union(claim.tests for _, _, _, claim in pending)
-        _, base_out = _pytest_at(root, base_commit, base_nodes)
-        head_code, _ = _pytest_at(root, at_commit, head_nodes)
-        for index, claim_id, base_claim, _head_claim in pending:
-            if not _base_is_assertion(base_out, base_claim.tests):
-                verdicts[index] = _fail(claim_id, "not assertion")
-            elif not _head_passed(head_code):
-                verdicts[index] = _fail(claim_id, "tests failed")
-            else:
-                verdicts[index] = {"id": claim_id, "result": "pass"}
+        _judge_pending(
+            root,
+            base_commit,
+            at_commit,
+            base_manifest.runner,
+            at_manifest.runner,
+            pending,
+            verdicts,
+        )
 
     claims = [item for item in verdicts if item is not None]
     return _payload(claims)
 
 
 def _payload(claims: list[dict[str, str]]) -> dict[str, Any]:
-    result = "pass" if claims and all(item["result"] == "pass" for item in claims) else "fail"
+    if any(item["result"] == "fail" for item in claims):
+        result = "fail"
+    elif any(item["result"] == "unstable" for item in claims):
+        result = "unstable"
+    else:
+        result = "pass"
     return {"result": result, "claims": claims}
 
 
@@ -134,54 +140,185 @@ def _union(groups: Any) -> list[str]:
     return nodes
 
 
-def _node_reported(reported: Sequence[str], node: str) -> bool:
-    for item in reported:
-        if item == node:
-            return True
-        if "::" not in item and node.startswith(item):
-            return True
-    return False
+def _judge_pending(
+    root: Path,
+    base_commit: str,
+    head_commit: str,
+    base_runner: Sequence[str],
+    head_runner: Sequence[str],
+    pending: Sequence[tuple[int, str, Claim, Claim]],
+    verdicts: list[dict[str, str] | None],
+) -> None:
+    base_ids = _union(claim.tests for _, _, claim, _ in pending)
+    head_ids = _union(claim.tests for _, _, _, claim in pending)
+    base_tree = _checkout(root, base_commit)
+    head_tree = _checkout(root, head_commit)
+    try:
+        base_first = _outcomes(_worktree(base_tree), base_ids, base_runner)
+        head_first = _outcomes(_worktree(head_tree), head_ids, head_runner)
+        viable: list[tuple[int, str, Claim, Claim]] = []
+        for index, claim_id, base_claim, head_claim in pending:
+            if _viable(base_claim.tests, head_claim.tests, base_first, head_first):
+                viable.append((index, claim_id, base_claim, head_claim))
+            elif not _assertion_red(base_claim.tests, base_first):
+                verdicts[index] = _fail(claim_id, "not assertion")
+            else:
+                verdicts[index] = _fail(claim_id, "tests failed")
+        if not viable:
+            return
+        confirm_base = _union(claim.tests for _, _, claim, _ in viable)
+        confirm_head = _union(claim.tests for _, _, _, claim in viable)
+        base_second = _outcomes(_worktree(base_tree), confirm_base, base_runner)
+        head_second = _outcomes(_worktree(head_tree), confirm_head, head_runner)
+        for index, claim_id, base_claim, head_claim in viable:
+            if _disagrees(base_claim.tests, base_first, base_second) or _disagrees(
+                head_claim.tests, head_first, head_second
+            ):
+                verdicts[index] = {"id": claim_id, "result": "unstable"}
+            else:
+                verdicts[index] = {"id": claim_id, "result": "pass"}
+    finally:
+        _remove(root, base_tree)
+        _remove(root, head_tree)
 
 
-def _base_is_assertion(output: str, tests: Sequence[str]) -> bool:
-    if not tests:
+def _outcomes(
+    worktree: Path | None,
+    test_ids: Sequence[str],
+    runner: Sequence[str],
+) -> dict[str, str]:
+    if worktree is None:
+        return {test_id: "not_run" for test_id in test_ids}
+    if not test_ids:
+        return {}
+    report: list[str] = []
+    original = tempfile.mkstemp
+
+    def _capture_report(*args: Any, **kwargs: Any) -> tuple[int, str]:
+        fd, path = original(*args, **kwargs)
+        suffix = kwargs.get("suffix", args[0] if args else None)
+        if suffix == ".xml":
+            report.append(path)
+        return fd, path
+
+    tempfile.mkstemp = _capture_report
+    try:
+        with _silence_stdio():
+            outcomes = run_tests(worktree, test_ids, runner)
+    finally:
+        tempfile.mkstemp = original
+    return _downgrade_non_assertion(outcomes, report[-1] if report else None)
+
+
+@contextmanager
+def _silence_stdio() -> Iterator[None]:
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    saved_out = os.dup(1)
+    saved_err = os.dup(2)
+    try:
+        os.dup2(devnull, 1)
+        os.dup2(devnull, 2)
+        yield
+    finally:
+        os.dup2(saved_out, 1)
+        os.dup2(saved_err, 2)
+        os.close(saved_out)
+        os.close(saved_err)
+        os.close(devnull)
+
+
+def _downgrade_non_assertion(
+    outcomes: dict[str, str],
+    report: str | None,
+) -> dict[str, str]:
+    if report is None or not Path(report).is_file():
+        return outcomes
+    try:
+        root = ET.parse(report).getroot()
+    except ET.ParseError:
+        return outcomes
+    updated = dict(outcomes)
+    for case in root.iter():
+        if _local(case.tag) != "testcase" or not _non_assertion_failure(case):
+            continue
+        for key in _keys(case):
+            if updated.get(key) == "assertion_failed":
+                updated[key] = "errored"
+    return updated
+
+
+def _non_assertion_failure(case: ET.Element) -> bool:
+    failures = [child for child in case if _local(child.tag) == "failure"]
+    if not failures or any(_local(child.tag) == "error" for child in case):
         return False
-    failed = _FAILED_RE.findall(output)
-    if not all(_node_reported(failed, node) for node in tests):
-        return False
-    return is_assertion_level_failure(output, list(tests))
+    return all(_non_assertion_message(child.get("message") or "") for child in failures)
 
 
-def _head_passed(exit_code: int) -> bool:
-    return exit_code == 0
+def _non_assertion_message(message: str) -> bool:
+    head = message.split(":", 1)[0].strip()
+    return head in _NON_ASSERTION or message.strip() == "collection failure"
 
 
-def _pytest_at(cwd: Path, commit: str, node_ids: Sequence[str]) -> tuple[int, str]:
+def _local(tag: str) -> str:
+    if "}" in tag:
+        return tag.rsplit("}", 1)[1]
+    return tag
+
+
+def _assertion_red(tests: Sequence[str], outcomes: dict[str, str]) -> bool:
+    return bool(tests) and all(
+        outcomes.get(test_id) == "assertion_failed" for test_id in tests
+    )
+
+
+def _head_passed(tests: Sequence[str], outcomes: dict[str, str]) -> bool:
+    return bool(tests) and all(outcomes.get(test_id) == "passed" for test_id in tests)
+
+
+def _viable(
+    base_tests: Sequence[str],
+    head_tests: Sequence[str],
+    base_outcomes: dict[str, str],
+    head_outcomes: dict[str, str],
+) -> bool:
+    return _assertion_red(base_tests, base_outcomes) and _head_passed(
+        head_tests, head_outcomes
+    )
+
+
+def _disagrees(
+    tests: Sequence[str],
+    first: dict[str, str],
+    second: dict[str, str],
+) -> bool:
+    return any(second.get(test_id) != first.get(test_id) for test_id in tests)
+
+
+def _checkout(cwd: Path, commit: str) -> tuple[Path, Path] | None:
     parent = Path(tempfile.mkdtemp(prefix="aff-verdict-"))
     worktree = parent / "wt"
-    try:
-        added = subprocess.run(
-            ["git", "-C", str(cwd), "worktree", "add", "--detach", str(worktree), commit],
-            capture_output=True,
-        )
-        if added.returncode != 0:
-            return 1, added.stderr.decode("utf-8", "replace")
-        env = os.environ.copy()
-        env.pop("PYTHONPATH", None)
-        env.pop("PYTEST_ADDOPTS", None)
-        completed = subprocess.run(
-            ["python3", "-m", "pytest", *node_ids],
-            cwd=str(worktree),
-            capture_output=True,
-            env=env,
-        )
-        output = completed.stdout.decode("utf-8", "replace") + completed.stderr.decode(
-            "utf-8", "replace"
-        )
-        return completed.returncode, output
-    finally:
-        subprocess.run(
-            ["git", "-C", str(cwd), "worktree", "remove", "--force", str(worktree)],
-            capture_output=True,
-        )
+    added = subprocess.run(
+        ["git", "-C", str(cwd), "worktree", "add", "--detach", str(worktree), commit],
+        capture_output=True,
+    )
+    if added.returncode != 0:
         shutil.rmtree(parent, ignore_errors=True)
+        return None
+    return parent, worktree
+
+
+def _worktree(checked: tuple[Path, Path] | None) -> Path | None:
+    if checked is None:
+        return None
+    return checked[1]
+
+
+def _remove(cwd: Path, checked: tuple[Path, Path] | None) -> None:
+    if checked is None:
+        return
+    parent, worktree = checked
+    subprocess.run(
+        ["git", "-C", str(cwd), "worktree", "remove", "--force", str(worktree)],
+        capture_output=True,
+    )
+    shutil.rmtree(parent, ignore_errors=True)
