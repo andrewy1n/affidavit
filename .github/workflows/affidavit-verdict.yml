@@ -1,11 +1,7 @@
 # Fixture CI: run aff verdict, emit a signed attestation, then verify it.
 #
-# Required secrets / allowlist (fixture key):
-#   AFFIDAVIT_ATTEST_KEY       — PEM/OpenSSH private key for namespace
-#                                affidavit-verdict (fixture deploy key).
-#   AFFIDAVIT_ATTEST_ALLOWLIST — allowed_signers file contents that list
-#                                that key under namespaces="affidavit-verdict".
-# Update the allowlist when rotating the fixture key; verify fails otherwise.
+# Mints an ephemeral ed25519 key and allowlist in the job (same shape as
+# tests/fixtures/dry_run_verdict_attest.sh). No repo secrets required.
 name: affidavit-verdict
 
 on:
@@ -49,17 +45,19 @@ jobs:
           echo "claim=$CLAIM" >> "$GITHUB_OUTPUT"
           test -d "$FIXTURE" || echo "::warning::fixture path $FIXTURE missing; attest-core/fixture setup must provide it"
 
-      - name: Write signing key and allowlist
-        env:
-          AFFIDAVIT_ATTEST_KEY: ${{ secrets.AFFIDAVIT_ATTEST_KEY }}
-          AFFIDAVIT_ATTEST_ALLOWLIST: ${{ secrets.AFFIDAVIT_ATTEST_ALLOWLIST }}
+      - name: Mint fixture signing key and allowlist
         run: |
+          set -euo pipefail
           mkdir -p "$HOME/.config/affidavit"
           umask 077
-          printf '%s\n' "$AFFIDAVIT_ATTEST_KEY" > "$HOME/.config/affidavit/attest_key"
-          printf '%s\n' "$AFFIDAVIT_ATTEST_ALLOWLIST" > "$HOME/.config/affidavit/allowed_signers"
-          echo "ATTEST_KEY=$HOME/.config/affidavit/attest_key" >> "$GITHUB_ENV"
-          echo "ATTEST_ALLOWLIST=$HOME/.config/affidavit/allowed_signers" >> "$GITHUB_ENV"
+          KEY="$HOME/.config/affidavit/attest_key"
+          ALLOW="$HOME/.config/affidavit/allowed_signers"
+          ssh-keygen -t ed25519 -N "" -f "$KEY" -q
+          PUB=$(ssh-keygen -y -f "$KEY")
+          BLOB=$(echo "$PUB" | awk '{print $1" "$2}')
+          printf '%s\n' "ci namespaces=\"affidavit-verdict\" $BLOB" > "$ALLOW"
+          echo "ATTEST_KEY=$KEY" >> "$GITHUB_ENV"
+          echo "ATTEST_ALLOWLIST=$ALLOW" >> "$GITHUB_ENV"
 
       - name: Build verdict fixture
         run: bash tests/fixtures/build_verdict_repo.sh
@@ -67,6 +65,7 @@ jobs:
       - name: Run aff verdict
         id: verdict
         run: |
+          set -euo pipefail
           FIXTURE="${{ steps.ctx.outputs.fixture }}"
           SHA=$(git -C "$FIXTURE" rev-parse HEAD)
           BASE=$(git -C "$FIXTURE" rev-parse HEAD~1)
@@ -100,13 +99,16 @@ jobs:
 
       - name: Emit signed attestation
         run: |
+          set -euo pipefail
           bin/aff attest emit \
             --key "$ATTEST_KEY" \
             --input verdict.json \
             | tee attestation.json
+          test -s attestation.json
 
       - name: Verify attestation
         run: |
+          set -euo pipefail
           bin/aff attest verify \
             --allowlist "$ATTEST_ALLOWLIST" \
             --commit "${{ steps.verdict.outputs.sha }}" \
