@@ -39,6 +39,7 @@ class Claim:
     text: str
     tests: tuple[str, ...]
     oracle_hashes: dict[str, str]
+    support_files: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,22 @@ class Manifest:
     claims: tuple[Claim, ...]
     amendments: tuple[dict[str, Any], ...]
     runner: tuple[str, ...]
+    support_files: tuple[str, ...] = ()
+
+
+def runner_digest(runner: Sequence[str]) -> str:
+    """Return ``sha256:<hex>`` of canonical argv lines (one element per line)."""
+    payload = ("\n".join(runner) + "\n").encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+def frozen_support_files(manifest: Manifest, claim: Claim) -> tuple[str, ...]:
+    """Union of manifest-global and claim-listed support paths, claim order last."""
+    seen: list[str] = []
+    for relpath in (*manifest.support_files, *claim.support_files):
+        if relpath not in seen:
+            seen.append(relpath)
+    return tuple(seen)
 
 
 def resolve_commit(cwd: Path | str, rev: str) -> str:
@@ -123,6 +140,7 @@ def _parse_manifest(parsed: Any) -> Manifest:
         claims=claims,
         amendments=_parse_amendments(parsed.get("amendments")),
         runner=_parse_runner(parsed),
+        support_files=_parse_support_files(parsed.get("support_files"), "support_files"),
     )
 
 
@@ -140,6 +158,14 @@ def _parse_runner(parsed: Mapping[str, Any]) -> tuple[str, ...]:
         raise ManifestError(
             "runner must be a non-empty argv list with {tests} and {report}"
         )
+    return tuple(raw)
+
+
+def _parse_support_files(raw: Any, label: str) -> tuple[str, ...]:
+    if raw is None:
+        return ()
+    if not isinstance(raw, list) or not all(isinstance(item, str) and item for item in raw):
+        raise ManifestError(f"{label} must be a list of paths")
     return tuple(raw)
 
 
@@ -163,6 +189,10 @@ def _parse_claim(raw: Any, index: int) -> Claim:
         text=text,
         tests=tuple(tests),
         oracle_hashes=_parse_hashes(hashes, index),
+        support_files=_parse_support_files(
+            raw.get("support_files"),
+            f"claims[{index}].support_files",
+        ),
     )
 
 
