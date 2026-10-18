@@ -10,9 +10,9 @@
     "title": "Standalone claim authoring, lint, and human-signed claims"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-17T22:58:47+00:00",
+  "recorded_at": "2026-10-18T03:08:49+00:00",
   "relationships": {},
-  "revision": "sha256:f2d6f5356d013a75d730a054bbd7ac49a69355bb6e9892e3600bf6894b47dfbd",
+  "revision": "sha256:92e1a9a3ff08af49333b2f6cecd9a01a50184b820201484b5f85adc26ececdc1",
   "stewardship": {
     "steward": "agent"
   },
@@ -26,8 +26,18 @@ Only orchestra can write a manifest, so affidavit is not usable on its own. No p
 
 ## Approach
 
-not yet scoped — discuss when this phase is current. Direction: `aff claim add` and `aff freeze` write and hash manifest entries. A lint flags compound claims and wording that limits trust to agent-supplied input. A review output shows each claim next to its test names for a person to approve. A claim may instead be witnessed by a signature from the allowlist, for behavior that cannot be automated.
+Adopt `claim-cli`: `aff claim add` and `aff freeze`, lint for compound/trust-scoped claims, and allowlist-signed human claims as an alternate witness. Phase-end reviewer skipped.
 
 ## Exit criteria
 
-Decide at plan-phase. At minimum: a repo with no orchestra gets a valid manifest from `aff claim add` and `aff freeze`, the lint flags a compound fixture claim, and verdict accepts a signed human claim and rejects an unsigned one.
+- Standalone claim add + freeze yields a valid manifest and verdict without orchestra.
+- Lint flags a compound fixture claim.
+- Signed human claim accepted; unsigned rejected.
+
+## Landing
+
+- **branch:** `phase/claim-authoring`
+- **worktree:** `/home/andrewyin/affidavit--claim-authoring`
+- **base:** `main`
+- **close:** commit code on the phase branch; merge that branch into `main`; commit the store on the primary checkout
+- **push:** not a stop (do not push)

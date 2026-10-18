@@ -10,9 +10,9 @@
     "title": "Signed verdict attestation from CI"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-17T22:58:46+00:00",
+  "recorded_at": "2026-10-18T03:08:48+00:00",
   "relationships": {},
-  "revision": "sha256:24917dc7ef0ec1cb6d4f7f06f698e72b65641d43128778920db516aad58399e7",
+  "revision": "sha256:05570e9c372334ca1968d1a8f5c6321e504163c85632825de928e8e81d4bcc99",
   "stewardship": {
     "steward": "agent"
   },
@@ -26,8 +26,17 @@ If the agent runs `aff verdict` in its own shell, it can still report a pass it 
 
 ## Approach
 
-not yet scoped — discuss when this phase is current. Direction: verdict runs where the agent does not control the environment (CI first), and emits a signed attestation of claim results bound to the commit, the manifest hash, and the runner template, using the SSH signing already used for amendments. A gate verifies the attestation, not the output. Ship a CI action that runs verdict on a pull request.
+Adopt `verdict-attestation`: emit and verify an SSH-signed attestation (namespace `affidavit-verdict`) bound to commit, manifest hash, runner digest, and claim results; ship a fixture CI action. Phase-end reviewer skipped (campaign milestone constraint).
 
 ## Exit criteria
 
-Decide at plan-phase. At minimum: `aff verdict` can emit a signed attestation, a verify command rejects a tampered or unsigned attestation and one for a different commit or manifest, and the CI action runs on a fixture repo.
+- Emit produces a signed attestation; verify rejects tamper and wrong commit/manifest binds.
+- CI action runs on a fixture repo.
+
+## Landing
+
+- **branch:** `phase/signed-verdict`
+- **worktree:** `/home/andrewyin/affidavit--signed-verdict`
+- **base:** `main`
+- **close:** commit code on the phase branch; merge that branch into `main`; commit the store on the primary checkout
+- **push:** not a stop (do not push)

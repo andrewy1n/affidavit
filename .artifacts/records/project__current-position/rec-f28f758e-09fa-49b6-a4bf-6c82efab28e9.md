@@ -1,0 +1,27 @@
+---
+{
+  "base_kind": "claim",
+  "epistemic_status": "asserted",
+  "id": "rec-f28f758e-09fa-49b6-a4bf-6c82efab28e9",
+  "identity": "unknown",
+  "lifecycle_state": "superseded",
+  "payload": {
+    "effort": "evidence-layer",
+    "phase": "frozen-environment",
+    "position": "planning work-items; then execute",
+    "scope": "phase"
+  },
+  "record_type": "project:current-position",
+  "recorded_at": "2026-10-18T03:22:21+00:00",
+  "relationships": {},
+  "revision": "sha256:77243a6dfe91f8a2cb5035c1c06395950b1001c5df4048817b7ccb5198905c73",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "frozen-environment",
+  "time": {
+    "as_of": "2026-10-18T03:09:57+00:00"
+  }
+}
+---
+

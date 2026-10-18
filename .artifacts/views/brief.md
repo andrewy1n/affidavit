@@ -1,22 +1,37 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:e0a7e31f8e043071433148dd88952abda0d84a96545591f76317d28e11dbc4f1
+> Store state: sha256:65d2b21ad893d3cb2965bb692e45a637bb525bd34da229d10463eee5874b7285
 
 ## amendment-sign
 
 ### Acceptance
 - **amendment-sign**: A hash or test-id change is authorized only by a signature chain that verifies under the base allowlist; a changed allowlist, a bad signature, and a missing step are refused; tdd; evidence-layer; python3 -m pytest tests/test_amendment.py -q _(id: [rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43](.artifacts/records/project__acceptance/rec-ea520f42-d62e-4b5d-879a-9dfd8ecc6d43.md))_
 
+## campaign-landing-automerge
+
+### Constraint
+- **campaign-landing-automerge**: For evidence-layer phases 5-11, Landing merges the phase branch into main and commits the store without asking; push is not a human stop; Landing close for evidence-layer phases frozen-environment through audit-differential; evidence-layer _(id: [rec-1c169abc-70e2-4610-a03b-aeee49a1257b](.artifacts/records/project__constraint/rec-1c169abc-70e2-4610-a03b-aeee49a1257b.md))_
+
 ## conventional-commits
 
 ### Acceptance
 - **conventional-commits**: execute-phase shows a per-task commit, a phase-branch commit, and a store commit whose subject matches type(scope): summary and whose body is one or two sentences; a task commit names the task slug; tdd; evidence-layer; cd ~/orchestra && python3 -m pytest tests/test_task_commit.py -q _(id: [rec-325e52d1-3740-4543-8f5c-47e640bf5b84](.artifacts/records/project__acceptance/rec-325e52d1-3740-4543-8f5c-47e640bf5b84.md))_
 
+## env-freeze
+
+### Acceptance
+- **env-freeze**: tdd; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_support_file_drift_without_amendment tests/test_verdict.py::test_verdict_refuses_claim_support_file_drift_without_amendment -q _(id: [rec-3bff17d7-9d75-4d11-a504-9a5b8d66f551](.artifacts/records/project__acceptance/rec-3bff17d7-9d75-4d11-a504-9a5b8d66f551.md))_
+
+## env-freeze-runner
+
+### Acceptance
+- **env-freeze-runner**: tdd; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_runner_digest_drift_without_amendment -q _(id: [rec-6a082c2e-8500-4178-b517-9d57ef09d9c7](.artifacts/records/project__acceptance/rec-6a082c2e-8500-4178-b517-9d57ef09d9c7.md))_
+
 ## evidence-layer
 
 ### Position
-- **evidence-layer**: runner-adapter done; next up: frozen-environment; effort _(id: [rec-bdbb8333-4bb9-4d69-85f6-fd669d38e00c](.artifacts/records/project__current-position/rec-bdbb8333-4bb9-4d69-85f6-fd669d38e00c.md))_
+- **evidence-layer**: frozen-environment done; next up: signed-verdict; effort _(id: [rec-e0d722c0-3c71-4d61-9395-ea202b4c9a8b](.artifacts/records/project__current-position/rec-e0d722c0-3c71-4d61-9395-ea202b4c9a8b.md))_
 
 ## extract-store-binding
 
@@ -90,6 +105,11 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Acceptance
 - **parse-manifest-runner**: An absent runner loads as the shipped pytest template, and a runner that is not an argv list with {tests} and {report} fails manifest load; tdd; evidence-layer; python3 -m pytest tests/test_manifest.py -q -k "runner_absent or runner_invalid" _(id: [rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a](.artifacts/records/project__acceptance/rec-2f6be402-8d78-4007-b3a4-e2a0ac1eec4a.md))_
+
+## phase-end-reviewer-milestones
+
+### Constraint
+- **phase-end-reviewer-milestones**: For evidence-layer phases 5-11, run the phase-end se-reviewer only on frozen-environment and audit-differential; skip reviewer, review check-run requirement, and integration-report on signed-verdict, oracle-provenance, evidence-kind, claim-authoring, and phase-end-evidence; execute-phase phase-end for evidence-layer phases frozen-environment through audit-differential; evidence-layer _(id: [rec-db3a1390-0ef9-4ba5-8d10-6ee334c90433](.artifacts/records/project__constraint/rec-db3a1390-0ef9-4ba5-8d10-6ee334c90433.md))_
 
 ## review-move-effort-records-spec-gap
 
@@ -239,6 +259,26 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Acceptance
 - **verify-claims-manifest-suite**: CLI subprocess tests cover the pass, a hash mismatch, a missing or invalid amendment signature, an allowlist change, and a --cwd pointed at a phase worktree other than the store checkout; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or bad_signature or allowlist or cwd_phase" _(id: [rec-27b93db5-292e-4864-8bc9-ac743955d861](.artifacts/records/project__acceptance/rec-27b93db5-292e-4864-8bc9-ac743955d861.md))_
 
+## verify-frozen-environment
+
+### Acceptance
+- **verify-frozen-environment**: check; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_support_file_drift_without_amendment tests/test_verdict.py::test_verdict_refuses_claim_support_file_drift_without_amendment -q _(id: [rec-f83f8a6d-4589-43b7-9853-95d904d92b14](.artifacts/records/project__acceptance/rec-f83f8a6d-4589-43b7-9853-95d904d92b14.md))_
+
+## verify-frozen-environment-lint
+
+### Acceptance
+- **verify-frozen-environment-lint**: check; evidence-layer; python3 -m pytest tests/test_lint.py::test_lint_reports_no_assert_witness -q _(id: [rec-55edf2d5-5ed9-49c2-aaef-10cdb45b875c](.artifacts/records/project__acceptance/rec-55edf2d5-5ed9-49c2-aaef-10cdb45b875c.md))_
+
+## verify-frozen-environment-runner
+
+### Acceptance
+- **verify-frozen-environment-runner**: check; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_runner_digest_drift_without_amendment -q _(id: [rec-b9efb8a3-f48d-43a4-9733-78462fbe3a23](.artifacts/records/project__acceptance/rec-b9efb8a3-f48d-43a4-9733-78462fbe3a23.md))_
+
+## verify-frozen-environment-skips
+
+### Acceptance
+- **verify-frozen-environment-skips**: check; evidence-layer; python3 -m pytest tests/test_lint.py::test_lint_reports_new_skip_between_base_and_head -q _(id: [rec-64566959-1ab1-4de4-bca9-feb47da70a23](.artifacts/records/project__acceptance/rec-64566959-1ab1-4de4-bca9-feb47da70a23.md))_
+
 ## verify-orchestration-split
 
 ### Acceptance
@@ -331,3 +371,13 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ### Acceptance
 - **verify-standalone-aff-verbs**: aff check and aff close-batch are not commands; check; evidence-layer; python3 -m pytest tests/test_standalone_cli.py -q -k rejects_store_commands _(id: [rec-2efc0852-17bc-4c58-b065-c929276d1962](.artifacts/records/project__acceptance/rec-2efc0852-17bc-4c58-b065-c929276d1962.md))_
+
+## witness-lint
+
+### Acceptance
+- **witness-lint**: tdd; evidence-layer; python3 -m pytest tests/test_lint.py::test_lint_reports_no_assert_witness -q _(id: [rec-6f481c53-d452-4f5b-a691-0b1e2ca3bbcb](.artifacts/records/project__acceptance/rec-6f481c53-d452-4f5b-a691-0b1e2ca3bbcb.md))_
+
+## witness-lint-skips
+
+### Acceptance
+- **witness-lint-skips**: tdd; evidence-layer; python3 -m pytest tests/test_lint.py::test_lint_reports_new_skip_between_base_and_head -q _(id: [rec-6447ebae-ba32-4520-a868-be2e7c72dd2f](.artifacts/records/project__acceptance/rec-6447ebae-ba32-4520-a868-be2e7c72dd2f.md))_

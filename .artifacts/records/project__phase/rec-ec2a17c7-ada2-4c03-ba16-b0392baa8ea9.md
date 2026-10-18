@@ -10,9 +10,9 @@
     "title": "Verdict checks who wrote the oracle and when"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-17T22:58:47+00:00",
+  "recorded_at": "2026-10-18T03:08:48+00:00",
   "relationships": {},
-  "revision": "sha256:7d48302788cbac0eff0bf572871f0ee53a61345ddcb96f7e4bf14a1de1498716",
+  "revision": "sha256:54120ac89571ca01c945c010a19bcbb07811ee2c2b5eeaaec2b30438e12440c1",
   "stewardship": {
     "steward": "agent"
   },
@@ -26,8 +26,17 @@ The core guarantee is that the test author is not the agent that benefits from a
 
 ## Approach
 
-not yet scoped — discuss when this phase is current. Direction: verdict checks from git that a claim's oracle landed in a commit before the implementation, that the oracle commit touches only test and frozen-support files, and that it is signed by a different principal than the implementation commits.
+Adopt `oracle-provenance-check`: verdict uses git for oracle-before-impl ordering, oracle/support-only paths on the oracle commit, and different SSH commit signers when history is signed. Phase-end reviewer skipped.
 
 ## Exit criteria
 
-Decide at plan-phase. At minimum: verdict fails a claim whose oracle commit follows the implementation, touches source, or shares a signer with the implementation, and passes a fixture history that meets all three.
+- Fail fixtures for oracle-after-impl, oracle touching source, and shared signer.
+- Pass fixture that meets all three.
+
+## Landing
+
+- **branch:** `phase/oracle-provenance`
+- **worktree:** `/home/andrewyin/affidavit--oracle-provenance`
+- **base:** `main`
+- **close:** commit code on the phase branch; merge that branch into `main`; commit the store on the primary checkout
+- **push:** not a stop (do not push)

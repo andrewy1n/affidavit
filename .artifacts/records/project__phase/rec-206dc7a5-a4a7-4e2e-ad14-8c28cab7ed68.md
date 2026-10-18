@@ -10,9 +10,9 @@
     "title": "aff audit: changed code no witness checks"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-17T22:58:47+00:00",
+  "recorded_at": "2026-10-18T03:08:49+00:00",
   "relationships": {},
-  "revision": "sha256:7f1fb17768aaecfd5ed1de1dcd51a2c4004c09c1271e6813fb14eaf9309975f2",
+  "revision": "sha256:538f12eab9fe14675fb28e7f1c8ee45c244bf31c906bcde99f339f962443d210",
   "stewardship": {
     "steward": "agent"
   },
@@ -26,8 +26,17 @@ Tests can be blind to code they execute. A claim's witness can pass at head whil
 
 ## Approach
 
-not yet scoped — discuss when this phase is current. Direction: `aff audit --base --head` splits the diff into blocks (skipping tests and prose), reverts each one and reruns the frozen claim tests through `run_tests`, labels it noticed, not noticed, or inconclusive, then plants mutants only in noticed blocks. An LLM or a mutation tool may propose mutants; only a test run judges them. Output is JSON for CI, advisory. Orchestra sends survivors to its oracle author.
+Adopt `audit-hunk-mutants`: `aff audit --base --head` productizes hunk-revert + capped mutants, judges with frozen claim tests via `run_tests`, advisory JSON, never reports test-file blocks. Phase-end reviewer skipped.
 
 ## Exit criteria
 
-Decide at plan-phase. At minimum: on the `check-runner` range the audit reports the unnoticed `build_batch(request, cwd=args.cwd)` block and at least one surviving mutant from `spikes/llm-mutants/findings.md`, and never reports a test file block.
+- On the check-runner range, reports the unnoticed cwd block and at least one surviving mutant from the spike findings.
+- Never reports a test-file block.
+
+## Landing
+
+- **branch:** `phase/phase-end-evidence`
+- **worktree:** `/home/andrewyin/affidavit--phase-end-evidence`
+- **base:** `main`
+- **close:** commit code on the phase branch; merge that branch into `main`; commit the store on the primary checkout
+- **push:** not a stop (do not push)
