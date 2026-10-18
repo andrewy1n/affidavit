@@ -189,6 +189,11 @@ def _build_parser() -> argparse.ArgumentParser:
         default=20,
         help="Cap how many mutants from the file are considered (default: 20)",
     )
+    audit.add_argument(
+        "--probes",
+        default=None,
+        help="Probe declaration JSON (default: .affidavit/probes.json at head)",
+    )
 
     return parser
 
@@ -236,6 +241,7 @@ def main(argv: list[str] | None = None) -> int:
                 extra_tests=args.tests,
                 mutants_path=args.mutants,
                 max_mutants=args.max_mutants,
+                probes_path=args.probes,
             )
         except (AuditError, ManifestError) as exc:
             print(exc, file=sys.stderr)

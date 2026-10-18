@@ -45,12 +45,13 @@ def run_audit(
     extra_tests: Sequence[str] = (),
     mutants_path: Path | str | None = None,
     max_mutants: int | None = 20,
+    probes_path: Path | str | None = None,
 ) -> dict[str, Any]:
     """Label source hunks between ``base`` and ``head``; optionally plant mutants.
 
-    Also runs declared probes from ``.affidavit/probes.json`` at head and
-    reports unclaimed differences. Returns an advisory JSON-shaped dict.
-    Does not affect verdict.
+    Also runs declared probes from ``.affidavit/probes.json`` at head (or
+    ``probes_path`` when given) and reports unclaimed differences. Returns
+    an advisory JSON-shaped dict. Does not affect verdict.
     """
     root = Path(cwd)
     base_commit = resolve_commit(root, base)
@@ -58,7 +59,11 @@ def run_audit(
     claim_tests, runner = _claim_tests_and_runner(root, head_commit, extra_tests)
     claim_ids = _claim_ids(root, head_commit)
     hunks = _source_hunks(root, base_commit, head_commit)
-    probes = _load_probes(root, head_commit)
+    probes = (
+        _load_probes_file(Path(probes_path))
+        if probes_path is not None
+        else _load_probes(root, head_commit)
+    )
 
     checked = _checkout(root, head_commit)
     if checked is None:
@@ -118,13 +123,25 @@ def _load_probes(root: Path, head_commit: str) -> list[dict[str, Any]]:
     )
     if proc.returncode != 0:
         return []
+    return _parse_probes(proc.stdout, PROBES_PATH)
+
+
+def _load_probes_file(path: Path) -> list[dict[str, Any]]:
     try:
-        raw = json.loads(proc.stdout)
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise AuditError(f"could not read probes file: {exc}") from exc
+    return _parse_probes(text, str(path))
+
+
+def _parse_probes(text: str, label: str) -> list[dict[str, Any]]:
+    try:
+        raw = json.loads(text)
     except json.JSONDecodeError as exc:
-        raise AuditError(f"invalid {PROBES_PATH}: {exc}") from exc
+        raise AuditError(f"invalid {label}: {exc}") from exc
     probes = raw.get("probes") if isinstance(raw, dict) else None
     if not isinstance(probes, list):
-        raise AuditError(f"{PROBES_PATH} must contain a probes list")
+        raise AuditError(f"{label} must contain a probes list")
     return [p for p in probes if isinstance(p, dict)]
 
 
