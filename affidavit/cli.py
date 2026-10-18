@@ -13,6 +13,7 @@ from affidavit.authoring import AuthoringError, add_claim, freeze
 from affidavit.evidence_kind import TEMPLATES
 from affidavit.lint import find_claim_findings, find_new_skips, find_no_assert
 from affidavit.manifest import ManifestError
+from affidavit.observation import list_observations, maybe_record_verdict_observation
 from affidavit.verdict import run_verdict
 
 
@@ -195,6 +196,26 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Probe declaration JSON (default: .affidavit/probes.json at head)",
     )
 
+    trail = sub.add_parser(
+        "trail",
+        help="List evidence-observations from the artifact store as JSON",
+    )
+    trail.add_argument(
+        "--cwd",
+        default=None,
+        help="Repository root (default: process cwd)",
+    )
+    trail.add_argument(
+        "--claim",
+        default=None,
+        help="Only observations that reference this claim id",
+    )
+    trail.add_argument(
+        "--technique",
+        default=None,
+        help="Only observations with this technique name",
+    )
+
     return parser
 
 
@@ -211,7 +232,25 @@ def main(argv: list[str] | None = None) -> int:
             print(exc, file=sys.stderr)
             return 2
         print(json.dumps(payload, separators=(",", ":")))
+        maybe_record_verdict_observation(
+            work,
+            at=args.at,
+            base=args.base,
+            claim_ids=args.claim_ids,
+            result=payload["result"],
+        )
         return 0 if payload["result"] == "pass" else 1
+    if args.command == "trail":
+        work = Path(args.cwd) if args.cwd else Path.cwd()
+        try:
+            items = list_observations(
+                work, claim=args.claim, technique=args.technique
+            )
+        except Exception as exc:  # noqa: BLE001 — surface store errors cleanly
+            print(exc, file=sys.stderr)
+            return 2
+        print(json.dumps(items, separators=(",", ":")))
+        return 0
     if args.command == "claim":
         work = Path(args.cwd) if args.cwd else Path.cwd()
         try:
