@@ -1,0 +1,44 @@
+---
+{
+  "base_kind": "claim",
+  "epistemic_status": "asserted",
+  "id": "rec-609a00a4-c961-4065-aa31-d1da28f78401",
+  "identity": "unknown",
+  "lifecycle_state": "active",
+  "payload": {
+    "confidence": "high",
+    "effort": "evidence-layer",
+    "next": "release",
+    "phase": "evidence-technique-ingest",
+    "requirement": "R1",
+    "status": "verified"
+  },
+  "record_type": "project:assessment",
+  "recorded_at": "2026-10-18T10:03:06+00:00",
+  "relationships": {
+    "supersedes": [
+      "rec-fa4c1977-0df3-4433-b3bd-3f319e23e72f"
+    ]
+  },
+  "revision": "sha256:e6cee2efdc98ca81c4b878ee740d8bbacdbcafadc57a24789b370bfed4eea0db",
+  "stewardship": {
+    "steward": "agent"
+  },
+  "subject": "evidence-technique-ingest-R1",
+  "time": {
+    "as_of": "2026-10-18T10:03:06+00:00"
+  }
+}
+---
+
+## Evidence
+
+audit-ingest green at aece39455aa6cffc45472d4eafc7f79005af2c94
+
+## Missing
+
+none
+
+## Reason
+
+R1 verified.
