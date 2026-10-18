@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:2f149a2d826557d6fc830867a40eb18c7c9a38b14085ad4c642009e92ddca00c
+> Store state: sha256:b625acd1f3300e8ed65c9754bb1cf17f0a5229e35fc6d07bd2c8c91da6f3bd55
 
 ## claims-manifest
 
@@ -118,8 +118,13 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ## evidence-kind
 
-### Phase
-- **evidence-kind**: Claims declare evidence_kind and verdict enforces it; 8; evidence-layer _(id: [rec-8152251a-6238-4841-8183-6717775aeb30](.artifacts/records/project__phase/rec-8152251a-6238-4841-8183-6717775aeb30.md))_
+### Acceptance
+- **kind-enforcement**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r1_manifest_claim_may_declare_evidence_kind -q _(id: [rec-1ef835e4-41dc-4aeb-8462-c21de870e1f1](.artifacts/records/project__acceptance/rec-1ef835e4-41dc-4aeb-8462-c21de870e1f1.md))_
+- **kind-enforcement-r2**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r2_interaction_claim_fails_under_default_unit_runner -q _(id: [rec-6e679668-c104-4f8b-af4e-0ec2fdf06601](.artifacts/records/project__acceptance/rec-6e679668-c104-4f8b-af4e-0ec2fdf06601.md))_
+- **kind-enforcement-r3**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r3_interaction_claim_passes_under_interaction_runner -q _(id: [rec-4a04e8e2-2dd3-40ef-aa2b-6466115aa6bd](.artifacts/records/project__acceptance/rec-4a04e8e2-2dd3-40ef-aa2b-6466115aa6bd.md))_
+- **verify-evidence-kind**: check; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r1_manifest_claim_may_declare_evidence_kind -q _(id: [rec-31329697-17c1-4cef-927e-b2bba4675d35](.artifacts/records/project__acceptance/rec-31329697-17c1-4cef-927e-b2bba4675d35.md))_
+- **verify-evidence-kind-r2**: check; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r2_interaction_claim_fails_under_default_unit_runner -q _(id: [rec-7869f8d0-e7d5-4a7c-9c8c-aa0507b6cd7a](.artifacts/records/project__acceptance/rec-7869f8d0-e7d5-4a7c-9c8c-aa0507b6cd7a.md))_
+- **verify-evidence-kind-r3**: check; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r3_interaction_claim_passes_under_interaction_runner -q _(id: [rec-35c32ec7-df9d-44ae-9d4b-1da771b510ef](.artifacts/records/project__acceptance/rec-35c32ec7-df9d-44ae-9d4b-1da771b510ef.md))_
 
 ## claim-authoring
 

@@ -1,7 +1,7 @@
 # Project Brief
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:fa5c24e302705692cd7017a9efa704b1f80a332a3bbf5004cc50d750e40761a0
+> Store state: sha256:99931a02ce25a4183b642182473b88fd35346bd6f07ec064721a463dd36db9a2
 
 ## amendment-sign
 
@@ -48,10 +48,15 @@
 ### Acceptance
 - **env-freeze-runner**: tdd; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_runner_digest_drift_without_amendment -q _(id: [rec-6a082c2e-8500-4178-b517-9d57ef09d9c7](.artifacts/records/project__acceptance/rec-6a082c2e-8500-4178-b517-9d57ef09d9c7.md))_
 
+## evidence-kind
+
+### Position
+- **evidence-kind**: evidence-kind planned: kind-enforcement + verify; phase _(id: [rec-e0860883-fb7a-417f-b42d-52f1dffc60b9](.artifacts/records/project__current-position/rec-e0860883-fb7a-417f-b42d-52f1dffc60b9.md))_
+
 ## evidence-layer
 
 ### Position
-- **evidence-layer**: signed-verdict done; next up: oracle-provenance; effort _(id: [rec-48bbb43a-d8a2-4590-b5c9-4433d8a6aafc](.artifacts/records/project__current-position/rec-48bbb43a-d8a2-4590-b5c9-4433d8a6aafc.md))_
+- **evidence-layer**: oracle-provenance done; next up: evidence-kind; effort _(id: [rec-6b282372-16f7-4332-ac77-d363463ce015](.artifacts/records/project__current-position/rec-6b282372-16f7-4332-ac77-d363463ce015.md))_
 
 ## extract-store-binding
 
@@ -98,6 +103,24 @@
 ### Acceptance
 - **junit-run-tests-tags**: A JUnit failure is assertion_failed, an error is errored, a skip or a missing case is not_run, and a failure plus an error is errored; tdd; evidence-layer; python3 -m pytest tests/test_runner.py -q -k maps_failure_error_skipped _(id: [rec-cca4eb26-7518-47f2-9160-6f6480f68d02](.artifacts/records/project__acceptance/rec-cca4eb26-7518-47f2-9160-6f6480f68d02.md))_
 
+## kind-enforcement
+
+### Work
+- **kind-enforcement**: Claims declare evidence_kind and verdict enforces it; evidence-kind; deliver; evidence-layer _(id: [rec-ed2ce447-5658-4449-a5d1-1d9c4d2618f6](.artifacts/records/project__work-item/rec-ed2ce447-5658-4449-a5d1-1d9c4d2618f6.md))_
+
+### Acceptance
+- **kind-enforcement**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r1_manifest_claim_may_declare_evidence_kind -q _(id: [rec-1ef835e4-41dc-4aeb-8462-c21de870e1f1](.artifacts/records/project__acceptance/rec-1ef835e4-41dc-4aeb-8462-c21de870e1f1.md))_
+
+## kind-enforcement-r2
+
+### Acceptance
+- **kind-enforcement-r2**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r2_interaction_claim_fails_under_default_unit_runner -q _(id: [rec-6e679668-c104-4f8b-af4e-0ec2fdf06601](.artifacts/records/project__acceptance/rec-6e679668-c104-4f8b-af4e-0ec2fdf06601.md))_
+
+## kind-enforcement-r3
+
+### Acceptance
+- **kind-enforcement-r3**: tdd; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r3_interaction_claim_passes_under_interaction_runner -q _(id: [rec-4a04e8e2-2dd3-40ef-aa2b-6466115aa6bd](.artifacts/records/project__acceptance/rec-4a04e8e2-2dd3-40ef-aa2b-6466115aa6bd.md))_
+
 ## move-effort-records
 
 ### Acceptance
@@ -121,11 +144,6 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Acceptance
 - **move-store-client-imports**: orchestra imports affidavit.oracle_red from the close path and does not import affidavit.aa, affidavit.aa_resolve, affidavit.check, affidavit.policy, or affidavit.verdict; tdd; evidence-layer; cd "$HOME/orchestra" && python3 -m pytest tests/test_affidavit_import_boundary.py -q _(id: [rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94](.artifacts/records/project__acceptance/rec-bcc3412b-e7c6-4c97-988b-ea215bcb0c94.md))_
 
-## oracle-provenance
-
-### Position
-- **oracle-provenance**: oracle-provenance planned: provenance-check + verify; phase _(id: [rec-5366c0ce-b345-481f-96a7-736ed6875c3d](.artifacts/records/project__current-position/rec-5366c0ce-b345-481f-96a7-736ed6875c3d.md))_
-
 ## parse-manifest-runner
 
 ### Acceptance
@@ -137,9 +155,6 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **phase-end-reviewer-milestones**: For evidence-layer phases 5-11, run the phase-end se-reviewer only on frozen-environment and audit-differential; skip reviewer, review check-run requirement, and integration-report on signed-verdict, oracle-provenance, evidence-kind, claim-authoring, and phase-end-evidence; execute-phase phase-end for evidence-layer phases frozen-environment through audit-differential; evidence-layer _(id: [rec-db3a1390-0ef9-4ba5-8d10-6ee334c90433](.artifacts/records/project__constraint/rec-db3a1390-0ef9-4ba5-8d10-6ee334c90433.md))_
 
 ## provenance-check
-
-### Work
-- **provenance-check**: Verdict checks oracle provenance from git; oracle-provenance; deliver; evidence-layer _(id: [rec-6532448f-ef80-47f6-95df-2e46fa206425](.artifacts/records/project__work-item/rec-6532448f-ef80-47f6-95df-2e46fa206425.md))_
 
 ### Acceptance
 - **provenance-check**: tdd; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r1_oracle_after_implementation_fails -q _(id: [rec-0f86bd5c-0f8d-4e98-b84d-cc6ac1721055](.artifacts/records/project__acceptance/rec-0f86bd5c-0f8d-4e98-b84d-cc6ac1721055.md))_
@@ -307,6 +322,24 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 ### Acceptance
 - **verify-claims-manifest-suite**: CLI subprocess tests cover the pass, a hash mismatch, a missing or invalid amendment signature, an allowlist change, and a --cwd pointed at a phase worktree other than the store checkout; tdd; evidence-layer; python3 -m pytest tests/test_verdict.py -q -k "pass_when or hash_mismatch or bad_signature or allowlist or cwd_phase" _(id: [rec-27b93db5-292e-4864-8bc9-ac743955d861](.artifacts/records/project__acceptance/rec-27b93db5-292e-4864-8bc9-ac743955d861.md))_
 
+## verify-evidence-kind
+
+### Work
+- **verify-evidence-kind**: Verify evidence kind; evidence-kind; deliver; evidence-layer _(id: [rec-992dd471-2b52-4170-b036-bbe6c151c7e6](.artifacts/records/project__work-item/rec-992dd471-2b52-4170-b036-bbe6c151c7e6.md))_
+
+### Acceptance
+- **verify-evidence-kind**: check; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r1_manifest_claim_may_declare_evidence_kind -q _(id: [rec-31329697-17c1-4cef-927e-b2bba4675d35](.artifacts/records/project__acceptance/rec-31329697-17c1-4cef-927e-b2bba4675d35.md))_
+
+## verify-evidence-kind-r2
+
+### Acceptance
+- **verify-evidence-kind-r2**: check; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r2_interaction_claim_fails_under_default_unit_runner -q _(id: [rec-7869f8d0-e7d5-4a7c-9c8c-aa0507b6cd7a](.artifacts/records/project__acceptance/rec-7869f8d0-e7d5-4a7c-9c8c-aa0507b6cd7a.md))_
+
+## verify-evidence-kind-r3
+
+### Acceptance
+- **verify-evidence-kind-r3**: check; evidence-layer; python3 -m pytest tests/test_evidence_kind.py::test_r3_interaction_claim_passes_under_interaction_runner -q _(id: [rec-35c32ec7-df9d-44ae-9d4b-1da771b510ef](.artifacts/records/project__acceptance/rec-35c32ec7-df9d-44ae-9d4b-1da771b510ef.md))_
+
 ## verify-frozen-environment
 
 ### Acceptance
@@ -328,9 +361,6 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 - **verify-frozen-environment-skips**: check; evidence-layer; python3 -m pytest tests/test_lint.py::test_lint_reports_new_skip_between_base_and_head -q _(id: [rec-64566959-1ab1-4de4-bca9-feb47da70a23](.artifacts/records/project__acceptance/rec-64566959-1ab1-4de4-bca9-feb47da70a23.md))_
 
 ## verify-oracle-provenance
-
-### Work
-- **verify-oracle-provenance**: Verify oracle provenance; oracle-provenance; deliver; evidence-layer _(id: [rec-3308eb03-5884-4be7-a427-a76777c61cd5](.artifacts/records/project__work-item/rec-3308eb03-5884-4be7-a427-a76777c61cd5.md))_
 
 ### Acceptance
 - **verify-oracle-provenance**: check; evidence-layer; python3 -m pytest tests/test_provenance.py::test_r1_oracle_after_implementation_fails -q _(id: [rec-951a64c2-99ad-44da-95d4-4dc221012064](.artifacts/records/project__acceptance/rec-951a64c2-99ad-44da-95d4-4dc221012064.md))_
