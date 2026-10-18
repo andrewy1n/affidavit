@@ -10,7 +10,6 @@ import os
 import shutil
 import subprocess
 import tempfile
-import xml.etree.ElementTree as ET
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator, Sequence
@@ -24,11 +23,7 @@ from affidavit.manifest import (
     merge_base,
     resolve_commit,
 )
-from affidavit.runner import _keys, run_tests
-
-# Pytest records these test-body exceptions as ``<failure>``. They are not
-# assertion reds; a collection failure is already an ``<error>``.
-_NON_ASSERTION = ("ModuleNotFoundError", "ImportError", "SyntaxError")
+from affidavit.runner import run_tests
 
 
 def run_verdict(
@@ -191,23 +186,8 @@ def _outcomes(
         return {test_id: "not_run" for test_id in test_ids}
     if not test_ids:
         return {}
-    report: list[str] = []
-    original = tempfile.mkstemp
-
-    def _capture_report(*args: Any, **kwargs: Any) -> tuple[int, str]:
-        fd, path = original(*args, **kwargs)
-        suffix = kwargs.get("suffix", args[0] if args else None)
-        if suffix == ".xml":
-            report.append(path)
-        return fd, path
-
-    tempfile.mkstemp = _capture_report
-    try:
-        with _silence_stdio():
-            outcomes = run_tests(worktree, test_ids, runner)
-    finally:
-        tempfile.mkstemp = original
-    return _downgrade_non_assertion(outcomes, report[-1] if report else None)
+    with _silence_stdio():
+        return run_tests(worktree, test_ids, runner)
 
 
 @contextmanager
@@ -225,44 +205,6 @@ def _silence_stdio() -> Iterator[None]:
         os.close(saved_out)
         os.close(saved_err)
         os.close(devnull)
-
-
-def _downgrade_non_assertion(
-    outcomes: dict[str, str],
-    report: str | None,
-) -> dict[str, str]:
-    if report is None or not Path(report).is_file():
-        return outcomes
-    try:
-        root = ET.parse(report).getroot()
-    except ET.ParseError:
-        return outcomes
-    updated = dict(outcomes)
-    for case in root.iter():
-        if _local(case.tag) != "testcase" or not _non_assertion_failure(case):
-            continue
-        for key in _keys(case):
-            if updated.get(key) == "assertion_failed":
-                updated[key] = "errored"
-    return updated
-
-
-def _non_assertion_failure(case: ET.Element) -> bool:
-    failures = [child for child in case if _local(child.tag) == "failure"]
-    if not failures or any(_local(child.tag) == "error" for child in case):
-        return False
-    return all(_non_assertion_message(child.get("message") or "") for child in failures)
-
-
-def _non_assertion_message(message: str) -> bool:
-    head = message.split(":", 1)[0].strip()
-    return head in _NON_ASSERTION or message.strip() == "collection failure"
-
-
-def _local(tag: str) -> str:
-    if "}" in tag:
-        return tag.rsplit("}", 1)[1]
-    return tag
 
 
 def _assertion_red(tests: Sequence[str], outcomes: dict[str, str]) -> bool:
