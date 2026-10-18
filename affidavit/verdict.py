@@ -26,6 +26,7 @@ from affidavit.manifest import (
     resolve_commit,
     runner_digest,
 )
+from affidavit.provenance import check_provenance
 from affidavit.runner import run_tests
 
 
@@ -34,6 +35,7 @@ def run_verdict(
     at: str,
     base: str | None,
     claim_ids: Sequence[str],
+    provenance: bool = False,
 ) -> dict[str, Any]:
     """Judge ``claim_ids`` by re-executing their oracle tests.
 
@@ -54,8 +56,23 @@ def run_verdict(
     at_by_id = {claim.id: claim for claim in at_manifest.claims}
     base_by_id = {claim.id: claim for claim in base_manifest.claims}
 
+    provenance_fails: dict[str, str] = {}
+    if provenance:
+        for claim_id in claim_ids:
+            head_claim = at_by_id.get(claim_id)
+            if head_claim is None:
+                continue
+            reason = check_provenance(
+                root, at_commit, base_commit, at_manifest, head_claim, at_allow
+            )
+            if reason is not None:
+                provenance_fails[claim_id] = reason
+
     if base_allow != at_allow:
-        claims = [_fail(claim_id, "allowlist changed") for claim_id in claim_ids]
+        claims = [
+            _fail(claim_id, provenance_fails.get(claim_id, "allowlist changed"))
+            for claim_id in claim_ids
+        ]
         return _payload(claims)
 
     base_runner_digest = runner_digest(base_manifest.runner)
@@ -64,6 +81,9 @@ def run_verdict(
     verdicts: list[dict[str, str] | None] = [None] * len(claim_ids)
     pending: list[tuple[int, str, Claim, Claim]] = []
     for index, claim_id in enumerate(claim_ids):
+        if claim_id in provenance_fails:
+            verdicts[index] = _fail(claim_id, provenance_fails[claim_id])
+            continue
         base_claim = base_by_id.get(claim_id)
         head_claim = at_by_id.get(claim_id)
         if base_claim is None or head_claim is None:

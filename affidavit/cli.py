@@ -40,6 +40,11 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Revision where oracle tests must fail on an assertion (default: merge-base with main)",
     )
+    verdict.add_argument(
+        "--provenance",
+        action="store_true",
+        help="Also require git provenance: oracle lands first, oracle-only commit, distinct signers",
+    )
     verdict.add_argument("claim_ids", nargs="+", metavar="CLAIM", help="Claim ids to judge")
 
     attest = sub.add_parser("attest", help="Emit or verify a signed verdict attestation")
@@ -120,7 +125,9 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.command == "verdict":
         work = Path(args.cwd) if args.cwd else Path.cwd()
-        payload = run_verdict(work, args.at, args.base, args.claim_ids)
+        payload = run_verdict(
+            work, args.at, args.base, args.claim_ids, provenance=args.provenance
+        )
         print(json.dumps(payload, separators=(",", ":")))
         return 0 if payload["result"] == "pass" else 1
     if args.command == "attest":
