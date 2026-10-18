@@ -1,0 +1,42 @@
+---
+{
+  "base_kind": "event",
+  "id": "rec-9dc8bd8e-b3d0-4832-b16e-b179bf3de4c0",
+  "identity": "unknown",
+  "lifecycle_state": "recorded",
+  "payload": {
+    "criterion_id": "rec-04aba49b-468d-4d98-a837-9df3b7b5e7e7",
+    "duration_s": 3.972241,
+    "effort": "evidence-layer",
+    "exit_code": 0,
+    "method": "tdd",
+    "output_sha256": "f43139fd91e82a3f04b4fd245f00a142a7ee4fe342d23cbbc384345d5a4027da",
+    "requirement": "R4",
+    "result": "pass",
+    "revision": "780b98ed03d068aea39f95a1974c5294a2b1bfe9",
+    "runner": "aff",
+    "signed_by": ""
+  },
+  "provenance": {
+    "sources": [
+      "audit-unclaimed-range"
+    ]
+  },
+  "record_type": "project:check-run",
+  "recorded_at": "2026-10-18T04:24:29+00:00",
+  "relationships": {
+    "informed_by": [
+      "rec-04aba49b-468d-4d98-a837-9df3b7b5e7e7"
+    ]
+  },
+  "revision": "sha256:681fbf8ebec5918a3f545f804d73eca968652adef010256cd44e9c9bdd3428fe",
+  "subject": "audit-unclaimed-range",
+  "time": {
+    "observed": "2026-10-18T04:24:29+00:00",
+    "recorded": "2026-10-18T04:24:29+00:00"
+  }
+}
+---
+
+.                                                                        [100%]
+1 passed in 3.54s
