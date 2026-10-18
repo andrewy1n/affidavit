@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+import textwrap
 from pathlib import Path
 
 from affidavit.amendment import canonical_payload
@@ -53,8 +54,9 @@ def _manifest(
     oracle: bytes,
     amendments: list | None = None,
     digest: str | None = None,
+    runner: list[str] | None = None,
 ) -> dict:
-    return {
+    document = {
         "claims": [
             {
                 "id": CLAIM,
@@ -65,6 +67,9 @@ def _manifest(
         ],
         "amendments": list(amendments or []),
     }
+    if runner is not None:
+        document["runner"] = list(runner)
+    return document
 
 
 def _write_tree(
@@ -74,6 +79,7 @@ def _write_tree(
     app: bytes,
     allowlist: bytes,
     manifest: dict,
+    extra: dict[str, bytes] | None = None,
 ) -> None:
     affidavit = root / ".affidavit"
     affidavit.mkdir(exist_ok=True)
@@ -84,6 +90,10 @@ def _write_tree(
     oracle_path.parent.mkdir(parents=True, exist_ok=True)
     oracle_path.write_bytes(oracle)
     (root / "app.py").write_bytes(app)
+    for relpath, data in (extra or {}).items():
+        path = root / relpath
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
 
 
 def _commit(root: Path, message: str) -> str:
@@ -106,6 +116,10 @@ def _repo(
     base_digest: str | None = None,
     head_digest: str | None = None,
     branch: bool = False,
+    base_runner: list[str] | None = None,
+    head_runner: list[str] | None = None,
+    base_extra: dict[str, bytes] | None = None,
+    head_extra: dict[str, bytes] | None = None,
 ) -> tuple[str, str]:
     _init(root)
     _write_tree(
@@ -113,7 +127,8 @@ def _repo(
         oracle=base_oracle,
         app=base_app,
         allowlist=base_allow,
-        manifest=_manifest(base_oracle, base_amendments, base_digest),
+        manifest=_manifest(base_oracle, base_amendments, base_digest, base_runner),
+        extra=base_extra,
     )
     base = _commit(root, "red")
     if branch:
@@ -123,7 +138,8 @@ def _repo(
         oracle=head_oracle,
         app=head_app,
         allowlist=head_allow,
-        manifest=_manifest(head_oracle, head_amendments, head_digest),
+        manifest=_manifest(head_oracle, head_amendments, head_digest, head_runner),
+        extra=head_extra,
     )
     head = _commit(root, "green")
     return base, head
@@ -425,3 +441,209 @@ def test_verdict_forged_check_run(tmp_path: Path) -> None:
     assert committed_bad.returncode == 1, committed_bad.stdout + committed_bad.stderr
     assert _payload(committed_bad)["result"] == "fail"
     assert _payload(committed_bad)["claims"][0]["reason"] == "hash mismatch"
+
+
+_FIXTURE_SCRIPT = "tools/emit_junit.py"
+_FIXTURE_RUNNER = ["python3", _FIXTURE_SCRIPT, "--junitxml={report}", "{tests}"]
+_WITNESS = b"# witness\n"
+
+
+def _emit_script(log_path: Path, behavior: str) -> bytes:
+    return textwrap.dedent(
+        f"""\
+        import json
+        import sys
+        from pathlib import Path
+
+        LOG = Path({str(log_path)!r})
+        BEHAVIOR = {behavior!r}
+
+        def main() -> None:
+            report = None
+            ids = []
+            for arg in sys.argv[1:]:
+                if arg.startswith("--junitxml="):
+                    report = Path(arg.split("=", 1)[1])
+                else:
+                    ids.append(arg)
+            counter = Path(".emit-count-" + BEHAVIOR)
+            n = int(counter.read_text()) + 1 if counter.is_file() else 1
+            counter.write_text(str(n))
+            if BEHAVIOR == "flake":
+                wrote = "failure" if n == 1 else "pass"
+            else:
+                wrote = BEHAVIOR
+            pieces = []
+            for test_id in ids:
+                if wrote == "failure":
+                    inner = '<failure message="assert">trace</failure>'
+                    pieces.append(
+                        '<testcase name="' + test_id + '">' + inner + "</testcase>"
+                    )
+                elif wrote == "error":
+                    inner = '<error message="boom">trace</error>'
+                    pieces.append(
+                        '<testcase name="' + test_id + '">' + inner + "</testcase>"
+                    )
+                else:
+                    pieces.append('<testcase name="' + test_id + '" />')
+            xml = (
+                '<?xml version="1.0" encoding="utf-8"?>\\n'
+                "<testsuites><testsuite>"
+                + "".join(pieces)
+                + "</testsuite></testsuites>\\n"
+            )
+            if report is None:
+                raise SystemExit("missing junit report path")
+            report.write_text(xml)
+            LOG.parent.mkdir(parents=True, exist_ok=True)
+            with LOG.open("a", encoding="utf-8") as handle:
+                handle.write(
+                    json.dumps(
+                        {{"n": n, "behavior": BEHAVIOR, "ids": ids, "wrote": wrote}}
+                    )
+                    + "\\n"
+                )
+
+        if __name__ == "__main__":
+            main()
+        """
+    ).encode()
+
+
+def _read_log(path: Path) -> list[dict]:
+    if not path.is_file():
+        return []
+    return [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+
+
+def _fixture_repo(
+    root: Path,
+    log_path: Path,
+    *,
+    base_behavior: str,
+    head_behavior: str,
+    base_app: bytes,
+    head_app: bytes,
+    base_oracle: bytes = _WITNESS,
+    head_oracle: bytes | None = None,
+) -> tuple[str, str]:
+    return _repo(
+        root,
+        base_app=base_app,
+        head_app=head_app,
+        base_oracle=base_oracle,
+        head_oracle=_WITNESS if head_oracle is None else head_oracle,
+        base_runner=_FIXTURE_RUNNER,
+        head_runner=_FIXTURE_RUNNER,
+        base_extra={_FIXTURE_SCRIPT: _emit_script(log_path, base_behavior)},
+        head_extra={_FIXTURE_SCRIPT: _emit_script(log_path, head_behavior)},
+    )
+
+
+def test_verdict_ignores_pytest_stdout() -> None:
+    source = (Path(__file__).resolve().parents[1] / "affidavit" / "verdict.py").read_text()
+    assert "_FAILED_RE" not in source
+    assert "is_assertion_level_failure" not in source
+
+
+def test_verdict_fixture_junit_pass(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    _base, head = _fixture_repo(
+        root,
+        tmp_path / "invocations.jsonl",
+        base_behavior="failure",
+        head_behavior="pass",
+        base_app=b"",
+        head_app=b"",
+    )
+    proc = _run(root, head, _base)
+    assert proc.returncode == 0, proc.stdout + proc.stderr
+    assert _payload(proc) == {"result": "pass", "claims": [{"id": CLAIM, "result": "pass"}]}
+
+
+def test_verdict_fixture_junit_error(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    base, head = _fixture_repo(
+        root,
+        tmp_path / "invocations.jsonl",
+        base_behavior="error",
+        head_behavior="pass",
+        base_app=APP_RED,
+        head_app=APP_GREEN,
+        base_oracle=ORACLE,
+        head_oracle=ORACLE,
+    )
+    proc = _run(root, head, base)
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    payload = _payload(proc)
+    assert payload["result"] == "fail"
+    assert payload["claims"] == [{"id": CLAIM, "result": "fail", "reason": "not assertion"}]
+
+
+def test_verdict_fixture_junit_head_failure(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    base, head = _fixture_repo(
+        root,
+        tmp_path / "invocations.jsonl",
+        base_behavior="failure",
+        head_behavior="failure",
+        base_app=b"base\n",
+        head_app=b"head\n",
+    )
+    proc = _run(root, head, base)
+    assert proc.returncode == 1, proc.stdout + proc.stderr
+    payload = _payload(proc)
+    assert payload["result"] == "fail"
+    assert payload["claims"] == [{"id": CLAIM, "result": "fail", "reason": "tests failed"}]
+
+
+def test_verdict_unstable_when_confirmation_disagrees(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    log_path = tmp_path / "invocations.jsonl"
+    base, head = _fixture_repo(
+        root,
+        log_path,
+        base_behavior="flake",
+        head_behavior="pass",
+        base_app=b"",
+        head_app=b"",
+    )
+    proc = _run(root, head, base)
+    assert proc.returncode != 0, proc.stdout + proc.stderr
+    payload = _payload(proc)
+    assert payload["result"] == "unstable"
+    assert payload["claims"] == [{"id": CLAIM, "result": "unstable"}]
+    rows = _read_log(log_path)
+    base_rows = [row for row in rows if row["behavior"] == "flake"]
+    head_rows = [row for row in rows if row["behavior"] == "pass"]
+    assert [row["n"] for row in base_rows] == [1, 2]
+    assert [row["wrote"] for row in base_rows] == ["failure", "pass"]
+    assert [row["ids"] for row in base_rows] == [[NODE], [NODE]]
+    assert [row["n"] for row in head_rows] == [1, 2]
+    assert [row["wrote"] for row in head_rows] == ["pass", "pass"]
+    assert [row["ids"] for row in head_rows] == [[NODE], [NODE]]
+
+
+def test_verdict_skips_confirmation_on_failed_claim(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    log_path = tmp_path / "invocations.jsonl"
+    base, head = _fixture_repo(
+        root,
+        log_path,
+        base_behavior="error",
+        head_behavior="pass",
+        base_app=b"",
+        head_app=b"",
+    )
+    proc = _run(root, head, base)
+    assert proc.returncode != 0, proc.stdout + proc.stderr
+    payload = _payload(proc)
+    assert payload["result"] == "fail"
+    assert payload["claims"] == [{"id": CLAIM, "result": "fail", "reason": "not assertion"}]
+    rows = [row for row in _read_log(log_path) if NODE in row["ids"]]
+    base_rows = [row for row in rows if row["behavior"] == "error"]
+    assert base_rows == [
+        {"n": 1, "behavior": "error", "ids": [NODE], "wrote": "error"}
+    ]
+    assert all(row["n"] == 1 for row in rows)
