@@ -17,11 +17,14 @@ from typing import Any, Iterator, Sequence
 from affidavit.amendment import authorize
 from affidavit.manifest import (
     Claim,
+    Manifest,
+    frozen_support_files,
     hash_oracle_files,
     load_allowlist,
     load_manifest,
     merge_base,
     resolve_commit,
+    runner_digest,
 )
 from affidavit.runner import run_tests
 
@@ -55,6 +58,9 @@ def run_verdict(
         claims = [_fail(claim_id, "allowlist changed") for claim_id in claim_ids]
         return _payload(claims)
 
+    base_runner_digest = runner_digest(base_manifest.runner)
+    head_runner_digest = runner_digest(at_manifest.runner)
+
     verdicts: list[dict[str, str] | None] = [None] * len(claim_ids)
     pending: list[tuple[int, str, Claim, Claim]] = []
     for index, claim_id in enumerate(claim_ids):
@@ -63,9 +69,15 @@ def run_verdict(
         if base_claim is None or head_claim is None:
             verdicts[index] = _fail(claim_id, "missing claim")
             continue
+        try:
+            base_support = _support_hashes(root, base_commit, base_manifest, base_claim)
+            head_support = _support_hashes(root, at_commit, at_manifest, head_claim)
+        except FileNotFoundError:
+            verdicts[index] = _fail(claim_id, "hash mismatch")
+            continue
         allowed, reason = authorize(
-            _mapping(base_claim),
-            _mapping(head_claim),
+            _mapping(base_claim, base_support, base_runner_digest),
+            _mapping(head_claim, head_support, head_runner_digest),
             at_manifest.amendments,
             base_allow,
             at_allow,
@@ -109,12 +121,30 @@ def _fail(claim_id: str, reason: str) -> dict[str, str]:
     return {"id": claim_id, "result": "fail", "reason": reason}
 
 
-def _mapping(claim: Claim) -> dict[str, Any]:
+def _mapping(
+    claim: Claim,
+    support_hashes: dict[str, str],
+    digest: str,
+) -> dict[str, Any]:
     return {
         "id": claim.id,
         "tests": list(claim.tests),
         "oracle_hashes": dict(claim.oracle_hashes),
+        "support_hashes": dict(support_hashes),
+        "runner_digest": digest,
     }
+
+
+def _support_hashes(
+    cwd: Path,
+    revision: str,
+    manifest: Manifest,
+    claim: Claim,
+) -> dict[str, str]:
+    relpaths = frozen_support_files(manifest, claim)
+    if not relpaths:
+        return {}
+    return hash_oracle_files(cwd, revision, relpaths)
 
 
 def _hashes_match(cwd: Path, revision: str, claim: Claim) -> bool:

@@ -203,3 +203,93 @@ def test_unchanged_claim_without_amendment(tmp_path):
     base = _claim("R1", tests, hashes)
     head = _claim("R1", tests, hashes)
     assert authorize(base, head, [], allow, allow) == (True, "")
+
+
+def test_support_hash_drift_without_amendment_is_missing_step(tmp_path):
+    _key, blob = _generate_key(tmp_path, "id_ed25519")
+    allow = _allowlist("owner", blob)
+    tests = ["tests/test_mod.py::test_name"]
+    hashes = {"tests/test_mod.py": "sha256:11"}
+    base = _claim("R1", tests, hashes)
+    head = _claim("R1", tests, hashes)
+    base["support_hashes"] = {"tests/conftest.py": "sha256:aa"}
+    head["support_hashes"] = {"tests/conftest.py": "sha256:bb"}
+    assert authorize(base, head, [], allow, allow) == (False, "missing step")
+
+
+def test_runner_digest_drift_without_amendment_is_missing_step(tmp_path):
+    _key, blob = _generate_key(tmp_path, "id_ed25519")
+    allow = _allowlist("owner", blob)
+    tests = ["tests/test_mod.py::test_name"]
+    hashes = {"tests/test_mod.py": "sha256:11"}
+    base = _claim("R1", tests, hashes)
+    head = _claim("R1", tests, hashes)
+    base["runner_digest"] = "sha256:oldrunner"
+    head["runner_digest"] = "sha256:newrunner"
+    assert authorize(base, head, [], allow, allow) == (False, "missing step")
+
+
+def test_signed_support_hash_amendment_authorizes(tmp_path):
+    key, blob = _generate_key(tmp_path, "id_ed25519")
+    allow = _allowlist("owner", blob)
+    tests = ["tests/test_mod.py::test_name"]
+    hashes = {"tests/test_mod.py": "sha256:11"}
+    old_support = {"tests/conftest.py": "sha256:aa"}
+    new_support = {"tests/conftest.py": "sha256:bb"}
+    base = _claim("R1", tests, hashes)
+    head = _claim("R1", tests, hashes)
+    base["support_hashes"] = dict(old_support)
+    head["support_hashes"] = dict(new_support)
+    step = _amendment("R1", tests, tests, hashes, hashes)
+    step["old_support_hashes"] = dict(old_support)
+    step["new_support_hashes"] = dict(new_support)
+    step = _sign(key, step)
+    assert authorize(base, head, [step], allow, allow) == (True, "")
+
+
+def test_signed_runner_digest_amendment_authorizes(tmp_path):
+    key, blob = _generate_key(tmp_path, "id_ed25519")
+    allow = _allowlist("owner", blob)
+    tests = ["tests/test_mod.py::test_name"]
+    hashes = {"tests/test_mod.py": "sha256:11"}
+    base = _claim("R1", tests, hashes)
+    head = _claim("R1", tests, hashes)
+    base["runner_digest"] = "sha256:oldrunner"
+    head["runner_digest"] = "sha256:newrunner"
+    step = _amendment("R1", tests, tests, hashes, hashes)
+    step["old_runner_digest"] = "sha256:oldrunner"
+    step["new_runner_digest"] = "sha256:newrunner"
+    step = _sign(key, step)
+    assert authorize(base, head, [step], allow, allow) == (True, "")
+
+
+def test_canonical_payload_includes_support_and_runner_when_present():
+    amendment = _amendment(
+        "R1",
+        ["tests/test_mod.py::test_a"],
+        ["tests/test_mod.py::test_a"],
+        {"a.py": "sha256:aa"},
+        {"a.py": "sha256:aa"},
+    )
+    amendment["old_support_hashes"] = {"b.py": "sha256:11", "a.py": "sha256:00"}
+    amendment["new_support_hashes"] = {"a.py": "sha256:22"}
+    amendment["old_runner_digest"] = "sha256:old"
+    amendment["new_runner_digest"] = "sha256:new"
+    amendment["signature"] = "not-part-of-the-payload"
+    assert canonical_payload(amendment) == (
+        "affidavit-amendment v1\n"
+        "claim: R1\n"
+        "old_tests: tests/test_mod.py::test_a\n"
+        "new_tests: tests/test_mod.py::test_a\n"
+        "old_hashes:\n"
+        "a.py sha256:aa\n"
+        "new_hashes:\n"
+        "a.py sha256:aa\n"
+        "old_support_hashes:\n"
+        "a.py sha256:00\n"
+        "b.py sha256:11\n"
+        "new_support_hashes:\n"
+        "a.py sha256:22\n"
+        "old_runner_digest: sha256:old\n"
+        "new_runner_digest: sha256:new\n"
+    ).encode()

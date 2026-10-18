@@ -11,11 +11,13 @@ import pytest
 
 from affidavit.manifest import (
     ManifestError,
+    frozen_support_files,
     hash_oracle_files,
     load_allowlist,
     load_manifest,
     merge_base,
     resolve_commit,
+    runner_digest,
 )
 
 ORACLE_REL = "tests/test_oracle.py"
@@ -47,16 +49,19 @@ def _manifest_doc(
     *,
     claim_id: str = "claim-widget",
     runner: object = _OMIT,
+    support_files: object = _OMIT,
+    claim_support_files: object = _OMIT,
 ) -> dict:
+    claim: dict = {
+        "id": claim_id,
+        "text": "The widget returns one.",
+        "tests": [NODE_ID],
+        "oracle_hashes": {ORACLE_REL: _sha256(oracle)},
+    }
+    if claim_support_files is not _OMIT:
+        claim["support_files"] = claim_support_files
     doc = {
-        "claims": [
-            {
-                "id": claim_id,
-                "text": "The widget returns one.",
-                "tests": [NODE_ID],
-                "oracle_hashes": {ORACLE_REL: _sha256(oracle)},
-            }
-        ],
+        "claims": [claim],
         "amendments": [
             {
                 "id": "amend-1",
@@ -67,6 +72,8 @@ def _manifest_doc(
     }
     if runner is not _OMIT:
         doc["runner"] = runner
+    if support_files is not _OMIT:
+        doc["support_files"] = support_files
     return doc
 
 
@@ -86,11 +93,23 @@ def _write_tree(
     allowlist: bytes,
     claim_id: str = "claim-widget",
     runner: object = _OMIT,
+    support_files: object = _OMIT,
+    claim_support_files: object = _OMIT,
 ) -> None:
     affidavit = root / ".affidavit"
     affidavit.mkdir(exist_ok=True)
     (affidavit / "manifest.json").write_text(
-        json.dumps(_manifest_doc(oracle, claim_id=claim_id, runner=runner), indent=2) + "\n"
+        json.dumps(
+            _manifest_doc(
+                oracle,
+                claim_id=claim_id,
+                runner=runner,
+                support_files=support_files,
+                claim_support_files=claim_support_files,
+            ),
+            indent=2,
+        )
+        + "\n"
     )
     (affidavit / "allowed_signers").write_bytes(allowlist)
     oracle_path = root / ORACLE_REL
@@ -273,3 +292,39 @@ def test_invalid_manifest_json_raises(tmp_path: Path) -> None:
     revision = _commit(root, "bad manifest")
     with pytest.raises(ManifestError):
         load_manifest(root, revision)
+
+
+def test_runner_digest_is_sha256_of_argv_lines() -> None:
+    argv = ("python3", "-m", "pytest", "{tests}", "--junitxml={report}")
+    expected = _sha256(("\n".join(argv) + "\n").encode("utf-8"))
+    assert runner_digest(argv) == expected
+    assert runner_digest(argv) != runner_digest((*argv[:2], "-q", *argv[2:]))
+
+
+def test_manifest_support_files_absent_is_empty(repo: dict[str, Path | str]) -> None:
+    root = repo["root"]
+    assert isinstance(root, Path)
+    loaded = load_manifest(root, str(repo["first"]))
+    assert loaded.support_files == ()
+    assert loaded.claims[0].support_files == ()
+    assert frozen_support_files(loaded, loaded.claims[0]) == ()
+
+
+def test_manifest_and_claim_support_files_union(tmp_path: Path) -> None:
+    root = _init(tmp_path)
+    _write_tree(
+        root,
+        ORACLE_V1,
+        ALLOWLIST_V1,
+        support_files=["tests/conftest.py", "pytest.ini"],
+        claim_support_files=["pytest.ini", "tests/helpers.py"],
+    )
+    revision = _commit(root, "support files")
+    loaded = load_manifest(root, revision)
+    assert loaded.support_files == ("tests/conftest.py", "pytest.ini")
+    assert loaded.claims[0].support_files == ("pytest.ini", "tests/helpers.py")
+    assert frozen_support_files(loaded, loaded.claims[0]) == (
+        "tests/conftest.py",
+        "pytest.ini",
+        "tests/helpers.py",
+    )
