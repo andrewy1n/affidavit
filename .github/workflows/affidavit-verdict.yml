@@ -61,30 +61,57 @@ jobs:
           echo "ATTEST_KEY=$HOME/.config/affidavit/attest_key" >> "$GITHUB_ENV"
           echo "ATTEST_ALLOWLIST=$HOME/.config/affidavit/allowed_signers" >> "$GITHUB_ENV"
 
+      - name: Build verdict fixture
+        run: bash tests/fixtures/build_verdict_repo.sh
+
       - name: Run aff verdict
         id: verdict
         run: |
-          SHA=$(git -C "${{ steps.ctx.outputs.fixture }}" rev-parse HEAD)
+          FIXTURE="${{ steps.ctx.outputs.fixture }}"
+          SHA=$(git -C "$FIXTURE" rev-parse HEAD)
+          BASE=$(git -C "$FIXTURE" rev-parse HEAD~1)
           bin/aff verdict \
-            --cwd "${{ steps.ctx.outputs.fixture }}" \
+            --cwd "$FIXTURE" \
+            --base "$BASE" \
             --at "$SHA" \
             "${{ steps.ctx.outputs.claim }}" \
-            | tee verdict.json
+            | tee verdict.raw.json
+          python3 - <<'PY'
+          import hashlib, json, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, ".")
+          from affidavit.manifest import load_manifest, resolve_commit, runner_digest
+          fixture = Path("""${{ steps.ctx.outputs.fixture }}""")
+          sha = subprocess.check_output(["git", "-C", str(fixture), "rev-parse", "HEAD"], text=True).strip()
+          verdict = json.load(open("verdict.raw.json"))
+          blob = subprocess.check_output(["git", "-C", str(fixture), "show", f"{sha}:.affidavit/manifest.json"])
+          body = {
+              "commit": resolve_commit(fixture, sha),
+              "manifest_hash": "sha256:" + hashlib.sha256(blob).hexdigest(),
+              "runner_digest": runner_digest(load_manifest(fixture, sha).runner),
+              "claims": verdict["claims"],
+              "result": verdict["result"],
+          }
+          json.dump(body, open("verdict.json", "w"))
+          print(json.dumps(body, indent=2))
+          PY
           echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "manifest_hash=$(python3 -c 'import json; print(json.load(open("verdict.json"))["manifest_hash"])')" >> "$GITHUB_OUTPUT"
 
       - name: Emit signed attestation
         run: |
-          bin/aff attest \
+          bin/aff attest emit \
             --key "$ATTEST_KEY" \
-            --from-verdict verdict.json \
-            --out attestation.json
+            --input verdict.json \
+            | tee attestation.json
 
       - name: Verify attestation
         run: |
           bin/aff attest verify \
             --allowlist "$ATTEST_ALLOWLIST" \
             --commit "${{ steps.verdict.outputs.sha }}" \
-            --attestation attestation.json
+            --manifest-hash "${{ steps.verdict.outputs.manifest_hash }}" \
+            --input attestation.json
 
       - name: Upload attestation
         if: always()

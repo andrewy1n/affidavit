@@ -195,7 +195,8 @@ def test_verify_rejects_bind_mismatch_on_manifest_hash(tmp_path: Path) -> None:
 
 
 def test_ci_workflow_runs_verdict_and_attest() -> None:
-    """R4: a workflow under .github/workflows runs verdict and the attest emit path."""
+    """R4: workflow must run an explicit fixture-build step and ship templates —
+    not merely contain the strings verdict and attest."""
     workflows = REPO_ROOT / ".github" / "workflows"
     assert workflows.is_dir(), "expected .github/workflows"
     files = sorted(workflows.glob("*.yml")) + sorted(workflows.glob("*.yaml"))
@@ -203,3 +204,27 @@ def test_ci_workflow_runs_verdict_and_attest() -> None:
     text = "\n".join(path.read_text() for path in files)
     assert "verdict" in text, "workflow must run aff verdict"
     assert "attest" in text, "workflow must invoke the attest emit path"
+    assert "build_verdict_repo" in text, (
+        "workflow must invoke an explicit fixture builder (build_verdict_repo) "
+        "before aff verdict"
+    )
+
+    builder = REPO_ROOT / "tests" / "fixtures" / "build_verdict_repo.sh"
+    assert builder.is_file(), f"expected builder script at {builder}"
+
+    fixture_root = REPO_ROOT / "tests" / "fixtures" / "verdict-repo"
+    templates = (
+        fixture_root / "app.py",
+        fixture_root / "tests" / "test_widget.py",
+        fixture_root / ".affidavit" / "manifest.json",
+    )
+    for path in templates:
+        assert path.is_file(), f"expected tracked fixture template at {path}"
+    gitignore = (REPO_ROOT / ".gitignore").read_text()
+    assert "verdict-repo/.git" in gitignore, (
+        "parent .gitignore must ignore the built nested .git under verdict-repo"
+    )
+    manifest = (fixture_root / ".affidavit" / "manifest.json").read_text()
+    assert "claim-widget" in manifest, (
+        "fixture manifest must declare claim-widget"
+    )

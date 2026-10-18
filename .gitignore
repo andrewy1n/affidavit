@@ -11,3 +11,6 @@ __pycache__/
 # Tier-2 background suite logs (phase worktree).
 .tier2/
 .suite/
+
+# Built subject repo from tests/fixtures/build_verdict_repo.sh
+tests/fixtures/verdict-repo/.git/
