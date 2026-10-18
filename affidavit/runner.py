@@ -33,6 +33,7 @@ def run_tests(
         cwd=worktree,
         env=env,
         check=False,
+        capture_output=True,
     )
     grouped = _read_report(report)
     return {test_id: _collapse(grouped.get(test_id, ())) for test_id in test_ids}

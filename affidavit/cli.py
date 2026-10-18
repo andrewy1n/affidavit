@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from affidavit.attestation import emit, verify
+from affidavit.audit import AuditError, run_audit
 from affidavit.authoring import AuthoringError, add_claim, freeze
 from affidavit.evidence_kind import TEMPLATES
 from affidavit.lint import find_claim_findings, find_new_skips, find_no_assert
@@ -158,6 +159,37 @@ def _build_parser() -> argparse.ArgumentParser:
     freeze_cmd.add_argument("--cwd", default=None, help="Repository root (default: process cwd)")
     freeze_cmd.add_argument("claim_ids", nargs="*", metavar="CLAIM", help="Claim ids (default: all)")
 
+    audit = sub.add_parser(
+        "audit",
+        help="Advisory: label diff blocks and optionally plant mutants",
+    )
+    audit.add_argument(
+        "--cwd",
+        default=None,
+        help="Git repository (default: process cwd)",
+    )
+    audit.add_argument("--base", required=True, help="Base revision")
+    audit.add_argument("--head", required=True, help="Head revision")
+    audit.add_argument(
+        "--test",
+        action="append",
+        default=[],
+        dest="tests",
+        metavar="NODE",
+        help="Extra claim test node id (repeatable)",
+    )
+    audit.add_argument(
+        "--mutants",
+        default=None,
+        help="JSON file of mutant proposals",
+    )
+    audit.add_argument(
+        "--max-mutants",
+        type=int,
+        default=None,
+        help="Cap how many mutants from the file are considered",
+    )
+
     return parser
 
 
@@ -193,6 +225,22 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if args.command == "runner-template":
         print(json.dumps(list(TEMPLATES[args.kind]), separators=(",", ":")))
+        return 0
+    if args.command == "audit":
+        work = Path(args.cwd) if args.cwd else Path.cwd()
+        try:
+            payload = run_audit(
+                work,
+                args.base,
+                args.head,
+                extra_tests=args.tests,
+                mutants_path=args.mutants,
+                max_mutants=args.max_mutants,
+            )
+        except (AuditError, ManifestError) as exc:
+            print(exc, file=sys.stderr)
+            return 2
+        print(json.dumps(payload, separators=(",", ":")))
         return 0
     if args.command == "attest":
         if args.attest_command == "emit":
