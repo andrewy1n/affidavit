@@ -1,7 +1,7 @@
 # Project Plan
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:3e4f61eb73b86453e290b9141c2f8eda976c7378405d856f7211537aacaaf416
+> Store state: sha256:30b5393e4a3ee99843e14d1755dbc03c2b0bcf97f457b670107ef784e9f4e018
 
 ## claims-manifest
 
@@ -82,9 +82,6 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ## frozen-environment
 
-### Phase
-- **frozen-environment**: Freeze the witness environment, not just the test files; 5; evidence-layer _(id: [rec-a741e0ca-9636-41d6-ab55-e0915071bd36](.artifacts/records/project__phase/rec-a741e0ca-9636-41d6-ab55-e0915071bd36.md))_
-
 ### Acceptance
 - **env-freeze**: tdd; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_support_file_drift_without_amendment tests/test_verdict.py::test_verdict_refuses_claim_support_file_drift_without_amendment -q _(id: [rec-3bff17d7-9d75-4d11-a504-9a5b8d66f551](.artifacts/records/project__acceptance/rec-3bff17d7-9d75-4d11-a504-9a5b8d66f551.md))_
 - **env-freeze-runner**: tdd; evidence-layer; python3 -m pytest tests/test_verdict.py::test_verdict_refuses_runner_digest_drift_without_amendment -q _(id: [rec-6a082c2e-8500-4178-b517-9d57ef09d9c7](.artifacts/records/project__acceptance/rec-6a082c2e-8500-4178-b517-9d57ef09d9c7.md))_
@@ -97,8 +94,15 @@ assert goals(os.path.expanduser("~/orchestra/.artifacts"))==["dashboard","packag
 
 ## signed-verdict
 
-### Phase
-- **signed-verdict**: Signed verdict attestation from CI; 6; evidence-layer _(id: [rec-ac9f5da7-15ec-442c-b4f3-2bd923d37ed5](.artifacts/records/project__phase/rec-ac9f5da7-15ec-442c-b4f3-2bd923d37ed5.md))_
+### Acceptance
+- **attest-ci**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_ci_workflow_runs_verdict_and_attest -q _(id: [rec-9d1b0910-9edf-4f6f-834f-bdc4a4eb650f](.artifacts/records/project__acceptance/rec-9d1b0910-9edf-4f6f-834f-bdc4a4eb650f.md))_
+- **attest-core**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_emit_signed_attestation_includes_commit_manifest_runner_and_claims -q _(id: [rec-2620c049-5db4-4593-b467-1f13191c8832](.artifacts/records/project__acceptance/rec-2620c049-5db4-4593-b467-1f13191c8832.md))_
+- **attest-core-bind**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_verify_rejects_wrong_commit tests/test_attestation.py::test_verify_rejects_bind_mismatch_on_manifest_hash -q _(id: [rec-af4de5c3-440e-4e5f-9175-039d591a6fea](.artifacts/records/project__acceptance/rec-af4de5c3-440e-4e5f-9175-039d591a6fea.md))_
+- **attest-core-sig**: tdd; evidence-layer; python3 -m pytest tests/test_attestation.py::test_verify_rejects_bad_signature tests/test_attestation.py::test_verify_rejects_tampered_payload -q _(id: [rec-27204235-9eb7-4d4e-a858-0c140858be15](.artifacts/records/project__acceptance/rec-27204235-9eb7-4d4e-a858-0c140858be15.md))_
+- **verify-signed-verdict**: check; evidence-layer; python3 -m pytest tests/test_attestation.py::test_emit_signed_attestation_includes_commit_manifest_runner_and_claims -q _(id: [rec-02f5f1e1-da0e-4c60-b62f-9cea163b3ef3](.artifacts/records/project__acceptance/rec-02f5f1e1-da0e-4c60-b62f-9cea163b3ef3.md))_
+- **verify-signed-verdict-bind**: check; evidence-layer; python3 -m pytest tests/test_attestation.py::test_verify_rejects_wrong_commit tests/test_attestation.py::test_verify_rejects_bind_mismatch_on_manifest_hash -q _(id: [rec-3fa6eb8b-9b79-4ba8-a95f-c731281ab225](.artifacts/records/project__acceptance/rec-3fa6eb8b-9b79-4ba8-a95f-c731281ab225.md))_
+- **verify-signed-verdict-ci**: check; evidence-layer; python3 -m pytest tests/test_attestation.py::test_ci_workflow_runs_verdict_and_attest -q _(id: [rec-8d754ac2-188a-4162-8aac-2850522ce765](.artifacts/records/project__acceptance/rec-8d754ac2-188a-4162-8aac-2850522ce765.md))_
+- **verify-signed-verdict-sig**: check; evidence-layer; python3 -m pytest tests/test_attestation.py::test_verify_rejects_bad_signature tests/test_attestation.py::test_verify_rejects_tampered_payload -q _(id: [rec-02cd8744-be8c-402c-9387-69c2c7e632d2](.artifacts/records/project__acceptance/rec-02cd8744-be8c-402c-9387-69c2c7e632d2.md))_
 
 ## oracle-provenance
 

@@ -1,7 +1,7 @@
 # Project Handoff
 
 > Derived view — not authoritative. Edit underlying records, not this file.
-> Store state: sha256:4a35a0104a95db5c59950a48804eeb91cc2d18a87dbb0fc6745dd699a82f52d5
+> Store state: sha256:8bab16f897da37600a3e3150b48dfa5e202374be4229699f52140e887c018d04
 
 ## evidence-layer
 
@@ -9,4 +9,4 @@
 - **evidence-layer**: affidavit is a standalone evidence tool: claims and oracles live in a committed manifest, verdicts come from re-executing frozen tests at a revision, and any orchestration layer gets gate answers only through aff verbs; effort; deliver _(id: [rec-f02f74d8-267c-451c-ab07-bf1c50f7edfa](.artifacts/records/project__active-goal/rec-f02f74d8-267c-451c-ab07-bf1c50f7edfa.md))_
 
 ### Position
-- **evidence-layer**: frozen-environment done; next up: signed-verdict; effort _(id: [rec-e0d722c0-3c71-4d61-9395-ea202b4c9a8b](.artifacts/records/project__current-position/rec-e0d722c0-3c71-4d61-9395-ea202b4c9a8b.md))_
+- **evidence-layer**: signed-verdict done; next up: oracle-provenance; effort _(id: [rec-48bbb43a-d8a2-4590-b5c9-4433d8a6aafc](.artifacts/records/project__current-position/rec-48bbb43a-d8a2-4590-b5c9-4433d8a6aafc.md))_

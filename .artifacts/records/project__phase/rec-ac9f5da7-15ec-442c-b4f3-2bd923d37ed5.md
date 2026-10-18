@@ -3,16 +3,16 @@
   "base_kind": "phase",
   "id": "rec-ac9f5da7-15ec-442c-b4f3-2bd923d37ed5",
   "identity": "unknown",
-  "lifecycle_state": "planned",
+  "lifecycle_state": "done",
   "payload": {
     "effort": "evidence-layer",
     "ordinal": 6,
     "title": "Signed verdict attestation from CI"
   },
   "record_type": "project:phase",
-  "recorded_at": "2026-10-18T03:08:48+00:00",
+  "recorded_at": "2026-10-18T03:37:26+00:00",
   "relationships": {},
-  "revision": "sha256:05570e9c372334ca1968d1a8f5c6321e504163c85632825de928e8e81d4bcc99",
+  "revision": "sha256:c347e13c947564f5df14186a0f35860c2aae190617b37d54c5276921ae7e7476",
   "stewardship": {
     "steward": "agent"
   },
@@ -26,7 +26,7 @@ If the agent runs `aff verdict` in its own shell, it can still report a pass it 
 
 ## Approach
 
-Adopt `verdict-attestation`: emit and verify an SSH-signed attestation (namespace `affidavit-verdict`) bound to commit, manifest hash, runner digest, and claim results; ship a fixture CI action. Phase-end reviewer skipped (campaign milestone constraint).
+Adopt `verdict-attestation`. Wave 1: `attest-core` (R1–R3) and `attest-ci` (R4) as subagents. Wave 2: `verify-signed-verdict`. SSH-sign namespace `affidavit-verdict`; bind commit, manifest hash, runner digest, claim results; ship a fixture workflow. Phase-end reviewer skipped.
 
 ## Exit criteria
 
@@ -40,3 +40,11 @@ Adopt `verdict-attestation`: emit and verify an SSH-signed attestation (namespac
 - **base:** `main`
 - **close:** commit code on the phase branch; merge that branch into `main`; commit the store on the primary checkout
 - **push:** not a stop (do not push)
+
+## Run
+
+One sitting. No human stops. Every task is `subagent`.
+
+Wave 1 is `attest-core` (22) and `attest-ci` (10), so 22 minutes. Wave 2 is `verify-signed-verdict` (10). Phase elapsed is 32 minutes.
+
+Wave 1: `attest-core` owns `affidavit/attestation.py`, CLI emit/verify, and tests; `attest-ci` owns `.github/workflows/` (or `actions/`) only.
